@@ -1,3 +1,4 @@
 analysis/
 papers/
 .DS_Store
+.playwright-cli/
