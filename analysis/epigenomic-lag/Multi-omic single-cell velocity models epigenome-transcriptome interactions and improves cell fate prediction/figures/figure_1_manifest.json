@@ -1,0 +1,164 @@
+{
+  "source_pdf": "papers/MultiVelo.pdf",
+  "page": 3,
+  "figure": "Figure 1",
+  "dpi": 300,
+  "figure_crop": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_crop.png",
+  "panels": [
+    {
+      "label": "a",
+      "path": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_panel_01_a.png",
+      "bbox_pixels_in_figure_crop": [
+        0,
+        0,
+        1834,
+        428
+      ],
+      "bbox_pixels_on_page": [
+        333,
+        188,
+        2167,
+        616
+      ],
+      "bbox_pdf_points_on_page": [
+        79.92,
+        45.12,
+        520.08,
+        147.84
+      ]
+    },
+    {
+      "label": "b",
+      "path": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_panel_02_b.png",
+      "bbox_pixels_in_figure_crop": [
+        0,
+        404,
+        1834,
+        949
+      ],
+      "bbox_pixels_on_page": [
+        333,
+        592,
+        2167,
+        1137
+      ],
+      "bbox_pdf_points_on_page": [
+        79.92,
+        142.08,
+        520.08,
+        272.88
+      ]
+    },
+    {
+      "label": "c",
+      "path": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_panel_03_c.png",
+      "bbox_pixels_in_figure_crop": [
+        9,
+        925,
+        741,
+        1157
+      ],
+      "bbox_pixels_on_page": [
+        342,
+        1113,
+        1074,
+        1345
+      ],
+      "bbox_pdf_points_on_page": [
+        82.08,
+        267.12,
+        257.76,
+        322.8
+      ]
+    },
+    {
+      "label": "d",
+      "path": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_panel_04_d.png",
+      "bbox_pixels_in_figure_crop": [
+        9,
+        1133,
+        741,
+        1428
+      ],
+      "bbox_pixels_on_page": [
+        342,
+        1321,
+        1074,
+        1616
+      ],
+      "bbox_pdf_points_on_page": [
+        82.08,
+        317.04,
+        257.76,
+        387.84
+      ]
+    },
+    {
+      "label": "e",
+      "path": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_panel_05_e.png",
+      "bbox_pixels_in_figure_crop": [
+        738,
+        925,
+        1834,
+        1428
+      ],
+      "bbox_pixels_on_page": [
+        1071,
+        1113,
+        2167,
+        1616
+      ],
+      "bbox_pdf_points_on_page": [
+        257.04,
+        267.12,
+        520.08,
+        387.84
+      ]
+    },
+    {
+      "label": "f",
+      "path": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_panel_06_f.png",
+      "bbox_pixels_in_figure_crop": [
+        9,
+        1425,
+        929,
+        2104
+      ],
+      "bbox_pixels_on_page": [
+        342,
+        1613,
+        1262,
+        2292
+      ],
+      "bbox_pdf_points_on_page": [
+        82.08,
+        387.12,
+        302.88,
+        550.08
+      ]
+    },
+    {
+      "label": "g",
+      "path": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_panel_07_g.png",
+      "bbox_pixels_in_figure_crop": [
+        926,
+        1425,
+        1834,
+        2104
+      ],
+      "bbox_pixels_on_page": [
+        1259,
+        1613,
+        2167,
+        2292
+      ],
+      "bbox_pdf_points_on_page": [
+        302.16,
+        387.12,
+        520.08,
+        550.08
+      ]
+    }
+  ],
+  "debug_image": "analysis/Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction/figures/figure_1_debug.png"
+}
