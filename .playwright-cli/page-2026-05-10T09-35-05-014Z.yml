@@ -1,0 +1,239 @@
+- generic [active] [ref=e1]:
+  - navigation "Slide navigation" [ref=e3]:
+    - button "Go to slide 1" [ref=e4] [cursor=pointer]
+    - button "Go to slide 2" [ref=e5] [cursor=pointer]
+    - button "Go to slide 3" [ref=e6] [cursor=pointer]
+    - button "Go to slide 4" [ref=e7] [cursor=pointer]
+    - button "Go to slide 5" [ref=e8] [cursor=pointer]
+    - button "Go to slide 6" [ref=e9] [cursor=pointer]
+    - button "Go to slide 7" [ref=e10] [cursor=pointer]
+    - button "Go to slide 8" [ref=e11] [cursor=pointer]
+    - button "Go to slide 9" [ref=e12] [cursor=pointer]
+    - button "Go to slide 10" [ref=e13] [cursor=pointer]
+    - button "Go to slide 11" [ref=e14] [cursor=pointer]
+    - button "Go to slide 12" [ref=e15] [cursor=pointer]
+  - generic [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: Nature Biotechnology 2023 · Journal Meeting
+      - heading "MultiVelo" [level=1] [ref=e19]
+      - paragraph [ref=e20]: chromatin accessibility를 RNA velocity의 시간 변수로 통합한 multi-omic velocity model
+      - paragraph [ref=e21]: Li, Virgilio, Collins, Welch · single-cell multi-omics / RNA velocity / epigenome-transcriptome dynamics
+    - generic:
+      - generic: MultiVelo paper analysis
+      - generic: 1 / 12
+  - generic [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]: Problem
+        - heading "RNA-only velocity가 놓치는 early regulatory change" [level=2] [ref=e26]:
+          - text: RNA-only velocity가 놓치는
+          - text: early regulatory change
+        - list [ref=e27]:
+          - listitem [ref=e28]: single-cell sequencing은 cell을 파괴하므로 같은 cell의 time series를 직접 볼 수 없다.
+          - listitem [ref=e29]: trajectory inference는 direction과 relative rate를 직접 예측하기 어렵다.
+          - listitem [ref=e30]: "RNA velocity는 `u/s` dynamics를 쓰지만 chromatin remodeling이 transcription rate를 바꾸는 과정을 직접 넣지 않는다."
+          - listitem [ref=e31]: 10x Multiome, SHARE-seq는 같은 cell의 RNA와 chromatin accessibility를 동시에 제공한다.
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - heading "pseudotime" [level=3] [ref=e34]
+          - paragraph [ref=e35]: cell similarity 기반 ordering. 방향성과 속도 해석은 제한적.
+        - generic [ref=e36]:
+          - heading "RNA velocity" [level=3] [ref=e37]
+          - paragraph [ref=e38]: unspliced/spliced RNA로 미래 transcriptional state를 예측.
+        - generic [ref=e39]:
+          - heading "MultiVelo" [level=3] [ref=e40]
+          - paragraph [ref=e41]: "chromatin accessibility `c(t)`를 transcription dynamics 안에 통합."
+    - generic:
+      - generic: gap
+      - generic: 2 / 12
+  - generic [ref=e42]:
+    - generic [ref=e43]:
+      - img "Figure 1a ODE model" [ref=e45]
+      - generic [ref=e46]:
+        - generic [ref=e47]: Core Model
+        - 'heading "`c`, `u`, `s`를 하나의 ODE system으로 연결" [level=2] [ref=e48]':
+          - text: "`c`, `u`, `s`를 하나의"
+          - text: ODE system으로 연결
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - heading "c(t)" [level=3] [ref=e51]
+            - paragraph [ref=e52]: "chromatin accessibility. transcription rate가 `c(t)`에 비례."
+          - generic [ref=e53]:
+            - heading "u(t)" [level=3] [ref=e54]
+            - paragraph [ref=e55]: unspliced pre-mRNA. induction/repression의 빠른 RNA signal.
+          - generic [ref=e56]:
+            - heading "s(t)" [level=3] [ref=e57]
+            - paragraph [ref=e58]: spliced mature RNA. cell state readout.
+        - paragraph [ref=e59]: 핵심 출력은 velocity vector, latent time, gene-specific switch time, primed/coupled/decoupled state, priming/decoupling interval이다.
+    - generic:
+      - generic: mechanistic view
+      - generic: 3 / 12
+  - generic [ref=e60]:
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - generic [ref=e63]: Model 1 vs Model 2
+        - heading "event ordering이 gene class를 만든다" [level=2] [ref=e64]:
+          - text: event ordering이
+          - text: gene class를 만든다
+        - list [ref=e65]:
+          - listitem [ref=e66]: "model 1: chromatin closing이 transcriptional repression보다 먼저 시작된다."
+          - listitem [ref=e67]: "model 2: transcriptional repression이 먼저 시작되고 chromatin closing이 뒤따른다."
+          - listitem [ref=e68]: "priming: chromatin이 먼저 열렸지만 RNA production은 아직 시작되지 않은 구간."
+          - listitem [ref=e69]: "decoupling: accessibility와 RNA가 서로 다른 방향으로 움직이는 구간."
+      - generic [ref=e70]:
+        - img "Figure 1b model comparison" [ref=e72]
+        - generic [ref=e73]:
+          - img "Figure 1f model 1 simulation" [ref=e75]
+          - img "Figure 1g model 2 simulation" [ref=e77]
+    - generic:
+      - generic: Figure 1
+      - generic: 4 / 12
+  - generic [ref=e78]:
+    - generic [ref=e79]:
+      - img "Figure 2 mouse brain results" [ref=e81]
+      - generic [ref=e82]:
+        - generic [ref=e83]: Embryonic Mouse Brain
+        - heading "known cortical trajectory와 더 맞는 velocity" [level=2] [ref=e84]:
+          - text: known cortical trajectory와
+          - text: 더 맞는 velocity
+        - list [ref=e85]:
+          - listitem [ref=e86]: MultiVelo는 RG에서 neuron, astrocyte, oligodendrocyte 방향으로 알려진 trajectory를 복원했다.
+          - listitem [ref=e87]: scVelo는 upper layer neuron에서 biologically implausible backflow를 보였다.
+          - listitem [ref=e88]: Eomes, Tle4에서 chromatin value가 먼저 상승해 RNA-only phase portrait보다 ordering 정보가 늘었다.
+          - listitem [ref=e89]: "fit gene `n = 865`: model 1 41.4%, model 2 26.7%, induction-only 29.5%."
+    - generic:
+      - generic: Figure 2
+      - generic: 5 / 12
+  - generic [ref=e90]:
+    - generic [ref=e91]:
+      - generic [ref=e92]:
+        - generic [ref=e93]: Cell-Gene States
+        - heading "coupled state 사이에 반복되는 priming과 decoupling" [level=2] [ref=e94]:
+          - text: coupled state 사이에 반복되는
+          - text: priming과 decoupling
+        - list [ref=e95]:
+          - listitem [ref=e96]: cell-gene pair를 primed, coupled-on, decoupled, coupled-off 네 state로 배정한다.
+          - listitem [ref=e97]: median primed interval은 전체 time의 21%, median decoupled interval은 19%였다.
+          - listitem [ref=e98]: chromatin과 RNA는 전반적으로 correlated하지만 상당한 시간 동안 modality 간 lag가 존재한다.
+          - listitem [ref=e99]: state assignment는 ODE fit과 latent time 추정의 정확도에 의존한다.
+      - img "Figure 3 state analysis" [ref=e101]
+    - generic:
+      - generic: Figure 3
+      - generic: 6 / 12
+  - generic [ref=e102]:
+    - generic [ref=e103]:
+      - img "Figure 4 mouse skin results" [ref=e105]
+      - generic [ref=e106]:
+        - generic [ref=e107]: Mouse Skin SHARE-seq
+        - heading "chromatin potential을 priming interval로 정량화" [level=2] [ref=e108]:
+          - text: chromatin potential을
+          - text: priming interval로 정량화
+        - list [ref=e109]:
+          - listitem [ref=e110]: MultiVelo latent time은 Palantir pseudotime과 Spearman 0.51, scVelo는 0.44였다.
+          - listitem [ref=e111]: TAC에서 IRS와 hair shaft cell로 이어지는 differentiation direction을 더 잘 잡았다.
+          - listitem [ref=e112]: "fit gene `n = 960`: induction-only 66.6%, model 1 32.4%, model 2 1.0%."
+          - listitem [ref=e113]: "Wnt3의 maximum `c-s` delay는 normalized time range 1 중 0.6까지 도달했다."
+    - generic:
+      - generic: Figure 4
+      - generic: 7 / 12
+  - generic [ref=e114]:
+    - generic [ref=e115]:
+      - generic [ref=e116]:
+        - generic [ref=e117]: Human HSPC
+        - heading "hematopoiesis에서도 chromatin-leading marker pattern" [level=2] [ref=e118]:
+          - text: hematopoiesis에서도
+          - text: chromatin-leading marker pattern
+        - list [ref=e119]:
+          - listitem [ref=e120]: filtering 후 11,605 high-quality cell에서 HSPC hierarchy와 더 맞는 velocity를 보였다.
+          - listitem [ref=e121]: "fit gene `n = 936`: model 1 40.4%, model 2 19.8%, induction-only 39.3%."
+          - listitem [ref=e122]: model 2 gene은 cell-cycle GO term에 enriched되었고 FDR < 0.002였다.
+          - listitem [ref=e123]: AZU1, HBD, HDC, LYZ, PF4 같은 terminal marker는 chromatin accessibility 증가 뒤 RNA expression이 증가했다.
+      - img "Figure 5 HSPC results" [ref=e125]
+    - generic:
+      - generic: Figure 5
+      - generic: 8 / 12
+  - generic [ref=e126]:
+    - generic [ref=e127]:
+      - img "Figure 6 fetal human brain results" [ref=e129]
+      - generic [ref=e130]:
+        - generic [ref=e131]: Fetal Human Brain
+        - heading "latent time을 TF motif와 disease SNP timing으로 확장" [level=2] [ref=e132]:
+          - text: latent time을 TF motif와
+          - text: disease SNP timing으로 확장
+        - list [ref=e133]:
+          - listitem [ref=e134]: MultiVelo는 known brain development pattern과 맞는 velocity를 보였고 scVelo는 IPC/upper layer neuron에서 backflow를 보였다.
+          - listitem [ref=e135]: "fit gene `n = 747`: induction-only 50.5%, model 1 38.3%, model 2 8.2%."
+          - listitem [ref=e136]: 대부분의 TF에서 expression peak가 downstream motif accessibility peak보다 앞섰다.
+          - listitem [ref=e137]: GWAS SNP 6,968개 중 757개를 accessibility-expression timing으로 분석했다.
+    - generic:
+      - generic: Figure 6
+      - generic: 9 / 12
+  - generic [ref=e138]:
+    - generic [ref=e139]:
+      - generic [ref=e140]: Cross-Dataset Pattern
+      - heading "반복되는 결론은 “chromatin timing이 RNA ambiguity를 줄인다”" [level=2] [ref=e141]:
+        - text: 반복되는 결론은
+        - text: “chromatin timing이 RNA ambiguity를 줄인다”
+      - generic [ref=e142]:
+        - generic [ref=e143]:
+          - strong [ref=e144]: "0.51"
+          - paragraph [ref=e145]: mouse skin MultiVelo-Palantir Spearman correlation
+        - generic [ref=e146]:
+          - strong [ref=e147]: 21%
+          - paragraph [ref=e148]: mouse brain median primed interval
+        - generic [ref=e149]:
+          - strong [ref=e150]: 11,605
+          - paragraph [ref=e151]: human HSPC high-quality cell count
+        - generic [ref=e152]:
+          - strong [ref=e153]: "757"
+          - paragraph [ref=e154]: fetal brain SNP timing analysis target count
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - heading "일관된 pattern" [level=3] [ref=e157]
+          - paragraph [ref=e158]: model 1은 대부분 dataset에서 model 2보다 많고, induction-only gene도 큰 비율을 차지한다.
+        - generic [ref=e159]:
+          - heading "baseline 대비 차이" [level=3] [ref=e160]
+          - paragraph [ref=e161]: scVelo가 backflow 또는 hierarchy mismatch를 보인 사례에서 MultiVelo가 known trajectory와 더 맞는 방향성을 보였다.
+    - generic:
+      - generic: summary numbers
+      - generic: 10 / 12
+  - generic [ref=e162]:
+    - generic [ref=e163]:
+      - generic [ref=e164]:
+        - generic [ref=e165]: Limitations
+        - heading "강한 claim에 비해 benchmark와 causal evidence는 제한적" [level=2] [ref=e166]:
+          - text: 강한 claim에 비해 benchmark와
+          - text: causal evidence는 제한적
+      - generic [ref=e167]:
+        - generic [ref=e168]:
+          - heading "metric 통일 부족" [level=3] [ref=e169]
+          - paragraph [ref=e170]: cell fate prediction 개선은 여러 dataset에서 biological plausibility 중심으로 제시되며, 동일 metric 기반 benchmark는 제한적이다.
+        - generic [ref=e171]:
+          - heading "mechanism abstraction" [level=3] [ref=e172]
+          - paragraph [ref=e173]: chromatin modifier, TF binding, looping 같은 과정은 rate constant와 switch time으로 압축된다.
+        - generic [ref=e174]:
+          - heading "SNP/TF timing의 인과성" [level=3] [ref=e175]
+          - paragraph [ref=e176]: time lag는 temporal association이며 CRISPR perturbation, allele-specific effect, reporter assay가 필요하다.
+    - generic:
+      - generic: critical reading
+      - generic: 11 / 12
+  - generic [ref=e177]:
+    - generic [ref=e178]:
+      - generic [ref=e179]: Final Takeaways
+      - heading "MultiVelo의 의미와 다음 질문" [level=2] [ref=e180]:
+        - text: MultiVelo의 의미와
+        - text: 다음 질문
+      - generic [ref=e181]:
+        - generic [ref=e182]:
+          - heading "핵심 의미" [level=3] [ref=e183]
+          - paragraph [ref=e184]: chromatin accessibility를 RNA velocity의 외부 feature가 아니라 transcription dynamics의 시간 변수로 통합했다.
+        - generic [ref=e185]:
+          - heading "다음 분석" [level=3] [ref=e186]
+          - paragraph [ref=e187]: full MultiVelo, RNA-only, chromatin-only, no-model2 ablation을 같은 metric으로 비교해야 한다.
+        - generic [ref=e188]:
+          - heading "다음 실험" [level=3] [ref=e189]
+          - paragraph [ref=e190]: priming/decoupled gene을 perturb-seq 또는 CRISPRi/a로 검증해 chromatin opening이 RNA induction을 유도하는지 확인한다.
+      - paragraph [ref=e191]: 좋은 후속 논문은 “time lag를 발견했다”에서 “그 lag가 causal regulatory step이다”로 넘어가야 한다.
+    - generic:
+      - generic: takeaways
+      - generic: 12 / 12
