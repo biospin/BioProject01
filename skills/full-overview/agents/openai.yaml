@@ -1,4 +1,0 @@
-interface:
-  display_name: "Full Overview"
-  short_description: "논문의 Overview 흐름을 구조적으로 정리합니다."
-  default_prompt: "이 논문의 Overview를 한국어로 분석해줘. Figure 1이 overview에 포함되는지 먼저 확인하고, 핵심 개념, method 관점, 알게 된 것, 기대 효과 순서로 정리해줘."
