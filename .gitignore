@@ -2,3 +2,28 @@ analysis/
 papers/
 .DS_Store
 .playwright-cli/
+
+# Claude Code local state (per-machine, not for sharing)
+.claude/
+
+# Python virtual environment (per-machine, not for sharing)
+.venv/
+
+# Source binaries — copyrighted, never commit. Stubs (.url, .bib, abstract.txt)
+# under sources/ are NOT excluded by these patterns and may be committed.
+analysis/**/sources/*.pdf
+analysis/**/sources/*.PDF
+analysis/**/sources/*.xlsx
+analysis/**/sources/*.docx
+analysis/**/sources/*.pptx
+analysis/**/sources/*.zip
+analysis/**/sources/*.tar.gz
+analysis/**/sources/*.tgz
+# Cached text dump of PDF (created by build_html.py for figure detection)
+analysis/**/sources/.paper_text.txt
+
+# Generated artifacts (re-built by build_html.py / build_index.py from yaml + sources)
+# Keep figure-map.json (may be hand-edited).
+analysis/**/figures/*.png
+analysis/**/core.html
+analysis/**/core-with-figures.md
