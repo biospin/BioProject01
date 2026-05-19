@@ -28,10 +28,10 @@ analysis/
 ├── <primary-topic>/
 │   └── <paper-id>/                # 예: wang-2024-multivelo/
 │       ├── paper-info.yaml        # 메타데이터·citation·카테고리·다운로드 링크 (single source of truth)
-│       ├── core.md                # 객관적 분석 (개요·문제·방법·결과·Figure·Table)
-│       ├── lens-academic.md       # 학계 시선 해석
-│       ├── lens-industry.md       # 산업 시선 해석
-│       ├── methodology-brief.md   # 재현·검토용 압축본
+│       ├── <paper-id>_core.md                # 객관적 분석 (개요·문제·방법·결과·Figure·Table)
+│       ├── <paper-id>_lens-academic.md       # 학계 시선 해석
+│       ├── <paper-id>_lens-industry.md       # 산업 시선 해석
+│       ├── <paper-id>_methodology-brief.md   # 재현·검토용 압축본
 │       ├── figures/               # core-figure가 추출한 panel 이미지 (해당 시)
 │       ├── slides/                # full-slides 결과 (해당 시)
 │       └── sources/               # 원문 PDF + supplementary + paper.bib
@@ -100,15 +100,15 @@ domain은 abstract 분석 단계에서, use_case와 importance는 전체 분석 
 | --- | --- |
 | 원문/supplementary 다운로드, paper-info.yaml 작성, 외부 정보 차단 규칙 | `skills/source-grounding/SKILL.md` |
 | Abstract만 빠르게 훑는 경량 분석 | `skills/abstract-analysis/SKILL.md` |
-| `core.md` 문제 정의 & 연구 목적 | `skills/core-problem/SKILL.md` |
-| `core.md` 방법론 분석 | `skills/core-methods/SKILL.md` |
-| `core.md` 주요 결과 (통계 유의성·재현성 강조) | `skills/core-results/SKILL.md` |
-| `core.md` Figure 분석 | `skills/core-figure/SKILL.md` |
-| `core.md` Table 분석 | `skills/core-table/SKILL.md` |
-| `lens-academic.md` 학계 시선 (저자 한계 + 분석자 판단 + 후속 연구 + citation 후보) | `skills/lens-academic/SKILL.md` |
-| `lens-industry.md` 산업 시선 (QA/RA 리스크 + BD value + 제품화 + 전문가 코멘트 + 카테고리화) | `skills/lens-industry/SKILL.md` |
-| `methodology-brief.md` 재현·검토용 압축본 | `skills/methodology-brief/SKILL.md` |
-| 기존 `core.md` 기반 정적 slide deck 생성 | `skills/full-slides/SKILL.md` |
+| `<paper-id>_core.md` 문제 정의 & 연구 목적 | `skills/core-problem/SKILL.md` |
+| `<paper-id>_core.md` 방법론 분석 | `skills/core-methods/SKILL.md` |
+| `<paper-id>_core.md` 주요 결과 (통계 유의성·재현성 강조) | `skills/core-results/SKILL.md` |
+| `<paper-id>_core.md` Figure 분석 | `skills/core-figure/SKILL.md` |
+| `<paper-id>_core.md` Table 분석 | `skills/core-table/SKILL.md` |
+| `<paper-id>_lens-academic.md` 학계 시선 (저자 한계 + 분석자 판단 + 후속 연구 + citation 후보) | `skills/lens-academic/SKILL.md` |
+| `<paper-id>_lens-industry.md` 산업 시선 (QA/RA 리스크 + BD value + 제품화 + 전문가 코멘트 + 카테고리화) | `skills/lens-industry/SKILL.md` |
+| `<paper-id>_methodology-brief.md` 재현·검토용 압축본 | `skills/methodology-brief/SKILL.md` |
+| 기존 `<paper-id>_core.md` 기반 정적 slide deck 생성 | `skills/full-slides/SKILL.md` |
 | 분석된 paper에 대한 질문 | `skills/question/SKILL.md` |
 
 ## Full Paper Workflow
@@ -121,17 +121,17 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
    - `paper-info.yaml` 스켈레톤 생성 (메타데이터 + citation + 다운로드 링크).
    - `sources/paper.bib` 생성.
    - 외부 지식 사용 금지 규칙을 분석 세션 동안 유지한다.
-3. **Metadata 및 domain 추출**: title, authors, year, venue, field, keywords를 `paper-info.yaml`과 `core.md` 첫 부분에 정리. abstract 기반으로 domain 태그도 LLM이 추출하여 `paper-info.yaml`에 기록.
-4. **`core.md` 작성** — 객관적 분석. 다음 순서로 skill 호출:
+3. **Metadata 및 domain 추출**: title, authors, year, venue, field, keywords를 `paper-info.yaml`과 `<paper-id>_core.md` 첫 부분에 정리. abstract 기반으로 domain 태그도 LLM이 추출하여 `paper-info.yaml`에 기록.
+4. **`<paper-id>_core.md` 작성** — 객관적 분석. 다음 순서로 skill 호출:
    - 문제 정의: `core-problem`
    - 방법론: `core-methods` (adaptive depth — 자료 유형별 깊이 자동 조정)
    - 주요 결과: `core-results`
    - Figure 분석: `core-figure`
    - Table 분석: `core-table`
-5. **`lens-academic.md` 작성** (`lens-academic`): 저자 한계 / 분석자 판단 / 매끄럽지 않은 지점 / 다음 논문 아이디어 / 본인 논문에서 인용할 후보 문장·수치. *학술적* 한계만 다룬다 (산업·규제·임상은 lens-industry로).
-6. **`lens-industry.md` 작성** (`lens-industry`): 산업·규제·임상 리스크 / BD value & 상용화 가능성 / 전문가 코멘트(등급·활용 우선순위). 이 단계에서 `paper-info.yaml`의 `use_case`와 `importance`도 채운다.
-7. **`methodology-brief.md` 작성** (`methodology-brief`): 재현·검토용 압축본. 우리 데이터에 적용/재현 가능한지 빠르게 판단하기 위한 메모.
-8. **Executive Summary (core.md 맨 앞 1단락 추가)** — 위 모든 단계가 끝난 *후* LLM이 core.md 맨 앞에 1단락(3~5문장)을 추가한다. 본인이 분석 노트를 다시 펴봤을 때 1초 안에 paper 그림을 파악하기 위함. 한계는 lens-* 참고하도록 짧게 언급, 본문 분석을 *압축한 진입점*. 형식:
+5. **`<paper-id>_lens-academic.md` 작성** (`lens-academic`): 저자 한계 / 분석자 판단 / 매끄럽지 않은 지점 / 다음 논문 아이디어 / 본인 논문에서 인용할 후보 문장·수치. *학술적* 한계만 다룬다 (산업·규제·임상은 lens-industry로).
+6. **`<paper-id>_lens-industry.md` 작성** (`lens-industry`): 산업·규제·임상 리스크 / BD value & 상용화 가능성 / 전문가 코멘트(등급·활용 우선순위). 이 단계에서 `paper-info.yaml`의 `use_case`와 `importance`도 채운다.
+7. **`<paper-id>_methodology-brief.md` 작성** (`methodology-brief`): 재현·검토용 압축본. 우리 데이터에 적용/재현 가능한지 빠르게 판단하기 위한 메모.
+8. **Executive Summary (<paper-id>_core.md 맨 앞 1단락 추가)** — 위 모든 단계가 끝난 *후* LLM이 <paper-id>_core.md 맨 앞에 1단락(3~5문장)을 추가한다. 본인이 분석 노트를 다시 펴봤을 때 1초 안에 paper 그림을 파악하기 위함. 한계는 lens-* 참고하도록 짧게 언급, 본문 분석을 *압축한 진입점*. 형식:
    ```markdown
    ## Executive Summary
    [3~5문장: 무엇을 풀고자 하는 자료인지 + 핵심 방법 한 줄 + 가장 중요한 결과 한 줄 + 어디 쓸 수 있는지 한 줄 + 자세한 한계는 lens-* 참고]
@@ -145,16 +145,16 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
 사용자가 *초록만* 가지고 있거나 *빠른 스크리닝*만 요청하면:
 
 1. `skills/source-grounding/SKILL.md`로 `paper-info.yaml` 스켈레톤만 생성 (PDF가 없어도 abstract 출처와 메타데이터는 기록).
-2. `skills/abstract-analysis/SKILL.md`로 `analysis/<primary-topic>/<paper-id>/abstract.md`를 작성.
+2. `skills/abstract-analysis/SKILL.md`로 `analysis/<primary-topic>/<paper-id>/<paper-id>_abstract.md`를 작성.
 3. Abstract에 없는 정보는 추측 금지.
-4. 나중에 full paper 분석을 진행하면 `abstract.md`는 그대로 보존하고 `core.md`를 별도로 생성한다. 둘은 공존한다.
+4. 나중에 full paper 분석을 진행하면 `<paper-id>_abstract.md`는 그대로 보존하고 `<paper-id>_core.md`를 별도로 생성한다. 둘은 공존한다.
 
 ## Slide Workflow
 
 사용자가 slides, slide deck, presentation 생성을 명시적으로 요청했을 때만 다음 순서를 따른다.
 
 1. `skills/full-slides/SKILL.md`를 사용한다.
-2. 먼저 `analysis/<primary-topic>/<paper-id>/core.md`가 존재해야 한다. 없으면 slide를 만들지 말고 full paper 분석이 먼저 필요하다고 말한다.
+2. 먼저 `analysis/<primary-topic>/<paper-id>/<paper-id>_core.md`가 존재해야 한다. 없으면 slide를 만들지 말고 full paper 분석이 먼저 필요하다고 말한다.
 3. `design.md`를 필수 visual design reference로 사용한다.
 4. source PDF에서 관련 Figure image를 캡처해 `slides/assets/figures/`에 저장한다.
 5. 각 Figure image는 slide 절반 이하 크기로 유지한다. 큰 multi-panel Figure는 여러 slide로 나눈다.
@@ -168,15 +168,15 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
 
 1. `skills/question/SKILL.md`를 사용한다.
 2. 답변 우선순위:
-   - 해당 paper의 `core.md`에 답이 있으면 그 파일만 근거로 답한다.
-   - 그래도 부족하면 같은 paper의 `lens-academic.md`, `lens-industry.md`, `methodology-brief.md`, `paper-info.yaml`을 참고한다.
+   - 해당 paper의 `<paper-id>_core.md`에 답이 있으면 그 파일만 근거로 답한다.
+   - 그래도 부족하면 같은 paper의 `<paper-id>_lens-academic.md`, `<paper-id>_lens-industry.md`, `<paper-id>_methodology-brief.md`, `paper-info.yaml`을 참고한다.
    - 다른 분석된 자료에서 답을 찾으면 `<paper-id>에 따르면...` 형식으로 출처를 명시한다. citation이 필요하면 `paper-info.yaml`의 `citation.key`를 사용 (예: `@wang2024multivelo`).
    - 어떤 분석 파일에도 답이 없으면 그 사실을 말하고 추측하지 않는다.
-3. 원문 PDF/외부 지식을 우선 근거로 삼지 않는다. 필요한 경우 먼저 `core.md`를 업데이트한 뒤 다시 답한다.
+3. 원문 PDF/외부 지식을 우선 근거로 삼지 않는다. 필요한 경우 먼저 `<paper-id>_core.md`를 업데이트한 뒤 다시 답한다.
 
 ## Lens 선택 규칙 (요약)
 
-- 기본: `paper-info.yaml` + `core.md` + `lens-academic.md` + `lens-industry.md` + `methodology-brief.md` 모두 작성.
+- 기본: `paper-info.yaml` + `<paper-id>_core.md` + `<paper-id>_lens-academic.md` + `<paper-id>_lens-industry.md` + `<paper-id>_methodology-brief.md` 모두 작성.
 - 사용자가 "academic만" 또는 "industry만"이라고 명시 → 명시된 lens 파일만 작성. 다른 lens는 생성하지 않는다. 단 `paper-info.yaml`의 `use_case`·`importance`는 industry skip 시에도 LLM이 가능한 범위에서 추출하고 *추정 표시* 후 기록한다 (나중에 필요할 때 본인 확인).
 - 사용자가 "core만"이라고 명시 → lens 파일은 생성하지 않는다.
-- 어떤 경우에도 `paper-info.yaml`, `core.md`, `sources/`는 필수이다.
+- 어떤 경우에도 `paper-info.yaml`, `<paper-id>_core.md`, `sources/`는 필수이다.

@@ -1,6 +1,6 @@
 ---
 name: core-results
-description: Analyze the Results section for the objective core.md section, with explicit emphasis on statistical significance (p-values, CI, effect size) and reproducibility (cross-dataset consistency, ablation, replication). Use to summarize datasets used, baselines compared, and concrete numerical or qualitative results for each dataset.
+description: Analyze the Results section for the objective <paper-id>_core.md section, with explicit emphasis on statistical significance (p-values, CI, effect size) and reproducibility (cross-dataset consistency, ablation, replication). Use to summarize datasets used, baselines compared, and concrete numerical or qualitative results for each dataset.
 ---
 
 # Core Results
@@ -11,7 +11,7 @@ Results 섹션을 "어떤 dataset을 사용했고, 그 dataset에서 어떤 결�
 ## Source grounding
 - Source grounding 원칙은 `skills/source-grounding/SKILL.md`를 따른다.
   본 skill의 출력에서도 `해석:` / `외부 맥락:` / `추정:` / `미제공:` / `질문:` / `검토필요:` 표기를 동일하게 사용한다.
-- 출력은 `analysis/<primary-topic>/<paper-id>/core.md`의 "주요 결과" 섹션에 누적된다.
+- 출력은 `analysis/<primary-topic>/<paper-id>/<paper-id>_core.md`의 "주요 결과" 섹션에 누적된다.
 
 ## 통계 유의성·재현성 강조 (이전 full-results 대비 보강)
 

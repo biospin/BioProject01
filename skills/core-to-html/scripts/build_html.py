@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render core.md (+ optionally lens-*, methodology-brief) into a standalone HTML
+"""Render <paper-id>_core.md (+ optionally lens-*, methodology-brief) into a standalone HTML
 report with Figures extracted from the source PDF.
 
 See skills/core-to-html/SKILL.md for the full spec.
@@ -835,7 +835,7 @@ def md_to_html(md_text: str) -> tuple[str, str]:
     """Return (body_html, toc_html).
 
     `mdx_truly_sane_lists` honours 2-space indentation for nested lists,
-    so the natural hierarchy in core.md ("- Hidden assumption:\n  1. foo")
+    so the natural hierarchy in <paper-id>_core.md ("- Hidden assumption:\n  1. foo")
     renders as a real nested list instead of a flat one. We also avoid
     `sane_lists`, which would insist on 4-space indents.
     """
@@ -866,31 +866,50 @@ def md_to_html(md_text: str) -> tuple[str, str]:
 # ---------------------------------------------------------------------------
 
 
+def _paper_id_from_folder(paper_folder: Path) -> str:
+    return paper_folder.resolve().name
+
+
 def collect_markdown(paper_folder: Path, include: list[str]) -> str:
-    """Concatenate core.md + included files into a single markdown string."""
+    """Concatenate <paper-id>_core.md + included files into one markdown string.
+
+    Output files in the paper folder follow the ``<paper-id>_<role>.md``
+    naming convention (paper-id == folder name). The ``include`` argument
+    accepts role names (e.g. "lens-academic"), which are resolved to
+    ``<paper-id>_lens-academic.md`` with a fallback to the legacy bare name.
+    """
     parts = []
-    core_path = paper_folder / "core.md"
+    paper_id = _paper_id_from_folder(paper_folder)
+    core_path = paper_folder / f"{paper_id}_core.md"
     if not core_path.exists():
-        print(f"core.md not found: {core_path}", file=sys.stderr)
-        sys.exit(1)
+        legacy = paper_folder / "core.md"
+        if legacy.exists():
+            core_path = legacy
+        else:
+            print(f"{core_path.name} not found in {paper_folder}", file=sys.stderr)
+            sys.exit(1)
     parts.append(core_path.read_text(encoding="utf-8"))
-    for name in include:
-        name = name.strip()
+    for raw in include:
+        name = raw.strip()
         if not name:
             continue
-        if not name.endswith(".md"):
-            name = name + ".md"
-        p = paper_folder / name
-        if not p.exists():
-            print(f"  (skip, not found): {p}", file=sys.stderr)
+        name = name[:-3] if name.endswith(".md") else name
+        candidates = [
+            paper_folder / f"{paper_id}_{name}.md",
+            paper_folder / f"{name}.md",
+        ]
+        p = next((c for c in candidates if c.exists()), None)
+        if p is None:
+            print(f"  (skip, not found): {candidates[0]}", file=sys.stderr)
             continue
-        parts.append(f"\n\n---\n\n# {p.stem.replace('-', ' ').title()}\n\n")
+        title = name.replace("-", " ").title()
+        parts.append(f"\n\n---\n\n# {title}\n\n")
         parts.append(p.read_text(encoding="utf-8"))
     return "\n\n".join(parts)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build HTML report from core.md + PDF figures")
+    parser = argparse.ArgumentParser(description="Build HTML report from <paper-id>_core.md + PDF figures")
     parser.add_argument("paper_folder", type=Path, help="analysis/<topic>/<paper-id>/")
     parser.add_argument("--figure-map", default="", help="Override: 'Fig1=33,Fig2=34,EDFig1=27'")
     parser.add_argument("--use-panels", action="store_true", help="Use figures/panels.json (panel-level)")
@@ -974,7 +993,8 @@ def main() -> int:
     # Expand ::: details Title ::: blocks into <details> disclosure widgets
     augmented = expand_details_blocks(augmented)
 
-    aug_path = folder / "core-with-figures.md"
+    paper_id = _paper_id_from_folder(folder)
+    aug_path = folder / f"{paper_id}_core-with-figures.md"
     aug_path.write_text(augmented, encoding="utf-8")
     print(f"wrote {aug_path.relative_to(REPO_ROOT)}")
 
@@ -987,7 +1007,7 @@ def main() -> int:
         toc=toc if not args.no_toc else "",
         body=body,
     )
-    html_path = folder / "core.html"
+    html_path = folder / f"{paper_id}_core.html"
     html_path.write_text(html, encoding="utf-8")
     print(f"wrote {html_path.relative_to(REPO_ROOT)}")
     print(f"\n브라우저에서 열기: open {html_path.relative_to(REPO_ROOT)}")
