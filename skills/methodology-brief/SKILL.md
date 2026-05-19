@@ -1,13 +1,13 @@
 ---
 name: methodology-brief
-description: Produce a 1-page multi-audience brief for reproducibility/applicability decisions. Used after core.md and lens-*.md are written; condenses key facts and links to detailed files. Serves three readers in one page — the reproduction engineer, the BD/decision maker, and the analyst (oneself) on revisit.
+description: Produce a 1-page multi-audience brief for reproducibility/applicability decisions. Used after <paper-id>_core.md and lens-*.md are written; condenses key facts and links to detailed files. Serves three readers in one page — the reproduction engineer, the BD/decision maker, and the analyst (oneself) on revisit.
 ---
 
 # Methodology Brief
 
 ## 목표
 
-`core.md`와 `lens-*.md` 작성이 끝난 후, **1페이지 짜리 multi-audience 압축본**을 만든다. 본인이 다시 펴봤을 때 ROI를 빠르게 판단하고, 팀 내 다른 사람(재현 담당자, BD/의사결정자)도 같은 문서로 자신의 take를 빠르게 얻을 수 있어야 한다. 자세한 내용은 *링크로* 다른 파일에 위임.
+`<paper-id>_core.md`와 `lens-*.md` 작성이 끝난 후, **1페이지 짜리 multi-audience 압축본**을 만든다. 본인이 다시 펴봤을 때 ROI를 빠르게 판단하고, 팀 내 다른 사람(재현 담당자, BD/의사결정자)도 같은 문서로 자신의 take를 빠르게 얻을 수 있어야 한다. 자세한 내용은 *링크로* 다른 파일에 위임.
 
 원칙:
 1. **1페이지** 안에 끝낸다 (300~500 단어, 화면 한 번에 보이는 정도).
@@ -17,7 +17,7 @@ description: Produce a 1-page multi-audience brief for reproducibility/applicabi
 ## Source grounding
 - Source grounding 원칙은 `skills/source-grounding/SKILL.md`를 따른다.
   본 skill의 출력에서도 `해석:` / `외부 맥락:` / `추정:` / `미제공:` / `질문:` / `검토필요:` 표기를 동일하게 사용한다.
-- 출력은 `analysis/<primary-topic>/<paper-id>/methodology-brief.md`.
+- 출력은 `analysis/<primary-topic>/<paper-id>/<paper-id>_methodology-brief.md`.
 
 ## 호출 시점
 
@@ -39,19 +39,19 @@ description: Produce a 1-page multi-audience brief for reproducibility/applicabi
 - 코드 공개: <URL / license / maintenance 상태>
 - 자원 요구: <GPU/CPU, RAM, runtime estimate>
 - 핵심 의존성: <library / framework / specific version>
-- 자세히 → [core.md](core.md) §방법론, [sources/paper.pdf](sources/paper.pdf) §Methods
+- 자세히 → [<paper-id>_core.md](<paper-id>_core.md) §방법론, [sources/paper.pdf](sources/paper.pdf) §Methods
 
 ## 우리 적용 가능성 (의사결정자)
 - Dataset 호환: <우리 dataset과의 일치 정도>
 - 자원 가능성: <우리 환경에서 가능 여부, estimate>
 - 비용·시간 추정: <지금 적용 시 얼마나 걸리는지>
 - ROI 한 줄: <왜 가져올 가치가 있는지/없는지>
-- 자세히 → [lens-industry.md](lens-industry.md) §3 (BD value & 상용화)
+- 자세히 → [<paper-id>_lens-industry.md](<paper-id>_lens-industry.md) §3 (BD value & 상용화)
 
 ## 본인 재회고 (본인)
 - 핵심 follow-up 질문 1~2개: `질문: ...`
 - 다음 액션: <구체적 next-step + 시점>
-- 자세히 → [lens-academic.md](lens-academic.md), [lens-industry.md](lens-industry.md) §4
+- 자세히 → [<paper-id>_lens-academic.md](<paper-id>_lens-academic.md), [<paper-id>_lens-industry.md](<paper-id>_lens-industry.md) §4
 
 ---
 마지막 갱신: <YYYY-MM-DD>
@@ -112,18 +112,18 @@ description: Produce a 1-page multi-audience brief for reproducibility/applicabi
   - 재현 가능성 섹션이 적용 불가능하면 짧게 "재현 적용 불가 — 자료 유형: <document_type>" + 자세히 링크.
   - 우리 적용 가능성은 *정보 활용 가능성*으로 재해석 (예: "BD 미팅에서 시장 동향 자료로 활용").
 - **`paper-info.yaml`의 importance가 비어 있으면** brief 작성을 *대기*하거나 `검토필요:`로 표시. lens-industry가 먼저 채워야 한다.
-- **링크는 *상대 경로*로**. 같은 폴더 안의 파일이므로 `[core.md](core.md)` 형태.
+- **링크는 *상대 경로*로**. 같은 폴더 안의 파일이므로 `[<paper-id>_core.md](<paper-id>_core.md)` 형태.
 
 ## 호출 순서 안에서의 위치
 
 AGENTS.md의 Full Paper Workflow에서:
 
 1. source-grounding (sources, paper-info.yaml)
-2. core-problem, core-methods, core-results, core-figure, core-table → `core.md`
-3. lens-academic → `lens-academic.md`
-4. lens-industry → `lens-industry.md` (categorization 갱신)
-5. **methodology-brief → `methodology-brief.md`** ← 여기
-6. Executive Summary 한 단락 추가 (`core.md` 맨 앞)
+2. core-problem, core-methods, core-results, core-figure, core-table → `<paper-id>_core.md`
+3. lens-academic → `<paper-id>_lens-academic.md`
+4. lens-industry → `<paper-id>_lens-industry.md` (categorization 갱신)
+5. **methodology-brief → `<paper-id>_methodology-brief.md`** ← 여기
+6. Executive Summary 한 단락 추가 (`<paper-id>_core.md` 맨 앞)
 
 즉 methodology-brief는 *모든 분석의 마지막에서 두 번째*. Executive Summary 직전에. lens-* 결과를 보고 압축.
 
@@ -131,5 +131,5 @@ AGENTS.md의 Full Paper Workflow에서:
 
 - **본 skill은 새로운 분석을 만들지 않는다.** 이미 만들어진 core-* / lens-* 의 *압축 + 링크*.
 - **1페이지 제한을 깨면 *목적 상실*.** 본인이 *5초 안에 그림 잡기*가 목표. 길어지면 그냥 다른 파일 보면 됨.
-- **링크가 가리키는 파일이 비어있으면** 표시 (`자세히 → lens-industry.md (미작성)`). 거짓 링크 금지.
+- **링크가 가리키는 파일이 비어있으면** 표시 (`자세히 → <paper-id>_lens-industry.md (미작성)`). 거짓 링크 금지.
 - **외부 자료 (사내 wiki, Confluence, JIRA)는 본 brief에 직접 link하지 않는다.** 필요하면 `paper-info.yaml`의 별도 필드에 기록.

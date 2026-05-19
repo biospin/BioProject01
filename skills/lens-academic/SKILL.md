@@ -6,14 +6,14 @@ description: Produce the academic lens — author limitations + analyst's own ju
 # Lens — Academic
 
 ## 목표
-이 자료의 *학계 시선* 노트를 만든다. 단순히 저자가 적은 한계를 옮기는 것이 아니라, core.md(배경·방법·결과·Figure·Table)를 바탕으로 어떤 설명이 부족한지, 어떤 연결이 매끄럽지 않은지, 어떤 실험이나 분석이 빠졌는지 판단한다. 이 판단은 *다음 논문 아이디어*와 *후속 연구 방향*으로 이어져야 한다. 추가로 *본인이 자신의 논문·제안서·학회 발표에서 인용할 만한 후보*를 따로 정리한다 (academic-citation use case).
+이 자료의 *학계 시선* 노트를 만든다. 단순히 저자가 적은 한계를 옮기는 것이 아니라, <paper-id>_core.md(배경·방법·결과·Figure·Table)를 바탕으로 어떤 설명이 부족한지, 어떤 연결이 매끄럽지 않은지, 어떤 실험이나 분석이 빠졌는지 판단한다. 이 판단은 *다음 논문 아이디어*와 *후속 연구 방향*으로 이어져야 한다. 추가로 *본인이 자신의 논문·제안서·학회 발표에서 인용할 만한 후보*를 따로 정리한다 (academic-citation use case).
 
 > 산업·규제·임상 리스크와 BD value, 자체 제품화 같은 *산업 시선*은 이 skill에서 다루지 않는다. `lens-industry`로 분리.
 
 ## Source grounding
 - Source grounding 원칙은 `skills/source-grounding/SKILL.md`를 따른다.
   본 skill의 출력에서도 `해석:` / `외부 맥락:` / `추정:` / `미제공:` / `질문:` / `검토필요:` 표기를 동일하게 사용한다.
-- 출력은 `analysis/<primary-topic>/<paper-id>/lens-academic.md`.
+- 출력은 `analysis/<primary-topic>/<paper-id>/<paper-id>_lens-academic.md`.
 
 ## Citation 후보 섹션 (신규)
 

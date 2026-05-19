@@ -11,7 +11,7 @@ description: Analyze scientific paper abstracts. Use when Codex needs to summari
 ## Source grounding
 - Source grounding 원칙은 `skills/source-grounding/SKILL.md`를 따른다.
   본 skill의 출력에서도 `해석:` / `외부 맥락:` / `추정:` / `미제공:` / `질문:` / `검토필요:` 표기를 동일하게 사용한다.
-- 출력은 `analysis/<primary-topic>/<paper-id>/abstract.md`. abstract.md는 full paper로 확장되어도 보존되며 `core.md`와 공존한다.
+- 출력은 `analysis/<primary-topic>/<paper-id>/<paper-id>_abstract.md`. <paper-id>_abstract.md는 full paper로 확장되어도 보존되며 `<paper-id>_core.md`와 공존한다.
 
 ## 언어 규칙
 - 기본 출력은 한국어로 작성한다.

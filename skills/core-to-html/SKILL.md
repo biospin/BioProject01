@@ -1,18 +1,18 @@
 ---
 name: core-to-html
-description: Render core.md (and optionally lens-*.md, methodology-brief.md) into a standalone HTML report with Figure/Table images embedded inline. Supports page-level PDF crop (fast, automatic) and panel-level crop (precise, requires bbox spec). Used after core.md is written to produce a browser-viewable journal-meeting handout.
+description: Render <paper-id>_core.md (and optionally lens-*.md, <paper-id>_methodology-brief.md) into a standalone HTML report with Figure/Table images embedded inline. Supports page-level PDF crop (fast, automatic) and panel-level crop (precise, requires bbox spec). Used after <paper-id>_core.md is written to produce a browser-viewable journal-meeting handout.
 ---
 
 # Core to HTML
 
 ## 목표
 
-분석 노트(`core.md` 등 markdown)를 *Figure·Table 이미지가 임베드된 HTML report*로 변환한다. 본인이 *브라우저로 더블클릭만으로 열기*, *팀과 공유*, *PDF로 export* 등에 활용.
+분석 노트(`<paper-id>_core.md` 등 markdown)를 *Figure·Table 이미지가 임베드된 HTML report*로 변환한다. 본인이 *브라우저로 더블클릭만으로 열기*, *팀과 공유*, *PDF로 export* 등에 활용.
 
 핵심 산출물:
 1. `analysis/<primary-topic>/<paper-id>/figures/` — PDF에서 추출한 Figure/Table PNG.
-2. `analysis/<primary-topic>/<paper-id>/core.html` — standalone HTML (CSS inline, image relative path).
-3. (선택) `core-with-figures.md` — markdown image 임베드 버전. VS Code preview에서도 보임.
+2. `analysis/<primary-topic>/<paper-id>/<paper-id>_core.html` — standalone HTML (CSS inline, image relative path).
+3. (선택) `<paper-id>_core-with-figures.md` — markdown image 임베드 버전. VS Code preview에서도 보임.
 
 ## Source grounding
 
@@ -75,9 +75,9 @@ PDF의 어느 페이지에 어느 Figure가 있는지 자동 탐지.
 
 ```
 analysis/<primary-topic>/<paper-id>/
-├── core.md                          # 원본 분석 노트 (변경 없음)
-├── core-with-figures.md             # image 임베드 markdown (자동 생성)
-├── core.html                        # standalone HTML report (자동 생성)
+├── <paper-id>_core.md                          # 원본 분석 노트 (변경 없음)
+├── <paper-id>_core-with-figures.md             # image 임베드 markdown (자동 생성)
+├── <paper-id>_core.html                        # standalone HTML report (자동 생성)
 └── figures/
     ├── figure-1.png                 # Fig 1 (page-level 또는 panel composite)
     ├── figure-2.png
@@ -121,7 +121,7 @@ python3 build_html.py analysis/<topic>/<paper-id> --include "lens-academic,lens-
 - `--figure-map <spec>`: Figure 번호 ↔ PDF 페이지 매핑 override.
 - `--use-panels`: `figures/panels.json` 사용 (panel-level).
 - `--extract-only` / `--render-only`: 단계 분리 실행.
-- `--include <skills>`: core.md 외 추가 markdown 파일도 HTML에 포함 (쉼표 구분).
+- `--include <skills>`: <paper-id>_core.md 외 추가 markdown 파일도 HTML에 포함 (쉼표 구분).
 - `--dpi <n>`: PNG export DPI (default 150). 인쇄용은 300, 빠른 미리보기는 100.
 - `--no-toc`: TOC 생성 안 함.
 
@@ -131,10 +131,10 @@ python3 build_html.py analysis/<topic>/<paper-id> --include "lens-academic,lens-
 2. PDF 열고 page count, embedded image count.
 3. (--use-panels가 아니면) 자동 매핑으로 Figure 페이지 식별.
 4. Figure 페이지를 `figures/figure-N.png`로 export.
-5. `core.md`를 복사하고 각 *Figure N* 섹션에 `![Figure N](figures/figure-N.png)` 추가 → `core-with-figures.md`.
+5. `<paper-id>_core.md`를 복사하고 각 *Figure N* 섹션에 `![Figure N](figures/figure-N.png)` 추가 → `<paper-id>_core-with-figures.md`.
 6. markdown → HTML 변환 (Python `markdown` library, extensions: `extra`, `tables`, `toc`, `fenced_code`).
 7. CSS 인라인 (reading-friendly, monospace 본문, 자료 인용 style).
-8. `core.html` 저장.
+8. `<paper-id>_core.html` 저장.
 
 ---
 
@@ -167,8 +167,8 @@ JavaScript 또는 CSS regex로 *분석 노트의 prefix line*을 자동 highligh
 
 ## Part 6. 호출 시점
 
-- **core.md 작성 직후** — page-level로 빠르게 HTML 미리보기.
-- **lens-*.md, methodology-brief.md 추가된 후** — `--include`로 전체 통합 report.
+- **<paper-id>_core.md 작성 직후** — page-level로 빠르게 HTML 미리보기.
+- **lens-*.md, <paper-id>_methodology-brief.md 추가된 후** — `--include`로 전체 통합 report.
 - **공유 직전** — panel-level로 정밀 추출 후 최종 HTML.
 - **반복 실행 OK** — figures/는 *덮어쓰기*, HTML도 덮어쓰기. 매번 최신 상태 유지.
 
@@ -211,9 +211,9 @@ JavaScript 또는 CSS regex로 *분석 노트의 prefix line*을 자동 highligh
 
 ## Part 9. 출력 체크리스트
 
-- [ ] `core.html`이 standalone — 외부 link 의존 없음 (CSS 인라인, image 상대 경로).
+- [ ] `<paper-id>_core.html`이 standalone — 외부 link 의존 없음 (CSS 인라인, image 상대 경로).
 - [ ] `figures/` 안의 PNG 파일이 *Figure N에 정확히 대응*.
-- [ ] `core-with-figures.md`는 *원본 core.md*와 별개로 유지 (원본 보존).
+- [ ] `<paper-id>_core-with-figures.md`는 *원본 <paper-id>_core.md*와 별개로 유지 (원본 보존).
 - [ ] 모든 Prefix (`해석:` 등)가 HTML에서 *시각적으로 구분*.
 - [ ] Table이 HTML `<table>`로 변환됨 (markdown extension `tables`).
 - [ ] TOC (목차)가 자동 생성됨 (긴 분석 노트에 유용).
@@ -226,4 +226,4 @@ JavaScript 또는 CSS regex로 *분석 노트의 prefix line*을 자동 highligh
 - **page-level과 panel-level은 *덮어쓰기*.** 둘 다 같은 `figures/figure-N.png` 파일에 저장. 마지막 실행 모드가 남음.
 - **figure-map.json은 *수정 후 보존*** — 다음 실행 시 자동 매핑 대신 이 파일을 우선 사용.
 - **본 skill은 분석을 *읽기 좋게 표현*만 한다.** 분석 *내용*은 core-* / lens-* 가 만든다.
-- **lens-industry.md의 *민감 정보*는 HTML에 그대로 노출됨.** 외부 공유 전 본인이 검토.
+- **<paper-id>_lens-industry.md의 *민감 정보*는 HTML에 그대로 노출됨.** 외부 공유 전 본인이 검토.

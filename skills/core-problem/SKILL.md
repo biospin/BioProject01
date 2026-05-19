@@ -1,6 +1,6 @@
 ---
 name: core-problem
-description: Analyze the problem definition and research purpose for the objective core.md section. Use to explain why this work became necessary, what prior approaches achieved and failed to solve, what gap led to the proposed work, and what basic concepts are needed. Outputs the "문제 정의 및 연구 목적" portion of core.md.
+description: Analyze the problem definition and research purpose for the objective <paper-id>_core.md section. Use to explain why this work became necessary, what prior approaches achieved and failed to solve, what gap led to the proposed work, and what basic concepts are needed. Outputs the "문제 정의 및 연구 목적" portion of <paper-id>_core.md.
 ---
 
 # Core Problem
@@ -11,7 +11,7 @@ description: Analyze the problem definition and research purpose for the objecti
 ## Source grounding
 - Source grounding 원칙은 `skills/source-grounding/SKILL.md`를 따른다.
   본 skill의 출력에서도 `해석:` / `외부 맥락:` / `추정:` / `미제공:` / `질문:` / `검토필요:` 표기를 동일하게 사용한다.
-- 출력은 `analysis/<primary-topic>/<paper-id>/core.md`의 "문제 정의 및 연구 목적" 섹션에 누적된다.
+- 출력은 `analysis/<primary-topic>/<paper-id>/<paper-id>_core.md`의 "문제 정의 및 연구 목적" 섹션에 누적된다.
 
 ## 언어 규칙
 - 기본 출력은 한국어로 작성한다.

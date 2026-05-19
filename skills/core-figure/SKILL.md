@@ -1,6 +1,6 @@
 ---
 name: core-figure
-description: Analyze figures for the objective core.md section, and when useful extract one image per figure panel using the bundled scripts. Use when explaining why each figure was included, inferring which claim the figure supports, describing each panel (a, b, c, d...) using captions and main text, or cropping panels from the source PDF.
+description: Analyze figures for the objective <paper-id>_core.md section, and when useful extract one image per figure panel using the bundled scripts. Use when explaining why each figure was included, inferring which claim the figure supports, describing each panel (a, b, c, d...) using captions and main text, or cropping panels from the source PDF.
 ---
 
 # Core Figure
@@ -11,7 +11,7 @@ description: Analyze figures for the objective core.md section, and when useful 
 ## Source grounding
 - Source grounding 원칙은 `skills/source-grounding/SKILL.md`를 따른다.
   본 skill의 출력에서도 `해석:` / `외부 맥락:` / `추정:` / `미제공:` / `질문:` / `검토필요:` 표기를 동일하게 사용한다.
-- 출력은 `analysis/<primary-topic>/<paper-id>/core.md`의 Figure 섹션에 누적된다.
+- 출력은 `analysis/<primary-topic>/<paper-id>/<paper-id>_core.md`의 Figure 섹션에 누적된다.
 - panel image 추출은 `analysis/<primary-topic>/<paper-id>/figures/`에 저장한다.
 
 ## 언어 규칙

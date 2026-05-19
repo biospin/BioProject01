@@ -73,7 +73,7 @@ description: Set up the per-document analysis folder, create paper-info.yaml, cu
 
 ## Part 2. paper-info.yaml — Single Source of Truth
 
-document folder의 메타데이터는 모두 `paper-info.yaml`에 모은다. citation, 다운로드 링크, 카테고리(domain / use_case / importance), 공유 대상, 우선순위, 연관 자료가 한 곳에 있어야 분석 결과(`core.md`, `lens-*.md`)에서 일관되게 참조 가능하다.
+document folder의 메타데이터는 모두 `paper-info.yaml`에 모은다. citation, 다운로드 링크, 카테고리(domain / use_case / importance), 공유 대상, 우선순위, 연관 자료가 한 곳에 있어야 분석 결과(`<paper-id>_core.md`, `lens-*.md`)에서 일관되게 참조 가능하다.
 
 > 파일명 주의: 분석 대상이 paper가 아닌 경우에도 파일명은 `paper-info.yaml`로 유지한다 (이미 다른 skill·문서가 이 이름을 참조). 내용은 `document_type`에 따라 자유롭게 분기.
 
@@ -452,7 +452,7 @@ python3 skills/source-grounding/scripts/fetch_sources.py \
    - 실패 시 **publisher landing page 크롤링** (selectors per publisher).
 3. `sources/abstract.txt`에 저장, `abstract_text.status: downloaded`.
 4. `abstract-analysis` skill 호출.
-5. 나중에 full paper로 확장 시 PDF만 추가하면 됨. `abstract.txt`는 보존, `core.md`를 새로 생성.
+5. 나중에 full paper로 확장 시 PDF만 추가하면 됨. `abstract.txt`는 보존, `<paper-id>_core.md`를 새로 생성.
 
 ### 5.4 Non-paper reference (학회/기업/리포트/뉴스/블로그)
 

@@ -1,6 +1,6 @@
 ---
 name: core-methods
-description: Analyze the methodology for the objective core.md section. Always invoked, with adaptive depth — full probabilistic/statistical analysis for method-centric papers, method taxonomy for review papers, protocol summary for biology-finding papers, and brief notes for non-paper materials.
+description: Analyze the methodology for the objective <paper-id>_core.md section. Always invoked, with adaptive depth — full probabilistic/statistical analysis for method-centric papers, method taxonomy for review papers, protocol summary for biology-finding papers, and brief notes for non-paper materials.
 ---
 
 # Core Methods
@@ -26,7 +26,7 @@ description: Analyze the methodology for the objective core.md section. Always i
 ## Source grounding
 - Source grounding 원칙은 `skills/source-grounding/SKILL.md`를 따른다.
   본 skill의 출력에서도 `해석:` / `외부 맥락:` / `추정:` / `미제공:` / `질문:` / `검토필요:` 표기를 동일하게 사용한다.
-- 출력은 `analysis/<primary-topic>/<paper-id>/core.md`의 "방법론" 섹션에 누적된다.
+- 출력은 `analysis/<primary-topic>/<paper-id>/<paper-id>_core.md`의 "방법론" 섹션에 누적된다.
 
 ## 목표
 
