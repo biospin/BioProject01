@@ -1,6 +1,6 @@
 # Topic: RNA-velocity
 
-마지막 갱신: 2026-05-19
+마지막 갱신: 2026-05-22
 
 ## Papers (primary topic으로 등록된 것)
 
@@ -11,4 +11,4 @@
 
 | Paper | Primary topic | Year | Venue | Importance |
 |---|---|---|---|---|
-| [li-2023-multivelo](../epigenomic-lag/li-2023-multivelo/) | epigenomic-lag | 2023 | Nature Biotechnology |  |
+| [li-2023-multivelo](../epigenomic-lag/li-2023-multivelo/) | epigenomic-lag | 2023 | Nature Biotechnology | 상 |
