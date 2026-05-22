@@ -2,6 +2,88 @@
 
 이 프로젝트는 scientific paper를 분석하고 구조화된 노트를 `analysis/<primary-topic>/<paper-id>/` 아래에 저장한다. 분석 결과는 **객관적 분석(core)** 과 **두 가지 해석 시선(academic / industry)** 으로 분리한다. `AGENTS.md`는 라우터 역할만 담당한다. 자세한 작성 규칙은 `skills/` 아래의 local skill에 있다.
 
+본 시스템은 paper가 1차 대상이지만 preprint, 학회 자료, industry/corporate 리포트, government/regulatory 문서, white paper, 블로그, 뉴스, webinar 등도 동일한 분석 흐름으로 지원한다 (자세한 분기는 `skills/source-grounding/SKILL.md` Part 7).
+
+## Quick Start (처음 사용자 또는 새 분석 시작)
+
+**분석 시작에 필요한 최소 정보는 한 줄이다.** 자료 종류별로 다음 패턴 중 하나로 시작하면 폴더 생성·`paper-info.yaml` seed·소스 다운로드·분석 진행이 자동으로 흘러간다.
+
+### Paper (기본 — 가장 자주)
+```
+DOI: 10.1038/s41587-022-01476-y 분석해줘
+```
+또는 PDF만 있을 때:
+```
+이 논문 분석해줘: ~/Downloads/multivelo.pdf
+```
+또는 publisher landing URL:
+```
+https://www.nature.com/articles/s41587-022-01476-y 분석해줘
+```
+
+### Preprint
+```
+https://www.biorxiv.org/content/10.1101/2022.12.13.520240v1 분석해줘
+```
+도메인이 bioRxiv·arXiv·medRxiv면 `document_type: preprint`로 자동 설정.
+
+### Industry / Corporate (DOI 없음)
+```
+~/Downloads/bcg-cell-therapy-2024.pdf BCG 2024 cell therapy 시장 리포트로 분석
+~/Downloads/illumina-wp-2024.pdf Illumina 2024 white paper로 분석
+```
+발행기관·연도·자료 종류를 prompt 안에 한 줄로 적는다. 파일명에 `wp`, `whitepaper` 등 단서가 있으면 자동 추론.
+
+### Government / Regulatory
+```
+~/Downloads/fda-guidance-cell-2024.pdf FDA 2024 cell therapy guidance로 분석
+```
+URL이 `fda.gov`, `ema.europa.eu`, `nih.gov` 등이면 자동 추론.
+
+### Web 자료 (블로그 / 뉴스 / 웨비나)
+```
+https://example.com/article 블로그로 분석
+https://www.statnews.com/... 뉴스로 분석
+https://www.youtube.com/watch?v=... 웨비나로 분석 (발표자: <name>)
+```
+URL 도메인으로 `blog` / `news` / `webinar` 자동 추론. webinar는 발표자 1줄 명시 권장.
+
+### 자료 종류가 모호할 때
+```
+이 자료 분석해줘: ~/Downloads/something.pdf
+```
+- Claude가 PDF 메타데이터 + 첫 페이지 보고 추측
+- 모호하면 **1줄 open-ended 질문**: "이 자료의 종류를 알려주세요 (paper / preprint / industry-report / whitepaper / government-report / blog / news / 기타)"
+
+### Topic 결정
+- 기존 topic 사용: `analysis/_index/papers.csv` 또는 `analysis/_index/<topic>.md` 참고. Claude가 자동 추천 후 사용자 확정.
+- 새 topic 필요: Claude가 kebab-case로 제안 후 사용자 확정.
+
+### 자동 수행되는 것
+1. `analysis/<topic>/<paper-id>/` 폴더 생성 (paper-id는 `<lastname>-<year>-<short-keyword>` 자동 생성).
+2. `paper-info.yaml` seed (Crossref API · PDF 메타 · URL · 또는 사용자 1줄 응답 기반).
+3. `sources/` 자동 download 시도 (`skills/source-grounding/scripts/fetch_sources.py`, Part 4.0 정책).
+   - Open access면 즉시 성공.
+   - Paywall이면 시도한 fallback 체인 + 최종 download URL을 안내, 사용자가 PDF를 `sources/`에 드롭.
+4. BibTeX 생성 (`sources/<paper-id>.bib`).
+5. 분석 진행:
+   - paper / preprint / conference-paper → `core-*` 전부 + `lens-academic` + `lens-industry` + `methodology-brief`.
+   - non-paper (Part 7.3) → 경량 흐름 (`lens-industry` 중심, `methods`·`figure`·`table`은 자료에 따라 선택적).
+6. **HTML report 생성 (default on)**:
+   - `core-to-html` skill 자동 호출 → `<paper-id>_core.html` (Figure·Table 이미지 임베드) + `figures/` 폴더 생성.
+   - 옵션: `<paper-id>_core-with-figures.md` (VS Code preview용) 동시 생성.
+   - 사용자가 prompt에 "HTML 생략", "skip html", "markdown only" 등 명시하면 skip.
+
+### 사용자가 직접 해야 할 일 (자동 실패 시만)
+- `sources/`에 PDF/supplementary 직접 드롭 → Claude가 자동 감지 + rename + yaml 갱신 + 분석 재개 (Part 4.3.1).
+- 모호한 종류 1줄 답변.
+- 새 topic 명명 확정.
+
+### 진행 중 체크: `analysis/_index/`
+`build_index.py`가 자동 갱신하는 `_index/papers.csv`, `_index/<topic>.md`에서 진행 상태(`analysis_status_short`), importance, use_case 등을 한눈에 확인 가능.
+
+---
+
 ## 출력물의 사용자
 
 - **Academic lens**: 연구자가 후속 논문을 설계하거나, 본인 논문·제안서·학회 발표에서 인용하기 위해 본다. 저자 한계, 분석자 판단, 다음 논문 아이디어, citation 후보가 중심.
@@ -139,6 +221,32 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
    이 단락은 별도 skill로 빼지 않고 *분석 마무리 단계*에서 LLM이 직접 작성한다 (core-* 출력을 모아 압축).
 
 각 단계의 출력은 위 출력 경로의 해당 파일에 누적해 저장한다. 한 skill이 다른 skill의 출력을 참조할 수 있다 (예: `lens-industry`는 `core-results`의 수치를 인용).
+
+## core.md 섹션 구조 (정합성 규칙)
+
+`<paper-id>_core.md`는 `/clear`·`/compact` 후 재생성해도 *같은 구조*가 나오도록 다음 top-level 섹션을 **순서·이름 그대로** 사용한다. paper-style 변형(예: clinical paper의 Patients/Cohort)은 sub-section 수준에서만 허용.
+
+1. **Executive Summary** — 분석 마무리 단계에 추가 (3~5문장).
+2. **Identity** — title / authors / year / venue / DOI / citation key (paper-info.yaml의 Identity 블록 축약).
+3. **Background** — 배경 스토리, 기본 개념, 이 논문의 필요성. `core-problem` skill 출력.
+4. **Methods** — formal task → 확률/통계 구조 → 핵심 method insight → 이전 방법과 차이 → Results에서 효과 → Method 한계. `core-methods` skill 출력.
+5. **Results** — Dataset 1..N → 전체 결과 요약 (+ simulation/ablation 있으면 sub-section). `core-results` skill 출력.
+6. **Figures** — 본문 Figure 1..N → Extended Data Figures (해당 시). `core-figure` skill 출력.
+7. **Tables** — 본문 Table → Supplementary Tables. `core-table` skill 출력. (본문 정식 Table 없으면 "본문에 정식 Table 없음" 한 줄로 표시.)
+8. **Supplementary Information** — Supplementary Notes / 추가 Figure / 추가 Table 정리.
+9. **분석 자체에 대한 메모** (선택) — 분석자가 남기는 self-note. 누락된 검증, 후속 질문, 재검토 항목.
+
+### 표기 규칙
+
+- Section name은 위 **영어 단어 그대로** (Executive Summary, Identity, Background, ...). 한국어 번역 추가 표기 금지 ("Background (배경)" 같은 형태 X).
+- Top-level은 `##` 수준. Sub-section은 `###`, sub-sub는 `####`.
+- 번호 매김 사용 안 함 (`## 1. Background` 형태 X). 순서는 위 8 + 1개로 고정.
+- Figure/Table sub-section 안에서는 다음 3개 sub-sub를 권장 (`####` 수준): "패널별 설명", "본문에서 강조한 비교", "해석 시 주의점".
+- 페이지 ref·accession ID는 본문 inline에 (예: "Dataset 1 — 10x Multiome E18 mouse brain (Wang 2020, GSE140203)").
+
+### 검증
+
+본 정합성 규칙이 지켜졌는지 확인은 build_index 같은 별도 도구가 아닌, **LLM이 마무리 단계에서 self-check**한다. 누락된 섹션 있으면 *그 사유*를 본문에 명시 (예: "## Tables\n본문에 정식 Table 없음.").
 
 ## Abstract-only Workflow
 

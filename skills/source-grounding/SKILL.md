@@ -348,6 +348,38 @@ mkdir -p analysis/<primary-topic>/<paper-id>/sources
 
 ## Part 4. 다운로드 워크플로우
 
+### 4.0 Default policy: auto-fetch before asking
+
+새 paper 분석 요청이 들어왔을 때 default 흐름은 **fetch_sources.py 자동 시도 → 실패 시 안내 → 사용자 manual provision** 순서다. 사용자에게 "PDF를 어떻게 받을지" 다지선다로 묻기 *전에* 일단 자동 fetch부터 시도한다.
+
+**적용 조건**:
+
+1. `analysis/<primary-topic>/<paper-id>/sources/` 폴더가 비어 있거나, 폴더는 있지만 `<paper-id>.pdf`(또는 document_type 해당 원문 파일)가 없음.
+2. `paper-info.yaml`에서 `doi` 또는 publisher URL을 추출 가능.
+
+**시퀀스**:
+
+1. paper-info.yaml seed 생성 (DOI / URL / title 등 기본 정보. Part 3.2).
+2. `fetch_sources.py` 자동 실행 (Part 4.1, fallback chain Part 4.3).
+   `--allow-scihub`는 default off.
+3. 결과 평가:
+   - **모두 성공** → 분석 진행. 사용자에게 "fetch 성공: paper.pdf + supp N개 받음" 한 줄만 보고.
+   - **일부/전부 실패** → Part 4.4의 형식으로 *시도한 경로 + 최종 download URL + 권장 다음 행동*을 안내하고 사용자의 manual provision을 기다린다.
+4. 사용자가 PDF를 `sources/`에 두면 Part 4.3.1의 자동 rename + yaml 갱신 흐름으로 이어진다.
+
+**이 정책을 건너뛰는 예외**:
+
+- 사용자가 명시적으로 "PDF 직접 넣을게" / "fetch 건너뛰어" / "이미 받아둔 파일 쓸게"라고 말한 경우.
+- `paper-info.yaml`이 없고 DOI/URL도 추출 불가 → seed 단계로 돌아가 사용자에게 최소 정보(title 또는 DOI) 요청.
+- 사용자가 abstract-only 분석을 명시적으로 선택한 경우 (Part 5.3).
+
+**이 정책의 효과**:
+
+- 사용자가 매번 다지선다에 답하지 않아도 fetch flow를 *밟아본 후* manual 단계로 자연스럽게 연결.
+- open access paper는 즉시 자동 진행, paywall paper는 한 단계만에 사용자 manual로 fallback.
+- fetch_sources.py 동작이 *모든 분석에서 default로 검증*되므로 script 자체의 신뢰성 지속 관찰 가능.
+- 사용자가 skill을 호출할 때 명시적 옵션 선택 없이도 합리적 default 동작을 기대 가능 (stateless reproducibility).
+
 ### 4.1 자동 다운로드 — fetch_sources.py
 
 `skills/source-grounding/scripts/fetch_sources.py`가 `paper-info.yaml`을 읽어 `sources/` 아래 파일을 다운로드한다.
@@ -461,8 +493,9 @@ python3 skills/source-grounding/scripts/fetch_sources.py \
 ### 5.5 이미 paper-info.yaml이 있는 경우
 
 1. 기존 yaml을 로드.
-2. 사용자가 추가/수정 요청한 부분만 갱신.
-3. `workflow.analysis_status`에 따라 어디서부터 이어갈지 결정.
+2. **sources 무결성 점검**: `sources/<paper-id>.pdf` (또는 해당 document_type의 원문 파일)가 실재하는지 확인. 없으면 **Part 4.0 정책에 따라 fetch_sources.py를 자동 실행**한 뒤 실패 시 사용자에게 manual provision 안내.
+3. 사용자가 추가/수정 요청한 부분만 갱신.
+4. `workflow.analysis_status`에 따라 어디서부터 이어갈지 결정.
 
 ---
 
