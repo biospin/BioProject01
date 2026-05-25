@@ -243,6 +243,7 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
 - 번호 매김 사용 안 함 (`## 1. Background` 형태 X). 순서는 위 8 + 1개로 고정.
 - Figure/Table sub-section 안에서는 다음 3개 sub-sub를 권장 (`####` 수준): "패널별 설명", "본문에서 강조한 비교", "해석 시 주의점".
 - 페이지 ref·accession ID는 본문 inline에 (예: "Dataset 1 — 10x Multiome E18 mouse brain (Wang 2020, GSE140203)").
+- **수식은 LaTeX `$...$` (inline) / `$$...$$` (display) 사용**. backtick code span(`` `...` ``)에 수식을 넣지 않는다 — `core-to-html`의 MathJax 렌더링에서 code span은 의도적으로 제외되므로 HTML에서 raw text로 표시된다. Greek/Sum/Expectation은 LaTeX 명령(`\alpha`, `\rho`, `\sum`, `\mathbb{E}`, `\mathrm{KL}`)으로. 자세한 규칙은 `skills/core-methods/SKILL.md` 언어 규칙 참고.
 
 ### 검증
 

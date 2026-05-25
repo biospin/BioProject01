@@ -7,6 +7,10 @@
 # Python virtual environment (per-machine, not for sharing)
 .venv/
 
+# Python bytecode cache
+__pycache__/
+*.pyc
+
 # Source binaries — copyrighted, never commit. Stubs (.url, .bib, abstract.txt)
 # under sources/ are NOT excluded by these patterns and may be committed.
 analysis/**/sources/*.pdf
