@@ -621,18 +621,44 @@ def augment_markdown_with_figures(md_text: str, figures_dir: Path,
 # ---------------------------------------------------------------------------
 
 
+# Skip table extraction on supp PDFs whose filenames imply non-data content.
+# Override per-run with --scan-all-supp.
+NON_DATA_PDF_FILENAME_PATTERNS = (
+    "peer-review",
+    "reporting-summary",
+    "review-file",
+    "referee",
+)
+
+# Cheap pre-filter: only run pymupdf's expensive find_tables() on pages
+# whose plain text actually contains a "Table N" / "Supplementary Table N"
+# caption. find_tables() costs ~1-3 s/page; get_text() costs ~10 ms/page.
+TABLE_CAPTION_FAST_RE = re.compile(
+    r"(?:Supp(?:lementary|\.)?\s+)?Table\s+\d+\s*[|:.]",
+    re.IGNORECASE,
+)
+
+
 def extract_tables_from_pdf(pdf_path: Path) -> list[dict]:
     """Return a list of {label, page, data, bbox} for tables in a single PDF.
 
     Uses pymupdf's page.find_tables() (v1.23+). Label inferred from the
     nearest 'Table N' / 'Supplementary Table N' caption on the same page.
+
+    Performance: pre-filters pages via TABLE_CAPTION_FAST_RE so find_tables()
+    only runs on pages with table-caption text. 10-50x speedup on docs
+    where most pages have no tables (peer-review files, figure-only supp).
     """
     if not pdf_path.exists():
         return []
     out: list[dict] = []
     doc = fitz.open(pdf_path)
     try:
-        for page_num in range(len(doc)):
+        candidate_pages: list[int] = [
+            i for i in range(len(doc))
+            if TABLE_CAPTION_FAST_RE.search(doc[i].get_text("text"))
+        ]
+        for page_num in candidate_pages:
             page = doc[page_num]
             try:
                 tf = page.find_tables()
@@ -775,52 +801,97 @@ def reconstruct_table_from_page_text(text: str, source: str, page_num: int) -> d
     }
 
 
-def collect_tables_from_paper(yaml_dir: Path, data: dict) -> dict[str, dict]:
+def _pdf_fingerprint(pdf_path: Path) -> list:
+    """Cache key entry per PDF — invalidate on content change."""
+    if not pdf_path.exists():
+        return [str(pdf_path), "missing"]
+    st = pdf_path.stat()
+    return [str(pdf_path), st.st_mtime_ns, st.st_size]
+
+
+def collect_tables_from_paper(yaml_dir: Path, data: dict,
+                              scan_all_supp: bool = False,
+                              cache_file: Path | None = None) -> dict[str, dict]:
     """Walk paper.local + supplementary[].local PDFs and collect tables.
 
     Tries pymupdf's find_tables() first. Falls back to text-based
     reconstruction for transposed supplementary tables that find_tables()
     cannot parse.
+
+    Performance:
+    - Skips supp PDFs whose filename matches NON_DATA_PDF_FILENAME_PATTERNS
+      (peer review, reporting summary, etc.) — opt in via scan_all_supp=True.
+    - mtime-based cache: cache_file stores result + per-PDF fingerprint;
+      second run is ~instant if no PDF changed.
+    - Page-level pre-filter inside extract_tables_from_pdf and the text
+      fallback below — only pages with 'Table N' caption are touched.
     """
     sources = data.get("sources") or {}
-    found: dict[str, dict] = {}
 
-    def absorb_find_tables(pdf_path: Path, source_label: str) -> None:
-        for t in extract_tables_from_pdf(pdf_path):
+    # Resolve which PDFs to scan (after filename filter).
+    pdf_list: list[tuple[Path, str]] = []
+    paper_local = (sources.get("paper") or {}).get("local")
+    if paper_local:
+        pdf_list.append((yaml_dir / paper_local, "paper"))
+    for i, supp in enumerate(sources.get("supplementary") or []):
+        local = supp.get("local")
+        if not local:
+            continue
+        name = Path(local).name.lower()
+        if not scan_all_supp and any(p in name for p in NON_DATA_PDF_FILENAME_PATTERNS):
+            print(f"  skipping {local} (non-data filename — use --scan-all-supp to override)")
+            continue
+        pdf_list.append((yaml_dir / local, f"supp-{i+1}"))
+
+    fingerprint = [_pdf_fingerprint(p) for p, _ in pdf_list]
+
+    # Cache hit?
+    if cache_file and cache_file.exists():
+        try:
+            cached = json.loads(cache_file.read_text(encoding="utf-8"))
+            if cached.get("fingerprint") == fingerprint:
+                n = len(cached.get("found") or {})
+                print(f"  table cache hit ({n} table(s)) — {cache_file.relative_to(REPO_ROOT)}")
+                return cached.get("found") or {}
+        except Exception:
+            pass
+
+    # Cold path: actually extract.
+    found: dict[str, dict] = {}
+    for pdf, source_label in pdf_list:
+        for t in extract_tables_from_pdf(pdf):
             label = t.get("label")
             if not label or label in found:
                 continue
             t["source"] = source_label
             found[label] = t
-
-    def absorb_text_fallback(pdf_path: Path, source_label: str) -> None:
-        if not pdf_path.exists():
-            return
-        doc = fitz.open(pdf_path)
+        # Text fallback: same page pre-filter so peer-review etc. stays cheap.
+        if not pdf.exists():
+            continue
+        doc = fitz.open(pdf)
         try:
             for page_num in range(len(doc)):
-                if "table" not in doc[page_num].get_text().lower():
-                    continue
                 text = doc[page_num].get_text()
+                if not TABLE_CAPTION_FAST_RE.search(text):
+                    continue
                 rec = reconstruct_table_from_page_text(text, source_label, page_num + 1)
                 if rec and rec["label"] not in found:
+                    rec["source"] = source_label
                     found[rec["label"]] = rec
         finally:
             doc.close()
 
-    paper_local = (sources.get("paper") or {}).get("local")
-    if paper_local:
-        pdf = yaml_dir / paper_local
-        absorb_find_tables(pdf, "paper")
-        absorb_text_fallback(pdf, "paper")
-
-    for i, supp in enumerate(sources.get("supplementary") or []):
-        local = supp.get("local")
-        if not local:
-            continue
-        pdf = yaml_dir / local
-        absorb_find_tables(pdf, f"supp-{i+1}")
-        absorb_text_fallback(pdf, f"supp-{i+1}")
+    # Save cache.
+    if cache_file:
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(
+                json.dumps({"fingerprint": fingerprint, "found": found},
+                           indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+        except Exception as e:
+            print(f"  warning: failed to write table cache: {e}", file=sys.stderr)
 
     return found
 
@@ -1078,6 +1149,10 @@ def main() -> int:
                         help="Additional .md files to include in the HTML (comma-separated)")
     parser.add_argument("--dpi", type=int, default=150, help="PNG export DPI (default 150)")
     parser.add_argument("--no-toc", action="store_true", help="Skip TOC sidebar")
+    parser.add_argument("--no-tables", action="store_true",
+                        help="Skip PDF table extraction entirely (escape hatch for slow runs)")
+    parser.add_argument("--scan-all-supp", action="store_true",
+                        help="Scan ALL supp PDFs for tables; default skips peer-review/reporting-summary")
     args = parser.parse_args()
 
     folder = args.paper_folder.resolve()
@@ -1169,12 +1244,21 @@ def main() -> int:
                                               figure_map={})
 
     # Tables (main + supp PDFs)
-    pdf_tables = collect_tables_from_paper(folder, data)
+    if args.no_tables:
+        pdf_tables = {}
+        print("table extraction skipped (--no-tables)")
+    else:
+        pdf_tables = collect_tables_from_paper(
+            folder, data,
+            scan_all_supp=args.scan_all_supp,
+            cache_file=figures_dir / ".table_cache.json",
+        )
     if pdf_tables:
         print(f"extracted tables: {sorted(pdf_tables.keys())}")
         augmented = augment_markdown_with_tables(augmented, pdf_tables)
     else:
-        print("no PDF tables found via find_tables() or text fallback")
+        if not args.no_tables:
+            print("no PDF tables found via find_tables() or text fallback")
 
     # Expand ::: details Title ::: blocks into <details> disclosure widgets
     augmented = expand_details_blocks(augmented)

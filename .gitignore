@@ -27,6 +27,7 @@ analysis/**/sources/.paper_text.txt
 # Generated artifacts (re-built by build_html.py / build_index.py from yaml + sources)
 # Keep figure-map.json (may be hand-edited).
 analysis/**/figures/*.png
+analysis/**/figures/.table_cache.json
 analysis/**/*_core.html
 analysis/**/*_core-with-figures.md
 # Legacy unprefixed names (pre-paper-id naming convention)
