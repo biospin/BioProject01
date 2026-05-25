@@ -27,7 +27,7 @@
 ### Importance (1개 종합 등급)
 
 - **Level**: 상
-- **Perspective (1문장)**: 우리 HSPC 10x Multiome pipeline의 *직접 후속/대체 후보*이며, multi-sample 통합 + continuous (δ, κ) + Bayesian differential test가 MultiVelo로 못 했던 분석을 *바로 가능*하게 해주는 epigenomic-lag topic의 핵심 reference.
+- **Perspective (1문장)**: 우리 HSPC 10x Multiome pipeline의 *직접 후속/대체 후보*이며, multi-sample 통합 + continuous $(\delta, \kappa)$ + Bayesian differential test가 MultiVelo로 못 했던 분석을 *바로 가능*하게 해주는 epigenomic-lag topic의 핵심 reference.
 
 ---
 
@@ -37,9 +37,9 @@
 
 - **Sample size**:
   - EB: 4,240 cells × 3,138 genes (신규, single experiment).
-  - HSPC×2 integration: 17,667 cells × 892 genes (다른 donor, 같은 protocol).
+  - HSPC$\times 2$ integration: 17,667 cells × 892 genes (다른 donor, 같은 protocol).
   - HSPC + macrophage: 9,908 cells × 929 genes (같은 sample의 cytokine treatment paired).
-  - HSPC×2 + BMMC scRNA: 27,841 cells × 1,044 genes.
+  - HSPC$\times 2$ + BMMC scRNA: 27,841 cells × 1,044 genes.
   - 신규 dataset 모두 *single experiment per condition*. inter-donor biological replicate는 HSPC만 2 donor.
   - `해석: cell scale은 *충분히 큼* (모든 dataset 4k+ cells). 그러나 *biological replicate* (donor / experimental session)는 여전히 적음. 의료·임상 grade evidence로는 추가 cohort 검증 필요.`
 
@@ -57,11 +57,11 @@
   - Gene filtering: highly variable gene + 10% cells expressed threshold (§"Automated data preprocessing"). Threshold sensitivity 분석 부재.
   - Cell QC: MAD (median absolute deviation) 기반 outlier 자동 제거 (Supplementary Fig. 22a). same threshold across all datasets라고만 명시.
   - cell cycle effect: RNA expression에서만 regress out — *unspliced/spliced count는 unchanged*. 이는 MultiVelo (`@li2023multivelo`)와 동일한 한계.
-  - Macrophage vs DC: DC cluster n=221, Macrophage n=850. 4배 차이 cluster size에서 Bayes factor가 robust한지 별도 검증 부재.
+  - Macrophage vs DC: DC cluster $n=221$, Macrophage $n=850$. 4배 차이 cluster size에서 Bayes factor가 robust한지 별도 검증 부재.
 
 - **Multiple testing**:
-  - Differential dynamics test: posterior expected FDP control (Eq. 25), default α_FDR=0.05.
-  - 다만 Fig. 6b volcano plot의 displayed p-values는 *unadjusted* — caption에서 "have been verified to have a False Discovery Rate < 0.05"로 명시이나, 검증 protocol 본문 미상세.
+  - Differential dynamics test: posterior expected FDP control (Eq. 25), default $\alpha_{\mathrm{FDR}}=0.05$.
+  - 다만 Fig. 6b volcano plot의 displayed p-values는 *unadjusted* — caption에서 "have been verified to have a False Discovery Rate $< 0.05$"로 명시이나, 검증 protocol 본문 미상세.
   - `해석: FDR < 0.05 verification은 *self-evaluated posterior expectation* — 실제 calibration (permutation, known null set)은 부재. clinical grade decision making에는 추가 validation 필요.`
 
 ### 2.2 임상·기술적 제약
@@ -162,7 +162,7 @@
 
 - **제품 카테고리 후보**:
   - **Software (SW)**: 자체 multi-omic analysis platform 또는 cloud SaaS에 MultiVeloVAE 통합 (BSD-3-Clause 이므로 직접 wrapping). 단순 wrapping은 *차별화 어려움* — 가치는 *vertical-specific UX* (예: HSPC differentiation dashboard, organoid 분화 monitoring)에 있음.
-  - **Diagnostic (Dx)**: 직접적 Dx 아님. 단 *differentiation stage signature* (cell-type-specific δ/κ pattern, lineage-specific priming gene)를 *biomarker panel*로 가공하면 hematologic malignancy stratification, immunotherapy response prediction에 활용 가능 (장기 R&D).
+  - **Diagnostic (Dx)**: 직접적 Dx 아님. 단 *differentiation stage signature* (cell-type-specific $\delta/\kappa$ pattern, lineage-specific priming gene)를 *biomarker panel*로 가공하면 hematologic malignancy stratification, immunotherapy response prediction에 활용 가능 (장기 R&D).
   - **Service**: multi-omic differentiation analysis as a *contract service* (CRO offering). MultiVeloVAE + downstream interpretation 일괄 제공.
   - **Therapeutic**: 직접적 therapeutic 후보 없음. 단 *in silico TF perturbation (Fig. 7)*이 *drug target nomination*에 기여 가능 (장기 R&D pipeline).
 
@@ -176,7 +176,7 @@
   - Bayesian differential dynamics test (Eq. 22-25)는 *novel framework* — 변형 patent 가능성 검토 가치.
 
 - **MVP 시나리오**:
-  - **MVP 1 — HSPC differentiation dashboard (continuous version)**: 우리 HSPC multi-sample multi-omic dataset → MultiVeloVAE fit → cell-type-specific (δ, κ) heatmap + priming/decoupling gene rank + differential dynamics volcano plot → React/Streamlit UI. 1-2개월 prototyping.
+  - **MVP 1 — HSPC differentiation dashboard (continuous version)**: 우리 HSPC multi-sample multi-omic dataset → MultiVeloVAE fit → cell-type-specific $(\delta, \kappa)$ heatmap + priming/decoupling gene rank + differential dynamics volcano plot → React/Streamlit UI. 1-2개월 prototyping.
   - **MVP 2 — Multi-sample drug response analyzer**: 약물 처리 vs 미처리 cell multi-omic time-course → MultiVeloVAE cVAE로 두 sample integration + differential dynamics test로 *drug-induced driver gene* 식별. CRO offering or internal R&D tool.
   - **MVP 3 — In silico TF KO simulator**: pre-trained MultiVeloVAE model에 TF gene 입력 → perturbation force UMAP + fate probability change → drug target nomination 후보 자동 추출.
 
@@ -209,7 +209,7 @@
   - 누가: 본인 (technical lead)
   - 언제: 다음 sprint (2-3주 내)
   - 자원: GPU 환경 1대 (RTX 3060 12 GB+), 코드 install (1일), 우리 dataset preprocessing (3일), MultiVeloVAE fit (수 시간 GPU), 결과 해석 (3일), MultiVelo 결과와 head-to-head 비교 (3일)
-  - 성공 기준: ① 우리 HSPC에서 cell-type-specific (δ, κ) gradient 식별, ② MultiVelo discrete 4 state assignment와 confusion matrix, ③ velocity stream이 known lineage hierarchy와 일치, ④ runtime이 MultiVelo 대비 단축 확인.
+  - 성공 기준: ① 우리 HSPC에서 cell-type-specific $(\delta, \kappa)$ gradient 식별, ② MultiVelo discrete 4 state assignment와 confusion matrix, ③ velocity stream이 known lineage hierarchy와 일치, ④ runtime이 MultiVelo 대비 단축 확인.
 
 - **Welch lab contact (전략적)**
   - 누가: 본인 + (BD lead 선택적)
@@ -248,11 +248,11 @@
 ### 4.1 종합 등급
 
 - **Level**: 상
-- **Perspective (1문장)**: 우리 HSPC 10x Multiome pipeline의 *직접 후속/대체 후보*이며, multi-sample 통합 + continuous (δ, κ) + Bayesian differential test가 MultiVelo로 못 했던 분석을 *바로 가능*하게 해주는 epigenomic-lag topic의 핵심 reference.
+- **Perspective (1문장)**: 우리 HSPC 10x Multiome pipeline의 *직접 후속/대체 후보*이며, multi-sample 통합 + continuous $(\delta, \kappa)$ + Bayesian differential test가 MultiVelo로 못 했던 분석을 *바로 가능*하게 해주는 epigenomic-lag topic의 핵심 reference.
 - **등급 근거**:
   - 본 paper의 HSPC dataset이 *우리 dataset과 동일 platform* + 같은 protocol 계열 (CD34+ STIF expansion). fit 결과 직접 비교 가능.
   - Code (welch-lab/MultiVeloVAE) GitHub open, **BSD-3-Clause** → *우리 commercial product embed 가능*.
-  - Continuous (δ, κ) + cell-specific (k_c, ρ)이 우리 *cell-type-specific epigenomic-lag*  연구 question에 직접 매칭.
+  - Continuous $(\delta, \kappa)$ + cell-specific $(k_c, \rho)$이 우리 *cell-type-specific epigenomic-lag*  연구 question에 직접 매칭.
   - cVAE multi-sample inference는 우리가 추가 sample 확보 시 *바로 적용 가능* — MultiVelo로는 불가.
   - Bayesian differential dynamics test는 우리 *cohort comparison / drug time-course* 분석에 unique value.
   - GPU 가속으로 MultiVelo의 CPU EM 대비 *significantly faster* — 우리 production pipeline에 더 적합.
