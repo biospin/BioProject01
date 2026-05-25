@@ -213,12 +213,20 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
 5. **`<paper-id>_lens-academic.md` 작성** (`lens-academic`): 저자 한계 / 분석자 판단 / 매끄럽지 않은 지점 / 다음 논문 아이디어 / 본인 논문에서 인용할 후보 문장·수치. *학술적* 한계만 다룬다 (산업·규제·임상은 lens-industry로).
 6. **`<paper-id>_lens-industry.md` 작성** (`lens-industry`): 산업·규제·임상 리스크 / BD value & 상용화 가능성 / 전문가 코멘트(등급·활용 우선순위). 이 단계에서 `paper-info.yaml`의 `use_case`와 `importance`도 채운다.
 7. **`<paper-id>_methodology-brief.md` 작성** (`methodology-brief`): 재현·검토용 압축본. 우리 데이터에 적용/재현 가능한지 빠르게 판단하기 위한 메모.
-8. **Executive Summary (<paper-id>_core.md 맨 앞 1단락 추가)** — 위 모든 단계가 끝난 *후* LLM이 <paper-id>_core.md 맨 앞에 1단락(3~5문장)을 추가한다. 본인이 분석 노트를 다시 펴봤을 때 1초 안에 paper 그림을 파악하기 위함. 한계는 lens-* 참고하도록 짧게 언급, 본문 분석을 *압축한 진입점*. 형식:
+8. **Executive Summary (<paper-id>_core.md 맨 앞 추가)** — 위 모든 단계가 끝난 *후* LLM이 <paper-id>_core.md 맨 앞에 bullet 5종을 추가한다. 본인이 분석 노트를 다시 펴봤을 때 **1초 안에 paper 그림을 파악**하기 위함. 1단락 prose가 아니라 *scannable한 bold-labeled bullet* — 길더라도 시선이 한 번에 잡힘. 형식:
    ```markdown
    ## Executive Summary
-   [3~5문장: 무엇을 풀고자 하는 자료인지 + 핵심 방법 한 줄 + 가장 중요한 결과 한 줄 + 어디 쓸 수 있는지 한 줄 + 자세한 한계는 lens-* 참고]
+
+   - **무엇**: [무슨 문제를 풀고자 하는 자료인지, 핵심 contribution 1줄]
+   - **모델 / 방법**: [핵심 method 한 줄. 입력 → 출력, 수학 골격은 $...$ inline. AGENTS.md "표기 규칙"의 LaTeX 규칙 준수]
+   - **핵심 결과**:
+     - ① [Dataset/벤치마크 1] — 한 줄, 수치 1개 포함
+     - ② [Dataset/벤치마크 2] — 한 줄
+     - ③ ... (필요시 최대 5~6개. 같은 dataset의 결과는 묶어서 한 줄)
+   - **우리 적용**: [우리 프로젝트에 어떻게 쓸 수 있는지 한 줄. pipeline-applicable / methodology-reference / academic-citation 중 어느 use_case인지 단서]
+   - **심층**: 한계·재현 ROI는 `<paper-id>_lens-academic.md` / `<paper-id>_lens-industry.md` / `<paper-id>_methodology-brief.md` 참고.
    ```
-   이 단락은 별도 skill로 빼지 않고 *분석 마무리 단계*에서 LLM이 직접 작성한다 (core-* 출력을 모아 압축).
+   이 섹션은 별도 skill로 빼지 않고 *분석 마무리 단계*에서 LLM이 직접 작성한다 (core-* 출력을 모아 압축). 한 항목당 *최대 2줄*을 넘기지 않는다 — 풍부한 설명은 본문 sections에 두고, Executive Summary는 *진입점*에 집중.
 
 각 단계의 출력은 위 출력 경로의 해당 파일에 누적해 저장한다. 한 skill이 다른 skill의 출력을 참조할 수 있다 (예: `lens-industry`는 `core-results`의 수치를 인용).
 

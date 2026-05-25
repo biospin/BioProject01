@@ -124,6 +124,20 @@ python3 build_html.py analysis/<topic>/<paper-id> --include "lens-academic,lens-
 - `--include <skills>`: <paper-id>_core.md 외 추가 markdown 파일도 HTML에 포함 (쉼표 구분).
 - `--dpi <n>`: PNG export DPI (default 150). 인쇄용은 300, 빠른 미리보기는 100.
 - `--no-toc`: TOC 생성 안 함.
+- `--no-tables`: PDF table 추출 단계 자체를 skip (가장 빠름; core.md에 인용된 table은 raw text로 표시).
+- `--scan-all-supp`: supp PDF 전체를 table 스캔. **default는 `peer-review`, `reporting-summary`, `review-file`, `referee` 파일명 패턴은 자동 skip** (table이 거의 없으면서 길어 가장 비쌈).
+
+#### Table 추출 성능
+
+기본 동작이 자동으로 다음 최적화를 적용:
+
+1. **파일명 필터** (위 `--scan-all-supp`로 끔). Peer Review File 67p 같은 PDF는 처음부터 제외.
+2. **Page pre-filter**: 모든 PDF의 모든 페이지에 대해 `get_text()`로 *Table N* caption 정규식 빠르게 매칭 (~10 ms/page). 매칭되는 페이지에만 무거운 `page.find_tables()`(~1-3 s/page) 호출.
+3. **mtime cache**: 결과를 `figures/.table_cache.json`에 (PDF별 mtime + size fingerprint) 저장. 다음 실행 시 모든 PDF가 변경되지 않았으면 즉시 cached dict 반환 (~0.01s). 이 cache 파일은 `.gitignore`로 commit 차단.
+
+체감 효과 (li-2025-multivelovae처럼 supp PDF 합 67+24p 있는 경우):
+- 첫 실행: ~180s → ~20s (filter + pre-scan)
+- 재실행: ~180s → <1s (cache hit)
 
 ### 4.3 동작 단계
 

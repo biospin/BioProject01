@@ -8,7 +8,16 @@ Citation: `@li2025multivelovae` — Li C*, Gu Y*, Virgilio MC, Lee KH, Collins K
 
 ## Executive Summary
 
-MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete 4 state + binary chromatin opening rate*를 *continuous, cell-specific* coupling factor κ와 decoupling factor δ로 일반화하고, 여기에 *multi-sample conditional VAE + 모든 gene에 공통된 shared latent time + 부분적으로 겹치는 modality (multi-omic + scRNA-only)*  지원 + *Bayesian differential dynamics test*를 추가한 multi-omic RNA velocity framework다 (Methods §"Problem setup"–"Differential dynamics testing", Results §"MultiVeloVAE infers cell times..."–§"MultiVeloVAE identifies genes with differential dynamics..."). 핵심 모델은 chromatin accessibility c, unspliced u, spliced s를 입력받아 cell time t와 cell state z, 그리고 cell-gene별 chromatin opening rate k_c와 transcription rate ρ를 posterior로 추정하는 conditional autoencoding variational Bayes로, 학습은 ELBO 최대화로 수행한다 (Eq. 4–8). 핵심 결과는 ① RNA-only mode에서 scVelo / UniTVelo / DeepVelo / VeloVI / PyroVelocity / cellDancer 6개 baseline 대비 10개 scRNA-seq dataset에서 latent time correlation·GCBDir·Mann–Whitney U 모두에서 우위 (Fig. 2f), ② 신규 생성한 7-day human embryoid body (EB) 10x Multiome dataset에서 NANOG+ root cell + 3 germ layer trajectory 정확 회복 (Fig. 3a), ③ 두 HSPC 10x Multiome batch를 conditional VAE로 정렬해 scVI·Scanorama 대비 biological conservation metric에서 우위 (Fig. 4d-e), ④ 신규 macrophage differentiation dataset에서 Bayes factor + Gaussian process 기반 differential dynamics test로 macrophage vs DC 분기 driver gene을 통계적으로 식별 (Fig. 6), ⑤ scRNA-only sample에 chromatin in silico imputation 후 SPI1 / GATA1 knockout in silico perturbation까지 가능 (Fig. 7). 우리 HSPC multiome pipeline에서 MultiVelo를 *직접 대체 또는 보완*할 강력한 candidate이며, GPU 가속이 추가되어 MultiVelo 대비 runtime 단축 효과까지 있다 (Fig. 3h). 자세한 한계·재현 ROI는 `li-2025-multivelovae_lens-academic.md`, `li-2025-multivelovae_lens-industry.md` 참고.
+- **무엇**: MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete 4 state + binary chromatin opening rate*를 *continuous, cell-specific* coupling factor $\kappa$ + decoupling factor $\delta$로 일반화하고, 거기에 **multi-sample conditional VAE**, 모든 gene 공통 **shared latent time**, 부분적으로 겹치는 modality(multi-omic + scRNA-only) 지원, **Bayesian differential dynamics test**를 추가한 multi-omic RNA velocity framework.
+- **모델**: chromatin accessibility $c$, unspliced $u$, spliced $s$ 입력 → cell time $t$, cell state $z$, cell-gene별 chromatin opening rate $k_c$ + transcription rate $\rho$를 posterior로 추정 (conditional autoencoding variational Bayes, ELBO 최대화 — Methods Eq. 4–8).
+- **핵심 결과**:
+  - ① **RNA-only 벤치마크**: 10개 scRNA-seq dataset에서 6개 baseline (scVelo / UniTVelo / DeepVelo / VeloVI / PyroVelocity / cellDancer) 대비 latent time correlation · GCBDir · Mann–Whitney U 모두 우위 (Fig. 2f).
+  - ② **신규 EB dataset**: 7-day human embryoid body 10x Multiome — NANOG+ root cell + 3 germ layer trajectory 정확 회복 (Fig. 3a).
+  - ③ **HSPC 통합**: 두 HSPC 10x Multiome batch를 cVAE로 정렬, scVI · Scanorama 대비 biological conservation 우위 (Fig. 4d-e).
+  - ④ **Differential dynamics**: 신규 macrophage dataset에서 Bayes factor + GP 기반 검정으로 macrophage vs DC 분기 driver gene 통계적 식별 (Fig. 6).
+  - ⑤ **In silico perturbation**: scRNA-only sample에 chromatin imputation 후 SPI1 / GATA1 KO simulation까지 (Fig. 7).
+- **우리 적용**: HSPC multiome pipeline에서 MultiVelo를 *직접 대체 또는 보완*할 강력한 candidate. GPU 가속으로 MultiVelo 대비 runtime 단축까지 (Fig. 3h).
+- **심층**: 한계·재현 ROI는 `li-2025-multivelovae_lens-academic.md` / `li-2025-multivelovae_lens-industry.md` 참고.
 
 ---
 
