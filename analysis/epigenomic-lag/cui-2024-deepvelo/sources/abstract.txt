@@ -1,0 +1,1 @@
+DeepVelo extends RNA velocity to multi-lineage systems with cell-specific kinetics. It uses a graph convolutional network to infer gene-specific and cell-specific transcription, splicing, and degradation rates for complex differentiation dynamics.
