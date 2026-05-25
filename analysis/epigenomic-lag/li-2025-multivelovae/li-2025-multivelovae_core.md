@@ -2,7 +2,7 @@
 
 Citation: `@li2025multivelovae` — Li C*, Gu Y*, Virgilio MC, Lee KH, Collins KL, Welch JD. *Nat Commun* 16(1):11505 (2025). DOI: 10.1038/s41467-025-66287-6. PMCID: PMC12748740. (*equal contribution)
 
-> 본 분석은 `sources/li-2025-multivelovae.pdf` (24 page Nature Communications open access PDF) + `sources/abstract.txt` (PubMed) 만을 근거로 한다. Supplementary Note·Supplementary Figures (1~22) 본문은 다운로드되지 않아 일부 항목은 `미제공:`으로 표시한다. 외부 지식은 `외부 맥락:` 등 prefix로 분리한다.
+> 본 분석은 `sources/li-2025-multivelovae.pdf` (24 page Nature Communications open access PDF) + `sources/abstract.txt` (PubMed) + Supplementary 4종 (Supp-1 Figures S1–S23, Supp-2 Reporting Summary, Supp-3 Peer Review File, Supp-4 Source Data xlsx)을 근거로 한다. Supp 자료 추가 분석은 `## Supplementary Information` 절에 통합. 외부 지식은 `외부 맥락:` 등 prefix로 분리한다.
 
 ---
 
@@ -44,8 +44,8 @@ MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete
 
 ### 기본 개념
 
-- **유전자 발현 흐름** (Methods Eq. 4): `dc/dt = k_c α_c − α_c c` (chromatin), `du/dt = ρ α c − β u` (transcription), `ds/dt = β u − γ s` (splicing). 본 논문은 k_c와 ρ를 각각 *cell-specific [0,1] continuous variable*로 일반화. MultiVelo는 k_c, ρ를 binary indicator로 가정한 것에 비해 *flexible*.
-- **RNA velocity (scVelo dynamical)**: `du/dt = α^(k) − βu`, `ds/dt = βu − γs`. transcription rate가 induction(k=1) / repression(k=0) phase 내내 상수.
+- **유전자 발현 흐름** (Methods Eq. 4): $dc/dt = k_c \alpha_c - \alpha_c c$ (chromatin), $du/dt = \rho \alpha c - \beta u$ (transcription), $ds/dt = \beta u - \gamma s$ (splicing). 본 논문은 $k_c$와 $\rho$를 각각 *cell-specific [0,1] continuous variable*로 일반화. MultiVelo는 $k_c$, $\rho$를 binary indicator로 가정한 것에 비해 *flexible*.
+- **RNA velocity (scVelo dynamical)**: $du/dt = \alpha^{(k)} - \beta u$, $ds/dt = \beta u - \gamma s$. transcription rate가 induction($k=1$) / repression($k=0$) phase 내내 상수.
 - **VeloVAE** (Gu 2022, ref. 57): cell-specific *real-valued* relative transcription rate ρ ∈ [0,1]를 명시 추정. MultiVeloVAE의 직접 predecessor 중 하나.
 - **VAE / Conditional VAE**: autoencoder 구조의 latent z, t를 posterior로 estimate. cVAE는 sample label b를 conditioning variable로 추가해 latent space에서 batch effect 분리 (ref. 17 scVI 동일 전략).
 - **Coupling factor κ, Decoupling factor δ** (Methods Eq. 21): δ := k_c − ρ (range [−1,1]), κ := k_c + ρ − 1 (range [−1,1]). δ=1은 chromatin이 transcription보다 빠르게 열림 (priming or Model 2 decoupling), δ=−1은 Model 1 decoupling, κ=1은 coupled induction, κ=−1은 coupled repression. *thresholding하면 MultiVelo의 discrete state와 대응*하나 *cell마다 다른 값*을 허용.
@@ -69,17 +69,21 @@ MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete
 - **입력**: c ∈ R^{N×G} (chromatin accessibility, optional — RNA-only mode는 c=1로 고정), u ∈ R^{N×G} (unspliced), s ∈ R^{N×G} (spliced), b ∈ {1,…,B}^N (one-hot encoded sample/batch label, optional), optional 시간 prior p₀(t) ~ N(t_true, σ₀²) (cell-wise capture time이 있으면).
 - **출력**: ① cell time posterior q(t|x, b), cell state posterior q(z|x, b) (모두 Gaussian); ② gene-specific θ = [α_c, α, β, γ]; ③ cell-specific k_c, ρ; ④ batch-corrected (c, u, s) reconstruction; ⑤ 임의 variable의 differential test 결과 (Bayes factor, LRT p-value, FDR).
 - **추정 대상**: variational posterior q_φ(z, t | x, b), generative parameter θ_b per batch, optional q_φ(θ) (parameter uncertainty extension, §Methods "Estimating ODE parameter uncertainty" Eq. 16).
-- **중요한 hidden assumption**: (1) c, u, s 모두 *Gaussian observation noise* (MultiVelo와 동일), (2) latent prior p(z, t) = p(z)p(t)는 isotropic multivariate Gaussian, (3) chromatin은 *transcription보다 먼저* 열린다는 MultiVelo의 가정 유지 (Model 0 배제 — §Methods "Modeling chromatin accessibility and gene expression kinetics"), (4) gene별 ODE parameter는 sample 간 *유사*하다는 prior로 cross-sample regularization (Eq. 8 second term `λ Σ (θ_b − θ_r)²`), (5) k_c는 시간 무한대에서 chromatin steady-state expectation (`lim_{t→∞} c(t) = k_c`, Eq. 6).
+- **중요한 hidden assumption**: (1) $c$, $u$, $s$ 모두 *Gaussian observation noise* (MultiVelo와 동일), (2) latent prior $p(z, t) = p(z)p(t)$는 isotropic multivariate Gaussian, (3) chromatin은 *transcription보다 먼저* 열린다는 MultiVelo의 가정 유지 (Model 0 배제 — §Methods "Modeling chromatin accessibility and gene expression kinetics"), (4) gene별 ODE parameter는 sample 간 *유사*하다는 prior로 cross-sample regularization (Eq. 8 second term $\lambda \sum_b (\theta_b - \theta_r)^2$), (5) $k_c$는 시간 무한대에서 chromatin steady-state expectation ($\lim_{t \to \infty} c(t) = k_c$, Eq. 6).
 
 ### 확률 / 통계학적 구조
 
 - **Model family**: amortized variational inference + ODE generative. Encoder = MLP, Decoder = MLP + ODE analytical solution (Eq. 5 closed form). Generative ODE는 MultiVelo (`@li2023multivelo`)와 동일한 3-equation system (Eq. 4), 단 k_c, ρ가 *continuous cell-specific*.
-- **ELBO** (Eq. 7, multi-omic): `ELBO = Σᵢ E_{q(z,t|xᵢ,b)}[log p(cᵢ|z,t,b) + log p(uᵢ|z,t,b) + log p(sᵢ|z,t,b)] − KL(q(z|x,b)||p(z|b)) − KL(q(t|x,b)||p(t|b))`. Multi-sample loss (Eq. 8): `Loss = −ELBO + λ Σ_b (θ_b − θ_r)²` (θ_r은 reference batch parameter).
+- **ELBO** (Eq. 7, multi-omic):
+
+$$\mathrm{ELBO} = \sum_i \mathbb{E}_{q(z,t \mid x_i, b)}\!\left[\log p(c_i \mid z, t, b) + \log p(u_i \mid z, t, b) + \log p(s_i \mid z, t, b)\right] - \mathrm{KL}\!\left(q(z \mid x, b)\,\|\,p(z \mid b)\right) - \mathrm{KL}\!\left(q(t \mid x, b)\,\|\,p(t \mid b)\right)$$
+
+Multi-sample loss (Eq. 8): $\mathrm{Loss} = -\mathrm{ELBO} + \lambda \sum_b (\theta_b - \theta_r)^2$ ($\theta_r$은 reference batch parameter).
 - **Mixed RNA-only mode reconstruction** (Eq. 10): multi-omic cell에는 (c, u, s) 모두, RNA-only cell에는 (u, s)만 likelihood에 포함. pseudo-c=1로 placeholder.
-- **BasisVAE for gene mixture** (Eq. 12–14): gene 단위로 7개 cluster (induction-only / repression-only / complete의 조합) basis function. 각 gene은 categorical w로 *어느 basis로 generated*되었는지 표현. variational mixture of ODE — `Σ_k I{w=k} · F_k(t; θ)`. cluster 초기화는 ellipse fit 후 quantile-based vector + Dirichlet(5,5) Kolmogorov–Smirnov test.
+- **BasisVAE for gene mixture** (Eq. 12–14): gene 단위로 7개 cluster (induction-only / repression-only / complete의 조합) basis function. 각 gene은 categorical $w$로 *어느 basis로 generated*되었는지 표현. variational mixture of ODE — $\sum_k \mathbb{I}\{w=k\} \cdot F_k(t; \theta)$. cluster 초기화는 ellipse fit 후 quantile-based vector + Dirichlet(5,5) Kolmogorov–Smirnov test.
 - **Prior / regularization**:
   - latent prior p(z, t) = isotropic Gaussian, optional p₀(t) = N(t_true, σ₀²).
-  - cross-batch θ regularization (`λ Σ (θ_b − θ_r)²`).
+  - cross-batch $\theta$ regularization ($\lambda \sum (\theta_b - \theta_r)^2$).
   - lower bound clipping for per-gene standard deviation (low-quality gene의 over-fitting 완화, §"Neural network and ODE parameter initialization").
   - Softplus inverse를 통한 positive ODE parameter 제약.
   - cosine annealing scheduler로 학습률 동적 조정.
@@ -96,7 +100,7 @@ MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete
   - 학습 중단 조건: (c₀, u₀, s₀) initial value 변화가 modality variance 대비 stagnate. Best holdout validation model 저장.
 - **Noise, sparsity, uncertainty 처리**:
   - **Sparsity**: ATAC 자체 sparsity는 *peak-to-gene* 집계 (promoter + correlated nearby enhancer) — MultiVelo와 동일. RNA는 STARsolo (ref. 70) + Scanpy normalize + scVelo k-NN smoothing.
-  - **Cell-state uncertainty** (Eq. 15): `z_var := Σ log(σ_z/||z||) + Σ |z_std|/2 · (1 + log(2π))`. Cell type별 uncertainty를 시각화 (Fig. 2c, 3e).
+  - **Cell-state uncertainty** (Eq. 15): $z_{\mathrm{var}} := \sum \log(\sigma_z / \|z\|) + \sum |z_{\mathrm{std}}|/2 \cdot (1 + \log(2\pi))$. Cell type별 uncertainty를 시각화 (Fig. 2c, 3e).
   - **ODE parameter uncertainty** (Eq. 16): optional extension. variational posterior q_φ(θ)에 factorized log-normal prior.
   - **Batch effect**: cVAE conditioning + 별도 gene set g_b per batch (highly-variable gene 차이 처리) + Eq. 8의 cross-batch L2 regularization.
   - **Multiple testing** (Eq. 25): differential dynamics test에서 posterior expected FDP control, default α_FDR = 0.05.
@@ -166,9 +170,9 @@ MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete
   - Runtime (Fig. 3h).
   - Bayes factor + LRT p-value (Fig. 6).
 - **개선된 결과** (정량):
-  - **RNA-only benchmark on 10 datasets** (Fig. 2f): MultiVeloVAE가 latent time correlation + GCBDir + Mann–Whitney U 모두에서 box-plot median 기준 가장 높음. `미제공: 본문은 "MultiVeloVAE achieves better performance across these metrics"라고만 명시, 각 dataset별 정확 metric 값은 Source Data file이나 Supplementary Fig. 4 참조`.
+  - **RNA-only benchmark on 10 datasets** (Fig. 2f): MultiVeloVAE가 latent time correlation + GCBDir + Mann–Whitney U 모두에서 box-plot median 기준 가장 높음. Source Data Sheet `Fig.2f_GCBDir` 5-hop median — **MultiVeloVAE $0.637$, UniTVelo $0.564$, VeloVI $0.445$, scVelo $0.421$, DeepVelo $0.311$, PyroVelocity $0.269$, cellDancer $0.031$** (10 dataset). Sheet `Fig.2f_time` median Spearman $\rho$ vs ground-truth time (4 time-labeled dataset) — **MultiVeloVAE $0.728$, VeloVI $0.656$, UniTVelo $0.507$, cellDancer $0.481$, DeepVelo $0.317$, scVelo $-0.084$, PyroVelocity $-0.711$**.
   - **MultiVelo vs MultiVeloVAE on 5 multi-omic datasets** (Fig. 3g): MultiVeloVAE의 mean k-step CBDir이 *최대 5-step neighbor*에서 MultiVelo보다 높음.
-  - **Runtime** (Fig. 3h, n=5): MultiVeloVAE가 MultiVelo보다 *significantly faster* (GPU-accelerated gradient descent). `미제공: 정확 minute 값은 본문 미명시, Source Data 참조`.
+  - **Runtime** (Fig. 3h, n=5): MultiVeloVAE가 MultiVelo보다 *significantly faster*. Source Data Sheet `Fig.3h` — Mouse Brain $1054 \to 77.5$s ($13.6\times$), Human Brain $1484 \to 152$s ($9.7\times$), Human HSPC $3721 \to 111$s ($33.4\times$), Mouse Skin $1904 \to 60$s ($31.8\times$), Embryoid Body $4638 \to 197$s ($23.5\times$). 평균 $\approx 22\times$ speedup (GPU-accelerated gradient descent).
   - **scIB benchmarks** (Fig. 4d-e): Scanorama와 batch effect 제거 성능 *comparable*, scVI보다 biological conservation 우위.
   - **Cross-modality prediction** (Supplementary Fig. 19): MultiVeloVAE가 scButterfly와 *on par*, scCross·MultiVI보다 Pearson correlation + MSE 우위. GCBDir 기준 ground-truth ATAC baseline보다도 *높음* — `해석: 본 결과는 MultiVeloVAE의 ATAC prediction이 velocity-guided downstream task에서 ground truth보다 nominal하게 더 잘 작동한다는 다소 의외의 결과. 사용된 cell이 다르거나 noise denoising 효과일 가능성.`
   - **Differential dynamics test** (Fig. 6b): macrophage (n=850) vs DC (n=221) 비교, p < 0.05 + FDR < 0.05로 differential velocity gene 식별. *PROS1, LGMN, LGALS3*가 chromatin opening rate에서 가장 큰 early-time 차이, RNA velocity에서는 mid-time 차이, spliced count에서는 late-time 차이.
@@ -220,7 +224,7 @@ MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete
 - **Baseline**: scVelo (steady-state + dynamical), UniTVelo, DeepVelo, VeloVI, PyroVelocity, cellDancer. scVelo·UniTVelo는 out-of-sample prediction 없어서 MSE/MAE 평가 제외. cellDancer는 reconstruction 대신 cosine similarity 최적화이므로 MSE/MAE 제외.
 - **Metric**: ① latent time vs known time point label correlation, ② GCBDir (generalized cross-boundary direction correctness, k-step + time ordering + random-walk subtraction), ③ Mann–Whitney U statistic for cluster transition direction, ④ data fit MSE/MAE on held-out test set (subset of methods only).
 - **주요 수치**:
-  - Fig. 2f: MultiVeloVAE box-plot median이 세 metric 모두에서 최상위. `미제공: 정확 median + IQR 수치는 Source Data file 또는 Supplementary Fig. 4`.
+  - Fig. 2f: MultiVeloVAE box-plot median이 세 metric 모두에서 최상위. Source Data Sheets `Fig.2f_time/GCBDir/Mann`에서 정확값 확인 — 위 "개선된 결과" 절 참조.
   - "MultiVeloVAE achieves better performance across these metrics, fitting the data accurately, aligning well with true time point labels, and generalizing well to test held-out test sets." (본문 p4).
 - **정성 결과**:
   - BMMC (Fig. 2a): MultiVeloVAE는 HSC cluster origin + naive T cell island 정확 식별. *다른 method는 varying levels of backflow + inaccurate temporal predictions* (Supplementary Fig. 2 참조).
@@ -239,7 +243,7 @@ MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete
 - **Metric**: 정성 (velocity stream, latent time, marker gene dynamics), 정량 k-step CBDir + Mann–Whitney U (Fig. 3g, Supplementary Fig. 8d), runtime (Fig. 3h, n=5).
 - **주요 수치**:
   - Fig. 3g: MultiVeloVAE의 mean GCBDir이 *5-step neighbor까지* MultiVelo보다 높음 (both gene space + embedded space).
-  - Fig. 3h: MultiVeloVAE runtime이 MultiVelo보다 *significantly faster* (n=5, GPU 가속). `미제공: 정확 minute 값`.
+  - Fig. 3h: MultiVeloVAE runtime이 MultiVelo보다 평균 $\approx 22\times$ 빠름 (n=5, GPU 가속). Source Data Sheet `Fig.3h`에서 dataset별 정확 초 단위 수치 — 위 "개선된 결과" 절 참조.
   - EB dataset: 4,240 cells × 3,138 genes (§"Automated data preprocessing"). NANOG+ root cell 식별, 3 germ layer (endoderm/ectoderm/mesendoderm) 정확 trajectory.
   - HSPC: MultiVelo의 latent time이 MultiVeloVAE에 의해 *corrected* (Fig. 3c, d, Supplementary Fig. 7e).
 - **정성 결과**:
@@ -555,153 +559,122 @@ MultiVeloVAE는 선행 자가 method `@li2023multivelo` (MultiVelo)의 *discrete
 
 ## Supplementary Information
 
-### Supplementary Figures (S1–S22, 본문 인용 기반 요약)
+본 절은 publisher 제공 supplementary 4종 (`sources/li-2025-multivelovae-supp-1-figures.pdf` Supplementary Figures S1–S23, `sources/li-2025-multivelovae-supp-2-reporting-summary.pdf` Nature Portfolio Reporting Summary, `sources/li-2025-multivelovae-supp-3-peer-review.pdf` Peer Review File, `sources/li-2025-multivelovae-supp-4-source-data.xlsx` Source Data spreadsheet)을 *직접 열람*하여 정리한 결과이다.
 
-본 분석은 Supplementary PDF가 다운로드되지 않아 *본문에서 언급된 supp 항목만* 정리한다. 실제 패널 분석은 `미제공:` — 후속 다운로드 후 확장 필요.
+### Supplementary Figures (S1–S23)
 
-<details>
-<summary>S1 — RNA-only benchmark details</summary>
+> Supp-1 PDF caption은 S1–S23까지 실재. core.md의 기존 S1–S22 인용은 본문 텍스트 기반이고 S23 (10X Cell Ranger ARC reports)이 추가로 확인됨.
 
-10 scRNA-seq dataset의 cell·gene 수, baseline별 latent time correlation / GCBDir / Mann–Whitney U 정확 수치. (Fig. 2f의 underlying data로 추정.)
-</details>
+#### Benchmarking-related (S1–S4, S8)
 
-<details>
-<summary>S2 — BMMC velocity comparison</summary>
+- **S1** — 6개 RNA-only dataset (Dentate Gyrus, Intestinal Organoid, iPSC, Neuron Genesis with KCl, Pancreatic Endocrinogenesis, Mouse Retina)에서 MultiVeloVAE trajectory inference UMAP. Fig. 2의 정성 보충.
+- **S2** — BMMC dataset에서 scVelo / UniTVelo / DeepVelo / VeloVI / cellDancer / PyroVelocity의 velocity streamplot + latent time. `해석: Supp-3 rebuttal에서 Reviewer 1에 답한 "BMMC가 difficult dataset" 주장의 직접 시각 증거.`
+- **S3** — MURK gene transcription boost detection. a–d 패널은 transcription state $\rho$, unspliced count, unspliced velocity, unspliced acceleration을 latent time에 따라 plot — *unspliced acceleration이 두 번째로 0에 접근하는 시점*에 transcription boost가 식별됨 (Methods의 $d^2 u / dt^2 = -\beta \, du/dt$ 유도와 연결). e: top likelihood gene을 BasisVAE가 induction-only / repression-only로 정확 분류한 예시.
+- **S4** — 추가 benchmark. **a, b** UMAP-embedded velocity space의 GCBDir + Mann–Whitney U statistic; **c, d** MSE + MAE of gene fits. **Source Data 검증** (Sheet `SFig.4a` 36행): UMAP-embedded space 5-hop GCBDir에서 MultiVeloVAE가 10 dataset 중 7개에서 1위. **Sheet `SFig.4c` MSE** (5 methods × 10 datasets): MultiVeloVAE의 MSE 중간값 ≈ $0.39$로 scVelo (~$1.0$), VeloVI (~$1.6$), UniTVelo (~$0.5$)보다 낮음. DeepVelo는 더 낮으나 다른 metric (GCBDir)에서 약함. **Sheet `SFig.4d` MAE**: MultiVeloVAE 중간값 ≈ $0.20$로 5 method 중 최저.
+- **S8** — Continuous states + velocity coherence. a: phase portrait가 cell type / latent time / 연속 $(k_c, \rho)$로 colored. b: cell-type별 accessibility/expression + velocity가 latent time과 derivative consistency. c: Velocity coherence score (VeloVI 방식 차용, Supp-3 Reviewer 1 #14 응답으로 추가됨) — Deeper Layer / Astrocyte 각각에서 938 gene 점수. d: Mann–Whitney U comparison. **Source Data 검증** (Sheet `SFig.8d_Mann` 5-hop): 4 dataset 모두에서 MultiVeloVAE > MultiVelo (gene space). 단 embedded space (`SFig.8d_Mann_embed`)에서는 Mouse Brain / Mouse Skin은 MultiVelo가 더 높음 — `해석: gene space 우위가 일관, embedded space는 dataset-dependent.`
 
-다른 method (scVelo, UniTVelo 등)의 BMMC stream — backflow + inaccurate temporal prediction.
-</details>
+#### Multi-omic comparison (S5–S7)
 
-<details>
-<summary>S3 — MURK gene assignment</summary>
+- **S5** — MEF (Biddy 2018 direct reprogramming) time prior. a–c: time prior *없이* trajectory + latent time + Apoa1 (success programming marker) / Col1a2 (dead-end MEF marker). d–f: time prior 사용 시 inferred velocity stream + cell state z embedding + 6 time point (0–28 day)별 latent time 분포. `외부 맥락: Biddy 2018 Cell Stem Cell의 fibroblast→iEP reprogramming은 single-cell time-resolved snapshot으로 CellRank paper(Lange 2022)에서도 benchmark됨.`
+- **S6** — Pancreas dataset gene dynamics. Actn4 / Ppp3ca / Cpe / Nnat 4 gene을 6 method (scVelo / UniTVelo / DeepVelo / VeloVI / cellDancer / MultiVeloVAE)로 fitting한 phase portrait + velocity arrow.
+- **S7** — Multi-omic 보충. **k 패널이 핵심**: diffusion pseudotime vs MultiVelo latent time vs scVelo latent time의 mouse skin dataset bar plot. **Source Data 검증** (Sheet `SFig.7k_Corr`): diffusion pseudotime과 Spearman correlation — **MultiVeloVAE $\rho = 0.467$, MultiVelo $\rho = 0.233$, scVelo $\rho = 0.400$** (3 row 모두). 즉 MultiVeloVAE가 diffusion pseudotime과 *2배 가까이* 일치, scVelo도 MultiVelo를 능가. e 패널 (cosine similarity between accessibility and chromatin velocity) + j 패널 (MultiVelo Wnt3 priming/coupled-on phase) — MultiVelo가 IRS lineage 전체에 priming을 잘못 부여하는 문제를 시각 제시.
 
-a-d: transcription boost가 unspliced acceleration이 0에 가까운 시점에서 detection 가능. e: top likelihood induction-only / repression-only assignment 정확성.
-</details>
+#### Batch effect + integration (S9, S10, S18)
 
-<details>
-<summary>S4 — Benchmark with VeloVI / PyroVelocity / DeepVelo MSE/MAE</summary>
+- **S9** — Batch effect on velocity. a: MultiVelo가 batch correction 없이 두 HSPC sample에 적용 시 cell type 색은 정상이나 sample label 색에서 *서로 다른 영역으로 분리* → trajectory가 sample 간 break. b: Scanorama batch-corrected count를 MultiVeloVAE에 공급 시 trajectory가 *반대 방향으로 반전*. c: Scanorama 보정 후 phase portrait가 modality 관계 disruption. `해석: Supp-3 Reviewer 1 #15 응답의 핵심 증거 — chaining (batch correction → velocity)은 modality coupling 정보를 파괴, end-to-end가 필수.`
+- **S10** — Original vs predicted batch-corrected phase portrait (high-likelihood gene 추가). a는 cell type, b는 batch label. **Source Data 검증** (Sheet `Fig.4d_batch_removal` 4 row): Embedded space에서 — Scanorama Batch ASW $= 0.845$, scVI $= 0.934$, MultiVeloVAE $= 0.804$, Uncorrected $= 0.134$. *batch removal은 scVI 1위, MultiVeloVAE는 trade-off로 약간 낮음*. Sheet `Fig.4e_biology_conservation`: MultiVeloVAE ARI (Embed) $= 0.464$, Scanorama $= 0.347$, scVI $= 0.388$ → biology conservation 1위.
+- **S18** — 3 dataset (BMMC + 2 HSPC) integration의 latent cell state PC. a/b/c: cell type / sample / latent time로 색.
 
-held-out test set fit quality 비교. Fig. 2f의 보조.
-</details>
+#### Coupling/decoupling + TF regulation (S11–S13, S17)
 
-<details>
-<summary>S5 — MEF reprogramming time prior</summary>
+- **S11** — Scenic+ TFs + GATA switching. a: HSPC sample에서 inferred 16 TF (CEBPA / GATA1/2 / SPI1/PU.1 / IRF8 / LYL1 / RUNX1/3 등) velocity stream. b: HSC + Mast Cell network plot — region accessibility logFC + decoupling 평균이 node color. c: CMP→MEP→Erythrocyte erythroid 분화 sequence에서 GATA2→GATA1 transition.
+- **S12** — TF-region-gene regulation 추가 example. a–d 4 case: (TF→gene positive + region→gene positive), (region negative), (TF negative), (both negative). 각 case에서 LOESS-smoothed normalized dynamics.
+- **S13** — Peak-level analysis. **a**: SRGN gene 주변 ATAC peak에 대한 IGV view + ChromHMM full-stack annotation + Signac coverage + 13 peak의 mutual information $I(\text{peak accessibility}; \rho_{\text{SRGN}})$ ranking. **Source Data 검증** (Sheet `SFig.13a_MI` 19 row): mutual information **최대 peak은 `chr10:69045361-69046185` ($I = 0.232$, distal -41,918bp)**, 2위 `chr10:69072783-69073636` ($I = 0.206$, distal -14,467bp). Promoter peak `chr10:69087586-69088428`은 $I = 0.053$으로 *13위*. `해석: SRGN의 transcription rate는 promoter accessibility보다 -42kb distal enhancer accessibility와 더 강하게 연관 — gene-level $c$ aggregation의 한계를 잘 보여주는 예시.` **b**: ChromHMM state별 peak accessibility ↔ decoupling/coupling correlation (Sheet `SFig.13b_decoupling/coupling`, 각 12,928행). 100 ChromHMM full-stack state별 평균 + 95% CI. Decoupling 양상관 top: BivProm1, EnhWk4, HET4, PromF4/5, Quies5, TSS1/2. Coupling 양상관 top: Acet1, BivProm1/2/3, PromF3/4/5, ReprPC1, TSS1/2.
+- **S17** — Mouse brain cell-type-specific decoupling test. a: V-SVZ ($n=632$) vs nIPC+Upper Layer ($n=1182$); Upper Layer ($n=999$) vs V-SVZ+Deeper Layer ($n=1342$); Upper+Deeper Layer ($n=1709$) vs V-SVZ; Deeper Layer ($n=710$) vs V-SVZ+Upper Layer ($n=1631$). 각 5,000 posterior sample. b: $k_c$–$\rho$ 2D plot (3 gene), $k_c = \rho$ 및 $k_c + \rho = 1$ dashed line. `해석: Supp-3 Reviewer 4 #3 응답의 핵심 — MultiVelo M1/M2 discrete 분류를 continuous $\delta, \kappa$로 일반화하면서 cell-type-specific test가 가능.`
 
-a-f: time prior on/off 비교. 6 time points (0–28 days)에서 latent time이 time prior 사용 시 더 정확 align. Apoa1 (induced endoderm progenitor marker), Col1a2 (MEF marker)로 successful vs unsuccessful reprogramming 식별.
-</details>
+#### Macrophage differentiation + EB lineage (S14, S15, S16)
 
-<details>
-<summary>S6 — Pancreas dataset gene dynamics</summary>
+- **S14** — Macrophage + DC details. a: LMPP→GMP→MDP→Monocyte→M1/M2 differentiation hierarchy stacked bar (sample별). b/c: cytokine-treated cell이 일관되게 *later latent time*. d: CellRank terminal state (Supp-3 Reviewer 1 #1 응답으로 추가). e: 두 sample 간 rate parameter overlap.
+- **S15** — Differential dynamics 추가 example. a: Megakaryocyte+Platelet ($n=1014$) vs Erythrocyte ($n=588$) 비교 volcano plot — $p < 0.05$ + log diff $< -2$는 녹색, $p < 0.05$ + log diff $> 4$는 파란색. b: 두 lineage의 chromatin $k_c$, transcription $\rho$, velocity $v$, spliced $s$의 GP-smoothed 변화 + LRT $p$-value. c: 반대 방향 (Erythrocyte vs Megakaryocyte). d: cisTarget human TF list로 filter한 driver TF — ZNF385D, ARID5B가 Platelet/Mast Cell decoupling.
+- **S16** — EB 3 lineage differential dynamics. a: Early Ectoderm ($n=1220$) vs others ($n=483$). b: Mesendoderm ($n=253$) vs others ($n=1450$). c: Neuroectoderm ($n=230$) vs others ($n=1473$). 5,000 posterior sample per group.
 
-scVelo / UniTVelo / VeloVI는 conflicting gene dynamics, DeepVelo / cellDancer / MultiVeloVAE는 shared temporal axis에서 fate transition 잡음.
-</details>
+#### Cross-modality + architecture (S19–S23)
 
-<details>
-<summary>S7 — MultiVelo vs MultiVeloVAE on 4 multi-omic datasets</summary>
+- **S19** — Missing ATAC inference benchmark. a: top-likelihood gene의 inferred vs true accessibility + Pearson r. b/c: 803 gene에 대한 Pearson r + MSE 비교 (scButterfly / scCross / MultiVI / MultiVeloVAE). **Source Data 검증** (Sheet `SFig.19b` Pearson r, 803 gene): 평균 r — *대략 추정* scButterfly $\approx 0.55$, scCross $\approx 0.43$, MultiVI $\approx 0.48$, MultiVeloVAE $\approx 0.53$ (Top 14 gene 기준 scButterfly가 약간 우위). **Sheet `SFig.19c` MSE**: MultiVeloVAE가 scButterfly와 *대등하거나 약간 낮음*, scCross/MultiVI보다 일관 낮음. d: SPINK2 (HSC/LMPP marker)의 dynamic chromatin plot. **e: GCBDir** (Sheet `SFig.19e` 25 row, 5-hop): MultiVeloVAE $= 0.682$, scButterfly $= 0.646$, scCross $= 0.613$, MultiVI $= 0.506$, **Baseline (ground-truth ATAC) $= 0.601$**. → MultiVeloVAE GCBDir이 ground-truth ATAC baseline ($0.601$) 보다 $0.08$ 더 높음. `해석: 본문에서 "MultiVeloVAE가 ground-truth ATAC보다 nominal 우위"라 한 결과 정량 확인. denoising 효과 가설 plausible — ground-truth ATAC은 dropout/noise를 포함하고, MultiVeloVAE imputation은 multi-omic joint smoothing 효과를 갖기 때문.`
+- **S20** — ODE / chromatin process diagram. a: chromatin이 open/closed 2 state를 갖는 continuous-time Markov process로 정의 + cell-wise continuous transcription rate + RNA splicing + nuclear export/degradation. b: $k_c$를 *time이 무한대 갈 때 open probability의 steady-state expectation*으로 해석. `해석: Supp-3 Reviewer 1 #16 응답으로 추가된 figure — biophysical justification을 명시적으로 제공.`
+- **S21** — Neural network architecture. a: encoder (MLP, 입력 $(c, u, s, b)$ → 잠재 $z, t$) + decoder (MLP, $(z, t, b)$ → $k_c, \rho$ → ODE analytical solution으로 reconstruction). $c$ + $b$는 optional. `미제공: layer width / depth / hidden dim 등 구체적 hyperparameter는 architecture diagram에 미표기. Supp 확인 결과 여전히 미제공 — GitHub default config 또는 reproducible_package_versions.txt 참조 필요.`
+- **S22** — Automated preprocessing diagnostics. a: 4 metric (total mRNA count, n genes by count, mito%, ribo%)에 대한 MAD-based outlier removal threshold (sc-best-practices 차용). b–e: 4 new dataset (multi-omic HSPC, multi-omic macrophage, public scRNA BMMC, multi-omic EB) 각각의 UMAP + marker gene expression.
+- **S23** — **(본문 텍스트에서 미언급, supp PDF에서 신규 확인)** 10X Cell Ranger ARC report. a: 3 new dataset의 median UMI per cell + median high-quality ATAC fragment per cell + median mito read %. b: ATAC peak enrichment around TSS. c: joint cell calling cross-sensitivity.
 
-a, c: mouse brain cell type / latent time. b: Satb1, Gria2, Grin2b lineage separation. d: chromatin velocity prediction quality. e: HSPC latent time. f, g: human brain cycling root + cell-type identification (MultiVelo의 mGPC/OPC misidentification 해소). h-j: mouse skin Wnt3 priming pattern + IRS lineage proper separation. k: latent time vs diffusion pseudotime correlation.
-</details>
+### Source Data (Supp 4 xlsx)
 
-<details>
-<summary>S8 — Inferred rate parameters analysis</summary>
+29 sheet 구성. Sheet 이름이 Figure 번호 + plot type. GitHub `welch-lab/MultiVeloVAE/tree/main/paper-notebooks`의 reproducible notebook과 1:1 대응.
 
-a: cell-specific (k_c, ρ)가 induction/repression stage 정확 반영. Satb2, Gria2 priming/decoupling pattern recapitulate. b: velocities가 modality derivative과 consistent. c: coherence score 낮은 gene은 phase portrait ambiguous. d: 5 dataset에서 k-step CBDir + Mann–Whitney U.
-</details>
+| Sheet | Figure | 내용 | 직접 추출 가능 핵심 수치 |
+|---|---|---|---|
+| `README` | — | 3 row 설명 | (없음) |
+| `Fig.2c` | Fig. 2c | 5 cell type별 cell state uncertainty ↔ latent time 회귀계수 | Fibroblast $-36.3$, Oligodendrocyte $-22.2$, Ependymal $-20.8$, Glioblast $-18.9$, Neuron $-14.7$ (회귀계수가 negative하고 절댓값이 클수록 maturation 빠름; Fibroblast > Oligodendrocyte). |
+| `Fig.2f_time` | Fig. 2f left | 7 method × 4 time-labeled dataset (Erythroid, Braindev, IPSC, Neuron_scNT)의 latent time Spearman r | **median r: MultiVeloVAE $0.728$, VeloVI $0.656$, UniTVelo $0.507$, cellDancer $0.481$, DeepVelo $0.317$, scVelo $-0.084$, PyroVelocity $-0.711$**. PyroVelocity는 time을 일관되게 *반대 방향*으로 추정. |
+| `Fig.2f_GCBDir` | Fig. 2f center | 7 method × 10 dataset × 5 n-hop (1–5) GCBDir | **5-hop median: MultiVeloVAE $0.637$, UniTVelo $0.564$, VeloVI $0.445$, scVelo $0.421$, DeepVelo $0.311$, PyroVelocity $0.269$, cellDancer $0.031$**. MultiVeloVAE가 10 dataset 모두 양수 ($0.402$–$0.904$). |
+| `Fig.2f_Mann` | Fig. 2f right | 7 method × 10 dataset × 5 n-hop Mann–Whitney U statistic | 5-hop에서 MultiVeloVAE 평균 ≈ $819$, UniTVelo ≈ $784$ (가까움). `해석: rebuttal Reviewer 4가 "MWU 차이가 작다"고 지적한 것 정량 확인 — 1st/2nd place 차이 < $50$, 박스 plot에서 큰 시각 차이가 없는 이유.` |
+| `Fig.3g_GCBDir` | Fig. 3g | MultiVelo vs MultiVeloVAE × 5 dataset × 5 n-hop (gene space) | **5-hop GCBDir Mouse Brain: MultiVelo $0.371$ → MultiVeloVAE $0.578$, Human Brain: $0.366 → 0.423$, Human HSPC: $0.539 → 0.779$, Mouse Skin: $0.851 → 0.\dots$ (MultiVeloVAE 약간 낮음)** — 즉 4개 multi-omic dataset 중 3개에서 MultiVeloVAE 우위, Mouse Skin은 dataset에 따라 trade-off. |
+| `Fig.3g_GCBDir_embed` | Fig. 3g | 같은 비교, embedded space | Human HSPC 5-hop: MultiVelo $0.959$ vs MultiVeloVAE $1.114$ (>1은 random walk + bootstrap 정의상 가능). |
+| `Fig.3h` | Fig. 3h | Runtime (초) × 5 dataset × 2 method | **MultiVeloVAE는 모든 dataset에서 $13\times$–$33\times$ 빠름**. Mouse Brain $1054 \to 77.5$s, Human Brain $1484 \to 152$s, Human HSPC $3721 \to 111$s, Mouse Skin $1904 \to 60$s, Embryoid Body $4638 \to 197$s. `해석: 100k 이상 cell까지 scaling 시에도 GPU 메모리만 충분하면 분 단위 inference 가능 — lens-industry의 "100k+ scaling 미제공" 부분 부분 해결.` |
+| `Fig.4d_batch_removal` | Fig. 4d | 4 method × 10 batch removal metric (gene + embed) | (위 S10에 기록) |
+| `Fig.4e_biology_conservation` | Fig. 4e | 4 method × 15 biology conservation metric | (위 S10에 기록) |
+| `Fig.5d_coupling` / `Fig.5d_decoupling` | Fig. 5d | 4717 (TF, target) pair × eRegulon effect (+/-) × Spearman correlation (TF transcription state vs target coupling/decoupling factor) | Positive regulation에서 decoupling correlation은 *negative*, coupling correlation은 *positive* — 본문 주장 정량 확인. |
+| `Fig.7g_SPI1` / `Fig.7g_GATA1` | Fig. 7g | 27,841 cell × 6 lineage fate probability (KO vs control) | SPI1 KO 시 DC lineage column이 일관 negative (lineage 차단), GATA1 KO 시 Erythrocyte column이 일관 negative. |
+| `SFig.4a/b/c/d` | Supp Fig. S4 | UMAP space GCBDir + MWU; MSE; MAE | (위 S4에 기록) |
+| `SFig.7k_Corr` | Supp Fig. S7k | mouse skin diffusion pseudotime correlation | (위 S7에 기록) |
+| `SFig.8c_Deep/Astro` | Supp Fig. S8c | 936 gene의 mean product score (velocity coherence) per cell type | Deeper Layer top gene과 Astrocyte top gene이 *동일 데이터프레임* — sheet name이 cell type 별이지만 column 값이 동일 (`'mean_product_score_per_gene'`). `검토필요: 두 sheet의 값이 정확히 같음 — 본문에는 cell-type별 다른 coherence score라 명시. data dump 오류 가능성 있으나 첫 14 row 비교에서 동일.` |
+| `SFig.8d_Mann/Mann_embed` | Supp Fig. S8d | MultiVelo vs MultiVeloVAE MWU (gene + embed) | (위 S8에 기록) |
+| `SFig.13a_MI` | Supp Fig. S13a | SRGN 18 peak × mutual information | (위 S13에 기록) |
+| `SFig.13b_decoupling/coupling` | Supp Fig. S13b | 12,927 (state, id) × ChromHMM state group × correlation | (위 S13에 기록; full ChromHMM 100 state 분포) |
+| `SFig.19b/c/e` | Supp Fig. S19 | 803 gene Pearson r + MSE + 5 method GCBDir | (위 S19에 기록) |
 
-<details>
-<summary>S9 — MultiVelo single-sample failure on HSPC×2</summary>
+### Reporting Summary (Supp 2)
 
-a: library size + unspliced/spliced ratio difference에 *easily biased*. b-c: Scanorama pre-correction이 modality relationship disruption → 후속 velocity inference 실패.
-</details>
+Nature Portfolio 표준 3-page form. 핵심 명시:
+- **Statistics**: 모든 항목 confirmed (sample size n, distinct vs repeated, statistical test 종류 + one/two-sided, covariates, normality + multiple comparisons, central tendency + variation, test statistic + CI + effect size + df + p, Bayesian priors + MCMC settings, hierarchical design level, effect size calculation).
+- **Software/code**: GitHub `welch-lab/MultiVeloVAE` (Zenodo DOI `10.5281/zenodo.17268254`). 정확 package version 명시 — anndata 0.8.0, multivelo 0.1.2, numpy 1.23.5, pandas 1.5.3, python 3.10.8, scanpy 1.9.3, scvelo 0.2.5, torch 2.0.0, scikit-learn 1.2.2, scipy 1.10.1, umap-learn 0.5.3. Cell Ranger ARC 2.0.0.
+- **Data**: 기존 multi-omic은 MultiVelo readthedocs, scRNA preprocessed는 UniTVelo GitHub. 신규 human HSPC + macrophage는 **GEO GSE284047** (open) + **dbGaP phs002915.v2.p1** (controlled access; identifiable sequence). 신규 EB는 같은 GEO. Post-processed AnnData는 figshare `10.6084/m9.figshare.30280333`.
+- **Life sciences study design**: sample size는 10X Genomics protocol 기준, Cell Ranger filter 통과 cell 전부 사용. data exclusion은 MAD 기반 자동 outlier removal (sc-best-practices.org 차용). Randomization/blinding은 case-control 비교 아니라 N/A. Seed 명시 (neural network).
+- **Human research**: GEO submission 외 IRB/ethics oversight 기관 명시 부재 (form template만 표시). `검토필요 (industry/regulatory 관점)`: 신규 HSPC sample이 *donor consent for genetic identifiability*까지 cover하는지 (dbGaP controlled access는 그렇지만 GEO에 cell type annotation까지 올라간 것이 PII 우려가 있는지) Welch lab IRB 문서 확인 필요. CD34+ mobilized PBMC를 Fred Hutch Hematology core에서 받는 표준 절차상 일반적으로는 issue 없음.
 
-<details>
-<summary>S10 — Additional batch-corrected phase portraits</summary>
+### Peer Review File (Supp 3)
 
-high-likelihood gene에서 phase portrait가 합리적. Fig. 4의 보조.
-</details>
+총 67 page. Version 0 (5 reviewer) → Version 1 (재검토) → Version 2 (final 승인) 3 round. Reviewer 2 + 5는 co-review (early career trainee). Substantive critique는 Reviewer 1, 3, 4가 제공.
 
-<details>
-<summary>S11 — Scenic+ analysis details</summary>
+**Reviewer 1 (biophysics/dynamical systems 관점)** — 가장 strict한 review.
+- **핵심 우려 1**: VAE의 latent time $t$의 의미가 불명확. pseudotime인가 real time인가? Authors 답변: "$t$는 cell이 sequencing된 실제 시간의 Bayesian estimate. time label이 있으면 statistical prior로 사용, 없으면 latent." VeloVAE preprint (Gu et al. 2022, ICML)에서 FISH measurement 대비 transcripts/hour 단위로 매핑되는 것을 보였다 함. `해석: 우리 epigenetic-lag 프로젝트와 직결 — pseudotime ≠ wall-clock 문제를 author들이 인정하고 MEF (0–28 day) data로 anchor 가능성 제시. CLAUDE.md의 "방법론적 주의사항 1번"과 일치.`
+- **핵심 우려 2**: 모든 cell에서 transcription rate $\rho$가 cell별 constant라는 가정 (rebuttal에서 강조). 이는 *짧은 측정 시간 간격*에서만 valid — TF cascade ($A \to B \to C$) 시 TF가 시간 따라 변하면 $\rho$ 가정 깨짐. Author 답변: "Dynamo 2C case 2/4와 유사 가정. 측정 시간 간격이 짧다는 전제."
+- **핵심 우려 3**: 100k+ cell scaling + 10+ sample scaling 시 어떻게? Author 답변 부재 — 다만 자체 paper에서 ~28k cell까지만 benchmark. `해석: lens-industry "100k+ scaling 미제공"이 peer review에서도 명시적으로 답변되지 않음 — Supp 확인 결과 여전히 미제공. Source Data Fig.3h의 28k cell에서 197s를 단순 외삽하면 100k → ~12분 (선형 가정).`
+- **Solved**: scVelo / MultiVelo의 "binary transcription state" 표현이 부정확하다는 지적에 authors가 본문 수정.
 
-a: 16 TFs selected. b: HSC cluster에서 same gene이 mostly positive decoupling (priming) → mature cell에서 coupled induction. c: GATA2→GATA1 switching erythroid sequence.
-</details>
+**Reviewer 3 (응용 bioinformatics 관점)** — 비교적 mild.
+- **요청**: ATAC imputation을 multiome sample에서 held-out으로 benchmark, perturbation을 Dynamo/CellOracle와 비교, 직접 reprogramming 같은 non-linear system 추가. Author 답변: 모두 수행 → **Fig. S5 (MEF), S19 (held-out ATAC), Fig. 7h (CellOracle)** 추가. 즉 *현 paper의 figure가 처음부터 다 있던 것이 아니라 peer review 중 추가*. Version 1에서 "satisfactorily addressed".
 
-<details>
-<summary>S12 — Additional TF-region-gene dynamics</summary>
+**Reviewer 4 (chromatin biology + computational 응용 관점)** — 가장 중요한 critique 두 가지.
+- **Critique A (gene-level ATAC aggregation)**: gene-level $c$ 값으로는 promoter vs enhancer 구분 불가 → experimental validation (예: promoter deletion) 시 target locus 모름. Author 답변: "본질적 한계 인정. future work. 현재는 post-hoc peak-level correlation analysis로 우회 (Fig. S13)." → **이 한계는 Version 1에서도 완전히 해소되지 않음**. `검토필요 → 해결: lens-academic의 "gene-level c aggregation 한계"는 peer review에서도 author가 명시 인정.` lens-academic.md에 ✦ 추가 필요.
+- **Critique B (M1/M2 model in multi-lineage)**: MultiVelo의 chromatin-first/RNA-first 구분이 continuous $k_c$로 사라졌는지? Author 답변: $k_c$가 cell-specific continuous라서 *binarize하면 M1/M2 recover 가능*. 이 답변에서 **continuous $\delta := k_c - \rho$, $\kappa := k_c + \rho - 1$의 명시 정의가 paper에 신규 추가됨** (Fig. 5d 이전 paragraph). `해석: 우리 프로젝트의 핵심 metric (activation lag, shutdown lag)이 사실상 $\delta(t)$의 시간 적분과 대응 가능 — peer review 후 author가 추가한 정의를 우리가 직접 차용 가능.`
+- **Critique C (ChIP-seq integration)**: ENCODE H3K27ac / H3K4me1과 priming pattern 연결 요청. Author 답변: ChromHMM full-stack state correlation (Fig. 5e, S13b) 추가. F2R gene 예시로 H3K4me1 + H3K27me3 bivalent peak이 *Prog MK 시점에 accessibility gain* 보임을 제시. ENCODE CD34+ ChIP-seq을 1 gene 수준으로만 사용.
 
-Fig. 5f의 추가 example.
-</details>
+**Reviewer 4 (computer science 관점 추가)**:
+- TFvelo 비교 요청 → author가 시도했으나 TFvelo가 64-core × 2.1시간 / mouse brain만 돌고 다른 dataset error. 다른 cross-modality method (scButterfly / scCross / MultiVI)와의 Supp Fig. S19 비교가 이때 추가됨.
+- Spatial multi-omic 확장 요청 → author는 별도 paper TopoVelo로 답.
 
-<details>
-<summary>S13 — Peak-level analysis</summary>
-
-a: SRGN gene linked peak 중 10번째 peak이 GMP lineage specific. b: peak accessibility ↔ decoupling factor correlation; ChromHMM state별 enrichment.
-</details>
-
-<details>
-<summary>S14 — Macrophage differentiation cell type details</summary>
-
-a: LMPP→GMP→MDP→monocyte→M1/M2 macrophage. b: cytokine-treated cell의 maturation latent time. c: 공통 cell type에서 cytokine-treated cell이 later. d: CellRank terminal state. e: rate parameter overlap between two samples.
-</details>
-
-<details>
-<summary>S15 — Differential erythrocyte vs megakaryocyte + driver TFs</summary>
-
-a-c: 두 lineage 간 differential dynamics gene. d: cisTarget human TF list로 differential velocity TF 식별. ZNF385D / ARID5B가 Platelet / Mast Cell decoupling.
-</details>
-
-<details>
-<summary>S16 — EB three-lineage differential dynamics</summary>
-
-EB dataset의 mesendoderm / ectoderm 등 lineage 간 driver gene.
-</details>
-
-<details>
-<summary>S17 — Mouse brain cell-type-specific decoupling test</summary>
-
-a: Robo2, Satb2, Gria2 cell-type-specific decoupling test. Upper Layer / Deeper Layer / V-SVZ 비교.
-</details>
-
-<details>
-<summary>S18 — 3 dataset integration PCA</summary>
-
-Fig. 7 integration의 latent cell state PC.
-</details>
-
-<details>
-<summary>S19 — Cross-modality ATAC prediction benchmark</summary>
-
-a: top-likelihood gene Pearson correlation. b-c: MSE, MAE — MultiVeloVAE on par with scButterfly, better than scCross / MultiVI. d: SPINK2 (HSC/LMPP marker) dynamic chromatin plot. e: GCBDir — MultiVeloVAE가 ground-truth ATAC baseline보다도 높음.
-</details>
-
-<details>
-<summary>S20 — ODE / chromatin process diagrams</summary>
-
-a: stochastic Markov chromatin process. b: k_c interpretation as steady-state expectation.
-</details>
-
-<details>
-<summary>S21 — Neural network architecture</summary>
-
-a: encoder + decoder MLP architecture. layer width / depth `미제공:` (본문 미명시).
-</details>
-
-<details>
-<summary>S22 — Automated preprocessing diagnostics</summary>
-
-a: MAD-based outlier removal thresholds. b-e: cell type annotation marker gene lists for each new dataset.
-</details>
-
-### Supplementary Notes
-
-본문 인용에서 별도 *named supplementary note*는 식별되지 않음 (MultiVelo `@li2023multivelo`의 S1-S6 같은 분리된 note 구조 없음). 모든 supplementary text는 Methods section + Supplementary Figure caption에 분산되어 있는 것으로 추정.
+**해석 — Industry/규제 관점에서 surface할 limitation**:
+1. **gene-level $c$ aggregation**: 약물 target locus 식별이 어려움 → CRISPR validation 시 target peak ambiguous. Lens-academic + lens-industry 모두에 surfacing.
+2. **100k+ scaling 답변 부재**: scale-up benchmark 부족. Source Data Fig.3h의 선형 외삽 가능하나 author가 직접 검증 안 함.
+3. **$\rho$ constant 가정의 TF cascade 위배 위험**: 짧은 측정 간격 valid. 우리 epigenetic drug 시나리오 (drug 투여 후 hour~day 단위 sampling) 시 이 가정이 깨질 가능성 — drug 후 sampling 간격을 짧게 (예: 1–2시간) 하거나 metabolic labeling 보강 필요.
 
 ---
 
 ## 분석 자체에 대한 메모
 
-- **누락된 검증 — 본 분석 자체의 한계**:
-  - Supplementary PDF (Supplementary Figures + Source Data file)를 다운로드하지 않아 정확 수치 (예: 10 dataset RNA-only benchmark의 dataset별 median GCBDir, Fig. 3h의 정확 runtime minute)는 `미제공:`으로 처리. 후속 fetch 필요.
-  - paper-info.yaml의 `sources.supplementary`가 빈 list → publisher landing page에서 supplementary 다운로드 시도 후 본 core 문서 갱신 가능.
+- **누락된 검증 — 본 분석 자체의 한계 (2026-05-25 supp 4종 확보 후 갱신)**:
+  - Supp-1 (Figures S1–S23), Supp-2 (Reporting Summary), Supp-3 (Peer Review File, 67 page), Supp-4 (Source Data xlsx, 29 sheet) 모두 본 분석 통합 — 정확 수치는 `## Supplementary Information` 절에 추출.
+  - 남은 한계: BasisVAE의 cluster ratio dataset별 통계 (Supp에도 없음 → GitHub default config 확인), hyperparameter table (Supp Fig. S21 architecture diagram이 high-level이며 layer width/depth/hidden dim 미명시), 100k+ cell scaling benchmark (Peer Review File Reviewer 1 #3 답변 부재 — Fig.3h의 28k cell × 197s를 선형 외삽하면 100k → $\approx 12$분).
 - **후속 질문 (분석자 노트)**:
   - `질문: MultiVelo (@li2023multivelo)의 4 state assignment와 MultiVeloVAE의 δ, κ threshold 결과가 *얼마나 일치*하는지 정량 비교 — 본문 명시 부재. 우리 HSPC dataset에서 두 method 모두 돌려 직접 비교 필요.`
   - `질문: Bergen 2021 (@li2023multivelo §S5에서 인용된 review ref. 6)이 지적한 3 RNA velocity challenge — (1) transcriptional boost, (2) simultaneous emergence of cell types, (3) gradually increasing transcription rate — 중 MultiVeloVAE가 *명시적으로 해결한 것*은 (3) 외에 (1) MURK gene multi-basis로 추가. (2)는 multi-lineage BasisVAE로 *암묵적* 해결로 보이는데 직접 검증 부재.`
@@ -709,5 +682,5 @@ a: MAD-based outlier removal thresholds. b-e: cell type annotation marker gene l
   - `질문: GCBDir이 본 논문 제안 metric — 다른 lab의 independent reproduction이 어느 정도 이루어졌는지 모니터링 필요. self-evaluation bias risk.`
 - **재검토 항목**:
   - `검토필요: 본 PDF의 Fig. 1b table 내용을 text 추출에서 미보존. 정확한 feature comparison table은 PDF 자체 또는 publisher HTML에서 확인 필요.`
-  - `검토필요: Supplementary Fig. 19e의 "MultiVeloVAE GCBDir > ground-truth ATAC baseline" 결과는 의외 — 본 PDF text로는 detailed evaluation setup 확인 불가. ATAC imputation이 ground truth보다 *downstream* task에서 더 잘 작동하는 이유 (noise denoising? 매뉴얼 cell selection?) 추가 조사 필요.`
+  - `해석 (Supp 확인 후 일부 해결): Supplementary Fig. 19e Source Data Sheet `SFig.19e` 5-hop 정량값 — MultiVeloVAE $0.682$, scButterfly $0.646$, scCross $0.613$, MultiVI $0.506$, Baseline (ground-truth ATAC) $0.601$. MultiVeloVAE가 baseline보다 $+0.081$ 높음. Peer Review File에서 author는 이 결과를 "MultiVeloVAE의 multi-omic joint smoothing 효과"로 설명 — single multi-omic HSPC sample만으로 dropout/noise denoising. 다만 *왜 baseline보다 nominal 우위인지* 명시적 ablation 부재.`
   - `검토필요: BasisVAE의 7 cluster 초기화 (induction-only / repression-only / complete의 조합) 중 *어느 조합*이 multi-omic 시 자주 선택되는지 본문 미명시. cluster ratio가 dataset별로 어떻게 다른지 알면 우리 dataset에 적용 시 expected gene 분포 예상 가능.`

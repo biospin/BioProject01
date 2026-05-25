@@ -12,7 +12,7 @@
 - **De novo training 의존** (Discussion p14): "current velocity inference methods, including deep-learning-based approaches, rely on de novo training. Recent efforts to integrate new data with atlas-level datasets have shown promise for cell-type annotation. Developing pre-trained and validated parameter sets for known cell types could benefit applications that require generic velocity inference on similar, low-quality samples." → 매 dataset마다 model 처음부터 학습 필요, atlas-level pre-training 부재.
 - **CITE-seq 등 추가 modality 미지원** (Discussion p14): "In the future, it may be promising to extend the approach to additional types of single-cell data, such as CITE-seq." → 현재 protein modality 미통합.
 - **Multi-sample 통합의 quality 의존성** (Discussion p13-14): "For effective integration across datasets, reliable velocity inference is needed for every dataset to ensure consistent results." → 한 sample이 noisy면 통합 전체 신뢰도 하락.
-- **개별 cis-regulatory element 직접 modeling 부재** (§Results "MultiVeloVAE infers state-specific decoupling patterns" p9): "individual cis-regulatory elements can play important and diverse roles in regulating transcription kinetics. Although MultiVeloVAE does not directly model the effects of individual cis-regulatory elements, we can perform downstream analyses to investigate the influence of individual peaks." → enhancer별 distinct kinetics는 post hoc correlation으로만 접근.
+- **개별 cis-regulatory element 직접 modeling 부재** (§Results "MultiVeloVAE infers state-specific decoupling patterns" p9): "individual cis-regulatory elements can play important and diverse roles in regulating transcription kinetics. Although MultiVeloVAE does not directly model the effects of individual cis-regulatory elements, we can perform downstream analyses to investigate the influence of individual peaks." → enhancer별 distinct kinetics는 post hoc correlation으로만 접근. **Peer Review File (Supp-3) Reviewer 4 Critique A에서 명시 지적**: "gene-level $c$ aggregation으로는 promoter vs enhancer 구분 불가 → experimental validation 시 target locus ambiguous". Author 답변: "본질적 한계 인정, future work". 즉 Version 1에서도 **완전 미해결**. SRGN 예시 (Supp Fig. S13a, mutual information top peak이 $-42$kb distal enhancer)가 이 한계의 구체적 사례.
 - **ChromHMM-decoupling association 결과의 잠정성** (§Results p9): "Although more work is needed to investigate these connections, our results suggest that there are interesting histone mark differences among peaks that are related to decoupled vs. coupled states." → BivProm1, EnhWk4, HET4 등 association이 *exploratory*, mechanism 미확정.
 
 ### 분석자가 판단한 한계
@@ -65,11 +65,11 @@
 
 ### 정리되지 않은 질문
 
-- **질문 1**: MultiVeloVAE의 `λ Σ (θ_b − θ_r)²` cross-batch regularization (Eq. 8)이 *sample composition이 매우 다른 case* (예: 정상 cell vs 질환 cell mixture)에서도 적절한가? 본문 dataset은 모두 *similar composition between batches* — completely *different cell type distribution* setting (case-control)에서 regularization이 *biology를 강제 동질화*하지 않는지 검증 부재.
+- **질문 1**: MultiVeloVAE의 $\lambda \sum_b (\theta_b - \theta_r)^2$ cross-batch regularization (Eq. 8)이 *sample composition이 매우 다른 case* (예: 정상 cell vs 질환 cell mixture)에서도 적절한가? 본문 dataset은 모두 *similar composition between batches* — completely *different cell type distribution* setting (case-control)에서 regularization이 *biology를 강제 동질화*하지 않는지 검증 부재.
 
 - **질문 2**: BasisVAE의 7 cluster initialization (induction-only / repression-only / complete 조합)이 hyperparameter K로 *주어진 fixed* 값. 본문은 K=7을 default로만 명시 — *dataset complexity에 따라 K를 adaptive하게 선택*하는 방법 없는가? non-parametric Bayesian (Dirichlet process)이 더 자연스러울 수 있음.
 
-- **질문 3**: in silico KO를 `c = u = s = 0`으로 zeroing — 이는 *gene expression이 모든 cell에서 영원히 0인 상태*를 simulate. 실제 KO는 *time-dependent decay* (mRNA half-life에 따른 점진적 감소) — 이를 반영한 perturbation simulation이 더 realistic하지 않은가? 본 paper의 simulation이 실험 결과와 quantitative agreement가 약한 것은 이 단순화 때문일 가능성.
+- **질문 3**: in silico KO를 $c = u = s = 0$으로 zeroing — 이는 *gene expression이 모든 cell에서 영원히 0인 상태*를 simulate. 실제 KO는 *time-dependent decay* (mRNA half-life에 따른 점진적 감소) — 이를 반영한 perturbation simulation이 더 realistic하지 않은가? 본 paper의 simulation이 실험 결과와 quantitative agreement가 약한 것은 이 단순화 때문일 가능성.
 
 - **질문 4**: Continuous (δ, κ)가 *single cell × single gene*마다 unique 값. 그러나 *cell의 stochastic state transition* (e.g., bursty transcription, Markov chromatin)을 직접 modeling하지는 않음. Stochastic ODE 변형 (`@li2023multivelo` Supplementary Fig. 2)이 본 MultiVeloVAE에는 부재 — VAE framework에서 stochastic 변형 자연스럽게 추가 가능한가?
 
