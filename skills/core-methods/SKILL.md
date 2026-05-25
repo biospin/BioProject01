@@ -43,6 +43,9 @@ Methods를 단순 절차 요약이 아니라 “이 논문이 어떤 probabilist
 - `likelihood`, `prior`, `posterior`, `latent variable`, `variational inference`, `Bayesian`, `Markov`, `ODE`, `loss function`, `regularization`, `optimization`, `gradient`, `negative sampling`, `benchmark`, `ablation`, `baseline`, `metric`처럼 분야에서 자연스러운 용어는 영어로 유지할 수 있다.
 - 영어 용어를 처음 사용할 때는 필요한 경우 짧게 한국어 설명을 붙인다.
 - 수식이 있으면 그대로 보존하되, 수식의 역할을 한국어로 설명한다.
+- **수식 표기는 반드시 LaTeX `$...$` (inline) / `$$...$$` (display)** 를 사용한다. backtick code span(`` `...` ``)에 수식을 넣지 않는다 — backtick은 MathJax 렌더링에서 의도적으로 제외되므로 HTML에서 raw text로 표시된다. Greek 문자는 `\alpha`, `\beta`, `\rho`, `\sigma`, `\delta`, `\kappa`, `\lambda`, `\theta` 등 LaTeX 명령으로 쓴다. Sum/expectation은 `\sum`, `\mathbb{E}`, `\mathrm{KL}`, `\mathrm{ELBO}` 등 사용. 변수만 단독 표기할 때도 inline math(`$x$`)를 권장한다 (예: $k_c$, $\rho$, $\theta_b$).
+  - 예: `$dc/dt = k_c \alpha_c - \alpha_c c$`, `$$\mathrm{ELBO} = \sum_i \mathbb{E}_{q(z,t|x_i,b)}[\log p(c_i|z,t,b)] - \mathrm{KL}(q(z|x,b) \| p(z|b))$$`.
+  - File/identifier(`fetch_sources.py`, `paper-info.yaml`, `--render-only`)는 backtick 그대로 사용.
 
 ## 작업 절차
 
