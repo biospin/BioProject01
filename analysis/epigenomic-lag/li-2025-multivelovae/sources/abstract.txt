@@ -1,0 +1,49 @@
+1. Nat Commun. 2025 Nov 20;16(1):11505. doi: 10.1038/s41467-025-66287-6.
+
+Inferring differential dynamics from multi-lineage, multi-omic, and multi-sample 
+single-cell data with MultiVeloVAE.
+
+Li C(#)(1), Gu Y(#)(2), Virgilio MC(1)(3), Lee KH(1), Collins KL(3)(4)(5), Welch 
+JD(6)(7).
+
+Author information:
+(1)Department of Computational Medicine and Bioinformatics, University of 
+Michigan, Ann Arbor, MI, USA.
+(2)Department of Electrical and Computer Engineering, University of Michigan, 
+Ann Arbor, MI, USA.
+(3)Cellular and Molecular Biology Program, University of Michigan, Ann Arbor, 
+MI, USA.
+(4)Department of Microbiology and Immunology, University of Michigan, Ann Arbor, 
+MI, USA.
+(5)Department of Internal Medicine, University of Michigan, Ann Arbor, MI, USA.
+(6)Department of Computational Medicine and Bioinformatics, University of 
+Michigan, Ann Arbor, MI, USA. welchjd@umich.edu.
+(7)Department of Computer Science and Engineering, University of Michigan, Ann 
+Arbor, MI, USA. welchjd@umich.edu.
+(#)Contributed equally
+
+Understanding how cells differentiate to their final specialized fates is a 
+fundamental problem in biomedical science. Single-cell multi-omic profiling 
+provides an opportunity to identify dynamic molecular changes, but new 
+computational approaches are needed to realize this potential. In particular, 
+previous methods for RNA velocity inference lack support for multi-lineage, 
+multi-sample, and multi-omic single-cell data and cannot be used to identify 
+differential dynamics. To overcome these challenges, we introduce MultiVeloVAE, 
+a probabilistic framework for multi-sample RNA velocity inference that 
+integrates single-cell RNA and multi-omic data. MultiVeloVAE models gene 
+expression and chromatin accessibility on a shared time scale, performs 
+multi-sample inference from datasets with partially overlapping modalities, 
+accounts for lineage bifurcations, and enables statistical testing of velocity 
+parameters among cell types and over time. Using newly generated 10X Multiome 
+datasets from human embryoid bodies and differentiating macrophage cells, we 
+demonstrate that MultiVeloVAE provides novel insights into chromatin 
+accessibility and gene expression dynamics during development.
+
+© 2025. The Author(s).
+
+DOI: 10.1038/s41467-025-66287-6
+PMCID: PMC12748740
+PMID: 41266355 [Indexed for MEDLINE]
+
+Conflict of interest statement: Competing interests: The authors declare no 
+competing interests.
