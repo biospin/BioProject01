@@ -54,7 +54,27 @@ sources:
       - "https://www.nature.com/articles/s41467-025-66287-6"
     local: "sources/li-2025-multivelovae.pdf"
     status: "downloaded"
-  supplementary: []
+  supplementary:
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM1_ESM.pdf"
+      local: "sources/li-2025-multivelovae-supp-1-figures.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Supplementary Figures S1-S22 (24 pages, 55MB). 수동 다운로드."
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM2_ESM.pdf"
+      local: "sources/li-2025-multivelovae-supp-2-reporting-summary.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Nature Portfolio Reporting Summary."
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM3_ESM.pdf"
+      local: "sources/li-2025-multivelovae-supp-3-peer-review.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Peer Review File (67 pages, 26MB). 리뷰어 코멘트 + 저자 응답."
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM4_ESM.xlsx"
+      local: "sources/li-2025-multivelovae-supp-4-source-data.xlsx"
+      type: "xlsx"
+      status: "downloaded"
+      note: "Source Data. Sheets: Fig.2c, Fig.2f_{time,GCBDir,Mann}, Fig.3g_GCBDir{,_embed}, Fig.3h, Fig.4d_batch_removal, Fig.4e_biology_conservation, Fig.5d_{coupling,decoupling}, Fig.7g_{SPI1,GATA1}, SFig.4a. 본문 metric 수치 검증용."
   data: []
   code:
     - url: "https://github.com/welch-lab/MultiVeloVAE"
