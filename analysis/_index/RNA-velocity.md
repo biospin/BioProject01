@@ -11,5 +11,6 @@
 
 | Paper | Primary topic | Year | Venue | Importance |
 |---|---|---|---|---|
+| [hong-2026-moflow](../epigenomic-lag/hong-2026-moflow/) | epigenomic-lag | 2026 | Nature Communications | 상 |
 | [li-2023-multivelo](../epigenomic-lag/li-2023-multivelo/) | epigenomic-lag | 2023 | Nature Biotechnology | 상 |
 | [li-2025-multivelovae](../epigenomic-lag/li-2025-multivelovae/) | epigenomic-lag | 2025 | Nature Communications | 상 |

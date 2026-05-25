@@ -300,21 +300,31 @@ from urllib.parse import quote as _url_quote
 
 
 _NATURE_DOI_RE = _re_supp.compile(
-    r"^(?P<journal>s\d+)-(?P<year>\d{4})-(?P<id>\d+)-\d+$",
+    # Nature/Springer DOI tails. Year segment is 3 digits in modern DOIs
+    # (e.g. s41467-025-66287-6 for 2025), occasionally 4 digits in older
+    # records. Trailing suffix is digit or letter (s41587-022-01476-y).
+    r"^(?P<journal>s\d+)-(?P<year>\d{3,4})-(?P<id>\d+)-\w+$",
 )
 
 
 def _springer_moesm_stem(doi: str) -> str | None:
     """Return MOESM filename stem for a Nature/Springer DOI.
 
-    Example: DOI tail ``s41467-025-66287-6`` → stem ``41467_2025_66287``.
+    Examples:
+      s41467-025-66287-6 → 41467_2025_66287
+      s41587-022-01476-y → 41587_2022_01476
     """
     tail = doi.split("/", 1)[-1] if "/" in doi else doi
     m = _NATURE_DOI_RE.match(tail)
     if not m:
         return None
     journal_digits = _re_supp.sub(r"\D", "", m.group("journal"))
-    return f"{journal_digits}_{m.group('year')}_{m.group('id')}"
+    year = m.group("year")
+    # Modern DOIs use a 3-digit year (yyy meaning 2yyy); pre-2000 records
+    # exist as 4-digit and pass through unchanged.
+    if len(year) == 3:
+        year = "2" + year
+    return f"{journal_digits}_{year}_{m.group('id')}"
 
 
 def _classify_supp_file(local_path: Path, ext: str) -> str:
