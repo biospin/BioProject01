@@ -235,6 +235,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
 <style>{css}</style>
+<script>
+MathJax = {{tex: {{inlineMath: [['$','$'],['\\\\(','\\\\)']], displayMath: [['$$','$$'],['\\\\[','\\\\]']]}}}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 </head>
 <body>
 <div class="layout">
@@ -396,16 +400,22 @@ def _get_main_content_bbox(page: "fitz.Page", padding: float = 8.0) -> "fitz.Rec
 
 
 def render_page_to_png(pdf_path: Path, page_num: int, out_path: Path,
-                       dpi: int = 150, trim: bool = True) -> None:
+                       dpi: int = 150, trim: bool = True,
+                       clip_bbox: tuple[float, float, float, float] | None = None) -> None:
     """Render a single 1-based page to PNG.
 
-    When trim=True, automatically crop to the bbox of horizontal text +
-    image blocks, removing PMC sidebar and page-number margins.
+    When ``clip_bbox`` is given, render only that region (page coords, pt).
+    Otherwise, when ``trim=True``, automatically crop to the bbox of
+    horizontal text + image blocks, removing PMC sidebar and page-number
+    margins.
     """
     doc = fitz.open(pdf_path)
     page = doc[page_num - 1]
     mat = fitz.Matrix(dpi / 72, dpi / 72)
-    if trim:
+    if clip_bbox is not None:
+        clip = fitz.Rect(*clip_bbox)
+        pix = page.get_pixmap(matrix=mat, clip=clip, alpha=False)
+    elif trim:
         clip = _get_main_content_bbox(page)
         pix = page.get_pixmap(matrix=mat, clip=clip, alpha=False)
     else:
@@ -413,6 +423,85 @@ def render_page_to_png(pdf_path: Path, page_num: int, out_path: Path,
     out_path.parent.mkdir(parents=True, exist_ok=True)
     pix.save(str(out_path))
     doc.close()
+
+
+# ---------------------------------------------------------------------------
+# Smart per-figure bbox (figure + caption, no body text below)
+# ---------------------------------------------------------------------------
+
+
+def _compute_figure_bbox(
+    pdf_path: Path, page_num: int, figure_key: str,
+) -> tuple[float, float, float, float] | None:
+    """Find a clip bbox for ``figure_key`` (e.g. ``"figure-3"``) on page
+    ``page_num`` (1-based). Returns ``(x0, y0, x1, y1)`` in page-pt
+    coordinates, or ``None`` if the caption is not detected (caller should
+    fall back to whole-page snapshot).
+
+    Strategy: locate the caption block via ``page.get_text("blocks")``.
+    A block is treated as the caption when its first non-empty line matches
+    ``^\\s*Fig(?:ure)?\\.?\\s*N\\s*[|.]``. The bbox spans the full page
+    width, top of page → bottom of caption block (+ small margin). If the
+    caption ends within 50pt of the page bottom, we just use the page
+    bottom (the figure occupies the whole page).
+    """
+    # Extract just the figure number from key like 'figure-3' / 'extended-data-fig-3'
+    m = re.search(r"(\d+)$", figure_key)
+    if not m:
+        return None
+    n = m.group(1)
+    cap_re = re.compile(
+        rf"^\s*(?:Extended\s+Data\s+)?Fig(?:ure)?\.?\s*{n}\s*[|.]",
+        re.IGNORECASE | re.MULTILINE,
+    )
+
+    doc = fitz.open(pdf_path)
+    try:
+        page = doc[page_num - 1]
+        rect = page.rect
+        # blocks: list of (x0, y0, x1, y1, text, block_no, block_type)
+        blocks = page.get_text("blocks")
+        # Sort top-to-bottom for predictable scan order.
+        blocks_sorted = sorted(blocks, key=lambda b: (b[1], b[0]))
+
+        caption_idx = None
+        for i, blk in enumerate(blocks_sorted):
+            text = blk[4] if len(blk) > 4 else ""
+            if not text:
+                continue
+            # cap_re is multiline, so it matches the figure caption pattern
+            # at the start of ANY line inside the block.
+            if cap_re.search(text):
+                caption_idx = i
+                break
+        if caption_idx is None:
+            return None
+
+        cap_block = blocks_sorted[caption_idx]
+        cap_y0 = cap_block[1]
+        cap_y1 = cap_block[3]
+
+        # Multi-column papers (Nature, etc.) split a single caption across
+        # left/right column blocks at the same vertical band. Treat any
+        # block whose y0 falls inside the caption-block's y-range and is
+        # NOT a body paragraph as a sibling caption block. Body paragraphs
+        # start *below* the bottom of the deepest caption-band block.
+        cap_band_bottom = cap_y1
+        for blk in blocks_sorted:
+            y0, y1_b = blk[1], blk[3]
+            # block whose top sits inside the caption band → likely a
+            # column-sibling of the caption (right-column continuation).
+            if cap_y0 - 4.0 <= y0 <= cap_y1 + 4.0:
+                cap_band_bottom = max(cap_band_bottom, y1_b)
+
+        margin = 6.0
+        y1 = min(rect.y1, cap_band_bottom + margin)
+        # If caption ends near the page bottom, just use full page bottom.
+        if (rect.y1 - cap_band_bottom) < 50.0:
+            y1 = rect.y1
+        return (rect.x0, rect.y0, rect.x1, y1)
+    finally:
+        doc.close()
 
 
 def apply_panel_spec(pdf_path: Path, spec_path: Path, out_dir: Path) -> dict[str, Path]:
@@ -777,6 +866,7 @@ def expand_details_blocks(md_text: str) -> str:
     def replace(match: re.Match) -> str:
         title = match.group("title").strip()
         body_md = match.group("body")
+        body_md, replacements = _protect_math_and_code(body_md)
         body_html = markdown.markdown(
             body_md,
             extensions=[
@@ -789,6 +879,7 @@ def expand_details_blocks(md_text: str) -> str:
                 "mdx_truly_sane_lists": {"nested_indent": 2, "truly_sane": True},
             },
         )
+        body_html = _restore_math_and_code(body_html, replacements)
         body_html = highlight_prefixes(body_html)
         return (
             f'<details class="collapse-block">\n'
@@ -827,6 +918,67 @@ def augment_markdown_with_tables(md_text: str, tables: dict[str, dict]) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Math protection (preserve $...$ / $$...$$ / \(...\) / \[...\] through
+# the markdown pass so MathJax can render them in the browser)
+# ---------------------------------------------------------------------------
+
+# Order matters: longest/most-specific delimiters first so $$...$$ is not
+# eaten by $...$. We skip math inside fenced code (``` ... ```) and inline
+# code (`...`) — code blocks are pulled out first, then restored.
+_CODE_FENCE_RE = re.compile(r"(^|\n)(```.*?\n.*?\n```)", re.DOTALL)
+_CODE_INLINE_RE = re.compile(r"`[^`\n]+`")
+
+_MATH_PATTERNS = [
+    re.compile(r"\$\$(.+?)\$\$", re.DOTALL),     # display $$...$$
+    re.compile(r"\\\[(.+?)\\\]", re.DOTALL),     # display \[...\]
+    re.compile(r"(?<!\\)\$(?!\s)(.+?)(?<!\s)(?<!\\)\$"),  # inline $...$
+    re.compile(r"\\\((.+?)\\\)", re.DOTALL),     # inline \(...\)
+]
+
+
+def _protect_math_and_code(md_text: str) -> tuple[str, dict[str, str]]:
+    """Replace math + code spans with unique placeholders so the markdown
+    parser does not mangle special characters (``_``, ``*``, ``\``) inside
+    them. Returns (modified_text, {placeholder: original}).
+
+    Code spans are extracted *first* so that any ``$`` inside ``code``
+    stays literal (not treated as math). Math is then extracted from what
+    remains. Placeholders are restored *after* the HTML pass, so MathJax
+    sees the original delimiters in the rendered HTML.
+    """
+    replacements: dict[str, str] = {}
+    counter = [0]
+
+    def stash(text: str) -> str:
+        token = f"\x00MATHCODE{counter[0]:06d}\x00"
+        counter[0] += 1
+        replacements[token] = text
+        return token
+
+    # 1. Fenced code blocks (multi-line)
+    def fenced_sub(m: re.Match) -> str:
+        prefix = m.group(1)
+        code = m.group(2)
+        return prefix + stash(code)
+    md_text = _CODE_FENCE_RE.sub(fenced_sub, md_text)
+
+    # 2. Inline code
+    md_text = _CODE_INLINE_RE.sub(lambda m: stash(m.group(0)), md_text)
+
+    # 3. Math (display first, then inline)
+    for pat in _MATH_PATTERNS:
+        md_text = pat.sub(lambda m: stash(m.group(0)), md_text)
+
+    return md_text, replacements
+
+
+def _restore_math_and_code(html: str, replacements: dict[str, str]) -> str:
+    for token, original in replacements.items():
+        html = html.replace(token, original)
+    return html
+
+
+# ---------------------------------------------------------------------------
 # Markdown → HTML
 # ---------------------------------------------------------------------------
 
@@ -838,7 +990,13 @@ def md_to_html(md_text: str) -> tuple[str, str]:
     so the natural hierarchy in <paper-id>_core.md ("- Hidden assumption:\n  1. foo")
     renders as a real nested list instead of a flat one. We also avoid
     `sane_lists`, which would insist on 4-space indents.
+
+    Math expressions (``$...$``, ``$$...$$``, ``\\(...\\)``, ``\\[...\\]``)
+    and code spans are masked with placeholders before the markdown pass so
+    the parser does not mangle their special characters; placeholders are
+    restored in the resulting HTML for MathJax to pick up in the browser.
     """
+    md_text, replacements = _protect_math_and_code(md_text)
     md = markdown.Markdown(
         extensions=[
             "extra",
@@ -856,6 +1014,7 @@ def md_to_html(md_text: str) -> tuple[str, str]:
         },
     )
     body = md.convert(md_text)
+    body = _restore_math_and_code(body, replacements)
     body = highlight_prefixes(body)
     toc = md.toc
     return body, toc
@@ -944,12 +1103,21 @@ def main() -> int:
             print(f"applying panel spec from {panels_spec.relative_to(REPO_ROOT)}")
             apply_panel_spec(pdf, panels_spec, figures_dir)
         else:
-            # Page-level
+            # Page-level (with smart per-figure bbox crop)
             auto_map = auto_detect_figure_pages(pdf)
             saved_map: dict[str, int] = {}
+            saved_bbox: dict[str, list[float]] = {}
             if map_file.exists():
                 with map_file.open("r", encoding="utf-8") as f:
-                    saved_map = {k: int(v) for k, v in json.load(f).items()}
+                    raw_saved = json.load(f)
+                for k, v in raw_saved.items():
+                    # Back-compat: old schema stored {key: int}
+                    if isinstance(v, int):
+                        saved_map[k] = v
+                    elif isinstance(v, dict) and "page" in v:
+                        saved_map[k] = int(v["page"])
+                        if "bbox" in v and v["bbox"] is not None:
+                            saved_bbox[k] = list(v["bbox"])
             cli_map = parse_figure_map_arg(args.figure_map) if args.figure_map else {}
             # priority: cli > saved > auto
             final_map = merge_figure_maps(auto_map, saved_map, cli_map)
@@ -961,14 +1129,32 @@ def main() -> int:
                 for key in sorted(final_map.keys()):
                     print(f"  {key}: page {final_map[key]}")
 
+            # Compute / persist per-figure bbox map (new schema)
+            new_map: dict[str, dict] = {}
             for key, page in final_map.items():
                 out_path = figures_dir / f"{key}.png"
-                render_page_to_png(pdf, page, out_path, dpi=args.dpi)
+                bbox = None
+                # If CLI overrode page or saved bbox is missing, recompute.
+                if key in saved_bbox and key not in cli_map:
+                    bbox = tuple(saved_bbox[key])
+                else:
+                    bbox = _compute_figure_bbox(pdf, page, key)
+                if bbox is None:
+                    print(
+                        f"  warning: caption regex did not match on page {page} for {key}; "
+                        f"falling back to whole-page snapshot",
+                        file=sys.stderr,
+                    )
+                    render_page_to_png(pdf, page, out_path, dpi=args.dpi)
+                    new_map[key] = {"page": page, "bbox": None}
+                else:
+                    render_page_to_png(pdf, page, out_path, dpi=args.dpi, clip_bbox=bbox)
+                    new_map[key] = {"page": page, "bbox": list(bbox)}
                 print(f"  wrote {out_path.relative_to(REPO_ROOT)}")
 
-            # Persist the map for next run
+            # Persist the map for next run (new schema)
             with map_file.open("w", encoding="utf-8") as f:
-                json.dump(final_map, f, indent=2, ensure_ascii=False)
+                json.dump(new_map, f, indent=2, ensure_ascii=False)
             print(f"  saved mapping to {map_file.relative_to(REPO_ROOT)}")
 
     if args.extract_only:

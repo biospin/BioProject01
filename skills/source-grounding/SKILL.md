@@ -392,6 +392,12 @@ python3 skills/source-grounding/scripts/fetch_sources.py \
 옵션:
 - `--allow-scihub` — Sci-Hub fallback 허용 (기본 off, 본인 환경에서만 사용).
 - `--fetch-abstract` — abstract 자동 가져오기 (PubMed/Crossref).
+- `--discover-supp` — Nature/Springer DOI(`10.1038/...`)인 paper에 한해, `sources.supplementary[]`가 비어 있을 때만 Springer CDN(`static-content.springer.com/.../MOESM<N>_ESM.{pdf,xlsx}`)을 N=1..6까지 자동 probe. 첫 페이지 텍스트를 보고 `figures` / `reporting-summary` / `peer-review` / `source-data` 등으로 best-guess label을 붙여 `sources/<paper-id>-supp-<N>-<label>.{pdf,xlsx}` 로 저장하고 yaml에 추가. 기본 off — 이미 yaml을 수동 편집한 사용자가 의도치 않게 mutated 되지 않도록 opt-in.
+
+`.url` stub은 cross-platform shortcut으로 작성됨:
+- `<name>.url` — Windows `[InternetShortcut]` INI (Explorer에서 더블 클릭).
+- `<name>.webloc` — macOS plist 형식이 같은 폴더에 함께 생성 (Finder에서 더블 클릭).
+두 파일 모두 git commit 대상 — `.gitignore`는 `.url`도 `.webloc`도 제외하지 않음.
 
 ### 4.2 status 카탈로그 (8종)
 
