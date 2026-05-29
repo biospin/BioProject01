@@ -1,0 +1,19 @@
+Source: PubMed (PMID 36229609)
+Citation: Li C, Virgilio MC, Collins KL, Welch JD. Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction. Nat Biotechnol. 2023 Mar;41(3):387-398. doi: 10.1038/s41587-022-01476-y. Epub 2022 Oct 13.
+
+Multi-omic single-cell datasets, in which multiple molecular modalities are
+profiled within the same cell, offer an opportunity to understand the temporal
+relationship between epigenome and transcriptome. To realize this potential, we
+developed MultiVelo, a differential equation model of gene expression that
+extends the RNA velocity framework to incorporate epigenomic data. MultiVelo
+uses a probabilistic latent variable model to estimate the switch time and rate
+parameters of chromatin accessibility and gene expression and improves the
+accuracy of cell fate prediction compared to velocity estimates from RNA only.
+Application to multi-omic single-cell datasets from brain, skin and blood cells
+reveals two distinct classes of genes distinguished by whether chromatin closes
+before or after transcription ceases. We also find four types of cell states:
+two states in which epigenome and transcriptome are coupled and two distinct
+decoupled states. Finally, we identify time lags between transcription factor
+expression and binding site accessibility and between disease-associated SNP
+accessibility and expression of the linked genes. MultiVelo is available on
+PyPI, Bioconda and GitHub (https://github.com/welch-lab/MultiVelo).

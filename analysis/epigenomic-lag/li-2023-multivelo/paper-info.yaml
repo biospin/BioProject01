@@ -1,0 +1,122 @@
+# Li, Chen et al., 2023 — multivelo — Nature Biotechnology
+# DOI: 10.1038/s41587-022-01476-y
+# Topics: epigenomic-lag (primary), single-cell-genomics, RNA-velocity, chromatin-rna-coupling  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Multi-omic single-cell velocity models epigenome-transcriptome interactions and improves cell fate prediction"
+authors:
+  - "Li, Chen"
+  - "Virgilio, Maria C."
+  - "Collins, Kathleen L."
+  - "Welch, Joshua D."
+year: 2023
+venue: "Nature Biotechnology"
+doi: "10.1038/s41587-022-01476-y"
+keywords:
+  - "RNA velocity"
+  - "multi-omics"
+  - "chromatin accessibility"
+  - "single-cell"
+  - "cell fate prediction"
+
+# Version (preprint vs published 등)
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2023-03-01"          # Nat Biotechnol 41(3):387-398 (online 2022-10-13)
+    volume: "41"
+    issue: "3"
+    pages: "387-398"
+
+# Topics (Option E)
+topics:
+  - "epigenomic-lag"            # primary
+  - "single-cell-genomics"
+  - "RNA-velocity"
+  - "chromatin-rna-coupling"
+
+# Citation
+citation:
+  key: "li2023multivelo"
+  short_id: "multivelo"
+  bibtex_file: "sources/li-2023-multivelo.bib"
+  bibtex_type: "article"
+  share_filename: "Li 2023 - Multi-omic single-cell velocity (MultiVelo).pdf"
+
+# Source files
+sources:
+  paper:
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10246490/pdf/nihms-1899244.pdf"
+    url_alt:
+      - "https://www.nature.com/articles/s41587-022-01476-y.pdf"
+      - "https://pmc.ncbi.nlm.nih.gov/articles/PMC10246490/"
+    local: "sources/li-2023-multivelo.pdf"
+    status: "downloaded"
+    note: "PMC10246490 NIHMS author manuscript, 48 pages. 사용자 manual download (PMC PoW cookie 필요)."
+  supplementary:
+    - url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/10246490/bin/NIHMS1899244-supplement-Supplementary_material.pdf"
+      local: "sources/li-2023-multivelo-supp-1-info.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Supplementary Information, 11 pages."
+  data:
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE140203"
+      local: "sources/data_GSE140203.url"
+      type: "geo-accession"
+      status: "url-only"
+      note: "SHARE-seq mouse skin (Ma et al., 2020) — reused dataset."
+  code:
+    - url: "https://github.com/welch-lab/MultiVelo"
+      local: "sources/code_MultiVelo.url"
+      type: "github"
+      status: "url-only"
+  abstract_text:
+    source: "pubmed"
+    pmid: "36229609"
+    local: "sources/abstract.txt"
+    status: "downloaded"
+
+# Categorization (LLM이 분석 단계에서 채움)
+categorization:
+  domain:
+    - "single-cell-genomics"
+    - "epigenomics"
+    - "RNA velocity"
+    - "computational-methods"
+    - "multi-omics"
+  use_case:
+    - "methodology-reference"
+    - "pipeline-applicable"
+    - "academic-citation"
+  importance:
+    level: "상"
+    perspective: "HSPC 10x Multiome pipeline에 바로 차용 가능 + chromatin–RNA lag 정량 알고리즘이 우리 epigenomic-lag topic의 foundational reference이며 후속 multi-omic velocity 비교 baseline."
+
+# Stakeholder & priority
+audience:
+  primary: "self"
+  secondary: []
+  note:
+priority:
+  level: "normal"
+  deadline:
+  reason: "Epigenomic-lag topic의 foundational reference. 후속 MultiVelo-VAE 등 비교에 필요."
+
+# Cross-reference (연관 자료)
+related: []
+
+# Workflow metadata
+workflow:
+  created: "2026-05-22"
+  last_updated: "2026-05-22"
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
