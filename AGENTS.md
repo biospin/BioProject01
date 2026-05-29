@@ -29,6 +29,8 @@ paper analysis에는 다음 local skill을 사용한다:
 | `full.md` Figure / Table Analysis | `skills/full-figure/SKILL.md` |
 | `full.md` Results | `skills/full-results/SKILL.md` |
 | `full.md` Limitations and Final Takeaways | `skills/full-discussion/SKILL.md` |
+| Cell type annotation 전략 및 품질 평가 - annotation 방법이 결론에 영향을 주는 single-cell / multi-ome 논문에서 사용 | `skills/celltype-annotation/SKILL.md` |
+| Multi-ome modality 통합 품질 평가 - scRNA-seq + scATAC-seq joint 분석 논문에서 통합 신뢰도가 downstream 분석에 영향을 줄 때 사용 | `skills/multiome-integration/SKILL.md` |
 | 기존 `full.md` 기반의 명시적 static slide deck 요청 | `skills/full-slides/SKILL.md` |
 | 분석된 paper에 대한 질문 | `skills/question/SKILL.md` |
 
