@@ -143,6 +143,8 @@ chromatin-RNA timing 연구는
 ### Speaker Note
 둘째 insight는 각 논문의 역할 분리입니다. MultiVelo는 foundation, MultiVeloVAE는 refined dynamics, MoFlow는 가장 direct한 lag interpretation으로 볼 수 있었습니다.
 
+추가로 주목할 점은, MultiVelo와 MoFlow가 SHARE-seq mouse skin과 E18 mouse brain이라는 동일한 데이터를 사용했는데 latent time에 대해 정반대 결론을 냈다는 것입니다. MultiVelo는 latent time이 적절한 timing 축이라고 했고, MoFlow는 고정된 global latent time이 오히려 lag 추정을 왜곡한다고 했습니다. 이것은 현재 field에서 temporal axis 자체가 아직 열린 문제임을 보여줍니다.
+
 ---
 
 ## Slide 10. Main Insight 3 - Repeated Limitations
@@ -160,7 +162,7 @@ chromatin-RNA timing 연구는
 ## Slide 11. Main Insight 4 - Unresolved Gaps
 
 1. pseudotime -> wall-clock calibration
-2. baseline epigenomic features -> lag prediction
+2. baseline epigenomic features -> lag prediction  ← 이 프로젝트의 핵심 novelty
 3. enhancer-level lag resolution
 4. multi-sample robustness
 5. Step 3 validation framework
@@ -218,7 +220,6 @@ chromatin-RNA timing 연구는
    - MoFlow 기반 lag target 정의
 3. Step 2 설계
    - baseline epigenomic feature -> lag prediction model 구상
-4. JIRA 상태 업데이트
 
 ### Speaker Note
 다음 단계는 literature synthesis를 끝내는 것이 아니라, Step 1의 operational target을 정하고 Step 2 predictive task로 연결하는 것입니다.
