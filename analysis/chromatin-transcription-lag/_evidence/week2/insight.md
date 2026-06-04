@@ -1,10 +1,5 @@
 # Insight
 
-Generated from: `papers.jsonl`, `comparison_table.md`, `evidence_bundle.md`
-Skill: `Skills/insight-agent.md`
-
----
-
 ## Field Flow
 
 The field moved through three distinct phases, each expanding what "timing" means in chromatin-RNA dynamics.
@@ -16,11 +11,11 @@ MultiVelo established that chromatin accessibility and transcription do not chan
 MultiVeloVAE replaced MultiVelo's discrete per-gene regime labels with continuous, cell-specific coupling ($k_c$) and decoupling ($\delta/\kappa$) factors inferred through a variational posterior. This moved the field from "is gene G in Model 1 or Model 2?" toward "how strongly decoupled is gene G in cell C at pseudotime T?" The decoupling factor is the closest existing variable to a cell-resolved lag estimate, but it is derived from model parameters rather than directly measured from timing data.
 
 **Phase 3 — Direct lag scoring (what is the signed lag magnitude?).**
-MoFlow removed the latent-time dependency entirely. Its relay velocity model computes a signed chromatin-to-spliced RNA lag per gene per cell without requiring a global trajectory ordering. Positive lag = chromatin leads transcription; negative lag = transcription precedes chromatin closing. This is the most direct published analog to the activation lag and shutdown lag concepts in this project.
+MoFlow reduces dependence on a fixed global latent-time axis. Its relay velocity model computes a signed chromatin-to-spliced RNA lag per gene per cell without requiring a single shared trajectory ordering. Positive lag = chromatin leads transcription; negative lag = transcription precedes chromatin closing. This is the most direct published analog to the activation lag and shutdown lag concepts in this project.
 
-Cross-paper statement: MultiVelo defined the ordering, MultiVeloVAE made it continuous, MoFlow made it signed and latent-time-free — three successive expansions of the same core question.
+Cross-paper statement: MultiVelo defined the ordering, MultiVeloVAE made it continuous, and MoFlow made lag direction more explicit without relying on a fixed global latent-time axis. These are three successive expansions of the same core question.
 
-Evidence anchor: MultiVelo §Methods (priming interval, decoupling interval definitions); MoFlow §Results (positive/negative lag interpretation; relay velocity formulation without fixed latent time).
+Evidence anchor: MultiVelo priming/decoupling interval definitions; MultiVeloVAE decoupling factor definition; MoFlow positive-versus-negative lag interpretation and relay velocity rationale.
 
 Project implication: Step 1 of this project (define and quantify gene-specific lag) has direct conceptual predecessors in all three papers, but none delivers an explicit, uncertainty-quantified activation lag or shutdown lag variable ready for downstream use without adaptation.
 
@@ -42,9 +37,9 @@ MultiVelo and MoFlow both analyze SHARE-seq mouse skin and E18 mouse brain. Mult
 - For Step 2 (predict lag from baseline features): None of the three directly attempts this; MultiVeloVAE's continuous posterior is suggestive of feature-driven lag prediction but does not model epigenomic baseline as input.
 - For Step 3 (validate against drug/perturbation response timing): All three are weak. MultiVeloVAE provides in-silico perturbation but no wall-clock validation; MultiVelo and MoFlow do not address it.
 
-Evidence anchor: comparison_table.md Step 1/2/3 relevance columns; MoFlow §Introduction (relay velocity rationale); MultiVeloVAE §Methods (decoupling factor definition).
+Evidence anchor: comparison_table.md Step 1/2/3 relevance columns; MoFlow relay velocity rationale; MultiVeloVAE decoupling factor definition.
 
-Project implication: no single paper delivers a complete Step 1 solution; a hybrid approach — MoFlow lag scores as primary, MultiVeloVAE uncertainty as secondary — is the most defensible starting point for this project.
+Project implication: no single paper delivers a complete Step 1 solution; a defensible starting point is to treat MoFlow as the strongest lag-oriented method and MultiVeloVAE as a complementary source of cell-specific dynamic context.
 
 ---
 
@@ -52,8 +47,8 @@ Project implication: no single paper delivers a complete Step 1 solution; a hybr
 
 Four limitations appear independently in all three papers. Their recurrence indicates structural constraints of the current field, not individual paper shortcomings.
 
-**1. Pseudotime units, not wall-clock time.**
-All three methods output timing estimates anchored to pseudotime or latent time. MultiVelo states this explicitly (§Limitations: timing remains in arbitrary latent time). MultiVeloVAE inherits this through the shared VAE latent axis. MoFlow's relay velocity removes the latent-time axis but the resulting lag scores are still ordinal within a trajectory, not calibrated to hours or days. Inference: any claim that short-lag genes respond faster to a drug in real time requires a calibration step that none of the three papers provides.
+**1. No wall-clock calibration.**
+All three methods stop short of calibrating their timing outputs to real experimental hours or days. MultiVelo states this explicitly through its arbitrary latent-time framing. MultiVeloVAE inherits the same limitation through latent dynamic variables derived from the model. MoFlow reduces dependence on a fixed global latent-time axis, but its lag scores are still not calibrated to wall-clock time. Inference: any claim that short-lag genes respond faster to a drug in real time requires a calibration step that none of the three papers provides.
 
 **2. No uncertainty interval on lag-like estimates.**
 MultiVelo produces point-estimate switch times with no confidence interval. MultiVeloVAE provides a posterior but does not propagate uncertainty through to a per-gene lag summary. MoFlow reports lag signs and magnitudes but without bootstrap or posterior variance. A gene classified as "short lag" could be noise-driven; there is currently no operational way to filter lag estimates by reliability without additional analysis.
@@ -64,7 +59,7 @@ All three aggregate chromatin peaks to the gene level (peak-to-gene linkage or g
 **4. No perturbation or drug response validation.**
 None of the three papers connects estimated lag to measured perturbation response timing. MultiVeloVAE's in-silico KO simulations are model-internal tests, not real perturbation experiments. This is a structural absence: the tools to estimate lag exist in draft form, but no paper closes the loop from lag estimate to response-time prediction.
 
-Evidence anchors: MultiVelo §Limitations (latent time, gene-level aggregation); MultiVeloVAE §Limitations (model assumptions, indirect perturbation); MoFlow §Limitations (gene-wise scope, missing regulatory context).
+Evidence anchors: MultiVelo latent-time and aggregation limitations; MultiVeloVAE model-assumption and indirect-perturbation limitations; MoFlow gene-wise scope and missing regulatory-context limitations.
 
 Project implication: all four limitations must be addressed or explicitly scoped out before any output of this project can support a drug response timing claim; the two most tractable are (1) pseudotime calibration via a metabolic labeling dataset and (2) uncertainty filtering via bootstrap resampling of lag estimates.
 
@@ -87,6 +82,6 @@ MultiVelo and MoFlow are designed for single-sample inference. MultiVeloVAE adds
 **Gap 5 — Step 3 validation framework.**
 No paper proposes, let alone executes, a test of the form: "genes predicted to have short activation lag by method X respond to epigenetic drug Y within T hours, while long-lag genes respond after T+Δ hours." This is the direct test of the project hypothesis. The closest adjacent design in the broader literature (e.g., DeepKINET's metabolic labeling benchmark) targets splicing/degradation rates, not chromatin-RNA lag, and uses labeling data not available for chromatin dynamics.
 
-Evidence anchors: MultiVelo §Limitations (response-time validation absent); MoFlow §Limitations (perturbation-level coordination missing); evidence_bundle.md `What it still does not solve` entries for all three papers.
+Evidence anchors: MultiVelo response-time validation absence; MoFlow perturbation-level coordination limitation; evidence_bundle.md `What it still does not solve` entries for all three papers.
 
 Project implication: Gaps 1 and 3 are the highest-priority structural blockers for this project; Gap 2 defines the core novelty; Gaps 4 and 5 define the validation design that would make a completed project publishable.
