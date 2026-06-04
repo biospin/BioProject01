@@ -41,7 +41,7 @@ This file is the direct handoff to the Insight Agent. Keep it compact, factual, 
 - What this paper enables for our project: a direct conceptual precursor for activation lag and shutdown lag.
 - What it still does not solve: continuous gene-specific lag with uncertainty and real-time calibration.
 - Key limitation: timing remains in latent units and response-time validation is absent.
-- Quote-ready figure / table / method anchors: see local analysis `BioProject01/analysis/multivelo-analysis.ref.md`.
+- Quote-ready figure / table / method anchors: Abstract definition of switch-time estimation and two gene classes; Fig. 2 on two regulation mechanisms; Fig. 3-5 on priming/decoupling in brain, skin, and HSPC; local analysis `BioProject01/analysis/multivelo-analysis.ref.md`.
 
 ### MultiVeloVAE
 - Full citation: Li et al., Nature Communications, 2025.
@@ -53,10 +53,10 @@ This file is the direct handoff to the Insight Agent. Keep it compact, factual, 
 - What this paper enables for our project: a better bridge from discrete regime labels to continuous lag-like variables.
 - What it still does not solve: explicit activation/shutdown lag variables linked to perturbation timing.
 - Key limitation: richer model, but still indirect for Step 3.
-- Quote-ready figure / table / method anchors: official article sections on decoupling factor and cell-specific rates.
+- Quote-ready figure / table / method anchors: Fig. 1a-b shared time scale and continuous `k_c` / `rho`; Fig. 4d-e biological conservation versus batch removal; Fig. 5a-b continuous coupling/decoupling factors; Fig. 5e credible intervals from posterior-sampled cells; Methods note on cell cycle regression in blood-cell datasets.
 
 ### MoFlow
-- Full citation: Nature Communications, 2025.
+- Full citation: Hong et al., Nature Communications, 2026.
 - Data modality: paired chromatin accessibility + RNA.
 - Main biological system: SHARE-seq mouse skin and E18 mouse brain.
 - Timing concept: signed chromatin-to-spliced RNA lag interpreted directly.
@@ -65,7 +65,7 @@ This file is the direct handoff to the Insight Agent. Keep it compact, factual, 
 - What this paper enables for our project: the closest existing method to direct gene-specific lag estimation.
 - What it still does not solve: pathway-level coordination and perturbation-time validation.
 - Key limitation: missing long-range regulatory context and memory effects.
-- Quote-ready figure / table / method anchors: official article sections on positive/negative lag and method limitations.
+- Quote-ready figure / table / method anchors: Fig. 3e positive vs negative `c-s` lag interpretation; Supplementary Fig. 2c-d lag-sign reversals under different timing alignments; Fig. 4a-g skin trajectory and `m1/m2` alignment with MultiVelo labels; Fig. 6a-d brain trajectory and CBDir comparison; limitation paragraph on long-range regulation, transcriptional memory, and gene-wise scope.
 
 ## Minimum Evidence Standard
 - Every claim in `insight.md` should map back to a concrete paper and evidence block.
