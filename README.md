@@ -123,3 +123,4 @@ python3 skills/core-figure/scripts/extract_panels.py <pdf> --page N --figure "Fi
 - **Confluence**: Space `VC`, 경로 `프로젝트 진행-AI전용 > 프로젝트#01`.
 - **JIRA**: Space `BIOP01`.
 - **Slack**: 멤버별 openclaw bot.
+- **Atlassian MCP 설정**: [`openclaw/atlassian-mcp-setup.md`](openclaw/atlassian-mcp-setup.md).

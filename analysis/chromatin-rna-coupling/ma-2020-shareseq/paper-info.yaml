@@ -1,0 +1,159 @@
+# Ma, Sai et al., 2020 — shareseq — Cell
+# DOI: 10.1016/j.cell.2020.09.056
+# Topics: chromatin-rna-coupling (primary), single-cell-genomics  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Chromatin Potential Identified by Shared Single-Cell Profiling of RNA and Chromatin"
+authors:
+  - "Ma, Sai"
+  - "Zhang, Bing"
+  - "LaFave, Lindsay M."
+  - "Earl, Andrew S."
+  - "Chiang, Zachary"
+  - "Hu, Yan"
+  - "Ding, Jiarui"
+  - "Brack, Alison"
+  - "Kartha, Vinay K."
+  - "Tay, Tristan"
+  - "Law, Travis"
+  - "Lareau, Caleb"
+  - "Hsu, Ya-Chieh"
+  - "Regev, Aviv"
+  - "Buenrostro, Jason D."
+year: 2020
+venue: "Cell"
+doi: "10.1016/j.cell.2020.09.056"
+keywords:
+  - "SHARE-seq"
+  - "chromatin potential"
+  - "single-cell multi-omics"
+  - "ATAC + RNA co-assay"
+  - "mouse skin / hair follicle"
+
+# Version
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2020-11-12"
+    volume: "183"
+    issue: "4"
+    pages: "1103-1116.e20"
+
+# Topics
+topics:
+  - "chromatin-rna-coupling"      # primary
+  - "single-cell-genomics"
+
+# Citation
+citation:
+  key: "ma2020shareseq"
+  short_id: "shareseq"
+  bibtex_file: "sources/ma-2020-shareseq.bib"
+  bibtex_type: "article"
+  share_filename: "Ma 2020 - Chromatin Potential (SHARE-seq).pdf"
+
+# Source files
+sources:
+  paper:
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7669735/pdf/nihms-1634991.pdf"
+    url_alt:
+      - "https://www.cell.com/cell/pdf/S0092-8674(20)31253-9.pdf"
+      - "https://pmc.ncbi.nlm.nih.gov/articles/PMC7669735/"
+      - "https://doi.org/10.1016/j.cell.2020.09.056"
+    local: "sources/ma-2020-shareseq.pdf"
+    status: "blocked"
+    note: "2026-06-09 재시도: local shell DNS/network 제한으로 PDF 직접 다운로드 실패. 분석은 PMC public fulltext crawl, ScienceDirect landing/fulltext metadata, PubMed abstract, DOI metadata에 근거. PDF binary가 필요하면 사용자가 sources/ma-2020-shareseq.pdf로 manual drop."
+  supplementary: []
+  data:
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE140203"
+      local: "sources/data_GSE140203.url"
+      type: "geo-accession"
+      status: "url-only"
+      note: "SHARE-seq mouse skin (hair follicle) — primary dataset. 본 프로젝트 Dataset 2."
+  code:
+    - url: "https://github.com/masai1116/SHARE-seq-alignmentV2"
+      local: "sources/code_SHARE-seq.url"
+      type: "github"
+      status: "url-only"
+      note: "SHARE-seq alignment pipeline V2 (첫 저자 Sai Ma 개인 계정에서 maintain). V1은 같은 owner의 SHARE-seq-alignment. Broad의 epi-SHARE-seq-pipeline은 official re-implementation."
+    - url: "https://github.com/masai1116/SHARE-seq-alignment"
+      local: "sources/code_SHARE-seq-v1.url"
+      type: "github"
+      status: "url-only"
+      note: "V1 original pipeline (paper 시점 버전)."
+    - url: "https://github.com/broadinstitute/epi-SHARE-seq-pipeline"
+      local: "sources/code_SHARE-seq-broad.url"
+      type: "github"
+      status: "url-only"
+      note: "Broad Institute Epigenomics Program이 maintain하는 alternative pipeline."
+  abstract_text:
+    source: "pubmed"
+    pmid: "33098772"
+    local: "sources/abstract.txt"
+    status: "downloaded"
+  fulltext:
+    - url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7669735/"
+      local: "sources/pmc_fulltext.url"
+      type: "pmc-fulltext"
+      status: "url-only"
+      note: "Primary public fulltext used for 2026-06-09 full analysis; browser crawl accessible, local shell download blocked."
+    - url: "https://www.sciencedirect.com/science/article/pii/S0092867420312538"
+      local: "sources/publisher_fulltext.url"
+      type: "publisher-fulltext"
+      status: "url-only"
+      note: "Publisher page used for title, highlights, summary, and bibliographic cross-check."
+    - url: "https://par.nsf.gov/servlets/purl/10328929"
+      local: "sources/public_pdf_mirror.url"
+      type: "public-pdf-mirror"
+      status: "url-only"
+      note: "NSF PAR PDF mirror identified by web search; local shell download blocked."
+
+# Categorization (LLM이 분석 단계에서 채움)
+categorization:
+  domain:
+    - "single-cell-genomics"
+    - "chromatin accessibility"
+    - "multi-omics"
+    - "experimental-methods"
+  use_case:
+    - "methodology-reference"
+    - "academic-citation"
+    - "pipeline-applicable"
+  importance:
+    level: "상"
+    perspective: "본 프로젝트 Dataset 2 (mouse skin SHARE-seq, GSE140203)의 원 paper. chromatin potential 개념의 시초로, MultiVelo/MoFlow 등 epigenomic-lag 후속 work의 foundational reference."
+
+# Stakeholder & priority
+audience:
+  primary: "self"
+  secondary: []
+  note:
+priority:
+  level: "normal"
+  deadline:
+  reason: "Dataset 2 (SHARE-seq mouse skin)의 원 출처. epigenomic-lag topic의 chromatin-RNA coupling 직관을 이해하기 위한 필수 reference."
+
+# Cross-reference
+related:
+  - paper-id: "li-2023-multivelo"
+    relation: "dataset-reuse"
+    note: "MultiVelo가 Ma 2020 GSE140203 SHARE-seq mouse skin을 Dataset 2로 재사용."
+  - paper-id: "li-2025-multivelovae"
+    relation: "dataset-reuse"
+    note: "MultiVeloVAE도 mouse skin SHARE-seq를 dataset로 사용 (ref. 36)."
+
+# Workflow metadata
+workflow:
+  created: "2026-05-26"
+  last_updated: "2026-06-09"
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"

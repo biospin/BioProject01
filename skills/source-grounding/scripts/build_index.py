@@ -15,6 +15,8 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime as dt
+import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -23,20 +25,119 @@ try:
     from ruamel.yaml import YAML
     from ruamel.yaml.error import YAMLError
 except ImportError:
-    print(
-        "ruamel.yaml is required. Install with: "
-        "pip install -r skills/source-grounding/scripts/requirements.txt",
-        file=sys.stderr,
-    )
-    sys.exit(1)
+    YAML = None
+
+    class YAMLError(Exception):
+        pass
 
 
 # Round-trip loader so other tools (fetch_sources.py) that write back to the
 # same files preserve comments. build_index.py itself only reads, so safe mode
 # would also work — but we keep rt for consistency across the project.
-yaml_io = YAML(typ="rt")
-yaml_io.preserve_quotes = True
-yaml_io.indent(mapping=2, sequence=4, offset=2)
+if YAML is not None:
+    yaml_io = YAML(typ="rt")
+    yaml_io.preserve_quotes = True
+    yaml_io.indent(mapping=2, sequence=4, offset=2)
+else:
+    yaml_io = None
+
+
+def _parse_scalar(value: str) -> Any:
+    value = value.strip()
+    if value == "":
+        return {}
+    if value in {"null", "Null", "NULL", "~"}:
+        return None
+    if value in {"true", "True"}:
+        return True
+    if value in {"false", "False"}:
+        return False
+    if (value.startswith('"') and value.endswith('"')) or (
+        value.startswith("'") and value.endswith("'")
+    ):
+        return value[1:-1]
+    if value.startswith("[") and value.endswith("]"):
+        inner = value[1:-1].strip()
+        if not inner:
+            return []
+        return [_parse_scalar(part.strip()) for part in inner.split(",")]
+    try:
+        return int(value)
+    except ValueError:
+        return value
+
+
+def _strip_inline_comment(value: str) -> str:
+    quote: str | None = None
+    for i, ch in enumerate(value):
+        if ch in {"'", '"'}:
+            quote = None if quote == ch else ch
+        if ch == "#" and quote is None:
+            return value[:i].rstrip()
+    return value
+
+
+def _simple_yaml_load(text: str) -> dict[str, Any]:
+    """Small YAML subset reader used only when ruamel.yaml is unavailable.
+
+    It supports the project paper-info.yaml shape: nested mappings, scalar
+    values, and lists of scalars or dictionaries. It is deliberately read-only.
+    """
+    root: dict[str, Any] = {}
+    stack: list[tuple[int, Any]] = [(-1, root)]
+    last_key_at_indent: dict[int, tuple[Any, str]] = {}
+    last_mapping_key: tuple[Any, str] | None = None
+
+    for raw in text.splitlines():
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        indent = len(raw) - len(raw.lstrip(" "))
+        line = raw.strip()
+
+        while stack and indent <= stack[-1][0]:
+            stack.pop()
+        parent = stack[-1][1]
+
+        if line.startswith("- "):
+            item_text = _strip_inline_comment(line[2:].strip())
+            if not isinstance(parent, list):
+                holder_key = (
+                    last_key_at_indent.get(indent)
+                    or last_key_at_indent.get(indent + 2)
+                    or last_mapping_key
+                )
+                if holder_key is None:
+                    continue
+                holder, key = holder_key
+                new_list: list[Any] = []
+                holder[key] = new_list
+                stack.append((indent - 1, new_list))
+                parent = new_list
+            if ":" in item_text and not item_text.startswith(("http://", "https://")):
+                key, value = item_text.split(":", 1)
+                item: dict[str, Any] = {key.strip(): _parse_scalar(_strip_inline_comment(value))}
+                parent.append(item)
+                stack.append((indent, item))
+                last_key_at_indent[indent + 2] = (item, key.strip())
+            else:
+                parent.append(_parse_scalar(item_text))
+            continue
+
+        while isinstance(parent, list) and stack and indent <= stack[-1][0] + 1:
+            stack.pop()
+            parent = stack[-1][1]
+
+        if ":" not in line or not isinstance(parent, dict):
+            continue
+        key, value = line.split(":", 1)
+        key = key.strip()
+        parent[key] = _parse_scalar(_strip_inline_comment(value))
+        last_mapping_key = (parent, key)
+        last_key_at_indent[indent + 2] = (parent, key)
+        if isinstance(parent[key], dict) and value.strip() == "":
+            stack.append((indent, parent[key]))
+
+    return root
 
 
 # ---------------------------------------------------------------------------
@@ -111,8 +212,26 @@ def find_paper_yamls() -> list[Path]:
 
 def load_yaml(path: Path) -> dict[str, Any] | None:
     try:
-        with path.open("r", encoding="utf-8") as f:
-            data = yaml_io.load(f)
+        if yaml_io is not None:
+            with path.open("r", encoding="utf-8") as f:
+                data = yaml_io.load(f)
+        else:
+            try:
+                raw = subprocess.check_output(
+                    [
+                        "ruby",
+                        "-ryaml",
+                        "-rjson",
+                        "-e",
+                        "puts YAML.load_file(ARGV[0]).to_json",
+                        str(path),
+                    ],
+                    text=True,
+                    stderr=subprocess.DEVNULL,
+                )
+                data = json.loads(raw)
+            except Exception:
+                data = _simple_yaml_load(path.read_text(encoding="utf-8"))
     except YAMLError as e:
         print(f"  yaml parse error in {path}: {e}", file=sys.stderr)
         return None
