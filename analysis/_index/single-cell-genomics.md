@@ -1,12 +1,12 @@
 # Topic: single-cell-genomics
 
-마지막 갱신: 2026-05-26
+마지막 갱신: 2026-06-08
 
 ## Papers (primary topic으로 등록된 것)
 
 | Paper | Year | Venue | Importance | Use case | Status |
 |---|---|---|---|---|---|
-| [trevino-2021-cortex](../single-cell-genomics/trevino-2021-cortex/) | 2021 | Cell | 상 | methodology-reference; academic-citation | abs:done,core:pn,la:pn,li:pn,mb:pn,sl:sk |
+| [trevino-2021-cortex](../single-cell-genomics/trevino-2021-cortex/) | 2021 | Cell | 상 | methodology-reference; academic-citation; pipeline-applicable | abs:done,core:ip,la:ip,li:ip,mb:ip,sl:sk |
 
 ## Related (secondary topic으로만 등록된 것)
 

@@ -16,6 +16,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import sys
@@ -27,16 +28,16 @@ try:
     import markdown
     from ruamel.yaml import YAML
 except ImportError as e:
-    print(
-        f"missing dependency ({e}). Install with: "
-        "pip install -r skills/source-grounding/scripts/requirements.txt",
-        file=sys.stderr,
-    )
-    sys.exit(1)
+    fitz = None
+    markdown = None
+    YAML = None
+    MISSING_DEPENDENCY = e
+else:
+    MISSING_DEPENDENCY = None
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-yaml_io = YAML(typ="rt")
+yaml_io = YAML(typ="rt") if YAML is not None else None
 
 
 # ---------------------------------------------------------------------------
@@ -1138,6 +1139,110 @@ def collect_markdown(paper_folder: Path, include: list[str]) -> str:
     return "\n\n".join(parts)
 
 
+def _simple_yaml_value(text: str, key: str) -> str | None:
+    m = re.search(rf"^{re.escape(key)}:\s*['\"]?(.+?)['\"]?\s*$", text, re.MULTILINE)
+    if not m:
+        return None
+    return m.group(1).strip().strip('"').strip("'")
+
+
+def _simple_markdown_to_html(md_text: str) -> tuple[str, str]:
+    """Dependency-free fallback renderer for constrained environments."""
+    lines = md_text.splitlines()
+    body: list[str] = []
+    toc: list[str] = ["<h2>Contents</h2><ul>"]
+    in_ul = False
+    in_code = False
+    code_buf: list[str] = []
+
+    def close_ul() -> None:
+        nonlocal in_ul
+        if in_ul:
+            body.append("</ul>")
+            in_ul = False
+
+    for raw in lines:
+        line = raw.rstrip()
+        if line.startswith("```"):
+            if in_code:
+                body.append("<pre><code>" + html.escape("\n".join(code_buf)) + "</code></pre>")
+                code_buf = []
+                in_code = False
+            else:
+                close_ul()
+                in_code = True
+            continue
+        if in_code:
+            code_buf.append(line)
+            continue
+        if not line.strip():
+            close_ul()
+            continue
+        m = re.match(r"^(#{1,4})\s+(.+)$", line)
+        if m:
+            close_ul()
+            level = len(m.group(1))
+            text = html.escape(m.group(2))
+            anchor = re.sub(r"[^a-zA-Z0-9가-힣_-]+", "-", m.group(2)).strip("-").lower()
+            body.append(f'<h{level} id="{anchor}">{text}</h{level}>')
+            if level in {2, 3}:
+                toc.append(f'<li><a href="#{anchor}">{text}</a></li>')
+            continue
+        if line.startswith("- "):
+            if not in_ul:
+                body.append("<ul>")
+                in_ul = True
+            body.append("<li>" + html.escape(line[2:]) + "</li>")
+            continue
+        close_ul()
+        escaped = html.escape(line)
+        escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
+        body.append(f"<p>{escaped}</p>")
+    close_ul()
+    if in_code:
+        body.append("<pre><code>" + html.escape("\n".join(code_buf)) + "</code></pre>")
+    toc.append("</ul>")
+    rendered = highlight_prefixes("\n".join(body))
+    return rendered, "\n".join(toc)
+
+
+def _fallback_main(args: argparse.Namespace) -> int:
+    folder = args.paper_folder.resolve()
+    yaml_path = folder / "paper-info.yaml"
+    if not yaml_path.exists():
+        print(f"not found: {yaml_path}", file=sys.stderr)
+        return 1
+    if args.extract_only:
+        print(
+            f"missing dependency ({MISSING_DEPENDENCY}); PDF extraction unavailable in fallback mode",
+            file=sys.stderr,
+        )
+        return 1
+    include = [s for s in args.include.split(",") if s.strip()]
+    full_md = collect_markdown(folder, include)
+    paper_id = _paper_id_from_folder(folder)
+    aug_path = folder / f"{paper_id}_core-with-figures.md"
+    aug_path.write_text(full_md, encoding="utf-8")
+    title = _simple_yaml_value(yaml_path.read_text(encoding="utf-8"), "title") or folder.name
+    warning = (
+        f"<div class=\"meta\">fallback render: missing dependency "
+        f"{html.escape(str(MISSING_DEPENDENCY))}; PDF figure/table extraction skipped.</div>"
+    )
+    body, toc = _simple_markdown_to_html(full_md)
+    html_text = HTML_TEMPLATE.format(
+        title=html.escape(title),
+        css=CSS,
+        toc=toc if not args.no_toc else "",
+        body=warning + body,
+    )
+    html_path = folder / f"{paper_id}_core.html"
+    html_path.write_text(html_text, encoding="utf-8")
+    print(f"wrote {aug_path.relative_to(REPO_ROOT)}")
+    print(f"wrote {html_path.relative_to(REPO_ROOT)}")
+    print(f"fallback render used; PDF figure/table extraction skipped")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build HTML report from <paper-id>_core.md + PDF figures")
     parser.add_argument("paper_folder", type=Path, help="analysis/<topic>/<paper-id>/")
@@ -1155,6 +1260,9 @@ def main() -> int:
                         help="Scan ALL supp PDFs for tables; default skips peer-review/reporting-summary")
     args = parser.parse_args()
 
+    if MISSING_DEPENDENCY is not None:
+        return _fallback_main(args)
+
     folder = args.paper_folder.resolve()
     yaml_path = folder / "paper-info.yaml"
     if not yaml_path.exists():
@@ -1162,14 +1270,23 @@ def main() -> int:
         return 1
 
     data = load_paper_info(yaml_path)
-    pdf = pdf_path_from_yaml(yaml_path, data)
+    pdf: Path | None = None
+    pdf_missing = False
+    try:
+        pdf = pdf_path_from_yaml(yaml_path, data)
+    except FileNotFoundError as e:
+        if args.extract_only or args.use_panels:
+            print(str(e), file=sys.stderr)
+            return 1
+        pdf_missing = True
+        print(f"warning: {e}; rendering markdown without PDF figure/table extraction", file=sys.stderr)
 
     figures_dir = folder / "figures"
     figures_dir.mkdir(exist_ok=True)
     map_file = figures_dir / "figure-map.json"
 
     # ----- Figure extraction -----
-    if not args.render_only:
+    if not args.render_only and not pdf_missing:
         if args.use_panels:
             panels_spec = figures_dir / "panels.json"
             if not panels_spec.exists():
@@ -1247,6 +1364,9 @@ def main() -> int:
     if args.no_tables:
         pdf_tables = {}
         print("table extraction skipped (--no-tables)")
+    elif pdf_missing:
+        pdf_tables = {}
+        print("table extraction skipped (PDF missing)")
     else:
         pdf_tables = collect_tables_from_paper(
             folder, data,

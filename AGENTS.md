@@ -95,6 +95,24 @@ URL 도메인으로 `blog` / `news` / `webinar` 자동 추론. webinar는 발표
 - 기본 출력 언어는 한국어로 작성한다.
 - 분야에서 자연스러운 표준 scientific term은 English로 유지한다. 예: `RNA`, `DNA`, `TF`, `SNP`, `chromatin`, `transcription`, `translation`, `single-cell`, `multi-omics`, `baseline`, `dataset`, `benchmark`, `BD`, `QA`, `RA`, `IND`, `IRB`.
 
+## 서술 톤 / 레지스터 (모든 산출물 공통)
+
+독자는 해당 분야의 숙련 연구자·실무자다(예: 20년+ 경력 바이오인포매티션, BD·제약/CRO 실무자). 출력은 담백하고 프로페셔널하게, 그리고 **"AI가 쓴 티"가 나지 않게** 쓴다. 아래는 실제 AI 글의 특징(자료 기반)으로, 모두 피한다.
+
+피해야 할 AI 말투 — 체크리스트:
+- **단조로운 명제체 반복**: 비슷한 길이의 문장을 "~이다 / ~한다 / ~된다"로만 끝내 백과사전식 리듬을 만드는 것. 문장 길이·종결을 의도적으로 섞는다. 슬라이드는 개조식(명사형 종결: "…확장", "…한계", "…생성")을 기본으로 한다.
+- **과장·상투 은유**: "폭발 / 게임 체인저 / 클라이맥스 / 외계 / 대박", 그리고 "태피스트리 / 심포니 / 모자이크 / 여정 / 풍경" 같은 추상 은유.
+- **"X가 아니라 Y" 반전 프레임**과 **3연속 병렬(rule-of-three)**의 남용 — 한 번은 괜찮지만 반복하면 티가 난다.
+- **전환어구 남발**: 문장·문단 머리의 "또한 / 게다가 / 결론적으로 / 요약하자면".
+- **em 대시(—)·앞머리 화살표(→) 남용**: 한 슬라이드·문단에 몇 개씩 넣지 않는다. (파이프라인·플로우 단계의 →는 예외.)
+- **빈 깊이 동사**: "탐구한다 / 살펴본다 / 심층적으로 분석한다"처럼 내용 없는 포장.
+- **단정 회피·기계적 공손**: "~일 수 있습니다 / 일반적으로 / 도움이 되셨길". 근거가 있는 곳은 단정한다.
+- **권유형·구어체·수사적 질문**: "~하자", "~예요/~거죠", "어떤 X가 잘 될까?".
+
+대신: 정확한 용어·수치·출처로 핵심을 전달하고, 문장 구조를 다양하게, 실제 전문가가 메모하듯 쓴다. 과장이 아니라 수치와 근거로 강조한다. 발표자 노트도 차분한 프로페셔널 구어까지만.
+
+> 근거 자료: AI 글 특징 — em dash·"it's not X, it's Y"·tricolon·listicle (woodard.com, huntingthemuse.net, tropes.fyi); 한국어 명제체 단조 반복·전환어구·추상 은유·빈 깊이 동사 (tilnote.io, letter.wepick.kr). 이 톤 규칙은 source grounding과 함께 모든 `core-*` / `lens-*` / `methodology-brief` / `full-slides` 출력에 적용된다.
+
 ## Hallucination 방지의 핵심 원칙
 
 분석은 반드시 `analysis/<primary-topic>/<paper-id>/sources/` 아래의 원문 PDF와 supplementary data만을 근거로 한다. 본문에 없는 수치, 외부 지식, 추측은 사실처럼 쓰지 않는다. 외부 맥락이 필요하면 `외부 맥락:` 또는 `해석:`으로 명시 분리한다.
@@ -190,6 +208,9 @@ domain은 abstract 분석 단계에서, use_case와 importance는 전체 분석 
 | `<paper-id>_lens-academic.md` 학계 시선 (저자 한계 + 분석자 판단 + 후속 연구 + citation 후보) | `skills/lens-academic/SKILL.md` |
 | `<paper-id>_lens-industry.md` 산업 시선 (QA/RA 리스크 + BD value + 제품화 + 전문가 코멘트 + 카테고리화) | `skills/lens-industry/SKILL.md` |
 | `<paper-id>_methodology-brief.md` 재현·검토용 압축본 | `skills/methodology-brief/SKILL.md` |
+| 여러 paper를 같은 schema로 수집·정규화 | `skills/paper-scrapper/SKILL.md` |
+| paper 묶음에서 연구 흐름·차이·gap 도출 | `skills/insight-agent/SKILL.md` |
+| insight의 근거·논리·과장 여부 검증 | `skills/validation-agent/SKILL.md` |
 | 기존 `<paper-id>_core.md` 기반 정적 slide deck 생성 | `skills/full-slides/SKILL.md` |
 | 분석된 paper에 대한 질문 | `skills/question/SKILL.md` |
 
@@ -229,6 +250,86 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
    이 섹션은 별도 skill로 빼지 않고 *분석 마무리 단계*에서 LLM이 직접 작성한다 (core-* 출력을 모아 압축). 한 항목당 *최대 2줄*을 넘기지 않는다 — 풍부한 설명은 본문 sections에 두고, Executive Summary는 *진입점*에 집중.
 
 각 단계의 출력은 위 출력 경로의 해당 파일에 누적해 저장한다. 한 skill이 다른 skill의 출력을 참조할 수 있다 (예: `lens-industry`는 `core-results`의 수치를 인용).
+
+## Evidence-to-Insight Workflow (Week2)
+
+이 workflow는 1주차의 paper-level 분석을 대체하지 않는다. 기존 `analysis/<primary-topic>/<paper-id>/` 분석 폴더는 개별 paper deep analysis의 single source이고, Week2 결과물은 여러 paper를 비교하는 topic-level layer로 별도 관리한다.
+
+### 출력 위치
+
+기본 위치는 다음과 같다.
+
+```text
+analysis/<primary-topic>/_evidence/week2/
+├── scope.md
+├── papers.jsonl
+├── comparison_table.md
+├── evidence_bundle.md
+├── insight.md
+├── validation_report.md
+└── handoff.md
+```
+
+- `analysis/<primary-topic>/<paper-id>/`: 개별 paper 분석. 1주차 산출물 유지.
+- `analysis/<primary-topic>/_evidence/week2/`: 여러 paper를 묶어 비교·해석·검증하는 Week2 산출물.
+- 이미 full analysis가 끝난 paper는 `paper-info.yaml`, `<paper-id>_core.md`, `<paper-id>_lens-academic.md`, `<paper-id>_lens-industry.md`, `<paper-id>_methodology-brief.md`를 우선 evidence로 사용한다.
+- 아직 full analysis가 없는 후보 paper는 abstract, DOI metadata, source URL 기반 record를 만들되, 추정/미제공 필드를 명확히 표시한다.
+
+### 단계
+
+1. **Topic Scope 정의** — `scope.md`
+   - topic, seed paper, keyword, 포함/제외 기준, 우선순위를 적는다.
+   - 예: `epigenomic-lag`, seed: MultiVelo / MultiVeloVAE / MoFlow.
+2. **Paper Scrapper 실행** — `skills/paper-scrapper/SKILL.md`
+   - 후보 paper를 수집하고 중복 제거한다.
+   - 모든 paper를 같은 record schema로 정규화한다.
+   - 출력: `papers.jsonl`, `comparison_table.md`, `evidence_bundle.md`.
+3. **Insight Agent 실행** — `skills/insight-agent/SKILL.md`
+   - `evidence_bundle.md`를 읽고 연구 흐름, 차별점, 반복 한계, unresolved gap, 후속 실험/분석 후보를 도출한다.
+   - 출력: `insight.md`.
+4. **Validation Agent 실행** — `skills/validation-agent/SKILL.md`
+   - `evidence_bundle.md`와 `insight.md`를 대조해 근거 부족, 빠진 전제, 과장된 결론, claim별 신뢰도를 점검한다.
+   - 출력: `validation_report.md`.
+5. **Cross Validation / Handoff**
+   - 여러 사람의 Validation Agent 결과가 있으면 일치/불일치 항목을 비교한다.
+   - 팀 지식화가 필요하면 `handoff.md`에 Jira / Confluence에 옮길 수 있는 action item 형태로 정리한다.
+
+### Paper Record Contract
+
+`papers.jsonl`은 한 줄에 paper 하나를 담는다. 모든 record는 가능한 한 아래 field를 유지한다. 값이 없으면 `null`, `[]`, 또는 `미제공:`으로 표시하고 추측으로 채우지 않는다.
+
+```json
+{
+  "record_id": "li-2023-multivelo",
+  "title": "MultiVelo: ...",
+  "authors": ["Li, ..."],
+  "year": 2023,
+  "venue": "Nature Biotechnology",
+  "doi": "...",
+  "url": "...",
+  "local_analysis": "analysis/epigenomic-lag/li-2023-multivelo",
+  "document_type": "paper",
+  "topic_relevance": "왜 이 topic에 들어오는지",
+  "research_question": "논문이 푸는 문제",
+  "assay_or_data": ["10x Multiome", "SHARE-seq"],
+  "method": "핵심 method / model / algorithm",
+  "main_claims": ["claim 1", "claim 2"],
+  "key_results": ["결과와 수치. 근거 위치 포함"],
+  "limitations": ["저자 한계 또는 분석자 한계. prefix 사용"],
+  "follow_up": ["후속 실험/분석 후보"],
+  "evidence_sources": ["core.md §Results", "Figure 2", "paper-info.yaml"],
+  "status": "full-analysis | abstract-only | metadata-only | needs-pdf"
+}
+```
+
+### OpenClaw 운영 반영
+
+OpenClaw에서는 위 workflow를 role별 agent로 나누어 실행한다. 자세한 운영 문서는 `openclaw/week2-agent-setup.md`를 따른다.
+
+- Paper Scrapper Agent: `skills/paper-scrapper/SKILL.md`
+- Insight Agent: `skills/insight-agent/SKILL.md`
+- Validation Agent: `skills/validation-agent/SKILL.md`
+- Integrator / Orchestrator: `handoff.md` 정리 및 Jira / Confluence 이관 준비
 
 ## core.md 섹션 구조 (정합성 규칙)
 
@@ -297,3 +398,27 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
 - 사용자가 "academic만" 또는 "industry만"이라고 명시 → 명시된 lens 파일만 작성. 다른 lens는 생성하지 않는다. 단 `paper-info.yaml`의 `use_case`·`importance`는 industry skip 시에도 LLM이 가능한 범위에서 추출하고 *추정 표시* 후 기록한다 (나중에 필요할 때 본인 확인).
 - 사용자가 "core만"이라고 명시 → lens 파일은 생성하지 않는다.
 - 어떤 경우에도 `paper-info.yaml`, `<paper-id>_core.md`, `sources/`는 필수이다.
+
+## Web Dashboard Workflow
+
+사용자가 "웹으로 논문 분석", "클릭으로 논문 해석", "팀원에게 논문 분석 하네스 배포"처럼 요청하면 `web/` 대시보드를 안내한다.
+
+- 로컬 실행: `python3 web/app.py --port 8765`
+- 팀 LAN 공유: `./web/scripts/share_dashboard.sh`
+- 확인 문서: `web/README.md`, `web/DEPLOY.md`
+- PDF 업로드 저장소: `artifacts/uploads/<timestamp>-<filename>.pdf`
+- 실행 요청 기록: `artifacts/web-runs/<run-id>/request.json`, `artifacts/web-runs/<run-id>/prompt.md`
+- Codex 실행 기록: `artifacts/web-runs/<run-id>/codex-job.json`, `artifacts/web-runs/<run-id>/codex.log`
+- 웹 보기:
+  - `Render HTML`은 `skills/core-to-html/scripts/build_html.py <paper-dir>`를 실행한 뒤 `/view/html?paper_path=<paper-dir>` 새 탭으로 연다.
+  - `View Core`는 `<paper-id>_core.md`를 `/view/core?path=<core-md>`에서 browser-readable HTML로 렌더링해 연다.
+- 상태 확인:
+  - `Run in Codex` 직후 하단 실행 패널의 status card, generated-file badges, Codex log tail을 확인한다.
+  - 대시보드 재시작 후 실행 PID를 잃으면 `finished-unknown`으로 표시하고 `codex.log`와 산출물 존재 여부를 기준으로 판단한다.
+
+웹 대시보드는 기존 분석 규칙을 대체하지 않는다. 새 분석 요청을 클릭으로 기록하고, 기존 `AGENTS.md` Full Paper Workflow에 넣을 `prompt.md`를 만든다. 결정적 스크립트 실행은 `analysis/_index/` rebuild와 `<paper-id>_core.html` render에 한정한다. LLM이 필요한 core/lens/methodology 분석은 기존 `skills/` 규칙과 `analysis/<topic>/<paper-id>/` 산출물 계약을 그대로 따른다.
+
+### Web Dashboard Evolution Log
+
+- 2026-06-08: CLI 중심 paper-analysis workflow를 클릭 기반 dashboard로 확장했다. `Run in Codex`, status polling, generated-file badges, browser-readable `View Core`, render 후 새 탭으로 여는 `Render HTML`, LAN 배포 스크립트, 재현 문서와 발표용 문서를 추가했다. 자세한 기록은 `artifacts/2026-06-08-bioproject01-web-dashboard-worklog.md`와 `artifacts/2026-06-08-bioproject01-web-dashboard-presentation.md`를 본다.
+- 2026-06-08: PDF-first web flow를 추가했다. 로컬 PDF는 브라우저에서 업로드해 `artifacts/uploads/`에 저장하고, 반환된 repo-relative path를 Source로 사용해 분석 prompt를 만든다.

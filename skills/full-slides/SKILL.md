@@ -27,6 +27,13 @@ description: Create static journal-meeting slide decks from existing topic-organ
 - slide 제목은 가능한 한 명사형 어미를 사용한다. 예: `... 확장`, `... 비교`, `... 정량화`, `... 한계`, `... 해석`.
 - 제목에서 `...한다`, `...된다`, `...본다`, `...보여준다`처럼 했다체 문장형 어미를 피한다.
 
+## 서술 톤 (AGENTS.md "서술 톤 / 레지스터" 준수)
+- 전체 톤 규칙은 `AGENTS.md`의 *서술 톤 / 레지스터* 를 따른다. slide·speaker-notes 모두 "AI가 쓴 티"를 피한다.
+- slide 본문도 개조식(명사형 종결)을 기본으로 하고, 모든 줄을 같은 길이의 `~이다 / ~한다` 명제체로 끝내 단조로운 리듬을 만들지 않는다.
+- 과장·상투 은유("폭발 / 게임 체인저 / 태피스트리"), "X가 아니라 Y" 반전, 3연속 병렬, 전환어구("또한 / 게다가") 남발을 피한다.
+- em 대시(—)·앞머리 화살표(→)를 한 슬라이드에 몇 개씩 쓰지 않는다(단계·플로우의 →는 예외). 강조는 굵게 남발이 아니라 수치·근거로 한다.
+- `<br>` 줄바꿈은 어구 중간에서 끊지 말고 의미 단위(구·절 경계)에서만 쓴다. 좁은 박스(stat label 등)는 줄바꿈에 기대지 말고 텍스트를 짧게 다듬는다.
+
 ## OpenClaw Slides 사용 규칙
 - 먼저 `/Users/hanlab/.openclaw/workspace/skills/openclaw-slides/SKILL.md`가 있는지 확인한다.
 - OpenClaw Slides가 없으면 slide를 만들기 전에 `openclaw skills install openclaw-slides`로 다운로드해야 한다고 말하고, 가능하면 해당 명령을 실행해 설치한다.
