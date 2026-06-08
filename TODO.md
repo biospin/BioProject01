@@ -28,6 +28,22 @@
 - [ ] Needs confirmation: whether web requests should remain private local artifacts or become shared study-session records.
 - [ ] Needs confirmation: whether Codex/Claude LLM execution should remain manual or become part of a controlled backend workflow.
 
+## Done (2026-06-09 — Claude port + dual-engine)
+
+- [x] Ported Codex harness to Claude Code: `.claude/skills/` (16), `.claude/agents/` (7), `CLAUDE.md` router, `.gitignore` share-exception.
+- [x] Verified the port by re-running one paper (Trevino 2021) in Claude → matches Codex output.
+- [x] Added interactive 6-step tutorial to the web dashboard (auto-open first visit + replay button).
+- [x] Made the dashboard engine-aware: `Claude로 분석` + `Codex로 분석`, `start-claude`/`claude-status` endpoints.
+- [x] paper-row Analyze button now uses Claude (avoids Codex usage-limit failures).
+- [x] Uploaded PDF is now copied into `analysis/<topic>/<paper-id>/sources/` (prompt instruction) so analysis is PDF-grounded.
+- [x] Wrote prose blog `artifacts/blog-harness-codex-to-claude.md` (kept in sync with slides).
+
+## Follow-ups (Claude port)
+
+- [ ] Test the dashboard `Claude로 분석` end-to-end in the browser (sandbox blocked auto-launch here).
+- [ ] Decide whether the paper-row button should offer an engine choice instead of defaulting to Claude.
+- [ ] Consider making the uploaded-PDF → `sources/` copy deterministic (dashboard-side) rather than prompt-driven.
+
 ## Done
 
 - [x] Added local web dashboard under `web/`.

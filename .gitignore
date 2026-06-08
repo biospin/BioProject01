@@ -39,6 +39,6 @@ analysis/**/core.html
 analysis/**/core-with-figures.md
 
 # Web dashboard runtime artifacts (per-run, not for sharing).
-# Keep run records (request.json, prompt.md, codex-job.json); ignore raw logs + uploads.
-artifacts/web-runs/**/codex.log
+# Keep run records (request.json, prompt.md, <engine>-job.json); ignore raw logs + uploads.
+artifacts/web-runs/**/*.log
 artifacts/uploads/

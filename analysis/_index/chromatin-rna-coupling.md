@@ -1,12 +1,12 @@
 # Topic: chromatin-rna-coupling
 
-마지막 갱신: 2026-06-08
+마지막 갱신: 2026-06-09
 
 ## Papers (primary topic으로 등록된 것)
 
 | Paper | Year | Venue | Importance | Use case | Status |
 |---|---|---|---|---|---|
-| [ma-2020-shareseq](../chromatin-rna-coupling/ma-2020-shareseq/) | 2020 | Cell | 상 | methodology-reference; academic-citation | abs:done,core:pn,la:pn,li:pn,mb:pn,sl:sk |
+| [ma-2020-shareseq](../chromatin-rna-coupling/ma-2020-shareseq/) | 2020 | Cell | 상 | methodology-reference; academic-citation; pipeline-applicable | abs:done,core:done,la:done,li:done,mb:done,sl:sk |
 
 ## Related (secondary topic으로만 등록된 것)
 

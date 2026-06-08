@@ -1,5 +1,19 @@
 # HANDOFF
 
+## Latest (2026-06-09) — Claude port + dual-engine dashboard
+
+기존 Codex 전용 논문 분석 하네스를 Claude Code에서도 네이티브로 실행하도록 옮기고, 대시보드가 Codex·Claude 두 엔진을 모두 굴리게 했다.
+
+- **하네스 포팅**: `.claude/skills/`(16, 정의만 — 스크립트는 top-level `skills/` 참조), `.claude/agents/`(7, Codex `openai.yaml` 변환), `CLAUDE.md`(AGENTS.md에 위임), `.gitignore`(`.claude/skills`·`.claude/agents`만 공유 예외). → 커밋 `1431bd7` push 완료.
+- **웹 대시보드 + 인터랙티브 튜토리얼**: 6단계 가이드, 첫 방문 자동 오픈 + `❓ 튜토리얼` 재실행. → 커밋 `de861ca` push 완료.
+- **대시보드 Claude 실행 엔진**: `web/app.py`를 engine-aware로 일반화(`ENGINES`, `start_job/get_job(... , engine)`, 라우트 `start-claude`/`claude-status`), 버튼 `Claude로 분석`(기본)+`Codex로 분석`. Claude는 `claude -p --dangerously-skip-permissions`로 자율 실행. → 로컬 완료, 이 커밋에서 push.
+- **보정 2건**: paper 행 분석 버튼을 Codex→Claude로 변경(Codex usage limit 회피), 업로드 PDF가 `artifacts/uploads/`에만 남던 것을 prompt가 `analysis/<topic>/<paper-id>/sources/`로 복사하도록 명시. → 이 커밋에서 push.
+- **문서**: 블로그(`artifacts/blog-harness-codex-to-claude.md`, 산문), 슬라이드(`...presentation.md`, Marp), worklog 갱신.
+
+검증: `claude --version` 2.1.168, app.py/app.js 구문 통과, ENGINES·엔드포인트·버튼 serve 확인. 실제 Claude 자율 subprocess 기동은 대시보드에서 사용자가 테스트(로컬 sandbox 정책상 자동화 세션에서는 직접 실행 안 함).
+
+아래는 직전(웹 대시보드 도입) 핸드오프 원문이다.
+
 ## Objective
 
 BioProject01의 기존 논문 분석 하네스를 CLI/대화형 실행만이 아니라 웹에서 클릭 기반으로 다룰 수 있게 만들었다.
