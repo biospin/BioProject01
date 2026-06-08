@@ -37,6 +37,29 @@ RUN_ROOT = REPO_ROOT / "artifacts" / "web-runs"
 UPLOAD_ROOT = REPO_ROOT / "artifacts" / "uploads"
 JOBS: dict[str, subprocess.Popen] = {}
 
+# Execution engines the dashboard can drive. Both run the saved prompt.md
+# autonomously with the repo as cwd; only the command and per-engine file names
+# differ. Codex reads the prompt from stdin via `-`; Claude reads it from stdin
+# in non-interactive print mode (`-p`).
+ENGINES: dict[str, dict] = {
+    "codex": {
+        "command": ["codex", "exec", "--cd", str(REPO_ROOT), "-"],
+        "log": "codex.log",
+        "job": "codex-job.json",
+    },
+    "claude": {
+        "command": ["claude", "-p", "--dangerously-skip-permissions"],
+        "log": "claude.log",
+        "job": "claude-job.json",
+    },
+}
+
+
+def engine_config(engine: str) -> dict:
+    if engine not in ENGINES:
+        raise ValueError(f"unknown engine: {engine}")
+    return ENGINES[engine]
+
 
 def json_response(handler: BaseHTTPRequestHandler, status: int, payload: dict) -> None:
     data = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
@@ -475,15 +498,15 @@ def run_command(args: list[str], timeout: int = 180) -> dict:
     }
 
 
-def write_job_status(run_dir: Path, status: dict) -> None:
-    (run_dir / "codex-job.json").write_text(
+def write_job_status(run_dir: Path, status: dict, engine: str = "codex") -> None:
+    (run_dir / engine_config(engine)["job"]).write_text(
         json.dumps(status, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
 
-def read_job_status(run_dir: Path) -> dict:
-    status_path = run_dir / "codex-job.json"
+def read_job_status(run_dir: Path, engine: str = "codex") -> dict:
+    status_path = run_dir / engine_config(engine)["job"]
     if not status_path.exists():
         return {"status": "not-started"}
     try:
@@ -574,14 +597,14 @@ def process_is_running(pid: int | None) -> bool:
     return True
 
 
-def watch_codex_job(run_dir: Path, proc: subprocess.Popen) -> None:
+def watch_job(run_dir: Path, proc: subprocess.Popen, engine: str = "codex") -> None:
     returncode = proc.wait()
-    status = read_job_status(run_dir)
+    status = read_job_status(run_dir, engine)
     if status.get("status") == "running":
         status["status"] = "succeeded" if returncode == 0 else "failed"
         status["returncode"] = returncode
         status["finished_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
-        write_job_status(run_dir, status)
+        write_job_status(run_dir, status, engine)
 
 
 def resolve_run_dir(raw_path: str) -> Path:
@@ -593,19 +616,21 @@ def resolve_run_dir(raw_path: str) -> Path:
     return run_dir
 
 
-def start_codex_job(raw_path: str) -> dict:
+def start_job(raw_path: str, engine: str = "codex") -> dict:
+    config = engine_config(engine)
     run_dir = resolve_run_dir(raw_path)
     run_id = run_dir.name
+    job_key = f"{run_id}:{engine}"
     prompt_path = run_dir / "prompt.md"
     if not prompt_path.exists():
         raise ValueError("prompt.md not found for this run")
 
-    existing = JOBS.get(run_id)
+    existing = JOBS.get(job_key)
     if existing and existing.poll() is None:
-        return get_codex_job(raw_path)
+        return get_job(raw_path, engine)
 
-    log_path = run_dir / "codex.log"
-    command = ["codex", "exec", "--cd", str(REPO_ROOT), "-"]
+    log_path = run_dir / config["log"]
+    command = config["command"]
     prompt_file = prompt_path.open("r", encoding="utf-8")
     log_file = log_path.open("a", encoding="utf-8")
     proc = subprocess.Popen(
@@ -620,9 +645,10 @@ def start_codex_job(raw_path: str) -> dict:
     prompt_file.close()
     log_file.close()
 
-    JOBS[run_id] = proc
+    JOBS[job_key] = proc
     status = {
         "status": "running",
+        "engine": engine,
         "run_id": run_id,
         "pid": proc.pid,
         "command": command,
@@ -631,33 +657,35 @@ def start_codex_job(raw_path: str) -> dict:
         "returncode": None,
         "log_path": str(log_path.relative_to(REPO_ROOT)),
     }
-    write_job_status(run_dir, status)
-    threading.Thread(target=watch_codex_job, args=(run_dir, proc), daemon=True).start()
+    write_job_status(run_dir, status, engine)
+    threading.Thread(target=watch_job, args=(run_dir, proc, engine), daemon=True).start()
     result = status.copy()
     result["log_tail"] = ""
     result["outputs"] = summarize_run_outputs(run_dir, "")
     return result
 
 
-def get_codex_job(raw_path: str) -> dict:
+def get_job(raw_path: str, engine: str = "codex") -> dict:
+    config = engine_config(engine)
     run_dir = resolve_run_dir(raw_path)
     run_id = run_dir.name
-    status = read_job_status(run_dir)
-    proc = JOBS.get(run_id)
+    job_key = f"{run_id}:{engine}"
+    status = read_job_status(run_dir, engine)
+    proc = JOBS.get(job_key)
     if proc:
         returncode = proc.poll()
         if returncode is not None and status.get("status") == "running":
             status["status"] = "succeeded" if returncode == 0 else "failed"
             status["returncode"] = returncode
             status["finished_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
-            write_job_status(run_dir, status)
+            write_job_status(run_dir, status, engine)
     elif status.get("status") == "running" and not process_is_running(status.get("pid")):
         status["status"] = "finished-unknown"
         status["finished_at"] = status.get("finished_at") or dt.datetime.now(dt.timezone.utc).isoformat()
-        status["note"] = "Dashboard restarted after this job began, so the exact return code is unavailable. Check codex.log for the final result."
-        write_job_status(run_dir, status)
+        status["note"] = f"Dashboard restarted after this job began, so the exact return code is unavailable. Check {config['log']} for the final result."
+        write_job_status(run_dir, status, engine)
 
-    log_path = run_dir / "codex.log"
+    log_path = run_dir / config["log"]
     log_tail = ""
     if log_path.exists():
         log_tail = log_path.read_text(encoding="utf-8", errors="replace")[-12000:]
@@ -690,12 +718,28 @@ def create_prompt(payload: dict) -> str:
     ]
     if notes:
         lines.extend(["", "## Notes", notes])
+
+    # Source가 로컬 PDF(특히 대시보드 업로드본)면, 원문이 분석 폴더에 남아 PDF-grounded
+    # 분석이 되도록 sources/로 복사하는 단계를 명시한다. (업로드는 artifacts/uploads/에만
+    # 저장되므로, 복사하지 않으면 PDF 없이 분석되어 figure/supplementary가 검토필요로 남는다.)
+    source_is_pdf = source.lower().endswith(".pdf")
+
     lines.extend(
         [
             "",
             "## Required workflow",
             "1. AGENTS.md Quick Start와 Full Paper Workflow를 따른다.",
             "2. source-grounding으로 `analysis/<topic>/<paper-id>/`와 `paper-info.yaml`을 만든다.",
+        ]
+    )
+    if source_is_pdf:
+        lines.append(
+            f"   - Source가 로컬 PDF(`{source}`)다. 분석 폴더를 만든 직후 이 PDF를 "
+            "`analysis/<topic>/<paper-id>/sources/`로 복사(`cp`)해 원문으로 보존하고, "
+            "그 PDF를 1차 grounding 근거로 사용한다. (업로드 원본은 `artifacts/uploads/`에만 있으므로 반드시 복사한다.)"
+        )
+    lines.extend(
+        [
             "3. mode/lens 선택에 맞춰 core, lens, methodology-brief를 작성한다.",
             "4. 마지막에 `skills/source-grounding/scripts/build_index.py`를 실행한다.",
             "5. full/core 분석이면 `skills/core-to-html/scripts/build_html.py <paper-dir>`를 실행한다.",
@@ -803,7 +847,11 @@ class AppHandler(BaseHTTPRequestHandler):
             elif parsed.path == "/api/run/codex-status":
                 query = parse_qs(parsed.query)
                 raw_path = unquote(query.get("run_path", [""])[0])
-                json_response(self, 200, get_codex_job(raw_path))
+                json_response(self, 200, get_job(raw_path, "codex"))
+            elif parsed.path == "/api/run/claude-status":
+                query = parse_qs(parsed.query)
+                raw_path = unquote(query.get("run_path", [""])[0])
+                json_response(self, 200, get_job(raw_path, "claude"))
             elif parsed.path == "/api/file":
                 query = parse_qs(parsed.query)
                 raw_path = unquote(query.get("path", [""])[0])
@@ -865,7 +913,11 @@ class AppHandler(BaseHTTPRequestHandler):
                 json_response(self, 200, result)
             elif parsed.path == "/api/run/start-codex":
                 payload = read_body(self)
-                result = start_codex_job(payload.get("run_path", ""))
+                result = start_job(payload.get("run_path", ""), "codex")
+                json_response(self, 202, result)
+            elif parsed.path == "/api/run/start-claude":
+                payload = read_body(self)
+                result = start_job(payload.get("run_path", ""), "claude")
                 json_response(self, 202, result)
             else:
                 text_response(self, 404, "not found")

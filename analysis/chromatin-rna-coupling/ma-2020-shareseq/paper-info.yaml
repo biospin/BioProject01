@@ -65,8 +65,8 @@ sources:
       - "https://pmc.ncbi.nlm.nih.gov/articles/PMC7669735/"
       - "https://doi.org/10.1016/j.cell.2020.09.056"
     local: "sources/ma-2020-shareseq.pdf"
-    status: "blocked"
-    note: "2026-06-09 재시도: local shell DNS/network 제한으로 PDF 직접 다운로드 실패. 분석은 PMC public fulltext crawl, ScienceDirect landing/fulltext metadata, PubMed abstract, DOI metadata에 근거. PDF binary가 필요하면 사용자가 sources/ma-2020-shareseq.pdf로 manual drop."
+    status: "author-contact-needed"
+    note: "2026-06-09 재시도: local shell DNS/network 제한으로 PDF 직접 다운로드 실패. 분석은 PMC public fulltext crawl, ScienceDirect landing/fulltext metadata, PubMed abstract, DOI metadata에 근거. PDF binary가 필요하면 사용자가 sources/ma-2020-shareseq.pdf로 manual drop. | primary: not a PDF (Content-Type=text/html; charset=utf-8) — likely paywall/landing | pmc: not a PDF (Content-Type=text/html; charset=utf-8) — likely paywall/landing | scihub: Sci-Hub skipped"
   supplementary: []
   data:
     - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE140203"

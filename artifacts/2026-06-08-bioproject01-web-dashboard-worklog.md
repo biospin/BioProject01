@@ -352,3 +352,14 @@ Claude에서 추가한 것:
 
 검증: `node --check web/static/app.js` 통과, 로컬 서버 기동 후 `/`가 튜토리얼 markup을 serve하고 `app.js`에 `TUTORIAL_STEPS`, `app.css`에 `tutorial-dialog` 포함 확인, `/api/papers`는 기존 9건 정상 반환(백엔드 무영향).
 
+### Dashboard 실행 엔진에 Claude 추가
+
+대시보드가 Codex만 호출하던 것을 Claude로도 실행하도록 연동했다.
+
+- 백엔드(`web/app.py`): job 시스템을 engine-aware로 일반화. `ENGINES` 설정(codex/claude별 command·log·job 파일), `write/read_job_status(..., engine)`, `start_job(path, engine)`, `get_job(path, engine)`, `watch_job(..., engine)`. JOBS는 `<run_id>:<engine>` 키로 분리해 한 요청에 두 엔진 독립 실행. 라우트 `POST /api/run/start-claude`, `GET /api/run/claude-status` 추가(기존 codex 라우트 유지).
+- Claude 실행: `claude -p --dangerously-skip-permissions` (prompt.md를 stdin으로, cwd=repo). codex와 동일하게 자율 실행. 기록은 `claude.log` / `claude-job.json`.
+- 프론트(`web/index.html`, `web/static/app.js`): `Claude로 분석`(primary) + `Codex로 분석` 버튼, `state.engine`로 상태 polling·라벨을 엔진별 분기(`runEngine(engine)`, `refreshJob`, `renderJobStatus`). paper-row 자동 실행은 codex 기본 유지.
+- 문서: `web/README.md`, `AGENTS.md` Web Dashboard Workflow를 두 엔진 기준으로 갱신.
+
+검증: `python3 -m py_compile`(app.py)·`node --check`(app.js) 통과, `ENGINES` import 확인, `/api/run/claude-status`가 잘못된 run_path를 안전하게 검증, `/`가 두 실행 버튼 serve 확인. 실제 Claude 자율 subprocess 기동은 로컬 sandbox 정책상 이 세션에서 직접 실행하지 않고 대시보드에서 사용자가 테스트한다.
+

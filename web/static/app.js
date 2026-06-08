@@ -6,7 +6,10 @@ const state = {
   activeRunPath: "",
   activePrompt: "",
   jobPoller: null,
+  engine: "codex",
 };
+
+const ENGINE_LABEL = { codex: "Codex", claude: "Claude" };
 
 const $ = (id) => document.getElementById(id);
 
@@ -108,7 +111,7 @@ function renderPapers() {
             </div>
           </div>
           <div class="paper-actions">
-            <button type="button" data-action="analyze-paper" data-paper-id="${escapeAttr(paper.paper_id)}">분석 실행</button>
+            <button type="button" data-action="analyze-paper" data-paper-id="${escapeAttr(paper.paper_id)}">Claude로 분석</button>
             <button type="button" data-action="render" data-path="${escapeAttr(paper.path)}">HTML 보기</button>
             <button type="button" data-action="open-core" data-path="${escapeAttr(`${paper.path}/${paper.paper_id}_core.md`)}">핵심 분석 보기</button>
           </div>
@@ -245,14 +248,15 @@ async function analyzePaper(paperId) {
     run_path: result.run_path,
   });
 
-  const job = await api("/api/run/start-codex", {
+  state.engine = "claude";
+  const job = await api("/api/run/start-claude", {
     method: "POST",
     body: JSON.stringify({ run_path: result.run_path }),
   });
   renderJobStatus(job);
   startJobPolling();
   await refreshAll();
-  log("Started Codex analysis from paper row", {
+  log("Started Claude analysis from paper row", {
     paper_id: paper.paper_id,
     run_id: result.run_id,
     status: job.status,
@@ -362,21 +366,22 @@ function downloadPrompt() {
   log("Downloaded prompt");
 }
 
-async function runCodex() {
+async function runEngine(engine) {
   if (!state.activeRunPath) {
     log("Run skipped", { reason: "create or open a run prompt first" });
     return;
   }
-  const button = $("runCodexBtn");
+  state.engine = engine;
+  const button = engine === "claude" ? $("runClaudeBtn") : $("runCodexBtn");
   button.disabled = true;
   try {
-    const result = await api("/api/run/start-codex", {
+    const result = await api(`/api/run/start-${engine}`, {
       method: "POST",
       body: JSON.stringify({ run_path: state.activeRunPath }),
     });
     renderJobStatus(result);
     startJobPolling();
-    log("Started Codex job", result);
+    log(`Started ${ENGINE_LABEL[engine] || engine} job`, result);
   } finally {
     button.disabled = false;
   }
@@ -387,14 +392,15 @@ async function refreshJob() {
     log("Status skipped", { reason: "create or open a run prompt first" });
     return;
   }
-  const result = await api(`/api/run/codex-status?run_path=${encodeURIComponent(state.activeRunPath)}`);
+  const engine = state.engine || "codex";
+  const result = await api(`/api/run/${engine}-status?run_path=${encodeURIComponent(state.activeRunPath)}`);
   renderJobStatus(result);
   if (result.status === "running") {
     startJobPolling();
   } else {
     stopJobPolling();
   }
-  log("Refreshed Codex job", {
+  log(`Refreshed ${ENGINE_LABEL[engine] || engine} job`, {
     status: result.status,
     returncode: result.returncode,
     log_path: result.log_path,
@@ -403,13 +409,15 @@ async function refreshJob() {
 
 function renderJobStatus(job) {
   const status = job.status || "unknown";
+  const engine = job.engine || state.engine || "codex";
+  const name = ENGINE_LABEL[engine] || engine;
   const statusText = {
-    running: "Running: Codex가 분석을 진행 중입니다. 이 화면은 5초마다 자동 갱신됩니다.",
-    succeeded: "Succeeded: Codex 실행이 정상 종료되었습니다.",
-    failed: "Failed: Codex 실행이 실패했습니다. 아래 로그에서 원인을 확인하세요.",
+    running: `Running: ${name}가 분석을 진행 중입니다. 이 화면은 5초마다 자동 갱신됩니다.`,
+    succeeded: `Succeeded: ${name} 실행이 정상 종료되었습니다.`,
+    failed: `Failed: ${name} 실행이 실패했습니다. 아래 로그에서 원인을 확인하세요.`,
     "finished-unknown": "Finished: 대시보드 재시작으로 반환 코드는 알 수 없지만, 로그와 산출물은 확인할 수 있습니다.",
-    "not-started": "Not started: 아직 Run in Codex를 누르지 않았습니다.",
-    "invalid-status": "Status file is invalid: codex-job.json을 읽을 수 없습니다.",
+    "not-started": `Not started: 아직 ${name} 분석을 시작하지 않았습니다.`,
+    "invalid-status": `Status file is invalid: ${engine}-job.json을 읽을 수 없습니다.`,
   }[status] || `Status: ${status}`;
   const details = [
     job.pid ? `PID ${job.pid}` : "",
@@ -427,7 +435,7 @@ function renderJobStatus(job) {
   renderJobArtifacts(job.outputs);
   $("jobLog").textContent = job.log_tail
     ? job.log_tail
-    : "아직 codex.log 내용이 없습니다. 실행 직후라면 몇 초 뒤 Refresh Status를 눌러보세요.";
+    : `아직 ${engine}.log 내용이 없습니다. 실행 직후라면 몇 초 뒤 상태 새로고침을 눌러보세요.`;
 }
 
 function statusClass(status) {
@@ -549,7 +557,11 @@ $("uploadPdfBtn").addEventListener("click", () => {
 });
 
 $("runCodexBtn").addEventListener("click", () => {
-  runCodex().catch((error) => log("Run Codex failed", { error: error.message }));
+  runEngine("codex").catch((error) => log("Run Codex failed", { error: error.message }));
+});
+
+$("runClaudeBtn").addEventListener("click", () => {
+  runEngine("claude").catch((error) => log("Run Claude failed", { error: error.message }));
 });
 
 $("refreshJobBtn").addEventListener("click", () => {
@@ -597,7 +609,7 @@ const TUTORIAL_STEPS = [
   {
     target: "prompt-title",
     title: "2. 분석 실행",
-    body: "‘분석 시작’을 누르면 저장된 요청으로 분석이 실행됩니다. 상태 카드, 생성 파일 배지, 실행 로그가 이 영역에 표시되고 ‘상태 새로고침’으로 진행 상황을 갱신합니다.",
+    body: "‘Claude로 분석’ 또는 ‘Codex로 분석’을 누르면 저장된 요청으로 분석이 실행됩니다. 상태 카드, 생성 파일 배지, 실행 로그가 이 영역에 표시되고 ‘상태 새로고침’으로 진행 상황을 갱신합니다.",
   },
   {
     target: "papers-title",

@@ -36,8 +36,10 @@ For convenience, you can also run:
 
 - Records a new paper-analysis request under `artifacts/web-runs/<run-id>/`.
 - Generates a ready-to-use `prompt.md` for the existing `AGENTS.md` Full Paper Workflow.
-- Runs that `prompt.md` through `codex exec --cd <repo> -` when `Run in Codex` is clicked.
-- Stores Codex execution status and logs in the same run directory.
+- Runs that `prompt.md` autonomously through either engine:
+  - `Claude로 분석` → `claude -p --dangerously-skip-permissions` (stdin = prompt.md), logs to `claude.log` / `claude-job.json`.
+  - `Codex로 분석` → `codex exec --cd <repo> -`, logs to `codex.log` / `codex-job.json`.
+- Stores execution status and logs per engine in the same run directory; the two engines are independent and can be run on the same request.
 - Uploads local PDFs into `artifacts/uploads/` and uses the uploaded path as the analysis source.
 - Lists existing `analysis/<topic>/<paper-id>/` folders.
 - Rebuilds `analysis/_index/` with `skills/source-grounding/scripts/build_index.py`.
@@ -71,8 +73,8 @@ Prompt summary: scientific dashboard banner for BioProject01, combining single-c
 3. Fill topic, mode, and lens.
 4. Click `Create Run Prompt`.
 5. Confirm the prompt in the bottom `실행 요청 텍스트` panel.
-6. Click `Run in Codex`.
-7. In the same bottom panel, check the status card, generated-file badges, and Codex log. Use `Refresh Status` if the job is not auto-refreshing.
+6. Click `Claude로 분석` (or `Codex로 분석`).
+7. In the same bottom panel, check the status card, generated-file badges, and engine log. Use `상태 새로고침` if the job is not auto-refreshing.
 8. After analysis files appear in `analysis/<topic>/<paper-id>/`, click `Build Index`.
 9. Click `Render HTML` on the paper row to rebuild and open the HTML report.
 10. Click `View Core` on the paper row to open the core markdown analysis in a browser tab.
