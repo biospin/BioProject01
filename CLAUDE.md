@@ -20,6 +20,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Skill routing 테이블 — 작업별로 어떤 `skills/<name>/SKILL.md`를 호출하는지
 - Slide 워크플로우는 명시 요청 시에만 (`design.md`를 visual reference로 사용)
 
+## Claude Code 네이티브 실행 (Codex 하네스 포팅)
+
+이 하네스는 원래 Codex CLI(`AGENTS.md` 라우터 + `skills/*/SKILL.md` + `skills/*/agents/openai.yaml`)에서 동작하도록 만들어졌고, **동일한 하네스를 Claude Code에서도 네이티브로 실행할 수 있게 포팅**했다. 분석 규칙의 single source of truth는 그대로 `AGENTS.md` + `skills/*/SKILL.md`이며, 아래는 Claude가 그것을 자동 인식하게 하는 얇은 등록 레이어다.
+
+- **Skills**: `.claude/skills/<name>/` — Codex `skills/<name>/`의 **committed 복사본** 16개. Claude가 `.claude/skills/`에서 자동 discover한다. 웹(claude.ai/code = GitHub 체크아웃)에서도 동작하도록 심볼릭 링크가 아닌 실제 파일로 둔다. **원본 `skills/`를 고치면 `.claude/skills/`도 재동기화해야 한다** (`cp -R skills/<name> .claude/skills/`).
+- **Agents**: `.claude/agents/*.md` — Codex `skills/*/agents/openai.yaml` 7개(Abstract Analysis, Full Background=core-problem, Full Results=core-results, Full Figure=core-figure, Full Discussion=lens-academic, Full Slides, Question)를 Claude subagent 형식으로 포팅. 각 subagent는 해당 `SKILL.md` + `AGENTS.md` 라우터 + source-grounding 규칙을 읽고 작업한다.
+- 나머지 skill(core-methods, core-table, lens-industry, methodology-brief, source-grounding, core-to-html, paper-scrapper, insight-agent, validation-agent)은 Codex에서도 agent-picker 항목이 아니라 skill로만 호출되므로, Claude에서도 `.claude/skills/`를 통한 skill 호출로 사용한다.
+- 실행 흐름·출력 계약·섹션 구조는 전부 `AGENTS.md`를 따른다. CLAUDE.md는 이를 중복하지 않는다.
+
 ## 실제 호출 가능한 스크립트
 
 전부 `python3` 실행. 의존성은 `skills/source-grounding/scripts/requirements.txt`.
@@ -82,16 +91,17 @@ python3 skills/source-grounding/scripts/share_paper.py <paper-dir>
 - **Confluence**: Space `VC`, 경로: 프로젝트 진행-AI전용 > 프로젝트#01
 - **JIRA**: Space `BIOP01`
 - **Slack**: 멤버별 openclaw bot
+- **Atlassian MCP 설정**: [openclaw/atlassian-mcp-setup.md](openclaw/atlassian-mcp-setup.md)
 
 ## 팀 & 데이터셋 담당
 
-| 담당 데이터셋 | 담당자 | GitHub ID |
-|---|---|---|
-| 10x embryonic mouse brain | gglee (gklee) | Geongyu |
-| SHARE-seq mouse skin | 박상준 | — |
-| Human brain multi-ome | 전연수 / sjpark | sezinie000 |
-| Human HSPC 10x Multiome | kkkim / jamie (jmryu) | kakyungkim / JamieLyu |
-| 하네스 | braveji (ykji) | braveji18 |
+| 담당 데이터셋 | Primary | Secondary | GitHub ID (참고, verify 필요) |
+|---|---|---|---|
+| 10x embryonic mouse brain | 이건규 | — | Geongyu (=gglee/gklee) |
+| SHARE-seq mouse skin | 박상준 | — | (lookup pending) |
+| Human brain multi-ome | 전연수 | 박세진 | Yeonsu-Jeon (brain0106@gmail.com) / sjpark · sezinie000 |
+| Human HSPC 10x Multiome | 김가경 | 류재면 | kakyungkim / JamieLyu |
+| 하네스 | 지용기 | — | braveji18 (=braveji/ykji) |
 
 ## 주요 데이터셋
 
