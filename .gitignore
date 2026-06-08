@@ -37,3 +37,8 @@ analysis/**/*_core-with-figures.md
 # Legacy unprefixed names (pre-paper-id naming convention)
 analysis/**/core.html
 analysis/**/core-with-figures.md
+
+# Web dashboard runtime artifacts (per-run, not for sharing).
+# Keep run records (request.json, prompt.md, codex-job.json); ignore raw logs + uploads.
+artifacts/web-runs/**/codex.log
+artifacts/uploads/
