@@ -2,7 +2,11 @@
 .playwright-cli/
 
 # Claude Code local state (per-machine, not for sharing)
-.claude/
+.claude/*
+# ...but DO share the ported Claude harness layer (skills + agents) for web/team use.
+# settings*.json and worktrees/ stay per-machine (ignored by .claude/* above).
+!.claude/skills/
+!.claude/agents/
 
 # Python virtual environment (per-machine, not for sharing)
 .venv/
