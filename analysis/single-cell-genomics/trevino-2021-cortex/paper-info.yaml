@@ -63,7 +63,7 @@ sources:
       - "https://www.cell.com/cell/fulltext/S0092-8674(21)00942-9"
       - "https://static1.squarespace.com/static/61e14b3ce0a8b6050be3b8fb/t/61e8204a6d642d234730d5a0/1642602603623/Trevino%2Bet%2Bal%2B2021_main%2Bsmall.pdf"
     local: "sources/trevino-2021-cortex.pdf"
-    status: "not-fetched"
+    status: "author-contact-needed"
     note: "2026-06-08 재시도: 로컬 네트워크 DNS 제한으로 publisher/public mirror 다운로드 실패. PDF 부재 상태에서 source-limited full-analysis scaffold 작성. Figure/Table/STAR Methods 정밀 분석은 PDF manual drop 후 재검토 필요. | primary: network error | pmc: no PMID found for DOI | scihub: Sci-Hub skipped | primary: network error | pmc: PMC not attempted | scihub: Sci-Hub skipped"
   supplementary: []
   data:
