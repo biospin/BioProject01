@@ -1,0 +1,53 @@
+# , 2025 — Multi-agent AI enables evidence-based ce — bioRxiv
+# DOI: 10.1101/2025.11.06.686964
+# Topics: ai-scrna-tools (primary)  |  Importance: 중
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: cytetype-2025-biorxiv
+title: 'Multi-agent AI enables evidence-based cell annotation in single-cell transcriptomics'
+authors_short: Ahuja, Antill et al. (Nygen Analytics / Lund University)
+year: 2025
+venue: bioRxiv
+doi: 10.1101/2025.11.06.686964
+doi_or_url: 10.1101/2025.11.06.686964
+document_type: preprint
+topics:
+  - ai-scrna-tools
+citation:
+  key: ahuja2025cytetype
+  authors:
+    - Ahuja, Gautam
+    - Antill, Alex
+    - Su, Yi
+    - Dall'Olio, Giovanni Marco
+    - Basnayake, Sukhitha
+    - Karlsson, Göran
+    - Dhapola, Parashar
+categorization:
+  domain:
+    - single-cell-genomics
+    - ai-bioinformatics
+    - cell-type-annotation
+  use_case:
+    - pipeline-applicable
+    - methodology-reference
+    - academic-citation
+  importance:
+    level: "중"
+    perspective: "scRNA-seq annotation productivity tool로 우리 HSPC dataset에 즉시 적용 가능. 단 preprint COI 있어 독립 검증 권장. Epigenetic therapy response 예측 핵심 문제에 직접 기여는 아님."
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+sources:
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+  paper:
+    local: sources/cytetype-2025-biorxiv.pdf
+    status: available
+workflow:
+  last_updated: '2026-06-10'

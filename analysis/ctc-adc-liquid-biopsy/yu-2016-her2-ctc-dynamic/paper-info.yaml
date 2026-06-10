@@ -1,0 +1,53 @@
+# , 2016 — HER2 expression identifies dynamic funct — Nature
+# DOI: 10.1038/nature19328
+# Topics: ctc-adc-liquid-biopsy (primary)  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: yu-2016-her2-ctc-dynamic
+title: HER2 expression identifies dynamic functional states within circulating breast cancer cells
+authors_short: Yu, M. et al.
+year: 2016
+venue: Nature
+doi: 10.1038/nature19328
+doi_or_url: 10.1038/nature19328
+document_type: paper
+topics:
+  - ctc-adc-liquid-biopsy
+cytogen_relevance:
+  tier: high
+  use_case:
+    - adc_target_reference
+    - bd_pitch_reference
+  key_finding: HER2+ ↔ HER2- CTC 자발적 상호전환 — 동적 상태
+  applicable_to:
+    - SEV_BRCA
+    - NCCHE_Gastric
+categorization:
+  domain:
+    - "liquid-biopsy"
+    - "breast-cancer-biology"
+    - "HER2-targeted-therapy"
+    - "drug-resistance-mechanisms"
+  use_case:
+    - "academic-citation"
+    - "BD-opportunity"
+    - "commercialization-candidate"
+  importance:
+    level: "상"
+    perspective: "HER2+ CTC 동적 전환 개념이 ADC 타깃 선택·치료 모니터링·병용 전략 설계에 직접 연결되며, 이 분야의 핵심 foundation paper (Nature 2016)"
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+sources:
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+  paper:
+    local: sources/yu-2016-her2-ctc-dynamic.pdf
+    status: downloaded
+workflow:
+  last_updated: '2026-06-10'

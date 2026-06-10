@@ -1,0 +1,57 @@
+1. Nat Biotechnol. 2023 Nov;41(11):1593-1605. doi: 10.1038/s41587-023-01686-y.
+Epub  2023 Feb 16.
+
+Single-cell mapping of combinatorial target antigens for CAR switches using 
+logic gates.
+
+Kwon J(#)(1), Kang J(#)(2), Jo A(3)(4), Seo K(1), An D(1), Baykan MY(2), Lee 
+JH(1), Kim N(3)(4), Eum HH(3)(4), Hwang S(5)(6), Lee JM(7), Park WY(8), An 
+HJ(9), Lee HO(10)(11), Park JE(12), Choi JK(13)(14).
+
+Author information:
+(1)Department of Bio and Brain Engineering, KAIST, Daejeon, Republic of Korea.
+(2)Graduate School of Medical Science and Engineering, KAIST, Daejeon, Republic 
+of Korea.
+(3)Department of Microbiology, College of Medicine, The Catholic University of 
+Korea, Seoul, Republic of Korea.
+(4)Department of Biomedicine and Health Sciences, Graduate School, The Catholic 
+University of Korea, Seoul, Republic of Korea.
+(5)Department of Pathology, CHA Bundang Medical Center, CHA University, 
+Seongnam-si, Republic of Korea.
+(6)Department of Biomedical Science, CHA University, Pocheon-si, Republic of 
+Korea.
+(7)CHA Advanced Research Institute, CHA Bundang Medical Center, Seongnam-si, 
+Republic of Korea.
+(8)Samsung Genome Institute, Samsung Medical Center, Seoul, Republic of Korea.
+(9)Department of Pathology, CHA Bundang Medical Center, CHA University, 
+Seongnam-si, Republic of Korea. hjahn@cha.ac.kr.
+(10)Department of Microbiology, College of Medicine, The Catholic University of 
+Korea, Seoul, Republic of Korea. haeocklee@catholic.ac.kr.
+(11)Department of Biomedicine and Health Sciences, Graduate School, The Catholic 
+University of Korea, Seoul, Republic of Korea. haeocklee@catholic.ac.kr.
+(12)Graduate School of Medical Science and Engineering, KAIST, Daejeon, Republic 
+of Korea. jp24@kaist.ac.kr.
+(13)Department of Bio and Brain Engineering, KAIST, Daejeon, Republic of Korea. 
+jungkyoon@kaist.ac.kr.
+(14)Penta Medix Co., Ltd., Seongnam-si, Republic of Korea. 
+jungkyoon@kaist.ac.kr.
+(#)Contributed equally
+
+Identification of optimal target antigens that distinguish cancer cells from 
+normal surrounding tissue cells remains a key challenge in chimeric antigen 
+receptor (CAR) cell therapy for tumors with intratumoral heterogeneity. In this 
+study, we dissected tissue complexity to the level of individual cells through 
+the construction of a single-cell expression atlas that integrates ~1.4 million 
+tumor, tumor-infiltrating normal and reference normal cells from 412 tumors and 
+12 normal organs. We used a two-step screening method using random forest and 
+convolutional neural networks to select gene pairs that contribute most to 
+discrimination between individual malignant and normal cells. Tumor coverage and 
+specificity are evaluated for the AND, OR and NOT logic gates based on the 
+combinatorial expression pattern of the pairing genes across individual single 
+cells. Single-cell transcriptome-coupled epitope profiling validates the AND, OR 
+and NOT switch targets identified in ovarian cancer and colorectal cancer.
+
+© 2023. The Author(s), under exclusive licence to Springer Nature America, Inc.
+
+DOI: 10.1038/s41587-023-01686-y
+PMID: 36797491 [Indexed for MEDLINE]

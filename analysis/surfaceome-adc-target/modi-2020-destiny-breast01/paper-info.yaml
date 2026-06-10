@@ -1,0 +1,144 @@
+# Modi, S. et al., 2020 — destiny-breast01 — New England Journal of Medicine
+# DOI: 10.1056/NEJMoa1914510
+# Topics: surfaceome-adc-target (primary)  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: modi-2020-destiny-breast01
+document_type: "paper"
+title: 'Trastuzumab Deruxtecan in Previously Treated HER2-Positive Breast Cancer'
+authors:
+  - "Modi, S."
+  - "Saura, C."
+  - "Yamashita, T."
+  - "Park, Y.H."
+  - "Kim, S.-B."
+  - "Tamura, K."
+  - "Andre, F."
+  - "Iwata, H."
+  - "Ito, Y."
+  - "Tsurutani, J."
+  - "Sohn, J."
+  - "Denduluri, N."
+  - "Perrin, C."
+  - "Aogi, K."
+  - "Tokunaga, E."
+  - "Im, S.-A."
+  - "Lee, K.S."
+  - "Hurvitz, S.A."
+  - "Cortes, J."
+  - "Lee, C."
+  - "Chen, S."
+  - "Zhang, L."
+  - "Shahidi, J."
+  - "Yver, A."
+  - "Krop, I."
+authors_short: Modi, S. et al.
+year: 2020
+venue: New England Journal of Medicine
+doi: 10.1056/NEJMoa1914510
+doi_or_url: 10.1056/NEJMoa1914510
+keywords:
+  - "HER2-positive breast cancer"
+  - "antibody-drug conjugate"
+  - "trastuzumab deruxtecan"
+  - "T-DXd"
+  - "DS-8201"
+  - "DESTINY-Breast01"
+  - "Phase 2"
+  - "T-DM1 resistance"
+  - "topoisomerase I inhibitor"
+
+topics:
+  - surfaceome-adc-target
+
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2020-02-13"
+    volume: "382"
+    pages: "610-621"
+    epub_date: "2019-12-11"
+
+citation:
+  key: "modi2020destinybreast01"
+  short_id: "destiny-breast01"
+  bibtex_file: "sources/modi-2020-destiny-breast01.bib"
+  bibtex_type: "article"
+  share_filename: "Modi 2020 - Trastuzumab Deruxtecan in HER2+ Breast Cancer (DESTINY-Breast01).pdf"
+
+sources:
+  paper:
+    local: sources/modi-2020-destiny-breast01.pdf
+    status: downloaded
+    url: "https://www.nejm.org/doi/full/10.1056/NEJMoa1914510"
+  supplementary:
+    - local: sources/nejmoa1914510_appendix.pdf
+      type: pdf
+      status: downloaded
+      note: "Supplementary Appendix — ILD guidelines, eligibility criteria, Supplementary Tables S1-S6 and Figures S1-S2"
+    - local: sources/nejmoa1914510_protocol.pdf
+      type: pdf
+      status: downloaded
+      note: "Study protocol (full)"
+    - local: sources/nejmoa1914510_data-sharing.pdf
+      type: pdf
+      status: downloaded
+      note: "Data sharing statement"
+    - local: sources/nejmoa1914510_disclosures.pdf
+      type: pdf
+      status: downloaded
+      note: "Author disclosures/COI"
+
+categorization:
+  domain:
+    - "HER2-targeted-therapy"
+    - "antibody-drug-conjugate"
+    - "breast-oncology"
+    - "clinical-oncology"
+    - "surfaceome-target-validation"
+  use_case:
+    - "regulatory-precedent"
+    - "BD-opportunity"
+    - "academic-citation"
+  importance:
+    level: "상"
+    perspective: "DESTINY-Breast01 — T-DM1 이후 HER2+ MBC 표준치료 전환 근거 Phase 2. ORR 60.9% (ICR), PFS 16.4개월. FDA accelerated approval 직접 근거. SEV_BRCA·NCCHE_Gastric 전략 수립 핵심 reference."
+
+cytogen_relevance:
+  tier: high
+  use_case:
+    - adc_target_reference
+    - bd_pitch_reference
+    - regulatory_precedent
+  key_finding: "DESTINY-Breast01: T-DXd Phase 2 — ORR 60.9% (95% CI 53.4–68.0), median PFS 16.4개월, ILD 13.6% (grade5 2.2%); HER2+ MBC T-DM1 이후 ADC 표준 등록 근거"
+  applicable_to:
+    - SEV_BRCA
+    - NCCHE_Gastric
+
+audience:
+  primary: "bd-meeting"
+  secondary: ["self", "team"]
+  note: "BD pitch 및 임상 의사결정 reference; ILD safety 데이터 임상 관리 참조"
+
+priority:
+  level: high
+  deadline: null
+  reason: "HER2 ADC 분야 gold standard 시험 — BD 미팅 및 임상 전략 수립 시 즉시 활용"
+
+related:
+  - key: "tamura2019destinybreast01phase1"
+    relation: "predecessor"
+    note: "Phase 1 DS8201-A-J101 (Lancet Oncol 2019) — Phase 2 근거 시험"
+
+workflow:
+  created: "2026-06-10"
+  last_updated: "2026-06-10"
+  analysis_status:
+    abstract: "skipped"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"

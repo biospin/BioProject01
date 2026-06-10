@@ -1,0 +1,57 @@
+# , 2025 — SCassist: an AI based workflow assistant — Bioinformatics
+# DOI: 10.1093/bioinformatics/btaf402
+# Topics: ai-scrna-tools (primary)  |  Importance: 하
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: scassist-2025-bioinformatics
+title: 'SCassist: an AI based workflow assistant for single-cell analysis'
+authors_short: Nagarajan, V. et al.
+year: 2025
+venue: Bioinformatics
+doi: 10.1093/bioinformatics/btaf402
+doi_or_url: 10.1093/bioinformatics/btaf402
+document_type: paper
+topics:
+  - ai-scrna-tools
+citation:
+  key: nagarajan2025scassist
+  bibtex_type: article
+  full_citation: 'Nagarajan V, Shi G, Arunkumar S, Liu C, Gopalakrishnan J, Nath PR, Jang J, Caspi RR. SCassist: an AI based workflow assistant for single-cell analysis. Bioinformatics. 2025;41(8):btaf402.'
+categorization:
+  domain:
+    - single-cell-genomics
+    - ai-bioinformatics
+    - workflow-automation
+  use_case:
+    - methodology-reference
+    - academic-citation
+    - pipeline-applicable
+  importance:
+    level: "하"
+    perspective: "범용 scRNA-seq QC/파라미터 추천 도구. R 전용으로 우리 Python/scanpy 파이프라인과 언어 불일치. downstream biology 검증 없음. methodology-reference 및 academic-citation 관점에서만 가치."
+cytogen_relevance:
+  tier: low
+  use_case:
+    - methodology-reference
+    - academic-citation
+  key_finding: "Seurat 기반 scRNA-seq 전 단계 LLM workflow assistant. augmented prompt로 QC/정규화/클러스터링 파라미터 추천 제공. groundedness 98.7~99.9%, BERT semantic similarity 74~76%, Wilcoxon Signed-Rank p=0.0001122. API 비용 $2.07/1978회."
+  applicable_to: []
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+sources:
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+  paper:
+    local: sources/scassist-2025-bioinformatics.pdf
+    status: downloaded
+  supplementary:
+    local: sources/btaf402_supplementary_data.zip
+    status: downloaded
+workflow:
+  last_updated: '2026-06-10'

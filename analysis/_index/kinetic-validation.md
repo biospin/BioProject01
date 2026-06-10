@@ -1,6 +1,6 @@
 # Topic: kinetic-validation
 
-마지막 갱신: 2026-06-09
+마지막 갱신: 2026-06-10
 
 ## Papers (primary topic으로 등록된 것)
 

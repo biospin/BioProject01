@@ -1,0 +1,76 @@
+1. J Mammary Gland Biol Neoplasia. 2025 Sep 30;30(1):15. doi: 
+10.1007/s10911-025-09588-2.
+
+Natural and induced epithelial-mesenchymal transition results in epigenetic 
+silencing of HER2 overexpression.
+
+Hawkins KN(1), Dillard J(1), Ye Y(1), Wang J(2), Hoffman RM(3)(4), Mcphail K(5), 
+Barsky SH(6).
+
+Author information:
+(1)Department of Pathology, Anatomy and Cell Biology and the Clinical and 
+Translational Research Center of Excellence, Meharry Medical College, 1005 Dr. 
+D.B. Todd Jr. Boulevard, Nashville, TN, 37208, USA.
+(2)Scripps Mercy Hospital, MER 35, San Diego, CA, 92103, USA.
+(3)AntiCancer, Inc, 7917 Ostow St., Suite B,, San Diego, CA, 92111, USA.
+(4)The Department of Surgery, University of California at San Diego, 9300 Campus 
+Point Drive, #7220, La Jolla, CA, 92037-7220, USA.
+(5)Star Diagnostics Laboratories, 215 E Warm Springs Rd, Ste 108, Las Vegas, NV, 
+89119, USA.
+(6)Department of Pathology, Anatomy and Cell Biology and the Clinical and 
+Translational Research Center of Excellence, Meharry Medical College, 1005 Dr. 
+D.B. Todd Jr. Boulevard, Nashville, TN, 37208, USA. sbarsky@mmc.edu.
+
+Epithelial-mesenchymal transition (EMT) is a well-known phenomenon that has been 
+implicated in diverse biological processes ranging from embryonal development to 
+cancer invasion and metastasis. In epithelial-derived cancers which both invade 
+and metastasize as epithelial clumps or clusters, EMT would have to be followed 
+by MET (mesenchymal-epithelial transition) since both the initial cancer and the 
+metastasis appear epithelial in nature. There is a rare subset of breast 
+carcinomas, however, that exhibit biphasic epithelial and mesenchymal 
+differentiation, so-called metaplastic carcinomas. Our initial studies were 
+designed to examine whether EMT was indeed occurring in this unique subset of 
+metaplastic breast carcinomas. Based on both RT-PCR and immunocytochemical 
+studies, EMT was naturally occurring. Once this was confirmed, we wanted to 
+investigate the effects of EMT beyond the immediate gene expression pattern that 
+traditionally defined it. Although approximately 90% of metaplastic breast 
+carcinomas are triple negative, 5-10% amplify and overexpress HER2. We then 
+conducted both observational studies in these biphasic HER2 overexpressing 
+metaplastic breast carcinomas and experimental studies with a HER2 
+overexpressing cell line, the HTB20, where TGFβ1 induced EMT. In the 
+observational studies, HER2 gene amplification was equally present in both the 
+epithelial and mesenchymal phases but both HER2 mRNA and protein levels were 
+essentially silenced in the areas having undergone EMT. Similarly in the 
+experimental studies where TGFβ1 induced EMT, HER2 gene amplification persisted 
+but HER2 mRNA and protein levels were similarly silenced. These studies provide 
+direct evidence that both naturally occurring and induced EMT results in 
+epigenetically silencing of HER2 overexpression.
+
+© 2025. The Author(s).
+
+DOI: 10.1007/s10911-025-09588-2
+PMCID: PMC12484253
+PMID: 41026283 [Indexed for MEDLINE]
+
+Conflict of interest statement: Declarations. Ethics approval and consent to 
+participate: Initial xenograft studies were conducted under the UCLA 
+Chancellor’s Animal Research Committee (Certification 95-127-11). Continuing 
+animal studies were approved by The Ohio State University’s Animal Care and Use 
+Committee (IACUC), protocol 2007A0218 and human cell line studies by The Ohio 
+State University’s Institutional Biosafety Committee, protocol 2007R0057. 
+Additional animal studies were approved by the University of Nevada’s School of 
+Medicine and the Nevada Cancer Institute’s IACUC, protocols 00439 and 00440 when 
+the corresponding author of this study was affiliated with these previous 
+institutions. Subsequent animal studies were conducted under an 
+Interinstitutional Agreement between the California University of Science and 
+Medicine and Anticancer, Inc. using the latter’s IACUC protocol D16-00503 and 
+OLAW A3873-01. Final animal studies were carried out at Meharry Medical College, 
+OLAW D16-00261, IACUC A3420. Collection and use of human tissues from patients 
+with breast cancer including infiltrating ductal carcinomas (IDC), inflammatory 
+breast carcinomas (IBC) and metaplastic carcinomas (MC), completely deidentified 
+and anonymized, was approved by The Ohio State University Cancer Institutional 
+Review Board (IRB) under protocol 2006C0042. Additional cases of human breast 
+cancer were obtained from the Meharry Medical College and its Translational 
+Pathology Shared Resource Core. These were retrospective tissue retrieval 
+studies designated as exempt from Human Subject review. Consent for publication: 
+Not applicable. Competing interests: The authors declare no competing interests.

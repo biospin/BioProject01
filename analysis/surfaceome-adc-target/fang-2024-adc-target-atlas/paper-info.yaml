@@ -1,0 +1,109 @@
+# Fang, J. et al., 2023 — adc-target-atlas — Cancer Gene Therapy
+# DOI: 10.1038/s41417-023-00701-3
+# Topics: surfaceome-adc-target (primary), ctc-adc-liquid-biopsy  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: fang-2024-adc-target-atlas
+title: The target atlas for antibody-drug conjugates across solid cancers
+authors:
+  - "Fang, J."
+  - "Guo, L."
+  - "Zhang, Y."
+  - "Guo, Q."
+  - "Wang, M."
+  - "Wang, X."
+authors_short: Fang, J. et al.
+year: 2023
+venue: Cancer Gene Therapy
+doi: 10.1038/s41417-023-00701-3
+doi_or_url: 10.1038/s41417-023-00701-3
+document_type: paper
+topics:
+  - surfaceome-adc-target        # primary
+  - ctc-adc-liquid-biopsy        # secondary
+
+version:
+  type: published
+  peer_reviewed: true
+  published:
+    date: "2023-12-21"           # online; print volume 31 (2024) pp.273-284
+
+citation:
+  key: fang2023adctargetatlas
+  short_id: adc-target-atlas
+  bibtex_file: sources/fang-2024-adc-target-atlas.bib
+  bibtex_type: article
+
+cytogen_relevance:
+  tier: high
+  use_case:
+    - adc_target_reference
+    - bd_pitch_reference
+  key_finding: "19개 고형암 × 다중 omics 알고리즘으로 75개 ADC 타겟 + 165개 target-indication 조합 도출. 35개 ADC R&D 신규 후보 포함."
+  applicable_to:
+    - SEV_BRCA
+    - NCCHE_Gastric
+    - BLCA
+
+categorization:
+  domain:
+    - ADC target discovery
+    - pan-cancer surfaceome
+    - precision oncology
+    - drug discovery
+  use_case:
+    - academic-citation
+    - BD-opportunity
+    - commercialization-candidate
+  importance:
+    level: "상"
+    perspective: "최초 pan-solid-cancer ADC target atlas 중 하나. 75개 타겟 + 165개 target-indication 조합 + 35개 신규 후보 체계적 제공. NCCHE Gastric/SEV BRCA CTC 타겟 외부 검증 기준 및 BD 발표 third-party 근거로 즉시 활용 가능."
+
+audience:
+  primary: self
+  secondary:
+    - bd-meeting
+  note: NCCHE Gastric BD 발표 및 SEV BRCA 타겟 선택 근거
+priority:
+  level: high
+  deadline: null
+  reason: ADC 타겟 발굴 atlas로서 CTC 데이터 교차 분석 즉시 실행 가능
+
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+
+sources:
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: mismatched
+    note: "abstract.txt 내용이 Hao 2021 Seurat Cell 논문으로 오입력. 실제 abstract는 PDF에서 확인."
+  paper:
+    url: "https://doi.org/10.1038/s41417-023-00701-3"
+    local: sources/fang-2024-adc-target-atlas.pdf
+    status: downloaded
+  supplementary:
+    - local: sources/41417_2023_701_MOESM1_ESM.docx
+      type: docx
+      status: downloaded
+      note: Supplementary methods and tables (MOESM1)
+    - local: sources/41417_2023_701_MOESM2_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: "Supplementary Tables 1-6 (target-indication combinations, overexpression rates, clinical trials data)"
+
+workflow:
+  created: "2026-06-10"
+  last_updated: "2026-06-10"
+  analysis_status:
+    abstract: skipped
+    core: done
+    lens_academic: done
+    lens_industry: done
+    methodology_brief: done
+    slides: skipped
+  note: "전체 분석 완료 (2026-06-10). 기존 파일은 PDF 미확보 상태에서 외부 맥락 기반으로 작성되었으나, PDF 입수 후 원문 기반으로 전면 재작성. DOI 정정: 10.1016/j.cell.2021.04.048 (오기재) → 10.1038/s41417-023-00701-3 (정정)."

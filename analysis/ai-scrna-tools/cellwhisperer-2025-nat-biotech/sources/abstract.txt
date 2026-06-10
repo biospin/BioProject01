@@ -1,0 +1,58 @@
+1. Nat Biotechnol. 2025 Nov 11. doi: 10.1038/s41587-025-02857-9. Online ahead of 
+print.
+
+Multimodal learning enables chat-based exploration of single-cell data.
+
+Schaefer M(#)(1)(2), Peneder P(#)(3)(4), Malzl D(2)(5)(6), Lombardo 
+SD(2)(5)(6)(7), Peycheva M(2), Burton J(1)(2), Hakobyan A(3), Sharma 
+V(1)(2)(5)(6), Krausgruber T(1)(2), Sin C(2)(5)(6)(7), Menche J(2)(5)(6)(7)(8), 
+Tomazou EM(3)(9), Bock C(10)(11)(12).
+
+Author information:
+(1)Medical University of Vienna, Institute of Artificial Intelligence, Center 
+for Medical Data Science (CEDAS), Vienna, Austria.
+(2)CeMM Research Center for Molecular Medicine of the Austrian Academy of 
+Sciences, Vienna, Austria.
+(3)St. Anna Children's Cancer Research Institute (CCRI), Vienna, Austria.
+(4)Doctoral School in Microbiology and Environmental Science, University of 
+Vienna, Vienna, Austria.
+(5)Max Perutz Labs, Vienna, Austria.
+(6)Department of Structural and Computational Biology, Center for Molecular 
+Biology, University of Vienna, Vienna, Austria.
+(7)Ludwig Boltzmann Institute for Network Medicine at the University of Vienna, 
+Vienna, Austria.
+(8)Faculty of Mathematics, University of Vienna, Vienna, Austria.
+(9)Medical University of Vienna, Center for Cancer Research, Vienna, Austria.
+(10)Medical University of Vienna, Institute of Artificial Intelligence, Center 
+for Medical Data Science (CEDAS), Vienna, Austria. cbock@cemm.oeaw.ac.at.
+(11)CeMM Research Center for Molecular Medicine of the Austrian Academy of 
+Sciences, Vienna, Austria. cbock@cemm.oeaw.ac.at.
+(12)Medical University of Vienna, Comprehensive Center for AI in Medicine 
+(CAIM), Vienna, Austria. cbock@cemm.oeaw.ac.at.
+(#)Contributed equally
+
+Single-cell sequencing characterizes biological samples at unprecedented scale 
+and detail, but data interpretation remains challenging. Here, we present 
+CellWhisperer, an artificial intelligence (AI) model and software tool for 
+chat-based interrogation of gene expression. We establish a multimodal embedding 
+of transcriptomes and their textual annotations, using contrastive learning on 1 
+million RNA sequencing profiles with AI-curated descriptions. This embedding 
+informs a large language model that answers user-provided questions about cells 
+and genes in natural-language chats. We benchmark CellWhisperer's performance 
+for zero-shot prediction of cell types and other biological annotations and 
+demonstrate its use for biological discovery in a meta-analysis of human 
+embryonic development. We integrate a CellWhisperer chat box with the CELLxGENE 
+browser, allowing users to interactively explore gene expression through a 
+combined graphical and chat interface. In summary, CellWhisperer leverages large 
+community-scale data repositories to connect transcriptomes and text, thereby 
+enabling interactive exploration of single-cell RNA-sequencing data with 
+natural-language chats.
+
+© 2025. The Author(s).
+
+DOI: 10.1038/s41587-025-02857-9
+PMID: 41219484
+
+Conflict of interest statement: Competing interests: C.B. is a cofounder and 
+scientific advisor of Myllia Biotechnology and Neurolentech. The remaining 
+authors declare no competing interests.

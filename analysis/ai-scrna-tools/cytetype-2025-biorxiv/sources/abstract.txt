@@ -1,0 +1,34 @@
+1. Zebrafish. 2024 Apr;21(2):144-148. doi: 10.1089/zeb.2023.0071.
+
+A 3D-Printed and Freely Available Device to Measure the Zebrafish Optokinetic 
+Response Before and After Injury.
+
+Hermans A(1)(2), Tajnai S(1)(2), Tieman A(1)(2), Young S(1)(2), Franklin 
+A(1)(2), Horutz M(1)(2), Henle SJ(1)(2).
+
+Author information:
+(1)Carthage College, Kenosha, Wisconsin, USA.
+(2)Published on BioRxiv preprint server: 
+https://www.biorxiv.org/content/10.1101/2023.08.15.553448v1 (doi: 
+https://doi.org/10.1101/2023.08.15.553448).
+
+Zebrafish eyes are anatomically similar to humans and have a higher percentage 
+of cone photoreceptors more akin to humans than most rodent models, making them 
+a beneficial model organism for studying vision. However, zebrafish are 
+different in that they can regenerate their optic nerve after injury, which most 
+other animals cannot. Vision in zebrafish and many other vertebrate animals, 
+including humans, can be accessed using the optokinetic response (OKR), which is 
+an innate eye movement that occurs when tracking an object. Because fish cannot 
+use an eye chart, we utilize the OKR that is present in virtually all 
+vertebrates to determine if a zebrafish has vision. To this end, we have 
+developed an inexpensive OKR setup that uses 3D-printed and off-the-shelf parts. 
+This setup has been designed and used by undergraduate researchers and is also 
+scalable to a classroom laboratory setup. We demonstrate that this setup is 
+fully functional for assessing the OKR, and we use it to illustrate the return 
+of the OKR following optic nerve injury in adult zebrafish.
+
+DOI: 10.1089/zeb.2023.0071
+PMCID: PMC11035845
+PMID: 38621210 [Indexed for MEDLINE]
+
+Conflict of interest statement: No competing financial interests exist.

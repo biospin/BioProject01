@@ -1,0 +1,163 @@
+# Modi, S. et al., 2022 — destiny-breast04 — New England Journal of Medicine
+# DOI: 10.1056/NEJMoa2203690
+# Topics: surfaceome-adc-target (primary), ctc-adc-liquid-biopsy  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Trastuzumab Deruxtecan in Previously Treated HER2-Low Advanced Breast Cancer"
+authors:
+  - "Modi, S."
+  - "Jacot, W."
+  - "Yamashita, T."
+  - "Sohn, J."
+  - "Vidal, M."
+  - "Tokunaga, E."
+  - "Tsurutani, J."
+  - "Ueno, N.T."
+  - "Prat, A."
+  - "Harbeck, N."
+  - "Cameron, D.A."
+authors_short: "Modi, S. et al."
+year: 2022
+venue: "New England Journal of Medicine"
+doi: "10.1056/NEJMoa2203690"
+doi_or_url: "10.1056/NEJMoa2203690"
+keywords:
+  - "HER2-low"
+  - "trastuzumab deruxtecan"
+  - "T-DXd"
+  - "antibody-drug conjugate"
+  - "breast cancer"
+  - "DESTINY-Breast04"
+  - "progression-free survival"
+  - "overall survival"
+
+# ───────────────────────────────────────────
+# Topics (Option E 다중 분류)
+# ───────────────────────────────────────────
+topics:
+  - "surfaceome-adc-target"   # primary
+  - "ctc-adc-liquid-biopsy"   # secondary — CTC HER2 프로파일링 연구 맥락
+
+# ───────────────────────────────────────────
+# Version
+# ───────────────────────────────────────────
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2022-06-05"
+    updated: "2022-06-15"
+
+# ───────────────────────────────────────────
+# Citation
+# ───────────────────────────────────────────
+citation:
+  key: "modi2022destinybreast04"
+  short_id: "destiny-breast04"
+  bibtex_file: "sources/modi-2022-destiny-breast04.bib"
+  bibtex_type: "article"
+  share_filename: "Modi 2022 - Trastuzumab Deruxtecan HER2-Low Breast Cancer (DESTINY-Breast04).pdf"
+
+# ───────────────────────────────────────────
+# Source files
+# ───────────────────────────────────────────
+sources:
+  paper:
+    local: "sources/modi-2022-destiny-breast04.pdf"
+    status: "downloaded"
+  supplementary:
+    - local: "sources/nejmoa2203690_appendix.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Supplementary Appendix — 30 pages including Figures S1-S5, Tables S1-S7, investigators list"
+    - local: "sources/nejmoa2203690_protocol.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Full protocol and statistical analysis plan"
+    - local: "sources/nejmoa2203690_data-sharing.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Data sharing statement"
+    - local: "sources/nejmoa2203690_disclosures.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Author disclosures"
+  data:
+    - url: "https://clinicaltrials.gov/ct2/show/NCT03734029"
+      type: "clinicaltrials"
+      status: "url-only"
+      note: "DESTINY-Breast04 NCT03734029"
+
+# ───────────────────────────────────────────
+# Categorization
+# ───────────────────────────────────────────
+categorization:
+  domain:
+    - "oncology"
+    - "breast-cancer"
+    - "antibody-drug-conjugate"
+    - "HER2-targeted-therapy"
+    - "companion-diagnostics"
+    - "clinical-trial"
+  use_case:
+    - "regulatory-precedent"
+    - "BD-opportunity"
+    - "academic-citation"
+  importance:
+    level: "상"
+    perspective: "DESTINY-Breast04는 HER2-low를 독립 치료 가능 인구로 확립한 pivotal Phase 3 시험으로, CTC 기반 HER2 동적 프로파일링의 임상 가치와 직접 연결되며 regulatory-precedent + BD-opportunity 양측에서 즉시 활용 가능."
+
+# ───────────────────────────────────────────
+# CytoGen relevance
+# ───────────────────────────────────────────
+cytogen_relevance:
+  tier: high
+  use_case:
+    - adc_target_reference
+    - bd_pitch_reference
+    - regulatory_precedent
+  key_finding: "DESTINY-Breast04: T-DXd HER2-low(IHC 1+/2+ ISH-음성) Phase 3 — HER2-low 새 치료 가능 인구 정의 확립, CTC HER2 동적 프로파일링 가치 직결. mPFS 10.1 vs. 5.4개월(HR 0.51, P<0.001), OS 23.9 vs. 17.5개월(HR 0.64, P=0.003)."
+  applicable_to:
+    - SEV_BRCA
+    - NCCHE_Gastric
+
+# ───────────────────────────────────────────
+# Stakeholder & priority
+# ───────────────────────────────────────────
+audience:
+  primary: "team"
+  secondary:
+    - "bd-meeting"
+  note: "BD pitch 및 CTC HER2 연구 grant/proposal 맥락에서 핵심 reference"
+priority:
+  level: "high"
+  deadline: null
+  reason: "HER2-low 승인 pivotal data — CTC 연구 기획 및 BD pitch에서 즉시 필요"
+
+# ───────────────────────────────────────────
+# Cross-reference
+# ───────────────────────────────────────────
+related:
+  - key: "cortes2022destiny2"
+    relation: "predecessor"
+    note: "DESTINY-Breast03: T-DXd vs. T-DM1 in HER2-positive (HR 0.28)"
+  - key: "bardia2021sacituzumab"
+    relation: "competitor"
+    note: "ASCENT: sacituzumab govitecan in TNBC — HR-음성 HER2-low 직접 경쟁"
+
+# ───────────────────────────────────────────
+# Workflow metadata
+# ───────────────────────────────────────────
+workflow:
+  created: "2026-06-10"
+  last_updated: "2026-06-10"
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
