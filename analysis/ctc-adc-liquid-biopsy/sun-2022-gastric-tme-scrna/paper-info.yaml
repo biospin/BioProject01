@@ -1,0 +1,166 @@
+# Sun, K. et al., 2022 — sun-gastric-tme — Nature Communications
+# DOI: 10.1038/s41467-022-32627-z
+# Topics: ctc-adc-liquid-biopsy (primary)  |  Importance: 중
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: sun-2022-gastric-tme-scrna
+title: 'scRNA-seq of gastric tumor shows complex intercellular interaction with an alternative T cell exhaustion trajectory'
+authors:
+  - "Sun, K."
+  - "Xu, R."
+  - "Ma, F."
+  - "Yang, N."
+  - "Li, Y."
+  - "Sun, X."
+  - "Jin, P."
+  - "Kang, W."
+  - "Jia, L."
+  - "Xiong, J."
+  - "Hu, H."
+  - "Tian, Y."
+  - "Lan, X."
+authors_short: Sun, K. et al.
+year: 2022
+venue: Nature Communications
+doi: 10.1038/s41467-022-32627-z
+doi_or_url: 10.1038/s41467-022-32627-z
+document_type: paper
+keywords:
+  - "gastric cancer"
+  - "tumor microenvironment"
+  - "scRNA-seq"
+  - "T cell exhaustion"
+  - "Tc17"
+  - "tumor-associated stromal cells"
+  - "CellPhoneDB"
+  - "TCR clonotype"
+
+topics:
+  - ctc-adc-liquid-biopsy
+
+version:
+  type: published
+  peer_reviewed: true
+  published:
+    date: "2022-08-23"
+
+citation:
+  key: sun2022gastrictme
+  short_id: sun-gastric-tme
+  bibtex_file: sources/sun-2022-gastric-tme-scrna.bib
+  bibtex_type: article
+
+sources:
+  paper:
+    local: sources/sun-2022-gastric-tme-scrna.pdf
+    status: downloaded
+    note: Open access, CC BY 4.0
+  supplementary:
+    - local: sources/41467_2022_32627_MOESM1_ESM.pdf
+      type: pdf
+      status: downloaded
+      note: Supplementary Methods + Figures (Supp Fig 1-18)
+    - local: sources/41467_2022_32627_MOESM3_ESM.pdf
+      type: pdf
+      status: downloaded
+      note: Supplementary Note 1-3
+    - local: sources/41467_2022_32627_MOESM4_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Table 1 — signature genes of epithelial cell types
+    - local: sources/41467_2022_32627_MOESM5_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Table 2 — primer sequences
+    - local: sources/41467_2022_32627_MOESM6_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Data 1 — clinical characteristics
+    - local: sources/41467_2022_32627_MOESM7_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Data 2 — doublet markers per cluster
+    - local: sources/41467_2022_32627_MOESM8_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Data 3 — DEGs in all cell clusters
+    - local: sources/41467_2022_32627_MOESM9_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Data 4 — common genes Tex/Treg, Tc17/Th17
+    - local: sources/41467_2022_32627_MOESM10_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Data 5 — VDJ gene usage matrix per T cell cluster
+    - local: sources/41467_2022_32627_MOESM11_ESM.xlsx
+      type: xlsx
+      status: downloaded
+      note: Supplementary Data 6 — ligand-receptor interaction pairs (Figure 8)
+    - local: sources/41467_2022_32627_MOESM12_ESM.pdf
+      type: pdf
+      status: downloaded
+      note: Supplementary Data 7 — antibodies for multiplex IHC
+  data:
+    - url: "https://bigd.big.ac.cn/gsa/browse/CRA003371"
+      type: public-database
+      status: url-only
+      note: "Raw sequence data — BIG Data Center, Genome Sequence Archive, Access HRA000704"
+    - url: "https://ngdc.cncb.ac.cn/omix/release/OMIX001073"
+      type: public-database
+      status: url-only
+      note: "Processed expression matrices and cell annotations — OMIX001073"
+  code:
+    - url: "https://github.com/Lan-lab/sc-GC"
+      type: github
+      status: url-only
+      note: "Example scripts for scRNA-seq processing and analysis"
+  abstract_text:
+    source: pubmed
+    pmid: "35999201"
+    local: sources/abstract.txt
+    status: downloaded
+
+cytogen_relevance:
+  tier: medium
+  use_case:
+    - adc_target_reference
+    - bd_pitch_reference
+  key_finding: 위암 TME 166,533세포 단일세포 지도 — tissue side 비교 참조. Tc17 세포의 IL17/IL22/IL26 신호 및 TASC-TAM-LAMP3+ DC 상호작용 허브 정량화.
+  applicable_to:
+    - SEV_BRCA
+    - NCCHE_Gastric
+
+categorization:
+  domain:
+    - single-cell-genomics
+    - tumor-microenvironment
+    - gastric-cancer
+    - T-cell-biology
+    - cell-cell-communication
+  use_case:
+    - academic-citation
+    - methodology-reference
+    - BD-opportunity
+  importance:
+    level: "중"
+    perspective: "위암 TME 대규모 atlas로 학술 인용 가치 높음; Tc17-exhaustion 경로와 TASC-interaction hub는 ADC 타겟 선정 시 tissue-side reference로 직접 활용 가능. 단 단일 기관 10명 코호트, 공간 정보 부재로 clinical translation ROI 제한."
+
+audience:
+  primary: self
+  secondary: []
+  note: null
+
+priority:
+  level: normal
+  deadline: null
+  reason: null
+
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+
+workflow:
+  last_updated: '2026-06-10'

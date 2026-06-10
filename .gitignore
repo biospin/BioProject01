@@ -25,6 +25,10 @@ analysis/**/sources/*.pptx
 analysis/**/sources/*.zip
 analysis/**/sources/*.tar.gz
 analysis/**/sources/*.tgz
+analysis/**/sources/*.mp4
+analysis/**/sources/*.mp3
+analysis/**/sources/*.mov
+analysis/**/sources/*.avi
 # Cached text dump of PDF (created by build_html.py for figure detection)
 analysis/**/sources/.paper_text.txt
 

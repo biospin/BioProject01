@@ -1,0 +1,55 @@
+# , 2025 — Platelet-mediated circulating tumor cell — Hepatology
+# DOI: 10.1097/HEP.0000000000000934
+# Topics: ctc-adc-liquid-biopsy (primary)  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: sun-2025-hepatology-ctc-plt
+title: "Platelet-mediated circulating tumor cell evasion from natural killer cell killing through immune checkpoint CD155-TIGIT"
+authors_short: Sun Y, Li T, Ding L et al.
+year: 2025
+venue: Hepatology
+doi: 10.1097/HEP.0000000000000934
+doi_or_url: 10.1097/HEP.0000000000000934
+document_type: paper
+topics:
+  - ctc-adc-liquid-biopsy
+cytogen_relevance:
+  tier: high
+  use_case:
+    - pipeline-applicable
+    - academic-citation
+    - commercialization-candidate
+  key_finding: PLT 직접 부착이 FAK/JNK/c-Jun cascade를 통해 CTC의 CD155를 전사 활성화 → NK-cell TIGIT 결합으로 면역 회피. α-TIGIT 차단 시 전이 억제.
+  applicable_to:
+    - NCCHE_Gastric
+categorization:
+  domain:
+    - "CTC-biology"
+    - "immune-checkpoint"
+    - "liquid-biopsy"
+    - "NK-cell-immunology"
+    - "HCC-oncology"
+  use_case:
+    - "pipeline-applicable"
+    - "academic-citation"
+    - "commercialization-candidate"
+  importance:
+    level: "상"
+    perspective: "PLT-CTC adhesion이 FAK/JNK/c-Jun→CD155→TIGIT 축을 통해 NK-cell 면역 회피를 일으킨다는 기전을 분자 수준에서 처음 규명. 우리 CTC 파이프라인에서 CD41+CD155+ co-staining으로 즉시 적용 가능하고, 위암 CTC 분석의 PLT+CTC subtype 기능 정당성 핵심 근거."
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+sources:
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+  paper:
+    local: sources/sun-2025-hepatology-ctc-plt.pdf
+    status: available
+    note: PDF 전문 분석 완료 (2026-06-10)
+workflow:
+  last_updated: '2026-06-10'

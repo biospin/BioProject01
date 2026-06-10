@@ -1,0 +1,34 @@
+1. Cancers (Basel). 2024 Mar 31;16(7):1377. doi: 10.3390/cancers16071377.
+
+The Role of Circulating Tumor Cells as a Liquid Biopsy for Cancer: Advances, 
+Biology, Technical Challenges, and Clinical Relevance.
+
+Allen TA(1).
+
+Author information:
+(1)Duke Cancer Institute, Durham, NC 27710, USA.
+
+Cancer remains a leading cause of mortality worldwide, with metastasis 
+significantly contributing to its lethality. The metastatic spread of tumor 
+cells, primarily through the bloodstream, underscores the importance of 
+circulating tumor cells (CTCs) in oncological research. As a critical component 
+of liquid biopsies, CTCs offer a non-invasive and dynamic window into tumor 
+biology, providing invaluable insights into cancer dissemination, disease 
+progression, and response to treatment. This review article delves into the 
+recent advancements in CTC research, highlighting their emerging role as a 
+biomarker in various cancer types. We explore the latest technologies and 
+methods for CTC isolation and detection, alongside novel approaches to 
+characterizing their biology through genomics, transcriptomics, proteomics, and 
+epigenetic profiling. Additionally, we examine the clinical implementation of 
+these findings, assessing how CTCs are transforming the landscape of cancer 
+diagnosis, prognosis, and management. By offering a comprehensive overview of 
+current developments and potential future directions, this review underscores 
+the significance of CTCs in enhancing our understanding of cancer and in shaping 
+personalized therapeutic strategies, particularly for patients with metastatic 
+disease.
+
+DOI: 10.3390/cancers16071377
+PMCID: PMC11010957
+PMID: 38611055
+
+Conflict of interest statement: The author declares no conflicts of interest.

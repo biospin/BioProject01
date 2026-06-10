@@ -1,0 +1,51 @@
+# , 2025 — Natural and induced epithelial-mesenchym — Journal of Mammary Gland Biology and Neoplasia
+# DOI: 10.1007/s10911-025-09588-2
+# Topics: ctc-adc-liquid-biopsy (primary)  |  Importance: 중상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: hawkins-2025-her2-emt-mammary
+title: Natural and induced epithelial-mesenchymal transition results in epigenetic silencing of HER2 overexpression
+authors_short: Hawkins, K.N. et al.
+year: 2025
+venue: Journal of Mammary Gland Biology and Neoplasia
+doi: 10.1007/s10911-025-09588-2
+doi_or_url: 10.1007/s10911-025-09588-2
+document_type: paper
+topics:
+  - ctc-adc-liquid-biopsy
+cytogen_relevance:
+  tier: high
+  use_case:
+    - adc_target_reference
+  key_finding: in vivo 조직에서 자연 발생 EMT → HER2 발현 소실 (증폭은 유지)
+  applicable_to:
+    - SEV_BRCA
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+categorization:
+  domain:
+    - breast-oncology
+    - EMT-biology
+    - HER2-ADC-resistance
+    - epigenomics
+  use_case:
+    - academic-citation
+    - BD-opportunity
+  importance:
+    level: 중상
+    perspective: "CTC·ADC liquid biopsy 파이프라인에서 HER2 발현 동적 소실의 in vivo 2025년 직접 증거. 소표본(n=5 MC cases)·epigenetic 기전 미규명·특화 저널이 한계이나 Jordan 2016 + Nami 2021 + Hawkins 2025 삼각 인용으로 BD 논거 완결."
+sources:
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+  paper:
+    local: sources/hawkins-2025-her2-emt-mammary.pdf
+    status: downloaded
+workflow:
+  last_updated: '2026-06-10'
+  analysis_basis: full-pdf

@@ -1,0 +1,39 @@
+1. Bioinformatics. 2025 Aug 2;41(8):btaf402. doi: 10.1093/bioinformatics/btaf402.
+
+SCassist: an AI based workflow assistant for single-cell analysis.
+
+Nagarajan V(1), Shi G(1), Arunkumar S(1), Liu C(2), Gopalakrishnan J(3), Nath 
+PR(4), Jang J(1), Caspi RR(1).
+
+Author information:
+(1)Laboratory of Immunology, National Eye Institute, NIH, Bethesda, MD 20892, 
+United States.
+(2)Neuro-Immune Regulome Unit (Alumni), National Eye Institute, NIH, Bethesda, 
+MD 20892, United States.
+(3)Neuro-Immune Regulome Unit, National Eye Institute, NIH, Bethesda, MD 20892, 
+United States.
+(4)Laboratory of Immunology (Alumni), National Eye Institute, NIH, Bethesda, MD 
+20892, United States.
+
+Update of
+    bioRxiv. 2025 Apr 28:2025.04.22.650107. doi: 10.1101/2025.04.22.650107.
+
+SUMMARY: Single-cell RNA sequencing (scRNA-seq) data analysis often involves 
+complex iterative workflow, requiring significant expertise and time. To 
+navigate this complexity, we have developed SCassist, an R package that 
+leverages the power of the large language models (LLM's) to guide and enhance 
+scRNA-seq analysis. SCassist integrates LLM's into key workflow steps, to 
+analyze user data and provide relevant recommendations for filtering, 
+normalization and clustering parameters. It also provides LLM guided insightful 
+interpretations of variable features and principal components, along with cell 
+type annotations and enrichment analysis. SCassist provides intelligent 
+assistance using popular LLM's like Google's Gemini, OpenAI's GPT and Meta's 
+Llama3, making scRNA-seq analysis accessible to researchers at all levels.
+AVAILABILITY AND IMPLEMENTATION: The SCassist package, along with the detailed 
+tutorials, is available at GitHub. https://github.com/NIH-NEI/SCassist.
+
+Published by Oxford University Press 2025.
+
+DOI: 10.1093/bioinformatics/btaf402
+PMCID: PMC12341677
+PMID: 40650988 [Indexed for MEDLINE]

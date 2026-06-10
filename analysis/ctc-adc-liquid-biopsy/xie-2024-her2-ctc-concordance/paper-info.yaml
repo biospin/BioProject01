@@ -1,0 +1,73 @@
+# , 2024 — Concordance of HER2 status between prima — Discover Oncology
+# DOI: 10.1007/s12672-024-01663-0
+# Topics: ctc-adc-liquid-biopsy (primary)  |  Importance: 중
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: xie-2024-her2-ctc-concordance
+title: 'Concordance of HER2 status between primary tumor and circulating tumor cells in breast cancer'
+authors_short: Xie, P. et al.
+year: 2024
+venue: Discover Oncology
+doi: 10.1007/s12672-024-01663-0
+doi_or_url: 10.1007/s12672-024-01663-0
+document_type: paper
+topics:
+  - ctc-adc-liquid-biopsy
+cytogen_relevance:
+  tier: high
+  use_case:
+    - adc_target_reference
+    - bd_pitch_reference
+  key_finding: HER2 원발암-CTC 불일치율 32.6% — blood 기반 재프로파일링 필요성 근거
+  applicable_to:
+    - SEV_BRCA
+    - NCCHE_Gastric
+citation:
+  key: xie2024her2ctcconcordance
+  bibtex: |
+    @article{xie2024her2ctcconcordance,
+      title={Concordance of HER2 status between primary tumor and circulating tumor cells in breast cancer},
+      author={Xie, Peipei and Zhang, Xiaoli and Liu, Tianyi and Song, Yuchun and Zhang, Qi and Wan, Duo and Wang, Shijia and Wang, Shulian and Zhang, Wen},
+      journal={Discover Oncology},
+      volume={15},
+      pages={760},
+      year={2024},
+      doi={10.1007/s12672-024-01663-0},
+      pmid={39692928},
+      pmcid={PMC11655891}
+    }
+categorization:
+  domain:
+    - liquid-biopsy
+    - HER2-targeted-therapy
+    - circulating-tumor-cells
+    - breast-oncology
+    - antibody-drug-conjugates
+  use_case:
+    - academic-citation
+    - BD-opportunity
+    - commercialization-candidate
+  importance:
+    level: "중"
+    perspective: "조직-CTC HER2 불일치율 32.6% (hHER2⁻에서 cHER2⁺ 32.1%) 수치 제공 — ADC 적응 확장 BD 피치 및 CTC liquid biopsy 상용화 초기 근거. 단 n=43 단일 기관으로 재현 필요."
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+sources:
+  paper:
+    local: sources/xie-2024-her2-ctc-concordance.pdf
+    status: available
+    note: 'PDF available in sources/'
+  supplementary:
+    local: sources/12672_2024_1663_MOESM1_ESM.docx
+    status: available
+    note: 'Supplementary Table 1 — per-patient CTC/HER2+CTC data (n=43)'
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+workflow:
+  last_updated: '2026-06-10'

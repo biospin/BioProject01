@@ -1,0 +1,57 @@
+1. Nat Commun. 2022 Aug 23;13(1):4943. doi: 10.1038/s41467-022-32627-z.
+
+scRNA-seq of gastric tumor shows complex intercellular interaction with an 
+alternative T cell exhaustion trajectory.
+
+Sun K(#)(1), Xu R(#)(1), Ma F(#)(2)(3), Yang N(#)(1)(4), Li Y(#)(2), Sun 
+X(1)(5), Jin P(2), Kang W(2), Jia L(1), Xiong J(2), Hu H(2), Tian Y(6), Lan 
+X(7)(8)(9)(10).
+
+Author information:
+(1)School of Medicine, Tsinghua University, 100084, Beijing, China.
+(2)Department of Pancreatic and Gastric Surgery, National Cancer Center, 
+National Clinical Research Center for Cancer, Cancer Hospital, Chinese Academy 
+of Medical Sciences and Peking Union Medical College, No. 17 Panjiayuan Nanli, 
+100021, Beijing, China.
+(3)Department of General Surgery, Department of Gastrointestinal Surgery, 
+Beijing Hospital, National Center of Gerontology, Institute of Geriatric 
+Medicine, Chinese Academy of Medical Sciences, 100730, Beijing, China.
+(4)Peking-Tsinghua-NIBS Joint Graduate Program, Tsinghua University, 100084, 
+Beijing, China.
+(5)Centre for Life Sciences, Tsinghua University, 100084, Beijing, China.
+(6)Department of Pancreatic and Gastric Surgery, National Cancer Center, 
+National Clinical Research Center for Cancer, Cancer Hospital, Chinese Academy 
+of Medical Sciences and Peking Union Medical College, No. 17 Panjiayuan Nanli, 
+100021, Beijing, China. tianyantao@cicams.ac.cn.
+(7)School of Medicine, Tsinghua University, 100084, Beijing, China. 
+xlan@mail.tsinghua.edu.cn.
+(8)Peking-Tsinghua-NIBS Joint Graduate Program, Tsinghua University, 100084, 
+Beijing, China. xlan@mail.tsinghua.edu.cn.
+(9)Centre for Life Sciences, Tsinghua University, 100084, Beijing, China. 
+xlan@mail.tsinghua.edu.cn.
+(10)MOE Key Laboratory of Bioinformatics, Tsinghua University, 100084, Beijing, 
+China. xlan@mail.tsinghua.edu.cn.
+(#)Contributed equally
+
+The tumor microenvironment (TME) in gastric cancer (GC) has been shown to be 
+important for tumor control but the specific characteristics for GC are not 
+fully appreciated. We generated an atlas of 166,533 cells from 10 GC patients 
+with matched paratumor tissues and blood. Our results show tumor-associated 
+stromal cells (TASCs) have upregulated activity of Wnt signaling and 
+angiogenesis, and are negatively correlated with survival. Tumor-associated 
+macrophages and LAMP3+ DCs are involved in mediating T cell activity and form 
+intercellular interaction hubs with TASCs. Clonotype and trajectory analysis 
+demonstrates that Tc17 (IL-17+CD8+ T cells) originate from tissue-resident 
+memory T cells and can subsequently differentiate into exhausted T cells, 
+suggesting an alternative pathway for T cell exhaustion. Our results indicate 
+that IL17+ cells may promote tumor progression through IL17, IL22, and IL26 
+signaling, highlighting the possibility of targeting IL17+ cells and associated 
+signaling pathways as a therapeutic strategy to treat GC.
+
+© 2022. The Author(s).
+
+DOI: 10.1038/s41467-022-32627-z
+PMCID: PMC9399107
+PMID: 35999201 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no competing interests.

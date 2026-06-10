@@ -1,0 +1,54 @@
+1. Hepatology. 2025 Mar 1;81(3):791-807. doi: 10.1097/HEP.0000000000000934. Epub 
+2024 May 23.
+
+Platelet-mediated circulating tumor cell evasion from natural killer cell 
+killing through immune checkpoint CD155-TIGIT.
+
+Sun Y(1), Li T(2), Ding L(2), Wang J(2), Chen C(3), Liu T(4), Liu Y(2), Li 
+Q(2)(5), Wang C(2), Huo R(2), Wang H(2), Tian T(2), Zhang C(2)(6), Pan B(2), 
+Zhou J(1), Fan J(1), Yang X(1), Yang W(2), Wang B(2)(5)(7), Guo 
+W(2)(5)(6)(7)(8).
+
+Author information:
+(1)Department of Liver Surgery & Transplantation, Liver Cancer Institute, 
+Zhongshan Hospital, Fudan University; Key Laboratory of Carcinogenesis and 
+Cancer Invasion, Ministry of Education, Shanghai, China.
+(2)Department of Laboratory Medicine, Zhongshan Hospital, Fudan University, 
+Shanghai, China.
+(3)Department of Cell Biology, Shanghai Dunwill Medical Technology Company, 
+Shanghai, China.
+(4)Shanghai Geriatric Institute of Chinese Medicine, Shanghai University of 
+Traditional Chinese Medicine, Shanghai, China.
+(5)Department of Laboratory Medicine, Wusong Branch, Zhongshan Hospital, Fudan 
+University, Shanghai, China.
+(6)Department of Laboratory Medicine, Xiamen Branch, Zhongshan Hospital, Fudan 
+University, Xiamen, China.
+(7)Department of Laboratory Medicine, Shanghai Geriatric Medical Center, 
+Shanghai, China.
+(8)Cancer Center, Zhongshan Hospital, Fudan University, Shanghai, China.
+
+BACKGROUND AND AIMS: Circulating tumor cells (CTCs) are precursors of cancer 
+metastasis. However, how CTCs evade immunosurveillance during hematogenous 
+dissemination remains unclear.
+APPROACH AND RESULTS: We identified CTC-platelet adhesions by single-cell RNA 
+sequencing and multiplex immunofluorescence of blood samples from multiple 
+cancer types. Clinically, CTC-platelet aggregates were associated with 
+significantly shorter progression-free survival and overall survival in patients 
+with HCC. In vitro, ex vivo, and in vivo assays demonstrated direct platelet 
+adhesions gifted cancer cells with an evasive ability from NK cell killing by 
+upregulating inhibitory checkpoint CD155 (PVR cell adhesion molecule), therefore 
+facilitating distant metastasis. Mechanistically, CD155 was transcriptionally 
+regulated by the FAK/JNK/c-Jun cascade in a platelet contact-dependent manner. 
+Further competition assays and cytotoxicity experiments revealed that CD155 on 
+CTCs inhibited NK-cell cytotoxicity only by engaging with immune receptor TIGIT, 
+but not CD96 and DNAM1, another 2 receptors for CD155. Interrupting the 
+CD155-TIGIT interactions with a TIGIT antibody restored NK-cell 
+immunosurveillance on CTCs and markedly attenuated tumor metastasis.
+CONCLUSIONS: Our results demonstrated CTC evasion from NK-cell-mediated innate 
+immunosurveillance mainly through immune checkpoint CD155-TIGIT, potentially 
+offering an immunotherapeutic strategy for eradicating CTCs.
+
+Copyright © 2024 American Association for the Study of Liver Diseases.
+
+DOI: 10.1097/HEP.0000000000000934
+PMID: 38779918 [Indexed for MEDLINE]

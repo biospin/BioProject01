@@ -1,0 +1,68 @@
+1. Virol J. 2023 Oct 25;20(1):243. doi: 10.1186/s12985-023-02205-w.
+
+Trends in HIV-1 pretreatment drug resistance and HIV-1 variant dynamics among 
+antiretroviral therapy-naive Ethiopians from 2003 to 2018: a pooled sequence 
+analysis.
+
+Kiros M(1), Biset S(2), Gebremariam B(3), Yalew GT(4), Abegaz WE(5), Geteneh 
+A(6).
+
+Author information:
+(1)Department of Medical Laboratory Science, CollegeofMedicineandHealth 
+Sciences, Aksum University, Aksum, Ethiopia. mulugetakiros@gmail.com.
+(2)Department of Medical Microbiology, School of Biomedical and Laboratory 
+Sciences, College of Medicine and Health Sciences, University of Gondar, Gondar, 
+Ethiopia.
+(3)Department of Medical Laboratory Science, CollegeofMedicineandHealth 
+Sciences, Aksum University, Aksum, Ethiopia.
+(4)Department of Medical Laboratory Science, College of Medicine and Health 
+Sciences, Adigrat University, Adigrat, Ethiopia.
+(5)Department of Microbiology, Parasitology, and Immunology, School of Medicine, 
+Addis Ababa University, Addis Ababa, Ethiopia.
+(6)Department of Medical Laboratory Sciences, College of Health Sciences, Woldia 
+University, Woldia, Ethiopia.
+
+BACKGROUND: Ethiopia is among the highly HIV-affected countries, with reported 
+12,000 and 12,000 AIDS-related deaths and incidents as per reports from 2021. 
+Although the country has made a promising progress in antiretroviral therapy, 
+recent studies have indicated that pretreatment drug resistance (PDR) is 
+alarmingly increasing, which has become a challenge for the effectiveness of HIV 
+treatment. Epidemiologic data on PDR is necessary to help establish ART regimens 
+with good efficacy. Thus, this systematic review aimed to determine the trend 
+analysis of PDR among ART-naïve individuals along with HIV variant dynamics in 
+Ethiopia.
+METHOD: HIV-1 pol sequences from studies conducted between 2003 and 2018 among 
+ART-naïve Ethiopian individuals were retrieved from GenBank and analyzed for the 
+presence of PDR mutations (PDRM) along with the analysis of HIV-1 variant 
+dynamics. The Calibrated Population Resistance (CPR) tool Version 8.1 and 
+the REGA HIV-1 Subtyping Tool Version 3 were used to determine the PDRM and 
+HIV-1 genetic diversity, respectively.
+RESULT: We identified nine studies and analyzed 1070 retrieved HIV-1 pol 
+sequences in this systematic review. The pooled prevalence of PDR was 4.8% 
+(51/1070), including 1.4% (15/1070), 2.8% (30/1070), and 0.8% (9/1070) for 
+nucleoside reverse transcriptase inhibitor (NRTI), non-NRTI (NNRTI), and 
+protease inhibitor (PI) resistance, respectively. NRTI and NNRTI concurrent PDRM 
+were observed among 0.2% (2/799) of the analyzed sequences. The overall PDR 
+prevalence has been increasing over the years. Though the prevalence of the 
+NNRTI, NRTI, and PI PDR also increased over the years, the NNRTI increment was 
+more pronounced than the others, reaching 7.84% in 2018 from 2.19% in 2003. The 
+majority (97%; 1038/1070) of the genetic diversity was HIV-1 subtype C virus, 
+followed by subtype C' (2%; 20/1038) and other subtypes (1%; 10/1038).
+CONCLUSIONS: According to this systematic review, the overall pooled prevalence 
+of PDR is low. Despite the low prevalence, there has been an increasing trend of 
+PDR over the years, which implies the need for routine surveillance of PDRMs 
+along with preventive measures. Hence, this supports the recently endorsed 
+transition of ART regimens from NNRTI to integrase strand transfer 
+inhibitor-based regimens recommended by the WHO. In addition, this finding 
+underscores the need for routine baseline genotypic drug resistance testing for 
+all newly diagnosed HIV-infected patients before initiating treatment to halt 
+the upward trend of PDR.
+
+© 2023. BioMed Central Ltd., part of Springer Nature.
+
+DOI: 10.1186/s12985-023-02205-w
+PMCID: PMC10601210
+PMID: 37880705 [Indexed for MEDLINE]
+
+Conflict of interest statement: All the authors declare that they have no 
+competing interests.

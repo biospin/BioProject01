@@ -1,0 +1,62 @@
+1. Discov Oncol. 2024 Dec 18;15(1):760. doi: 10.1007/s12672-024-01663-0.
+
+Concordance of HER2 status between primary tumor and circulating tumor cells in 
+breast cancer.
+
+Xie P(#)(1), Zhang X(#)(1), Liu T(#)(2), Song Y(3), Zhang Q(1), Wan D(1), Wang 
+S(3), Wang S(4), Zhang W(5).
+
+Author information:
+(1)State Key Laboratory of Molecular Oncology, Department of Etiology and 
+Carcinogenesis, National Cancer Center/National Clinical Research Center for 
+Cancer/Cancer Hospital, Chinese Academy of Medical Sciences and Peking Union 
+Medical College, Beijing, 100021, China.
+(2)Department of Hepatobiliary Surgery, National Cancer Center/National Clinical 
+Research Center for Cancer/Cancer Hospital, Chinese Academy of Medical Sciences 
+and Peking Union Medical College, Beijing, 100021, China.
+(3)Department of Radiation Oncology, National Cancer Center/National Clinical 
+Research Center for Cancer/Cancer Hospital, Chinese Academy of Medical Sciences 
+and Peking Union Medical College, Beijing, 100021, China.
+(4)Department of Radiation Oncology, National Cancer Center/National Clinical 
+Research Center for Cancer/Cancer Hospital, Chinese Academy of Medical Sciences 
+and Peking Union Medical College, Beijing, 100021, China. wangsl@cicams.ac.cn.
+(5)Department of Immunology, National Cancer Center/National Clinical Research 
+Center for Cancer/Cancer Hospital, Chinese Academy of Medical Sciences and 
+Peking Union Medical College, Beijing, 100021, China. zhangwen@cicams.ac.cn.
+(#)Contributed equally
+
+BACKGROUND: During tumor progression, HER2 expression undergoes dynamic changes. 
+Circulating tumor cells (CTCs) can be used to monitor HER2 expression in 
+real-time and hold potential for clinical application. This study aimed to 
+evaluate the consistency of HER2 expression between primary tumors and CTCs in 
+patients with breast cancer (BC).
+METHODS: We used a previously established telomerase reverse transcriptase-based 
+CTC detection method (TBCD) combined with anti-HER2 antibody to detect CTC and 
+HER2-positive CTC (HER2 + CTC) in 4 ml of peripheral blood from patients with 
+breast cancer prior to radiotherapy. The results indicated that the status of 
+HER2 in CTC was inconsistent with the histological results.
+RESULTS: Discordance in HER2 status between primary tumor and CTC was observed 
+in 32.6% of patients (kappa value = 0.325, p = 0.03). And among patients with 
+histologically HER2-negative breast cancer, the detection rate of HER2 + CTC was 
+32.1% (9/28).
+CONCLUSIONS: We found that the HER2 status of CTC in peripheral blood was 
+inconsistent with the histological findings. Further research should explore the 
+clinical significance of detecting HER2-positive CTCs, and it is desired that 
+real-time HER2 status testing of CTCs could hold potential value for patients 
+with breast cancer.
+
+© 2024. The Author(s).
+
+DOI: 10.1007/s12672-024-01663-0
+PMCID: PMC11655891
+PMID: 39692928
+
+Conflict of interest statement: Declarations. Ethics approval and consent to 
+participate: All procedures performed in studies involving human participants 
+were in accordance with the ethical standards of the institutional and/or 
+national research committee and with the 1964 Helsinki Declaration and its later 
+amendments or comparable ethical standards. The study was approved by the 
+Bioethics Committee of the National Cancer Center/National Clinical Research 
+Center for Cancer/Cancer Hospital, Chinese Academy of Medical Sciences and 
+Peking Union Medical College (No.19/317-2101). Competing interests: The authors 
+declare no competing interests.

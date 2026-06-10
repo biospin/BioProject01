@@ -1,0 +1,63 @@
+# , 2025 — Mechanisms of resistance to trastuzumab  — npj Breast Cancer
+# DOI: 10.1038/s41523-025-00868-y
+# Topics: ctc-adc-liquid-biopsy (primary)  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+paper_id: proszek-2025-adc-ctc-resistance
+title: 'Mechanisms of resistance to trastuzumab deruxtecan in breast cancer elucidated by multi-omic molecular profiling'
+authors_short: Sledge GW, Xiu J, et al.
+year: 2025
+venue: npj Breast Cancer
+doi: 10.1038/s41523-025-00868-y
+doi_or_url: 10.1038/s41523-025-00868-y
+document_type: paper
+citation:
+  key: sledge2025tdxdresistance
+topics:
+  - ctc-adc-liquid-biopsy
+cytogen_relevance:
+  tier: high
+  use_case:
+    - adc_target_reference
+    - bd_pitch_reference
+  key_finding: >
+    ABCC1(drug efflux pump) 고발현 → T-DXd OS 단축 (Q4 14.2개월 vs Q1 22.0개월, HER2 독립적);
+    ERBB2 고발현 → T-DXd OS 연장 (Q4 27.3개월 vs Q1 13.2개월);
+    Post-T-DXd에서 NFE2L2/KEAP1/ERBB2/SMAD4 mutation 농축.
+  applicable_to:
+    - SEV_BRCA
+    - NCCHE_Gastric
+categorization:
+  domain:
+    - "ADC-resistance"
+    - "breast-oncology"
+    - "multi-omic-profiling"
+    - "real-world-evidence"
+  use_case:
+    - "academic-citation"
+    - "BD-opportunity"
+  importance:
+    level: "상"
+    perspective: >
+      T-DXd 내성의 실세계 large-scale 증거(N=2,799)로 ABCC1이 HER2 독립적 내성 biomarker임을 확립.
+      ADC 내성 biomarker 패널(ABCC1+ERBB2) 및 ABCC1 억제 병용 전략의 산업적 근거 제공.
+      CytoGen의 ADC 파이프라인(SEV_BRCA, NCCHE_Gastric) 내성 예측 전략 수립에 직접 참조.
+analysis_status:
+  core: done
+  lens_academic: done
+  lens_industry: done
+  methodology_brief: done
+sources:
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+  paper:
+    local: sources/proszek-2025-adc-ctc-resistance.pdf
+    status: downloaded
+  supplementary:
+    local: sources/41523_2025_868_MOESM1_ESM.pdf
+    status: downloaded
+workflow:
+  last_updated: '2026-06-10'

@@ -1,0 +1,32 @@
+1. Nat Rev Clin Oncol. 2019 Jul;16(7):409-424. doi: 10.1038/s41571-019-0187-3.
+
+Liquid biopsy and minimal residual disease - latest advances and implications 
+for cure.
+
+Pantel K(1), Alix-Panabières C(2).
+
+Author information:
+(1)Department of Tumour Biology, University Medical Centre Hamburg-Eppendorf, 
+Hamburg, Germany. pantel@uke.de.
+(2)Laboratory of Rare Human Circulating Cells (LCCRH), University Medical Centre 
+and University of Montpellier, Montpellier, France.
+
+Liquid biopsy has been introduced as a new diagnostic concept predicated on the 
+analysis of circulating tumour cells (CTCs) or circulating tumour-derived 
+factors, in particular, cell-free tumour DNA (ctDNA). Highly sensitive liquid 
+biopsy assays have been developed that can now be applied to detect and 
+characterize minimal residual disease (MRD), which reflects the presence of 
+tumour cells disseminated from the primary lesion to distant organs in patients 
+who lack any clinical or radiological signs of metastasis or residual tumour 
+cells left behind after local therapy that eventually lead to local recurrence. 
+This application is the new frontier of liquid biopsy analyses, which are 
+challenged by the very low concentrations of CTCs and ctDNA in blood samples. In 
+this Review, we discuss the key technologies that can be used to detect and 
+characterize CTCs in surveillance of MRD and provide a brief overview of similar 
+roles of ctDNA analyses. We then focus on the current clinical data on the use 
+of CTCs and ctDNA in the detection and monitoring of MRD and in obtaining 
+information on therapeutic targets and resistance mechanisms relevant to the 
+management of individual patients with cancer.
+
+DOI: 10.1038/s41571-019-0187-3
+PMID: 30796368 [Indexed for MEDLINE]
