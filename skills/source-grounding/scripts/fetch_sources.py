@@ -154,14 +154,92 @@ def fetch_to_file(
 
 
 def write_url_stub(item: dict, dest: Path) -> None:
-    """For status='url-only': write a small .url file that records the URL."""
+    """For status='url-only': write a cross-platform shortcut stub.
+
+    - ``<name>.url`` → Windows INI-format ``[InternetShortcut]`` block,
+      double-clickable on Windows (and recognized by some Linux file
+      managers).
+    - ``<name>.webloc`` → macOS plist-format Internet shortcut, written
+      alongside so macOS Finder can double-click it.
+
+    Type info is intentionally NOT serialised into the stub file contents
+    — keep them strict so the OS shell parser accepts them. Type / note /
+    other metadata already live in ``paper-info.yaml``.
+    """
     dest.parent.mkdir(parents=True, exist_ok=True)
-    body = [f"URL: {item.get('url', '')}"]
-    if item.get("note"):
-        body.append(f"Note: {item['note']}")
-    if item.get("type"):
-        body.append(f"Type: {item['type']}")
-    dest.write_text("\n".join(body) + "\n", encoding="utf-8")
+    url = item.get("url", "")
+
+    # Windows .url (INI). Use CRLF for max Windows-shell compatibility;
+    # Windows Explorer is tolerant of LF too but Notepad / older shells
+    # are not.
+    ini = f"[InternetShortcut]\r\nURL={url}\r\n"
+    dest.write_text(ini, encoding="utf-8")
+
+    # macOS .webloc (plist). Only emit the companion for an actual .url
+    # destination; non-.url destinations (rare) get plain INI.
+    if dest.suffix.lower() == ".url":
+        webloc_path = dest.with_suffix(".webloc")
+        plist = (
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" '
+            '"http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n'
+            '<plist version="1.0">\n'
+            '<dict>\n'
+            '\t<key>URL</key>\n'
+            f'\t<string>{url}</string>\n'
+            '</dict>\n'
+            '</plist>\n'
+        )
+        webloc_path.write_text(plist, encoding="utf-8")
+
+
+def write_manual_shortcuts(
+    sources_dir: Path,
+    *,
+    doi: str | None,
+    primary_url: str | None,
+    pmc_id: str | None = None,
+    prefix: str = "paper",
+) -> list[str]:
+    """Drop double-clickable shortcuts in sources/ when the fallback chain fails.
+
+    Generates up to three shortcuts so the user can reach the download page
+    in one click instead of copy-pasting URLs from the terminal:
+
+    - ``<prefix>-pmc-reader.url`` — PMC reader (best when PMC ID exists; the
+      page exposes both the main PDF and supplementary asset links).
+    - ``<prefix>-publisher.url`` — publisher landing (institutional access).
+    - ``<prefix>-doi.url`` — DOI resolver (fallback when publisher URL unknown).
+
+    Existing stubs are not overwritten — the user may have customized them.
+    Returns the list of filenames written for logging.
+    """
+    sources_dir.mkdir(parents=True, exist_ok=True)
+    written: list[str] = []
+
+    if pmc_id:
+        pmc_normalized = pmc_id if str(pmc_id).startswith("PMC") else f"PMC{pmc_id}"
+        dest = sources_dir / f"{prefix}-pmc-reader.url"
+        if not dest.exists():
+            write_url_stub(
+                {"url": f"https://pmc.ncbi.nlm.nih.gov/articles/{pmc_normalized}/"},
+                dest,
+            )
+            written.append(dest.name)
+
+    if primary_url:
+        dest = sources_dir / f"{prefix}-publisher.url"
+        if not dest.exists():
+            write_url_stub({"url": primary_url}, dest)
+            written.append(dest.name)
+
+    if doi:
+        dest = sources_dir / f"{prefix}-doi.url"
+        if not dest.exists():
+            write_url_stub({"url": f"https://doi.org/{doi}"}, dest)
+            written.append(dest.name)
+
+    return written
 
 
 # ---------------------------------------------------------------------------
@@ -263,6 +341,142 @@ def fetch_abstract(doi: str) -> tuple[str, str] | None:
 
 
 # ---------------------------------------------------------------------------
+# Nature / Springer supplementary auto-discovery
+# ---------------------------------------------------------------------------
+
+import re as _re_supp  # local alias so a top-level rename later does not break this
+from urllib.parse import quote as _url_quote
+
+
+_NATURE_DOI_RE = _re_supp.compile(
+    # Nature/Springer DOI tails. Year segment is 3 digits in modern DOIs
+    # (e.g. s41467-025-66287-6 for 2025), occasionally 4 digits in older
+    # records. Trailing suffix is digit or letter (s41587-022-01476-y).
+    r"^(?P<journal>s\d+)-(?P<year>\d{3,4})-(?P<id>\d+)-\w+$",
+)
+
+
+def _springer_moesm_stem(doi: str) -> str | None:
+    """Return MOESM filename stem for a Nature/Springer DOI.
+
+    Examples:
+      s41467-025-66287-6 → 41467_2025_66287
+      s41587-022-01476-y → 41587_2022_01476
+    """
+    tail = doi.split("/", 1)[-1] if "/" in doi else doi
+    m = _NATURE_DOI_RE.match(tail)
+    if not m:
+        return None
+    journal_digits = _re_supp.sub(r"\D", "", m.group("journal"))
+    year = m.group("year")
+    # Modern DOIs use a 3-digit year (yyy meaning 2yyy); pre-2000 records
+    # exist as 4-digit and pass through unchanged.
+    if len(year) == 3:
+        year = "2" + year
+    return f"{journal_digits}_{year}_{m.group('id')}"
+
+
+def _classify_supp_file(local_path: Path, ext: str) -> str:
+    """Best-effort label for a downloaded supplementary file."""
+    if ext == "xlsx":
+        return "source-data"
+    if ext == "pdf":
+        try:
+            doc = __import__("fitz").open(local_path)
+            try:
+                if len(doc) > 0:
+                    first = doc[0].get_text() or ""
+            finally:
+                doc.close()
+        except Exception:
+            return "supp"
+        head = first[:800].lower()
+        if "supplementary figure" in head or "supplementary figures" in head:
+            return "figures"
+        if "reporting summary" in head:
+            return "reporting-summary"
+        if "peer review" in head:
+            return "peer-review"
+        if "supplementary table" in head:
+            return "tables"
+        if "supplementary methods" in head or "extended methods" in head:
+            return "methods"
+        return "supp"
+    return "supp"
+
+
+def discover_springer_supp(
+    doi: str,
+    paper_id: str,
+    yaml_dir: Path,
+    *,
+    dry_run: bool = False,
+    verbose: bool = False,
+) -> list[dict]:
+    """Probe Springer's predictable CDN for MOESM<N>_ESM.{pdf,xlsx}.
+
+    Returns a list of supplementary item dicts (compatible with
+    ``sources.supplementary[]``) for items successfully downloaded.
+    Probing stops after 2 consecutive N values yield no hit.
+    """
+    stem = _springer_moesm_stem(doi)
+    if stem is None:
+        if verbose:
+            print(f"discover-supp: DOI '{doi}' does not match Nature/Springer pattern")
+        return []
+
+    encoded = _url_quote(f"10.1038/{doi.split('/', 1)[-1]}", safe="")
+    base = (
+        f"https://static-content.springer.com/esm/art%3A{encoded}/MediaObjects/"
+        f"{stem}_MOESM{{n}}_ESM.{{ext}}"
+    )
+
+    found: list[dict] = []
+    consec_misses = 0
+    for n in range(1, 7):
+        hit = None
+        for ext in ("pdf", "xlsx"):
+            url = base.format(n=n, ext=ext)
+            if verbose:
+                print(f"  probing MOESM{n}.{ext} ...")
+            if dry_run:
+                # In dry-run, assume no hit (we cannot probe without writing).
+                continue
+            r = http_get(url)
+            if r is None or r.status_code != 200:
+                continue
+            # First save with a temp-ish placeholder name, then classify.
+            tmp_local = yaml_dir / "sources" / f"{paper_id}-supp-{n}-pending.{ext}"
+            tmp_local.parent.mkdir(parents=True, exist_ok=True)
+            tmp_local.write_bytes(r.content)
+            label = _classify_supp_file(tmp_local, ext)
+            final_local = yaml_dir / "sources" / f"{paper_id}-supp-{n}-{label}.{ext}"
+            if final_local != tmp_local:
+                tmp_local.rename(final_local)
+            rel_local = final_local.relative_to(yaml_dir).as_posix()
+            hit = {
+                "url": url,
+                "local": rel_local,
+                "type": ext,
+                "status": "downloaded",
+                "note": f"Auto-discovered via Springer CDN probe (MOESM{n}).",
+            }
+            if verbose:
+                print(f"    -> downloaded {final_local.name}")
+            break
+        if hit:
+            found.append(hit)
+            consec_misses = 0
+        else:
+            consec_misses += 1
+            if consec_misses >= 2:
+                if verbose:
+                    print(f"  two consecutive misses at N={n}; stopping probe")
+                break
+    return found
+
+
+# ---------------------------------------------------------------------------
 # Stubs: publisher landing page and Sci-Hub
 # ---------------------------------------------------------------------------
 
@@ -356,7 +570,25 @@ def process_paper(
         "author-contact-needed",
         note=f"primary: {primary_note} | pmc: {pmc_note} | scihub: {scihub_note}",
     )
-    return f"all fallbacks failed → status=author-contact-needed"
+
+    # Drop double-clickable shortcuts so the user can reach the download page
+    # in one click without chasing URLs from the terminal output. Look up the
+    # PMC ID once (best landing page when available — exposes both main PDF
+    # and supplementary asset links).
+    pmc_id = None
+    if doi:
+        pmid = doi_to_pmid(doi)
+        if pmid:
+            pmc_id = pmid_to_pmc(pmid)
+    written = write_manual_shortcuts(
+        local.parent,
+        doi=doi,
+        primary_url=url,
+        pmc_id=pmc_id,
+        prefix="paper",
+    )
+    suffix = f" | shortcuts: {', '.join(written)}" if written else ""
+    return f"all fallbacks failed → status=author-contact-needed{suffix}"
 
 
 def process_other(
@@ -387,7 +619,14 @@ def process_other(
         set_status(item, "downloaded")
         return note
     set_status(item, "manual-needed", note=note)
-    return f"failed → {note}"
+
+    # Drop a shortcut at <local>.url so the user can double-click to reach
+    # the file's download page in their browser. Keeps the failed item's
+    # target path discoverable from the sources/ listing.
+    stub_path = local.with_suffix(".url")
+    if not stub_path.exists():
+        write_url_stub(item, stub_path)
+    return f"failed → wrote shortcut {stub_path.name}"
 
 
 # ---------------------------------------------------------------------------
@@ -446,6 +685,15 @@ def main() -> int:
     parser.add_argument("--use-pmc", action="store_true", help="Try PubMed PMC fallback when primary URL fails")
     parser.add_argument("--allow-scihub", action="store_true", help="Show Sci-Hub URL in manual guide (does NOT auto-scrape)")
     parser.add_argument("--fetch-abstract", action="store_true", help="Fetch abstract.txt via PubMed/Crossref")
+    parser.add_argument(
+        "--discover-supp",
+        action="store_true",
+        help=(
+            "For Nature/Springer DOIs (10.1038/...), probe the Springer CDN for "
+            "MOESM<N>_ESM.{pdf,xlsx} when sources.supplementary[] is empty. "
+            "Off by default — does not mutate yamls unless the user opts in."
+        ),
+    )
     parser.add_argument("--dry-run", action="store_true", help="Do not write files; show what would happen")
     parser.add_argument("--verbose", action="store_true", help="Print progress")
     args = parser.parse_args()
@@ -463,7 +711,9 @@ def main() -> int:
 
     yaml_dir = yaml_path.parent
     doi = data.get("doi")
-    sources = data.get("sources") or {}
+    if "sources" not in data or data.get("sources") is None:
+        data["sources"] = {}
+    sources = data["sources"]
 
     # Paper
     if "paper" in sources:
@@ -483,6 +733,32 @@ def main() -> int:
         outcome = process_other(supp, yaml_dir, expect_pdf=False, dry_run=args.dry_run)
         if args.verbose or outcome.startswith("failed"):
             print(f"supplementary[{i}]: {outcome}")
+
+    # Optional: Nature/Springer supplementary auto-discovery
+    if args.discover_supp:
+        if not doi:
+            if args.verbose:
+                print("discover-supp: no DOI; skipping")
+        elif not doi.startswith("10.1038/"):
+            if args.verbose:
+                print(f"discover-supp: DOI '{doi}' is not Nature/Springer; skipping")
+        elif sources.get("supplementary"):
+            if args.verbose:
+                print("discover-supp: sources.supplementary already populated; skipping")
+        else:
+            paper_id = yaml_dir.name
+            discovered = discover_springer_supp(
+                doi, paper_id, yaml_dir,
+                dry_run=args.dry_run, verbose=args.verbose,
+            )
+            if discovered:
+                sources.setdefault("supplementary", [])
+                # ruamel CommentedSeq vs plain list: use .append either way
+                for item in discovered:
+                    sources["supplementary"].append(item)
+                print(f"discover-supp: added {len(discovered)} item(s)")
+            else:
+                print("discover-supp: no files discovered")
 
     # Data and code: typically url-only
     for kind in ("data", "code"):

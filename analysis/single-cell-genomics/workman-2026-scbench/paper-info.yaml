@@ -1,0 +1,87 @@
+# Workman et al., 2026 — scBench — arXiv preprint
+# arXiv: 2602.09063v1
+# Topics: single-cell-genomics (primary)  |  Importance: 상
+
+# ─── end of header ───
+
+# Identity
+document_type: "preprint"
+title: "scBench: Evaluating AI Agents on Single-Cell RNA-seq Analysis"
+authors:
+  - "Workman, Kenny"
+  - "Yang, Zhen"
+  - "Muralidharan, Harihara"
+  - "Abdulali, Aidan"
+  - "Le, Hannah"
+year: 2026
+venue: "arXiv (q-bio.GN)"
+doi: ""
+arxiv_id: "2602.09063v1"
+keywords:
+  - "benchmark"
+  - "scRNA-seq"
+  - "AI agents"
+  - "LLM evaluation"
+  - "single-cell analysis"
+  - "deterministic grader"
+
+# ───────────────────────────────────────────
+# Topics
+# ───────────────────────────────────────────
+topics:
+  - "single-cell-genomics"           # primary
+  - "ai-agents"                      # secondary
+  - "benchmarking"                   # secondary
+
+# ───────────────────────────────────────────
+# Version
+# ───────────────────────────────────────────
+version:
+  type: "preprint"
+  peer_reviewed: false
+  preprint:
+    server: "arXiv"
+    doi: ""
+    arxiv_id: "2602.09063v1"
+    date: "2026-02-09"
+
+# ───────────────────────────────────────────
+# Citation
+# ───────────────────────────────────────────
+citation:
+  key: "workman2026scbench"
+  short_id: "scbench"
+  bibtex_file: "sources/workman-2026-scbench.bib"
+  bibtex_type: "misc"
+
+# ───────────────────────────────────────────
+# Source files
+# ───────────────────────────────────────────
+sources:
+  paper:
+    url: "https://arxiv.org/abs/2602.09063"
+    local: "sources/workman-2026-scbench.pdf"
+    status: "downloaded"
+  supplementary: []
+  data:
+    - url: "https://github.com/latchbio/scbench"
+      local: ""
+      type: "github"
+      status: "url-only"
+      note: "benchmark framework, graders, linter, agent harness; 30 canonical evals public"
+
+# ───────────────────────────────────────────
+# Categorization (lens-industry 참조)
+# ───────────────────────────────────────────
+categorization:
+  domain:
+    - "single-cell genomics"
+    - "AI/LLM agents"
+    - "bioinformatics benchmarking"
+  use_case:
+    - "internal-tool-evaluation"      # 우리 분석 파이프라인에서 LLM agent 선택 기준으로
+    - "academic-citation"             # scRNA-seq agent 관련 논문·제안서 인용
+    - "technology-watch"              # LLM-driven bioinformatics 트렌드 모니터링
+  importance:
+    level: "상"
+    perspective: "LLM agent를 scRNA-seq 분석에 실제 적용할 때 어느 task·platform에서 실패하는지 처음으로 정량화한 benchmark paper로, 우리 파이프라인 설계에 직접 참조 가능."
