@@ -1,0 +1,15 @@
+{
+  "status": "succeeded",
+  "engine": "claude",
+  "run_id": "20260609-012557",
+  "pid": 21084,
+  "command": [
+    "claude",
+    "-p",
+    "--dangerously-skip-permissions"
+  ],
+  "started_at": "2026-06-08T16:26:08.586136+00:00",
+  "finished_at": "2026-06-08T16:30:49.170248+00:00",
+  "returncode": 0,
+  "log_path": "artifacts/web-runs/20260609-012557/claude.log"
+}

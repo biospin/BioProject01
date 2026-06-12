@@ -1,0 +1,64 @@
+1. Cell. 2021 Sep 16;184(19):5053-5069.e23. doi: 10.1016/j.cell.2021.07.039. Epub
+ 2021 Aug 13.
+
+Chromatin and gene-regulatory dynamics of the developing human cerebral cortex 
+at single-cell resolution.
+
+Trevino AE(1), Müller F(2), Andersen J(3), Sundaram L(4), Kathiria A(1), 
+Shcherbina A(5), Farh K(6), Chang HY(7), Pașca AM(8), Kundaje A(9), Pașca 
+SP(10), Greenleaf WJ(11).
+
+Author information:
+(1)Department of Genetics, Stanford University, Stanford, CA, USA.
+(2)Department of Genetics, Stanford University, Stanford, CA, USA; Center for 
+Bioinformatics, Saarland University, Saarbrücken, Germany.
+(3)Department of Psychiatry and Behavioral Sciences, Stanford University, 
+Stanford, CA, USA; Stanford Brain Organogenesis Program, Wu Tsai Neuroscience 
+Institute Stanford University, Stanford, CA, USA.
+(4)Department of Computer Science, Stanford University, Stanford, CA, USA.
+(5)Biomedical Data Science Program, Stanford University, Stanford CA, USA.
+(6)Illumina Artificial Intelligence Laboratory, Illumina Inc, San Diego, CA, 
+USA.
+(7)Department of Genetics, Stanford University, Stanford, CA, USA; Center for 
+Personal Dynamic Regulomes, Stanford University, Stanford, CA, USA; Howard 
+Hughes Medical Institute, Stanford University, Stanford, CA, USA.
+(8)Department of Pediatrics, Division of Neonatology, Stanford University, 
+Stanford, CA, USA.
+(9)Department of Genetics, Stanford University, Stanford, CA, USA; Department of 
+Computer Science, Stanford University, Stanford, CA, USA.
+(10)Department of Psychiatry and Behavioral Sciences, Stanford University, 
+Stanford, CA, USA; Stanford Brain Organogenesis Program, Wu Tsai Neuroscience 
+Institute Stanford University, Stanford, CA, USA. Electronic address: 
+spasca@stanford.edu.
+(11)Department of Genetics, Stanford University, Stanford, CA, USA; Department 
+of Applied Physics, Stanford University, Stanford, CA, USA; Chan-Zuckerberg 
+Biohub, San Francisco, CA, USA. Electronic address: wjg@stanford.edu.
+
+Genetic perturbations of cortical development can lead to neurodevelopmental 
+disease, including autism spectrum disorder (ASD). To identify genomic regions 
+crucial to corticogenesis, we mapped the activity of gene-regulatory elements 
+generating a single-cell atlas of gene expression and chromatin accessibility 
+both independently and jointly. This revealed waves of gene regulation by key 
+transcription factors (TFs) across a nearly continuous differentiation 
+trajectory, distinguished the expression programs of glial lineages, and 
+identified lineage-determining TFs that exhibited strong correlation between 
+linked gene-regulatory elements and expression levels. These highly connected 
+genes adopted an active chromatin state in early differentiating cells, 
+consistent with lineage commitment. Base-pair-resolution neural network models 
+identified strong cell-type-specific enrichment of noncoding mutations predicted 
+to be disruptive in a cohort of ASD individuals and identified frequently 
+disrupted TF binding sites. This approach illustrates how cell-type-specific 
+mapping can provide insights into the programs governing human development and 
+disease.
+
+Copyright © 2021 Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.cell.2021.07.039
+PMID: 34390642 [Indexed for MEDLINE]
+
+Conflict of interest statement: Declaration of interests W.J.G. was a consultant 
+for 10x Genomics and is named as an inventor on patents describing ATAC-seq 
+methods. H.Y.C. is a co-founder of Accent Therapeutics and Boundless Bio and an 
+advisor of 10x Genomics, Arsenal Biosciences, and Spring Discovery. A.S. is an 
+employee of Insitro, Inc, and receives consulting fees from Myokardia, Inc. K.F. 
+is an employee of Illumina, Inc.

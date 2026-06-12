@@ -1,0 +1,1 @@
+mmVelo is a deep generative model for estimating cell state-dependent dynamics across multiple modalities. It uses spliced and unspliced RNA dynamics and multimodal representation learning to project dynamics onto chromatin accessibility, inferring chromatin velocity at single-peak resolution.
