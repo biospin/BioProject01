@@ -198,6 +198,7 @@ domain은 abstract 분석 단계에서, use_case와 importance는 전체 분석 
 
 | Task | Skill |
 | --- | --- |
+| 데이터셋(accession)·주제·method로부터 분석에 쓸 새 문헌 발견 (repo 중복 제거 + 역할별 분류) | `skills/lit-search/SKILL.md` |
 | 원문/supplementary 다운로드, paper-info.yaml 작성, 외부 정보 차단 규칙 | `skills/source-grounding/SKILL.md` |
 | Abstract만 빠르게 훑는 경량 분석 | `skills/abstract-analysis/SKILL.md` |
 | `<paper-id>_core.md` 문제 정의 & 연구 목적 | `skills/core-problem/SKILL.md` |
@@ -280,6 +281,7 @@ analysis/<primary-topic>/_evidence/week2/
 1. **Topic Scope 정의** — `scope.md`
    - topic, seed paper, keyword, 포함/제외 기준, 우선순위를 적는다.
    - 예: `epigenomic-lag`, seed: MultiVelo / MultiVeloVAE / MoFlow.
+   - seed/후보를 직접 발굴해야 하면 먼저 `skills/lit-search/SKILL.md`로 dataset(accession)·주제 기반 문헌 발견을 돌려 candidate 목록을 만들고 그 결과를 `scope.md` seed로 넣는다.
 2. **Paper Scrapper 실행** — `skills/paper-scrapper/SKILL.md`
    - 후보 paper를 수집하고 중복 제거한다.
    - 모든 paper를 같은 record schema로 정규화한다.

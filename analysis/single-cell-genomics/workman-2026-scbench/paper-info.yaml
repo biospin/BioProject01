@@ -1,8 +1,8 @@
-# Workman et al., 2026 — scBench — arXiv preprint
-# arXiv: 2602.09063v1
-# Topics: single-cell-genomics (primary)  |  Importance: 상
+# Workman, Kenny et al., 2026 — scbench — arXiv (q-bio.GN)
+# DOI: (없음)
+# Topics: single-cell-genomics (primary), ai-agents, benchmarking  |  Importance: 상
 
-# ─── end of header ───
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
 
 # Identity
 document_type: "preprint"
