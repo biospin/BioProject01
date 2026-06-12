@@ -1,0 +1,120 @@
+# Validation Report
+
+## 1. Overall Verdict
+
+- 종합 판정: `revise`
+- 가장 강한 insight: C1, C3, C4. 세 paper의 method evolution과 repeated limitations는 기존 분석 파일에서 직접 확인된다. celldancer/deepvelo full-analysis 추가로 *cell-specific kinetics 분기 lineage*가 PDF citation 수준에서 보강됨.
+- 가장 약한 insight: C6. MoFlow lag group을 MultiVeloVAE differential test로 재검정하는 hybrid workflow는 논리적으로 자연스럽지만 아직 직접 evidence가 없다.
+- 새로 보강된 insight: C7 (mmVelo PDF 정밀 패스로 `partially-supported` → `supported (preprint-tier)`); C8 (DeepKINET PDF 정밀 패스로 *concrete transferability map* 확보).
+- 다음 수정 우선순위:
+  - C2와 C6은 "결론"이 아니라 `해석:` 또는 follow-up proposal로 유지해야 한다.
+  - C5는 wet-lab "실험"이 아니라 computational benchmark로 표현해야 한다.
+  - C7은 preprint maturity가 유일한 잔여 caveat — `검토필요: peer-review 출간 모니터링`만 남긴다.
+  - C8은 "transfer 가능 / 부분 / 불가" 3-단계 transferability map으로 정리한다.
+  - `handoff.md`에는 바로 실행할 수 있는 action item과 사용자 확인 필요 항목을 분리한다.
+
+## 2. Claim-level Evidence Check
+
+| claim_id | verdict | evidence found | missing evidence | overreach risk | action |
+|---|---|---|---|---|---|
+| C1 | supported | MultiVelo core는 ODE/discrete state; MultiVeloVAE core는 cVAE/continuous/multi-sample; MoFlow core는 latent time-free relay velocity. cellDancer (`@li2023celldancer` core p.61 §Introduction)는 *latent time-free local neighbor cosine loss*를 처음 제시해 MoFlow의 *direct predecessor*임을 PDF로 확인. DeepVelo (`@cui2024deepvelo` core p.41 §Background)는 *GCN + continuity loss*로 cell-specific kinetics를 self-supervised로 학습 — MultiVeloVAE의 cell-specific kinetics rationale에 대한 RNA-only predecessor. | 없음 | 낮음 | 그대로 사용. cell-specific kinetics 분기는 cellDancer/DeepVelo PDF로 lineage가 한 단계 더 깊게 확인됨. |
+| C2 | partially-supported | MoFlow는 direct lag outputs, MultiVeloVAE는 multi-sample/differential test 기능 보유 | 실제 우리 dataset benchmark 없음 | 중간. "적합하다"가 확정처럼 들릴 수 있음 | `해석:`으로 표시하고 "우선 테스트 전략"으로 낮춰 표현 |
+| C3 | supported | MultiVelo single c per gene; MultiVeloVAE individual CRE 직접 modeling 부재; MoFlow long-range enhancer-promoter/motif-level modeling 부재. mmVelo PDF (p.2 §1)가 MultiVelo 한계를 *직접 인용*: *"this aggregates the peak accessibility for each gene, making it difficult to determine the dynamics at the resolution of the single-peak level"* — gene-level aggregation 한계가 후속 paper에서 명시적으로 비판됨. | 우리 HSPC peak-level source data 비교는 여전히 없음 | 낮음 | 그대로 사용 |
+| C4 | supported | MultiVelo TF lag association; MultiVeloVAE perturbation wet-lab 검증 부재; MoFlow mechanism external reference association. DeepKINET 저자도 Discussion p.12에서 SERGIO-style simulation 외에는 *strict* kinetic ground truth가 없음을 인정 — causal validation 부족이 RNA velocity field 전반의 공통 bottleneck임을 보강. | 각 paper의 모든 biological claim을 일괄 평가한 것은 아님 | 낮음-중간 | "핵심 mechanistic interpretation의 causal validation 부족"으로 표현 |
+| C5 | partially-supported | 두 paper가 서로 직접 비교하지 않고 MultiVelo와 각각 비교. cellDancer는 MoFlow가 *외부 후속 paper*로서 CBDir로 재평가했을 때 HSPC $-0.056$, SHARE-seq $0.026$로 *MultiVelo·MoFlow보다 낮음* (`@li2023celldancer` core p.270, MoFlow Supp Table 1) — 즉 *MoFlow의 직접 ancestor benchmark* 만이 통일 metric으로 존재. | 직접 metric unification (MoFlow ↔ MultiVeloVAE)이 아직 설계되지 않음 | 중간 | "우선순위 높은 computational benchmark"로 수정 |
+| C6 | needs-source-check | MoFlow lag outputs와 MultiVeloVAE differential test 기능은 각각 존재 | 같은 gene/cell에서 두 output이 compatible한지 미검증 | 높음 | follow-up idea로만 유지. 실행 전 input schema compatibility 확인 |
+| C7 | supported (preprint-tier) | mmVelo PDF 정밀 패스 완료. (a) *peak-level resolution* 메커니즘은 *decoder output dimension*임을 PDF p.2 §1, p.3 §2.1, p.13–14 §5.4–5.5에서 확인 — peak가 *공통 latent transition* $d_n$을 *공유*하되 *peak-specific decoder branch* $f_p^a$를 통과한 차분 $\Delta \text{ATAC} = C^a \odot (f^a(z_n + \rho d_n) - f^a(z_n))$로 single-peak velocity를 정의 (per-peak ODE rate는 *없음*). (b) MultiVelo와 *직접 benchmark*함: SHARE-seq mouse skin hair shaft-cuticle/cortex lineage에서 spliced/unspliced/gene-aggregated/peak-level 네 가지 consistency score (Fig S3j-m, PDF p.4 §2.3, p.26). (c) Code: github.com/nomuhyooon/mmVelo (PDF p.23 §10.3), license CC-BY 4.0 (PDF footer). | PDF read로 supported; preprint 성숙도가 유일한 잔여 caveat | 낮음 | "후보"가 아니라 "supported with preprint-tier caveat"로 표현. `검토필요: peer-review 출간 모니터링 (bioRxiv 10.1101/2024.12.11.628059 v1 2024-12-17)`; GitHub repo license verification. |
+| C8 | partially-supported (with concrete transferability map) | DeepKINET PDF 정밀 패스 완료. *Transfer 가능*: (i) 2-stage decoupling 학습 전략 (Stage 1 VAE freeze → Stage 2 cell-specific rate decoder, lens-academic §3 PDF p.13–14, core p.111). (ii) 100-repeat multi-method box-plot evaluation + *negative correlation = fail* rule (core p.13 Fig 3b). (iii) Cluster-level set-vs-estimated scatter benchmark template. *Partial*: SERGIO-style chromatin-aware simulator는 *재설계 필요* — DeepKINET은 rate (1/time) 단위 inject, lag는 time 단위 inject (lens-academic §3 PDF p.121). *Transfer 불가*: (i) scEU-seq/scNT-seq RNA labeling 자체는 *chromatin opening event를 label하지 않음* (lens-academic §3 PDF p.114) — single-cell chromatin labeling 표준 부재. (ii) Dynamo-derived rate를 *chromatin lag ground truth*로 차용 불가 — MultiVelo switch time을 차용하면 *circular validation*. | concrete 4-bullet transferability map으로 정리됨; 잔여 gap은 chromatin-aware simulator 설계와 chromatin labeling 표준 부재 | 낮음 (이전 중간 → 명시화로 risk 감소) | "validation design reference 제한" → "framework borrow 가능 / labeling ground truth 불가" 양면으로 표현. 후속: chromatin-aware simulator 설계 (BEELINE, MultiVelo authors simulation script 후보 검토) + DeepKINET-Multiome 형태의 chromatin-aware extension 모니터링. |
+
+## 3. Missing Assumptions
+
+- claim: C2
+  - 빠진 전제: 우리 HSPC data가 MoFlow와 MultiVeloVAE 양쪽의 preprocessing/input requirement를 모두 만족한다는 전제.
+  - 왜 중요한가: 두 method가 요구하는 normalization, smoothing, peak-to-gene aggregation이 다르면 output concordance가 method 차이가 아니라 preprocessing 차이일 수 있다.
+  - 확인 방법: 동일 AnnData/MuData에서 공통 preprocessing branch와 method-specific preprocessing branch를 분리해 benchmark한다.
+
+- claim: C5
+  - 빠진 전제: CBDir과 GCBDir을 같은 dataset에서 모두 계산할 수 있다는 전제.
+  - 왜 중요한가: MoFlow paper는 CBDir 중심, MultiVeloVAE는 GCBDir/다축 metric 중심이라 metric 차이 자체가 결론을 바꿀 수 있다.
+  - 확인 방법: 최소 metric set을 CBDir, GCBDir, runtime, memory, lag-score concordance로 고정한다.
+
+- claim: C6
+  - 빠진 전제: MoFlow의 gene/cell-specific kinetic outputs와 MultiVeloVAE의 $\delta/\kappa$ outputs가 같은 cell/gene indexing으로 안정적으로 매핑된다는 전제.
+  - 왜 중요한가: gene filtering 또는 cell filtering이 다르면 concordance 분석이 biased된다.
+  - 확인 방법: shared gene/cell intersection을 먼저 만들고, dropped genes/cells의 bias를 보고한다.
+
+- claim: C7
+  - 빠진 전제: mmVelo의 *single-peak chromatin velocity*가 per-peak ODE rate 없이 *decoder branch level* 에서 정의된다는 사실이 우리 lag framework에 *acceptable*하다는 전제.
+  - 왜 중요한가: per-peak kinetic rate가 없으므로 mmVelo의 peak-level output을 "lag"로 해석할 때 *peak 간 timing 차이*는 *decoder weight 차이*에서 오는 것이지 *peak-specific ODE rate*에서 오는 것이 아님 — 해석 prior를 명확히 해야 한다.
+  - 확인 방법: mmVelo의 Fig 2c-e Neurod2 enhancer→promoter→mRNA pseudotime ordering을 우리 HSPC multiome에서도 ablation으로 재현해, decoder-level peak ordering이 *cluster-level temporal consistency*를 제공하는지 확인.
+
+- claim: C8
+  - 빠진 전제: DeepKINET-style cluster-level set-vs-estimated benchmark가 우리 *chromatin-aware simulator*에서도 작동할 수 있다는 전제.
+  - 왜 중요한가: lag inject는 time 단위, DeepKINET inject는 rate (1/time) 단위 — 동일 simulator 골격을 재사용하려면 *chromatin opening event time과 transcription start time을 명시적으로 설정*해야 함. simulator 재설계 부재 시 benchmark 차용이 무효화.
+  - 확인 방법: BEELINE 또는 MultiVelo authors의 simulation script를 첫 후보로 검토하고, 없으면 SERGIO를 *time-event annotation* 가능하게 수정한 fork를 만들어야 함을 사용자에게 보고.
+
+## 4. Overreach / Weak Claims
+
+- claim: C2
+  - 현재 표현: "우리 use case에는 MoFlow primary, MultiVeloVAE secondary 전략이 적합하다."
+  - 문제: 기존 paper evidence 기반의 분석자 판단이며, 우리 data benchmark 결과는 없음.
+  - 더 안전한 표현: `해석: 현재 evidence 기준으로는 MoFlow를 direct lag quantification 후보, MultiVeloVAE를 multi-sample/differential test 후보로 나누어 병렬 검증하는 전략이 합리적이다.`
+
+- claim: C5
+  - 현재 표현: "direct head-to-head가 다음 우선순위 높은 실험/분석이다."
+  - 문제: wet-lab experiment로 오해 가능.
+  - 더 안전한 표현: "direct head-to-head computational benchmark가 다음 우선순위 높은 분석이다."
+
+- claim: C6
+  - 현재 표현: "hybrid workflow가 유망하다."
+  - 문제: 실제 output compatibility, statistical validity 미검증.
+  - 더 안전한 표현: "`질문:` MoFlow lag group을 MultiVeloVAE differential test의 hypothesis set으로 넣을 수 있는가? 먼저 compatibility pilot 필요."
+
+- claim: C7
+  - 현재 표현: "mmVelo는 gene-level c aggregation gap을 메우는 후보이다."
+  - 문제: 이전엔 preprint metadata만으로 표현했지만, PDF 정밀 패스로 mechanism이 명확해진 만큼 *gap-filling의 의미*도 정밀화 필요. mmVelo는 *per-peak ODE rate*가 아니라 *decoder branch resolution*으로 peak-level를 정의함.
+  - 더 안전한 표현: "mmVelo는 *decoder-level peak resolution*으로 single-peak chromatin velocity를 정의해 gene-level aggregation을 *부분적으로* 메우는 후보. `검토필요: preprint 출간 모니터링 + per-peak ODE rate가 아닌 decoder-level resolution임을 인용 시 명확히 구분`."
+
+## 5. Source Coverage
+
+| paper | status | evidence quality | validation note |
+|---|---|---|---|
+| `li-2023-multivelo` | full-analysis | high | core/lens/methodology 모두 존재. 주요 수치와 한계 확인됨. |
+| `li-2025-multivelovae` | full-analysis | high | core/lens/methodology + supplementary/source-data 언급 존재. Exact numeric matrix는 추가 추출 가능. |
+| `hong-2026-moflow` | full-analysis | high | core/lens/methodology 모두 존재. CBDir 수치와 MoFlow vs MultiVeloVAE 비교 노트 확인됨. |
+| `li-2023-celldancer` | full-analysis | high | core 494L + lens 331L. PDF 정밀 패스 완료. MoFlow의 *직접 predecessor*임이 핵심 — *latent time-free cosine loss*가 본 paper §Introduction p2에서 처음 제시되어 MoFlow가 이를 chromatin-aware로 확장한 lineage가 PDF로 확인됨. |
+| `nomura-2024-mmvelo` | full-analysis | high (preprint-tier) | core 361L + lens 302L. PDF 정밀 패스 완료. *single-peak chromatin velocity*가 decoder-level resolution임을 PDF p.2/p.3/p.13–14에서 확인. SHARE-seq에서 MultiVelo와 *직접 benchmark* (Fig S3j-m). License CC-BY 4.0, code public. `검토필요: peer-review 출간 모니터링`. |
+| `cui-2024-deepvelo` | full-analysis | high | core 552L + lens 370L. PDF 정밀 패스 완료. *GCN + continuity loss* 기반 cell-specific kinetics — MultiVeloVAE의 cell-specific kinetics rationale에 대한 RNA-only predecessor. chromatin은 없음. |
+| `mizukoshi-2024-deepkinet` | full-analysis | high | core 383L + lens 337L. PDF 정밀 패스 완료. *2-stage decoupling 학습 + 100-repeat box-plot + negative correlation fail rule + cluster-level simulation benchmark* 의 *evaluation framework*는 transferable; *scEU-seq/scNT-seq labeling 자체*는 non-transferable (단일-cell chromatin labeling 표준 부재). C8 transferability map의 1차 source. |
+
+## 6. Cross Validation Notes
+
+- 다른 Validation Agent와 일치: 아직 없음. 현재는 single validation run.
+- 다른 Validation Agent와 불일치: 해당 없음.
+- 토론으로 남길 항목:
+  - MoFlow와 MultiVeloVAE 중 어떤 method를 primary로 볼지.
+  - metric을 CBDir/GCBDir 중 무엇으로 통일할지.
+  - 우리 HSPC benchmark를 먼저 할지, source data 수치 추출을 먼저 할지.
+
+## 7. Required Revisions to insight.md
+
+- C2, C6은 final claim이 아니라 `해석:` 또는 follow-up proposal로 표시.
+- C5의 "실험/분석"을 "computational benchmark"로 구체화.
+- "적합" 같은 확정 표현은 "현재 evidence 기준의 테스트 전략"으로 낮춘다.
+- C7: "preprint이며 PDF/code 확인 전이므로 강한 결론 금지" 문구를 *제거*하고 "PDF 정밀 패스로 mechanism은 supported; preprint 성숙도가 잔여 caveat"로 교체. "후보" → "supported (preprint-tier)". *Decoder-level resolution*과 *per-peak ODE rate 없음*을 정확히 표현.
+- C8: "RNA-only splicing/degradation validation을 chromatin lag validation으로 직접 확대하지 않기"를 *유지*하되, 그 뒤에 *4-bullet transferability map* (✅ 2-stage decoupling + 100-repeat benchmark / ⚠️ chromatin-aware simulator 재설계 / ❌ scEU-seq labeling 자체 / ❌ Dynamo proxy ground truth) 명시.
+
+## 8. Handoff Decision
+
+- Jira / Confluence로 넘겨도 되는 항목:
+  - Week2 workflow demo 산출물 생성 완료.
+  - HSPC head-to-head benchmark 설계.
+  - MoFlow license 확인.
+  - mmVelo PDF/code/license 확인.
+  - source data에서 exact benchmark matrix/gene list 추출.
+- 보류할 항목:
+  - hybrid MoFlow lag group + MultiVeloVAE differential test는 compatibility pilot 전까지 보류.
+  - enhancer-resolved lag model은 장기 아이디어로 보류.
+- 추가 paper analysis가 필요한 항목:
+  - 현재 core evidence set 내에서는 없음. cellDancer/DeepVelo/DeepKINET/mmVelo 모두 full-analysis로 승급되어 Week2 evidence quality는 strong.
+  - DeepKINET이 *in-house validation design reference*로 들어왔으므로 *perturbation/time-stamped ground truth* paper는 Week3에서 *chromatin-aware* 방향 (perturb-seq + multiome, time-resolved multiome, 또는 BEELINE-style chromatin-aware simulator 논문)으로 좁혀 추가하면 C4 (causal validation)와 C8 (validation design transfer) 두 gap을 동시에 메울 수 있다.

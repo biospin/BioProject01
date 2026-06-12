@@ -2,13 +2,21 @@
 .playwright-cli/
 
 # Claude Code local state (per-machine, not for sharing)
-.claude/
+.claude/*
+# ...but DO share the ported Claude harness layer (skills + agents) for web/team use.
+# settings*.json and worktrees/ stay per-machine (ignored by .claude/* above).
+!.claude/skills/
+!.claude/agents/
 
 # Python virtual environment (per-machine, not for sharing)
 .venv/
 
 # Presentation slides — local-only, not committed to shared repo
 presentation/
+
+# Python bytecode cache
+__pycache__/
+*.pyc
 
 # Source binaries — copyrighted, never commit. Stubs (.url, .bib, abstract.txt)
 # under sources/ are NOT excluded by these patterns and may be committed.
@@ -26,8 +34,14 @@ analysis/**/sources/.paper_text.txt
 # Generated artifacts (re-built by build_html.py / build_index.py from yaml + sources)
 # Keep figure-map.json (may be hand-edited).
 analysis/**/figures/*.png
+analysis/**/figures/.table_cache.json
 analysis/**/*_core.html
 analysis/**/*_core-with-figures.md
 # Legacy unprefixed names (pre-paper-id naming convention)
 analysis/**/core.html
 analysis/**/core-with-figures.md
+
+# Web dashboard runtime artifacts (per-run, not for sharing).
+# Keep run records (request.json, prompt.md, <engine>-job.json); ignore raw logs + uploads.
+artifacts/web-runs/**/*.log
+artifacts/uploads/

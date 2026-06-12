@@ -1,0 +1,131 @@
+# Li, Chen et al., 2025 — multivelovae — Nature Communications
+# DOI: 10.1038/s41467-025-66287-6
+# Topics: epigenomic-lag (primary), single-cell-genomics, RNA-velocity, chromatin-rna-coupling  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Inferring differential dynamics from multi-lineage, multi-omic, and multi-sample single-cell data with MultiVeloVAE"
+authors:
+  - "Li, Chen"
+  - "Gu, Yichen"
+  - "Virgilio, Maria C."
+  - "Lee, Kun H."
+  - "Collins, Kathleen L."
+  - "Welch, Joshua D."
+year: 2025
+venue: "Nature Communications"
+doi: "10.1038/s41467-025-66287-6"
+keywords:
+  - "RNA velocity"
+  - "multi-omics"
+  - "variational autoencoder"
+  - "multi-sample integration"
+  - "differential dynamics"
+
+# Version
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2025"
+
+# Topics (Option E)
+topics:
+  - "epigenomic-lag"            # primary
+  - "single-cell-genomics"
+  - "RNA-velocity"
+  - "chromatin-rna-coupling"
+
+# Citation
+citation:
+  key: "li2025multivelovae"
+  short_id: "multivelovae"
+  bibtex_file: "sources/li-2025-multivelovae.bib"
+  bibtex_type: "article"
+  share_filename: "Li 2025 - MultiVeloVAE (Nat Commun).pdf"
+
+# Source files
+sources:
+  paper:
+    url: "https://www.nature.com/articles/s41467-025-66287-6.pdf"
+    url_alt:
+      - "https://www.nature.com/articles/s41467-025-66287-6"
+    local: "sources/li-2025-multivelovae.pdf"
+    status: "downloaded"
+  supplementary:
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM1_ESM.pdf"
+      local: "sources/li-2025-multivelovae-supp-1-figures.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Supplementary Figures S1-S22 (24 pages, 55MB). 수동 다운로드."
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM2_ESM.pdf"
+      local: "sources/li-2025-multivelovae-supp-2-reporting-summary.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Nature Portfolio Reporting Summary."
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM3_ESM.pdf"
+      local: "sources/li-2025-multivelovae-supp-3-peer-review.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Peer Review File (67 pages, 26MB). 리뷰어 코멘트 + 저자 응답."
+    - url: "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-66287-6/MediaObjects/41467_2025_66287_MOESM4_ESM.xlsx"
+      local: "sources/li-2025-multivelovae-supp-4-source-data.xlsx"
+      type: "xlsx"
+      status: "downloaded"
+      note: "Source Data. Sheets: Fig.2c, Fig.2f_{time,GCBDir,Mann}, Fig.3g_GCBDir{,_embed}, Fig.3h, Fig.4d_batch_removal, Fig.4e_biology_conservation, Fig.5d_{coupling,decoupling}, Fig.7g_{SPI1,GATA1}, SFig.4a. 본문 metric 수치 검증용."
+  data: []
+  code:
+    - url: "https://github.com/welch-lab/MultiVeloVAE"
+      local: "sources/code_MultiVeloVAE.url"
+      type: "github"
+      status: "url-only"
+  abstract_text:
+    source: "pubmed"
+    local: "sources/abstract.txt"
+    status: "downloaded"
+
+# Categorization
+categorization:
+  domain:
+    - "single-cell-genomics"
+    - "epigenomics"
+    - "RNA velocity"
+    - "variational inference"
+    - "multi-omics"
+  use_case:
+    - "methodology-reference"
+    - "pipeline-applicable"
+    - "academic-citation"
+  importance:
+    level: "상"
+    perspective: "우리 HSPC 10x Multiome pipeline의 직접 후속/대체 후보이며, multi-sample 통합 + continuous (δ, κ) + Bayesian differential test가 MultiVelo로 못 했던 분석을 바로 가능하게 해주는 epigenomic-lag topic의 핵심 reference."
+
+# Stakeholder & priority
+audience:
+  primary: "self"
+  secondary: []
+  note:
+priority:
+  level: "normal"
+  deadline:
+  reason: "Epigenomic-lag topic의 후속 method — MultiVelo와 직접 비교 baseline."
+
+# Cross-reference
+related:
+  - paper_id: "li-2023-multivelo"
+    relation: "extends"
+    note: "MultiVeloVAE는 MultiVelo의 discrete state를 continuous coupling/decoupling factor로 일반화."
+
+# Workflow metadata
+workflow:
+  created: "2026-05-25"
+  last_updated: "2026-05-25"
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"

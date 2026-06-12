@@ -1,0 +1,16 @@
+{
+  "status": "failed",
+  "run_id": "20260609-001053",
+  "pid": 85615,
+  "command": [
+    "codex",
+    "exec",
+    "--cd",
+    "/Users/kkkim/projects/autobiox/BioProject01",
+    "-"
+  ],
+  "started_at": "2026-06-08T15:11:07.787941+00:00",
+  "finished_at": "2026-06-08T15:15:11.429857+00:00",
+  "returncode": 1,
+  "log_path": "artifacts/web-runs/20260609-001053/codex.log"
+}

@@ -1,0 +1,141 @@
+# Cui, Haotian et al., 2024 — deepvelo — Genome Biology
+# DOI: 10.1186/s13059-023-03148-9
+# Topics: epigenomic-lag (primary), RNA-velocity, single-cell-genomics  |  Importance: 중
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+document_type: "paper"
+title: "DeepVelo: deep learning extends RNA velocity to multi-lineage systems with cell-specific kinetics"
+authors:
+- "Cui, Haotian"
+- "Maan, Hassaan"
+- "Vladoiu, Maria C."
+- "Zhang, Jiao"
+- "Taylor, Michael D."
+- "Wang, Bo"
+year: 2024
+venue: "Genome Biology"
+doi: "10.1186/s13059-023-03148-9"
+keywords:
+- "RNA velocity"
+- "DeepVelo"
+- "cell-specific kinetics"
+- "multi-lineage"
+- "graph convolution"
+topics:
+- "epigenomic-lag"
+- "RNA-velocity"
+- "single-cell-genomics"
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2024-01-19"
+citation:
+  key: "cui2024deepvelo"
+  short_id: "deepvelo"
+  bibtex_file: "sources/cui-2024-deepvelo.bib"
+  bibtex_type: "article"
+sources:
+  paper:
+    url: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-023-03148-9
+    url_alt:
+    - https://genomebiology.biomedcentral.com/counter/pdf/10.1186/s13059-023-03148-9.pdf
+    local: sources/cui-2024-deepvelo.pdf
+    status: downloaded
+  supplementary:
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM1_ESM.pdf
+    local: sources/cui-2024-deepvelo-supp-1-figures.pdf
+    type: pdf
+    status: downloaded
+    note: Supplementary Notes + Figures + Tables (40 pages). Robustness analysis, hyperparameter sweep, additional benchmarks.
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM2_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-2-correlated-genes.xlsx
+    type: xlsx
+    status: downloaded
+    note: Top 100 most-correlated genes (DeepVelo vs scVelo).
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM3_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-3-cell-types.xlsx
+    type: xlsx
+    status: downloaded
+    note: Vladoiu et al. GABAergic / Gliogenic cell type annotations.
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM4_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-4-pathway-go.xlsx
+    type: xlsx
+    status: downloaded
+    note: 'GO/pathway results: DeepVelo vs scVelo × GABAergic/Gliogenic.'
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM5_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-5-direction-consistency.xlsx
+    type: xlsx
+    status: downloaded
+    note: Direction Score / Overall Consistency / Celltype-wise Consistency.
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM6_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-6-sheet1.xlsx
+    type: xlsx
+    status: downloaded
+    note: Single-sheet supplementary data (purpose to verify in main text).
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM7_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-7-immunogenic-samples.xlsx
+    type: xlsx
+    status: downloaded
+    note: Sample 1-3 Immunogenic / Depleted gene lists.
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM8_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-8-celltype-samples.xlsx
+    type: xlsx
+    status: downloaded
+    note: Sample 1-3 Cell-type annotations.
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM9_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-9-hp-sweep.xlsx
+    type: xlsx
+    status: downloaded
+    note: Hyperparameter sweep results.
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM10_ESM.xlsx
+    local: sources/cui-2024-deepvelo-supp-10-direction-consistency-v2.xlsx
+    type: xlsx
+    status: downloaded
+    note: Direction Score / Consistency — second batch.
+  - url: https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-023-03148-9/MediaObjects/13059_2023_3148_MOESM11_ESM.docx
+    local: sources/cui-2024-deepvelo-supp-11-reporting-summary.docx
+    type: docx
+    status: downloaded
+    note: Nature Portfolio Reporting Summary.
+  data: []
+  code: []
+  abstract_text:
+    source: "springer"
+    local: "sources/abstract.txt"
+    status: "downloaded"
+categorization:
+  domain:
+  - "single-cell-genomics"
+  - "RNA velocity"
+  - "deep-learning"
+  - "tumor-heterogeneity"
+  use_case:
+  - "methodology-reference"
+  - "academic-citation"
+  importance:
+    level: "중"
+    perspective: "cell-specific kinetics와 multi-lineage velocity 한계를 설명하는 foundational RNA-only reference. MoFlow / MultiVeloVAE / cellDancer / VeloVAE 후속 method의 직접 background로 method genealogy 분석에 필수. 직접 epigenomic-lag pipeline 적용은 unlikely."
+audience:
+  primary: "self"
+  secondary: []
+  note: "Week2 evidence expansion"
+priority:
+  level: "normal"
+  deadline:
+  reason: "cell-specific kinetics lineage"
+related:
+- paper_id: "hong-2026-moflow"
+  relation: "related-method"
+  note: "MoFlow의 cell-specific kinetic rationale와 비교."
+workflow:
+  created: "2026-05-25"
+  last_updated: "2026-05-26"
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"

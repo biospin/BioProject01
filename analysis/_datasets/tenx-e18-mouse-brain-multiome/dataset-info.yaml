@@ -1,0 +1,94 @@
+# 10x Genomics — Fresh Embryonic E18 Mouse Brain (5k) — Single Cell Multiome ATAC + Gene Expression
+# 본 프로젝트 Dataset 1. 동반 paper 없음 (vendor demo dataset).
+
+# Identity
+dataset_id: "tenx-e18-mouse-brain-multiome"
+provider: "10x Genomics"
+version: "1.0.0"            # MultiVelo가 사용한 첫 release. 후속 2.0.0 / Cell Ranger ARC 2.0 reprocessing 있음.
+release_date: "미제공: 10x dataset page에 명시 안 됨. 추정 2020년 10x Multiome 제품 launch 시점."
+
+# Biological identity
+species: "Mus musculus"
+tissue: "Embryonic day 18 (E18) cerebral cortex; 후속 release version (3.1 standard 6.0.0)은 cortex + hippocampus + subventricular zone (SVZ) nuclei combined로 명시"
+sample_provenance: "10x Genomics가 BrainBits LLC (commercial supplier)로부터 commission한 C57BL/6 strain mouse tissue. donor 수·연령 등 추가 정보 미제공."
+modality:
+  - "scRNA-seq (Gene Expression library)"
+  - "scATAC-seq (ATAC library)"
+  - "paired Multiome (same nucleus joint profiling)"
+platform: "10x Genomics Chromium Next GEM Single Cell Multiome ATAC + Gene Expression"
+
+# Scale
+cell_count_advertised: 5000          # "5k" 명목
+cell_count_after_qc: 3365            # MultiVelo (Li 2023) Dataset 1 reported value after filtering
+gene_count_advertised: "미제공"
+gene_count_after_filtering: 936      # MultiVelo Dataset 1, highly variable genes after filtering
+
+# Access
+access:
+  primary_url: "https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-1-0-0"
+  primary_url_alt:
+    - "https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-2-0-0"
+    - "https://www.10xgenomics.com/datasets/5-k-mouse-e-18-combined-cortex-hippocampus-and-subventricular-zone-nuclei-3-1-standard-6-0-0"
+  geo_accession: null              # 10x demo dataset은 GEO에 deposit되지 않음
+  sra_accession: null
+  license: "CC BY 4.0"
+  citation_form: "10x Genomics. Fresh Embryonic E18 Mouse Brain (5k), Single Cell Multiome ATAC + Gene Expression Dataset by Cell Ranger ARC v1.0.0. https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-1-0-0"
+
+# Documents (technical docs only, no peer-reviewed paper)
+documents:
+  - title: "Demonstrated Protocol — Nuclei Isolation from Mouse Brain Tissue for Single Cell Multiome ATAC + Gene Expression Sequencing"
+    code: "CG000366 Rev A"
+    url: "https://www.10xgenomics.com/support/single-cell-multiome-atac-plus-gene-expression/documentation/steps/sample-prep/nuclei-isolation-from-mouse-brain-tissue-for-single-cell-multiome-atac-plus-gene-expression-sequencing"
+    local: "sources/_10x_protocol_CG000366.url"
+    type: "protocol"
+    note: "10x가 사용한 nuclei isolation protocol. agent가 sample handling 차이를 비교할 때 참조."
+  - title: "User Guide — Chromium Next GEM Single Cell Multiome ATAC + Gene Expression"
+    code: "CG000338 Rev A"
+    url: "https://www.10xgenomics.com/support/single-cell-multiome-atac-plus-gene-expression/documentation/chromium-next-gem-single-cell-multiome-atac-plus-gene-expression-reagent-kits-user-guide"
+    local: "sources/_10x_userguide_CG000338.url"
+    type: "user-guide"
+    note: "library prep + sequencing parameters. raw data 재처리 시 chemistry 버전 확인용."
+
+# Secondary references (이 dataset을 분석한 paper들 — de facto representative analyses)
+secondary_refs:
+  - paper_id: "li-2023-multivelo"
+    paper_local: "analysis/epigenomic-lag/li-2023-multivelo"
+    relation: "first-refereed-analysis"
+    role_in_paper: "Dataset 1 — MultiVelo의 기본 동작 검증용 (RG → IPC → ExN trajectory 회복, M1/M2 gene 분류 정량)"
+    key_numbers:
+      - "3,365 cells × 936 highly variable genes"
+      - "426 genes high-likelihood ODE fit (likelihood > 0.05)"
+      - "induction-only 29.5%, repression-only 2.4%, M1 41.4%, M2 26.7%"
+      - "M2 highest spliced expression timing earlier than M1: P = 9e-7 (Wilcoxon one-sided)"
+      - "primed 21%, decoupled 19% of total time (median)"
+    note: "MultiVelo가 이 dataset에 대해 reported한 cell/gene 수 + 분포가 본 프로젝트 Dataset 1 agent의 *재현 target*."
+  - paper_id: "li-2025-multivelovae"
+    paper_local: "analysis/epigenomic-lag/li-2025-multivelovae"
+    relation: "benchmark-reuse"
+    role_in_paper: "Mouse brain 10x Multiome dataset 재사용 (`@li2023multivelo` AnnData 그대로 사용)"
+    note: "Dataset 1을 li-2023-multivelo가 제공한 preprocessed AnnData 형태로 직접 가져옴. 즉 Dataset 1의 표준 preprocessing은 MultiVelo 저자 release."
+  # 다른 chromatin-RNA velocity paper들 (cui-2024-deepvelo, hong-2026-moflow 등)이 이 dataset을 쓰는지는 각 paper 분석본 확인 후 추가.
+
+# Role in this project (agent operation)
+project_role:
+  dataset_number: 1
+  agent_owner:
+    primary: "이건규"                  # 2026-05-26 update — 이전 표기: gglee / gklee / Geongyu
+    secondary: []
+    note: "본 dataset의 agent operation은 이건규 담당. 한국명 표준화 (이전 CLAUDE.md: gglee)."
+  primary_use: "Smoke test + 문헌 비교 anchor. 가장 작고 가장 많이 benchmark된 dataset이므로 pipeline 변경 시 회귀 감지가 빠르다."
+  expected_outputs:
+    - "RG → IPC → ExN → upper/deeper layer trajectory 복원 (정성)"
+    - "M1 vs M2 gene 분류 비율 재현 (MultiVelo Fig. 2h 수치와 ±α% 이내)"
+    - "decoupled state interval ≈ 19% of total latent time (median)"
+    - "(향후) baseline epigenomic feature → activation/shutdown lag 추정의 sanity check"
+  cross_ref_with_other_datasets:
+    - "Dataset 2 (SHARE-seq mouse skin): 같은 mouse지만 platform / tissue 다름 → platform-invariant lag 신호 검증"
+    - "Dataset 3 (Trevino 2021 human cortex): 같은 cortex developmental 맥락 / species 다름 → species-conserved program 검증"
+
+# Workflow metadata
+workflow:
+  created: "2026-05-26"
+  last_updated: "2026-05-26"
+  status: "active"
+  agent_briefing_doc: "README.md"   # agent가 시작할 때 먼저 읽을 문서

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Full Results"
+  short_description: "논문 Results의 데이터셋과 수치를 정리합니다."
+  default_prompt: "이 논문의 Results를 한국어로 분석해줘. 어떤 데이터셋을 사용했고 각 데이터셋에서 어떤 수치 결과와 비교 결과를 얻었는지 정리해줘."
