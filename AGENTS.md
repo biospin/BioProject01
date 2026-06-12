@@ -190,6 +190,9 @@ domain은 abstract 분석 단계에서, use_case와 importance는 전체 분석 
 | `<paper-id>_lens-academic.md` 학계 시선 (저자 한계 + 분석자 판단 + 후속 연구 + citation 후보) | `skills/lens-academic/SKILL.md` |
 | `<paper-id>_lens-industry.md` 산업 시선 (QA/RA 리스크 + BD value + 제품화 + 전문가 코멘트 + 카테고리화) | `skills/lens-industry/SKILL.md` |
 | `<paper-id>_methodology-brief.md` 재현·검토용 압축본 | `skills/methodology-brief/SKILL.md` |
+| 여러 paper를 같은 schema로 수집·정규화 | `skills/paper-scrapper/SKILL.md` |
+| paper 묶음에서 연구 흐름·차이·gap 도출 | `skills/insight-agent/SKILL.md` |
+| insight의 근거·논리·과장 여부 검증 | `skills/validation-agent/SKILL.md` |
 | 기존 `<paper-id>_core.md` 기반 정적 slide deck 생성 | `skills/full-slides/SKILL.md` |
 | 분석된 paper에 대한 질문 | `skills/question/SKILL.md` |
 
@@ -213,14 +216,102 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
 5. **`<paper-id>_lens-academic.md` 작성** (`lens-academic`): 저자 한계 / 분석자 판단 / 매끄럽지 않은 지점 / 다음 논문 아이디어 / 본인 논문에서 인용할 후보 문장·수치. *학술적* 한계만 다룬다 (산업·규제·임상은 lens-industry로).
 6. **`<paper-id>_lens-industry.md` 작성** (`lens-industry`): 산업·규제·임상 리스크 / BD value & 상용화 가능성 / 전문가 코멘트(등급·활용 우선순위). 이 단계에서 `paper-info.yaml`의 `use_case`와 `importance`도 채운다.
 7. **`<paper-id>_methodology-brief.md` 작성** (`methodology-brief`): 재현·검토용 압축본. 우리 데이터에 적용/재현 가능한지 빠르게 판단하기 위한 메모.
-8. **Executive Summary (<paper-id>_core.md 맨 앞 1단락 추가)** — 위 모든 단계가 끝난 *후* LLM이 <paper-id>_core.md 맨 앞에 1단락(3~5문장)을 추가한다. 본인이 분석 노트를 다시 펴봤을 때 1초 안에 paper 그림을 파악하기 위함. 한계는 lens-* 참고하도록 짧게 언급, 본문 분석을 *압축한 진입점*. 형식:
+8. **Executive Summary (<paper-id>_core.md 맨 앞 추가)** — 위 모든 단계가 끝난 *후* LLM이 <paper-id>_core.md 맨 앞에 bullet 5종을 추가한다. 본인이 분석 노트를 다시 펴봤을 때 **1초 안에 paper 그림을 파악**하기 위함. 1단락 prose가 아니라 *scannable한 bold-labeled bullet* — 길더라도 시선이 한 번에 잡힘. 형식:
    ```markdown
    ## Executive Summary
-   [3~5문장: 무엇을 풀고자 하는 자료인지 + 핵심 방법 한 줄 + 가장 중요한 결과 한 줄 + 어디 쓸 수 있는지 한 줄 + 자세한 한계는 lens-* 참고]
+
+   - **무엇**: [무슨 문제를 풀고자 하는 자료인지, 핵심 contribution 1줄]
+   - **모델 / 방법**: [핵심 method 한 줄. 입력 → 출력, 수학 골격은 $...$ inline. AGENTS.md "표기 규칙"의 LaTeX 규칙 준수]
+   - **핵심 결과**:
+     - ① [Dataset/벤치마크 1] — 한 줄, 수치 1개 포함
+     - ② [Dataset/벤치마크 2] — 한 줄
+     - ③ ... (필요시 최대 5~6개. 같은 dataset의 결과는 묶어서 한 줄)
+   - **우리 적용**: [우리 프로젝트에 어떻게 쓸 수 있는지 한 줄. pipeline-applicable / methodology-reference / academic-citation 중 어느 use_case인지 단서]
+   - **심층**: 한계·재현 ROI는 `<paper-id>_lens-academic.md` / `<paper-id>_lens-industry.md` / `<paper-id>_methodology-brief.md` 참고.
    ```
-   이 단락은 별도 skill로 빼지 않고 *분석 마무리 단계*에서 LLM이 직접 작성한다 (core-* 출력을 모아 압축).
+   이 섹션은 별도 skill로 빼지 않고 *분석 마무리 단계*에서 LLM이 직접 작성한다 (core-* 출력을 모아 압축). 한 항목당 *최대 2줄*을 넘기지 않는다 — 풍부한 설명은 본문 sections에 두고, Executive Summary는 *진입점*에 집중.
 
 각 단계의 출력은 위 출력 경로의 해당 파일에 누적해 저장한다. 한 skill이 다른 skill의 출력을 참조할 수 있다 (예: `lens-industry`는 `core-results`의 수치를 인용).
+
+## Evidence-to-Insight Workflow (Week2)
+
+이 workflow는 1주차의 paper-level 분석을 대체하지 않는다. 기존 `analysis/<primary-topic>/<paper-id>/` 분석 폴더는 개별 paper deep analysis의 single source이고, Week2 결과물은 여러 paper를 비교하는 topic-level layer로 별도 관리한다.
+
+### 출력 위치
+
+기본 위치는 다음과 같다.
+
+```text
+analysis/<primary-topic>/_evidence/week2/
+├── scope.md
+├── papers.jsonl
+├── comparison_table.md
+├── evidence_bundle.md
+├── insight.md
+├── validation_report.md
+└── handoff.md
+```
+
+- `analysis/<primary-topic>/<paper-id>/`: 개별 paper 분석. 1주차 산출물 유지.
+- `analysis/<primary-topic>/_evidence/week2/`: 여러 paper를 묶어 비교·해석·검증하는 Week2 산출물.
+- 이미 full analysis가 끝난 paper는 `paper-info.yaml`, `<paper-id>_core.md`, `<paper-id>_lens-academic.md`, `<paper-id>_lens-industry.md`, `<paper-id>_methodology-brief.md`를 우선 evidence로 사용한다.
+- 아직 full analysis가 없는 후보 paper는 abstract, DOI metadata, source URL 기반 record를 만들되, 추정/미제공 필드를 명확히 표시한다.
+
+### 단계
+
+1. **Topic Scope 정의** — `scope.md`
+   - topic, seed paper, keyword, 포함/제외 기준, 우선순위를 적는다.
+   - 예: `epigenomic-lag`, seed: MultiVelo / MultiVeloVAE / MoFlow.
+2. **Paper Scrapper 실행** — `skills/paper-scrapper/SKILL.md`
+   - 후보 paper를 수집하고 중복 제거한다.
+   - 모든 paper를 같은 record schema로 정규화한다.
+   - 출력: `papers.jsonl`, `comparison_table.md`, `evidence_bundle.md`.
+3. **Insight Agent 실행** — `skills/insight-agent/SKILL.md`
+   - `evidence_bundle.md`를 읽고 연구 흐름, 차별점, 반복 한계, unresolved gap, 후속 실험/분석 후보를 도출한다.
+   - 출력: `insight.md`.
+4. **Validation Agent 실행** — `skills/validation-agent/SKILL.md`
+   - `evidence_bundle.md`와 `insight.md`를 대조해 근거 부족, 빠진 전제, 과장된 결론, claim별 신뢰도를 점검한다.
+   - 출력: `validation_report.md`.
+5. **Cross Validation / Handoff**
+   - 여러 사람의 Validation Agent 결과가 있으면 일치/불일치 항목을 비교한다.
+   - 팀 지식화가 필요하면 `handoff.md`에 Jira / Confluence에 옮길 수 있는 action item 형태로 정리한다.
+
+### Paper Record Contract
+
+`papers.jsonl`은 한 줄에 paper 하나를 담는다. 모든 record는 가능한 한 아래 field를 유지한다. 값이 없으면 `null`, `[]`, 또는 `미제공:`으로 표시하고 추측으로 채우지 않는다.
+
+```json
+{
+  "record_id": "li-2023-multivelo",
+  "title": "MultiVelo: ...",
+  "authors": ["Li, ..."],
+  "year": 2023,
+  "venue": "Nature Biotechnology",
+  "doi": "...",
+  "url": "...",
+  "local_analysis": "analysis/epigenomic-lag/li-2023-multivelo",
+  "document_type": "paper",
+  "topic_relevance": "왜 이 topic에 들어오는지",
+  "research_question": "논문이 푸는 문제",
+  "assay_or_data": ["10x Multiome", "SHARE-seq"],
+  "method": "핵심 method / model / algorithm",
+  "main_claims": ["claim 1", "claim 2"],
+  "key_results": ["결과와 수치. 근거 위치 포함"],
+  "limitations": ["저자 한계 또는 분석자 한계. prefix 사용"],
+  "follow_up": ["후속 실험/분석 후보"],
+  "evidence_sources": ["core.md §Results", "Figure 2", "paper-info.yaml"],
+  "status": "full-analysis | abstract-only | metadata-only | needs-pdf"
+}
+```
+
+### OpenClaw 운영 반영
+
+OpenClaw에서는 위 workflow를 role별 agent로 나누어 실행한다. 자세한 운영 문서는 `openclaw/week2-agent-setup.md`를 따른다.
+
+- Paper Scrapper Agent: `skills/paper-scrapper/SKILL.md`
+- Insight Agent: `skills/insight-agent/SKILL.md`
+- Validation Agent: `skills/validation-agent/SKILL.md`
+- Integrator / Orchestrator: `handoff.md` 정리 및 Jira / Confluence 이관 준비
 
 ## core.md 섹션 구조 (정합성 규칙)
 
@@ -243,6 +334,7 @@ PDF가 주어졌을 때 다음 순서로 진행한다.
 - 번호 매김 사용 안 함 (`## 1. Background` 형태 X). 순서는 위 8 + 1개로 고정.
 - Figure/Table sub-section 안에서는 다음 3개 sub-sub를 권장 (`####` 수준): "패널별 설명", "본문에서 강조한 비교", "해석 시 주의점".
 - 페이지 ref·accession ID는 본문 inline에 (예: "Dataset 1 — 10x Multiome E18 mouse brain (Wang 2020, GSE140203)").
+- **수식은 LaTeX `$...$` (inline) / `$$...$$` (display) 사용**. backtick code span(`` `...` ``)에 수식을 넣지 않는다 — `core-to-html`의 MathJax 렌더링에서 code span은 의도적으로 제외되므로 HTML에서 raw text로 표시된다. Greek/Sum/Expectation은 LaTeX 명령(`\alpha`, `\rho`, `\sum`, `\mathbb{E}`, `\mathrm{KL}`)으로. 자세한 규칙은 `skills/core-methods/SKILL.md` 언어 규칙 참고.
 
 ### 검증
 
