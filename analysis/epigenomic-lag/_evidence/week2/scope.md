@@ -11,6 +11,15 @@
 - `li-2025-multivelovae` — MultiVeloVAE, continuous decoupling factor와 VAE 기반 확장.
 - `hong-2026-moflow` — MoFlow 후보. full analysis 필요.
 
+## Candidates (abstract-only — PDF 확보 후 core 분석으로 승급 예정)
+
+추가된 4편은 모두 abstract-only 단계다(원문 PDF 미확보, `sources/abstract.txt` + `<paper-id>_abstract.md`만 근거). 정량 비교는 PDF 확보 후로 유보.
+
+- `el-kazwini-2026-crakvelo` — CRAK-Velo (Genome Biology 2026). 역할: method — chromatin accessibility를 RNA velocity에 통합하는 semi-mechanistic model. MultiVelo 직접 경쟁/대체 chromatin-aware velocity.
+- `luo-2026-velocity-benchmark` — RNA velocity benchmark 17 studies (Cell Reports Methods 2026). 역할: benchmark — 15 method × 17 dataset, "전 항목 우월 method 없음" → method 선택 근거.
+- `safi-2022-chromatin-priming` — Safi 2022 (Cell Reports). 역할: biology — HSPC chromatin priming이 commitment에 선행 → activation lag 가설 근거 (같은 cell type).
+- `martin-2023-hspc-chromatin` — Martin 2023 (Stem Cells, review로 분류됨). 역할: biology 배경 — HSPC 분화 중 chromatin accessibility dynamics 개관.
+
 ## Keywords
 
 - chromatin RNA coupling

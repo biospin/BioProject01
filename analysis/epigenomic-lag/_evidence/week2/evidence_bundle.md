@@ -5,7 +5,8 @@
 - Topic: `epigenomic-lag`
 - Research question: gene별 chromatin-transcription lag structure를 정량화하고 epigenetic drug response timing 예측으로 연결할 수 있는 method와 evidence를 비교한다.
 - Inclusion: paired chromatin accessibility + RNA 또는 multiome data를 활용하고, chromatin state와 transcription/RNA dynamics의 시간적 관계를 다루는 method paper.
-- Current evidence set: `@li2023multivelo`, `@li2025multivelovae`, `@hong2026moflow`, `@li2023celldancer`, `@nomura2024mmvelo`, `@cui2024deepvelo`, `@mizukoshi2024deepkinet`.
+- Current evidence set (full-analysis, 11편): velocity method — `@li2023multivelo`, `@li2025multivelovae`, `@hong2026moflow`, `@li2023celldancer`, `@nomura2024mmvelo`, `@cui2024deepvelo`, `@mizukoshi2024deepkinet`, `@elkazwini2026crakvelo`; benchmark — `@luo2026velocitybenchmark`; biology(HSPC chromatin priming) — `@safi2022chromatinpriming`, `@martin2023hspcchromatin`.
+- 2026-06-12 승격: 직전 abstract-only 4편(`@elkazwini2026crakvelo`, `@luo2026velocitybenchmark`, `@safi2022chromatinpriming`, `@martin2023hspcchromatin`)이 PDF 확보 + core/lens/methodology-brief 완료로 **full-analysis로 승격**. 정량 비교가 이제 가능. `@martin2023hspcchromatin`은 review→primary research article(ATAC-seq + CRISPRi)로 자료 유형 정정됨.
 
 ## Paper Records
 
@@ -213,6 +214,128 @@
   - `analysis/epigenomic-lag/mizukoshi-2024-deepkinet/mizukoshi-2024-deepkinet_lens-academic.md` §3 Validation design transferability (직접 transferability map 정의)
 - Status: `full-analysis`
 
+### `el-kazwini-2026-crakvelo` — CRAK-Velo (full-analysis)
+
+- Identity: El Kazwini, Gao, Kouadri Boudjelthia, Cai, Huang, Sanguinetti, 2026, *Genome Biology* (Article in Press, unedited manuscript), DOI `10.1186/s13059-026-04086-y` (online 2026-05-05). bioRxiv preprint `10.1101/2024.09.12.612736`. PDF + Additional file 1/2 확보.
+- Topic relevance: UniTVelo를 chromatin-aware로 확장한 semi-mechanistic velocity. MultiVelo보다 단순·빠른 대안. **우리 HSPC(GSE209878)에서 MultiVelo와 동일 데이터·동일 annotation으로 직접 head-to-head가 가능한 1순위 비교 baseline.**
+- Research question: RNA velocity 결과를 chromatin region–gene interaction과 연결하면서, transcription rate를 chromatin accessibility로 직접 구성해 더 단순·빠르게 추정할 수 있는가?
+- Method / assay / dataset:
+  - Method: UniTVelo RBF spliced model(Eq.4–7) 계승 + scATAC 유래 transcription rate $c^g = \eta_g \sum_r^{R_g} w_r^g f(\phi_r^n)$ (Eq.8–10, cisTopic으로 $\phi_r$ smoothing). unspliced 미분을 RNA-only 형태(Eq.6)와 ATAC-derived 형태 $u'^{ATAC}_g = c^g - \beta_g \hat{u}_g$ (Eq.11)로 정의해 가중 NLL $l(\theta_g) = \pi b_g^2(\sum |x-\hat{x}|^2 + k|\hat{u}' - u'^{ATAC}|^2) - \log b_g$ (Eq.13)로 reconcile. gene별 region weight $w_r^g$ 추정. gradient descent, dataset당 10,000 epochs.
+  - Data: 세 dataset 모두 paired 10x Multiome — HSPC(GSE209878, 11,605/2,000/3,939), E18 mouse brain(3,365/2,000/4,002), human cerebral cortex(GSE162170, 4,693/954/844).
+- Main claims:
+  - chromatin을 transcription rate production term으로 직접 구성해 RNA-only(UniTVelo)보다 biologically consistent한 flow·terminal state를 얻는다.
+  - MultiVelo 대비 simpler and faster이면서 동일 HSPC에서 더 정확하다.
+  - region weight $w_r^g$로 cis-regulatory region–gene interaction을 정량해 해석 layer를 제공한다.
+- Key results:
+  - HSPC(GSE209878): CBDir 세 method 중 최고, platelet terminal state 정확 식별(UniTVelo 실패, MultiVelo는 erythrocyte→granulocyte spurious flow). KNN cell-type accuracy 다수 gene 우위(HDC 0.259 vs MultiVelo 0.183) (Fig 1).
+  - E18 mouse brain: Upper/Deeper Layer 독립 terminal 정확 식별(MultiVelo·UniTVelo는 spurious Upper→Deeper flow) (Fig 2).
+  - Run-time(Table S1): HSPC 15h vs MultiVelo >24h, HCC 6h vs 24h — 세 dataset 모두 MultiVelo보다 빠름.
+  - HCC($G>R$): flow는 일관하나 region-level inference가 low coverage(window 내 region 보유 gene ~50%)로 hyperparameter에 민감.
+- Limitations:
+  - 저자 명시: HCC region-level inference 불안정; mouse brain ependymal cell terminal 식별 세 method 공통 실패.
+  - 해석: 공식 ablation(chromatin term on/off, $k=0$, weight permutation) 부재 — UniTVelo 비교는 ablation을 부분 대신할 뿐 순수 chromatin 효과와 구현 차이가 분리 안 됨.
+  - 해석: CBDir·KNN에 통계 검정·CI·시드 분산 없음; 예시 gene cherry-picking 여지(FOXP2는 MultiVelo 약간 우위).
+  - `검토필요:` **chromatin–transcription lag를 명시 parameter로 출력하지 않음** — KLF1/Jag2 region kinetic plot의 지연은 pseudotime 축 시각화이므로 gene별 lag 수치는 후처리 필요.
+  - `검토필요:` $k$($k=0.5$ vs Eq.15/16), topic 수($T=20/30/50$), supplementary Table 번호(S1/S2) 본문·캡션 불일치 — Article in Press 교정 대상.
+- Follow-up possibility:
+  - 우리 GSE209878 HSPC에서 CRAK-Velo vs MultiVelo head-to-head(본 논문이 이미 그 셋업).
+  - region kinetic plot의 accessibility-peak와 unspliced-peak pseudotime 차이를 gene별 lag 수치로 후처리하는 파이프라인 구축(우리 핵심 deliverable 직결).
+- Evidence sources:
+  - `analysis/epigenomic-lag/el-kazwini-2026-crakvelo/el-kazwini-2026-crakvelo_core.md` Executive Summary/Methods/Results/Figures
+  - `analysis/epigenomic-lag/el-kazwini-2026-crakvelo/el-kazwini-2026-crakvelo_lens-academic.md` Limitations/Citation/Final Takeaways
+- Status: `full-analysis`
+
+### `luo-2026-velocity-benchmark` — RNA velocity benchmark (full-analysis)
+
+- Identity: Luo, Ren, Yang, You, Zhou, Qin, Li, 2026, *Cell Reports Methods* 6(4):101367 (PMC13106975). bioRxiv preprint `10.1101/2025.08.02.668272`. PDF + STAR Methods + mmc1/mmc2 확보. 저자 소속: Department of Hematology, Xiamen University.
+- Topic relevance: 15개 RNA velocity method를 17 real + 3 simulation dataset에서 벤치마크. **우리 HSPC(GSE209878)가 Dataset12로 직접 사용됨 — 단 MultiVelo는 `rna_only=True`(ATAC 비활성)로만 평가되어 multi-omic 강점은 미측정.**
+- Research question: RNA velocity inference에서 어떤 method를 언제 써야 하는지에 대한 evidence-based scenario별 best-practice를 수립할 수 있는가?
+- Method / assay / dataset:
+  - Method: 15 method(ODE 5: velocyto·scVelo-sto·scVelo-dyn·**MultiVelo(`rna_only=True`)**·CellRank / ML 4: UniTVelo·Dynamo-sto·Pyro-Velocity·cell2fate / DL 6: veloAE·veloVI·veloVAE·LatentVelo·cellDancer·DeepVelo)를 4 metric으로 평가 — accuracy CBDir(ground-truth $A\to B$ 방향 cosine), ICCoh·Vcs(내부 일관성/smoothness), A1/A2(method agreement). downsampling(0.4–0.8 ×5)·HVG·dyngen simulation로 stability, time·memory로 usability.
+  - Data: 17 real dataset — Dataset1 pancreas(GSE132188) … **Dataset12 human HSPC(GSE209878, transition HSC→MPP/MPP→LMPP/MEP→Erythrocyte/GMP→Granulocyte)** … Dataset16 embryonic mouse brain 10x multiome, Dataset17 mouse hematopoiesis(GSE81682). + 3 dyngen simulation.
+- Main claims:
+  - 모든 평가를 압도하는 단일 method 없음("no single method exhibited superior performance in all the assessments").
+  - 단일 method 의존 대신 multiple method 결과의 cross-method consistency(특히 downstream biological interpretation)를 비교하라.
+  - scenario별 권고: large atlas→veloVI/DeepVelo/Dynamo-sto/scVelo-sto, low-quality→UniTVelo/LatentVelo/veloVI/Pyro-Velocity, complex topology→DeepVelo/veloVI/LatentVelo.
+- Key results:
+  - Accuracy 전반 낮음(17 real 평균 CBDir ≈0.1): 최고 veloVI 0.23, 다음 Pyro-Velocity 0.17; veloVAE 다수 dataset에서 방향 역전(Fig 2A).
+  - complexity↑→accuracy↓: human bone marrow(Dataset4) 평균 CBDir −0.193, mature PBMC(Dataset11) 대부분 method가 biology와 반대 방향.
+  - ICCoh 대부분 ≥0.7(LatentVelo 0.99, UniTVelo·MultiVelo 0.96)이나 저자는 over-smoothing 신호일 수 있다고 경고; A1 대부분 <0.4(method 간 큰 불일치).
+  - Usability: DeepVelo·veloVI가 time·memory 우수, cellDancer·MultiVelo는 실행시간 長(Fig 6C).
+- Limitations:
+  - 저자 명시: CBDir이 pre-defined ground-truth(annotation bias)에 의존; high ICCoh가 over-smoothing일 수 있음; method 불일치는 inference error가 아니라 model architecture 차이일 수 있음.
+  - `해석:` **MultiVelo·Chromatin Velocity 등 epigenome-integrating method를 `rna_only=True`로만 평가** — 우리 epigenomic-lag에 정작 필요한 multi-omic(ATAC 켠) 모드 성능이 측정되지 않음. Dataset16이 multiome인데도 ATAC 활용 평가는 없음.
+  - `미제공:` Dataset12(HSPC) 단독 method 순위의 수치 표가 본문에 없음(합산 분포 위주) — hematopoietic branching 순위는 mmc1/mmc2/원자료 별도 추출 필요.
+  - `해석:` 최고 CBDir 0.23·전체 평균 ≈0.1로 절대 정확도 낮음 — 권고는 상대 순위일 뿐 절대 신뢰도를 보장하지 않음.
+- Follow-up possibility:
+  - multi-omic 모드를 켠 velocity benchmark — HSPC(Dataset12)·embryonic brain(Dataset16)에서 ATAC 켠 MultiVelo CBDir 재측정(우리 목표 직결 빈칸).
+  - Dataset12(GSE209878)+Dataset17(GSE81682)만으로 hematopoietic branching 특화 mini-benchmark.
+- Evidence sources:
+  - `analysis/epigenomic-lag/luo-2026-velocity-benchmark/luo-2026-velocity-benchmark_core.md` Executive Summary/Methods/Results/Tables
+  - `analysis/epigenomic-lag/luo-2026-velocity-benchmark/luo-2026-velocity-benchmark_lens-academic.md` Limitations/Citation/Final Takeaways
+- Status: `full-analysis`
+
+### `safi-2022-chromatin-priming` — concurrent stem/lineage chromatin priming (full-analysis)
+
+- Identity: Safi, Dhapola, Warsi, Sommarin, …, Karlsson, 2022, *Cell Reports* 39(6):110798, DOI `10.1016/j.celrep.2022.110798`, PMID 35545037. 2023 erratum(Cell Rep 42(10):113357) 존재(본 PDF에 미반영). PDF + mmc1–7 확보.
+- Topic relevance: mouse LSK HSPC scATAC-seq로 commitment에 선행하는 concurrent stem/lineage chromatin priming을 chromatin-side로 입증 — activation lag 가설의 정성적 선행성을 같은 HSPC 축에서 뒷받침. **단 paired multiome이 아니고 transition 축이 pseudotime이라 gene별 lag 정량의 직접 근거는 아님.**
+- Research question: HSPC에서 cellular-fate option이 어느 stem-like 단계에서 lineage priming으로 처음 시작되는가를 chromatin accessibility 수준에서 규명.
+- Method / assay / dataset:
+  - Method: scATAC-seq(8 sorted populations) → 571 JASPAR TFBS motif accessibility 정량(distal/proximal 분리) → Slingshot pseudotime 정렬 → Python `ruptures` change-point detection으로 motif accessibility 급변 transition point 검출(motif당 1개). change-point density로 transition zone 위치. scRNA-seq·sc-qPCR·transplant·in vitro clonogenic assay로 직교 검증.
+  - Data: mouse LSK HSPC scATAC 2,680 cells(~283,358 peaks = 107,011 distal + 37,945 promoter-proximal); scRNA-seq는 **다른 cell batch**(2,462 cells), computational projection으로 연결. paired multiome 아님.
+- Main claims:
+  - lineage commitment에 앞서 stem-like + lineage-affiliated(lympho-myeloid + MegE) chromatin program을 *동시* 보유하는 prospectively isolable한 `LSKFlt3int CD9high` 중간 집단이 존재한다.
+  - chromatin program(특히 distal enhancer/TF motif)이 lineage commitment와 frank gene expression에 *선행*한다.
+  - 이 집단은 multi-lineage capacity는 있으나 long-term self-renewal은 없는 transition state다.
+- Key results:
+  - distal homogeneity score 0.434 vs proximal 0.246 — distal regulatory region이 cell type 분리력 우위(Fig 2E/2F).
+  - lympho-myeloid trajectory의 *가장 이른* transition point가 CD9high-dominated cluster 3에 mapping; cluster 3가 stem-like(FoxO/Hox/Spi1) + lineage-specific motif 동시 보유(Fig 3).
+  - scRNA-seq cluster 3에 CD9high 30% enrich(Poisson p<10⁻⁵), HSC-like signature; SPI1↑(lympho-myeloid) vs GATA1↑(MegE) 개별 cell anti-correlation crossover(Fig 4, 3O).
+  - 기능 검증: CD9high single clone의 30%가 multi-lineage progeny(CD9low 5.7%); transplant에서 short-term myeloid + long-term lymphoid이나 long-term self-renewal 없음(Fig 6,7).
+- Limitations:
+  - `해석:` **paired multiome이 아님** — scATAC↔scRNA를 computational projection으로 연결하므로 같은 cell의 opening→transcription lag를 직접 계산 못함.
+  - `검토필요:` transition point 축이 Slingshot **pseudotime**(differentiation ordering)이고 wall-clock time이 아님 — "precede"는 ordering상 선행성.
+  - `해석:` change-point가 motif 단위·trajectory별 single point만 검출; "concurrent"가 single-cell co-accessibility인지 집단 평균인지 구분 부족.
+  - `해석:` mouse LSK이므로 human HSPC cross-species 일반화는 선결 과제(우리 GSE209878은 human).
+  - `검토필요:` 본문 Data availability(GSE173075/173076) vs STAR Methods(GSE148746) accession 불일치; 2023 erratum 미반영.
+- Follow-up possibility:
+  - 우리 GSE209878 human HSPC paired multiome에서 같은 cell의 promoter ATAC change point와 transcription onset change point의 pseudotime 차이를 lag proxy로 정의(Safi change-point density 절차 차용).
+  - Safi의 lineage-primed enhancer cluster 15·16 좌표가 우리 HSPC ATAC peak과 겹치는지 비교.
+- Evidence sources:
+  - `analysis/chromatin-rna-coupling/safi-2022-chromatin-priming/safi-2022-chromatin-priming_core.md` Executive Summary/Methods/Results/Figures
+  - `analysis/chromatin-rna-coupling/safi-2022-chromatin-priming/safi-2022-chromatin-priming_lens-academic.md` Limitations/Citation/Final Takeaways
+- Status: `full-analysis`
+
+### `martin-2023-hspc-chromatin` — HSPC chromatin accessibility dynamics (full-analysis)
+
+- Identity: Martin, Rodriguez y Baena, Reggiardo, Worthington, …, Forsberg, 2023, *Stem Cells* 41(5):520-539, DOI `10.1093/stmcls/sxad022`, PMID 36945732, PMC10183972. PDF + supplementary 확보. **자료 유형 정정: review → primary research article**(PDF header "Original Research", Results·실험 Figure·CRISPRi 직접 수행).
+- Topic relevance: mouse hematopoiesis 13 cell type의 ATAC-seq + CRISPRi primary article. chromatin priming이 transcription/commitment에 선행한다는 방향성을 같은 hematopoietic 축에서 직접 보이고 **CRISPRi로 accessibility→expression 인과까지 연결** — activation lag 가설의 생물학적 방향성 배경.
+- Research question: 분화 과정에서 epigenetic identity가 lineage potential에 어떻게 기여하고, lineage-primed CRE가 분화 trajectory를 따라 어떻게 유지/소실되는가?
+- Method / assay / dataset:
+  - Method: bulk ATAC-seq(13 FACS-purified cell type, replicate n=2) → IDR peak → master peak-list 92,842 peaks → chromVAR 정규화 + PCA/UMAP/hierarchical clustering → HOMER motif·GREAT GO → HSC와 unipotent cell 배타 공유 'primed peak' 추적 → dCas9-KRAB **CRISPRi**로 후보 CRE silencing 후 cell-surface protein flow cytometry 정량.
+  - Data: mouse BM ATAC-seq 13 cell type(GSE184851 + 선행 GSE162949); CRISPRi mouse(CD81/CD115/CD11b). expression reference는 외부 GEXC database — **paired RNA/multiome 아님**.
+- Main claims:
+  - selective HSC-primed lineage-specific CRE 중 소수만(lineage별 25% 미만) 분화 전 과정 accessible 유지되고 대부분 닫힌다.
+  - 13 cell type이 erythromyeloid vs lymphoid 두 cluster로 분리되고 HSC/MPP는 erythromyeloid에 편향.
+  - HSC가 가장 높은 global accessibility를 보이며 HSC-unique CRE는 erythroid fate priming에 치우침; CRISPRi로 accessibility→expression 인과 확립.
+- Key results:
+  - HSC IDR peak 70,731(master 92,842)로 progenitor 중 최다, cumulative signal도 최고(Table 1, Fig 1B/1C).
+  - HSC-primed peak의 25% 미만만 분화 끝까지 유지(17% MkP/11% EP/13% GM/12% B/26% T)(Fig 6C).
+  - HSC-unique peak 3,026개, 92.7% non-promoter, ELF3/CTCFL/NF-E2/RUNX motif + "definitive erythrocyte differentiation" GO enrich(Fig 7A-D).
+  - CRISPRi: CD81 promoter proof-of-concept(p<.01); CD115 promoter·enhancer 둘 다 silencing 시 CD115+ 유의 감소(p<.0001); **CD11b enhancer는 ns** — 모든 putative CRE가 기능적이지 않음(Fig 7I-L).
+- Limitations:
+  - `해석:` **paired RNA/multiome 직접 측정 없음**(expression은 외부 GEXC) — accessibility-expression이 같은 cell 동시 측정이 아니므로 시간 단위 lag 정량 불가, priming 방향성 근거로만 사용.
+  - `해석:` bulk ATAC-seq(single-cell 아님)라 population 내 heterogeneity·intermediate state 평균화.
+  - `검토필요:` peak count·cumulative signal이 cell 수·library depth에 민감한데 정규화 절차 본문 수치 약함 — "HSC가 가장 열림" 인용 시 caveat 동반.
+  - `해석:` replicate n=2(HSC 2 sample은 clustering에서 유일 비인접); genome-wide priming 주장의 인과 검증은 CRISPRi 3 locus에 한정.
+- Follow-up possibility:
+  - Martin의 mouse HSC-unique/lineage-primed CRE 좌표를 우리 Human HSPC GSE209878 ATAC peak에 mm10→hg38 liftover로 mapping해 baseline primed-CRE feature 정의.
+  - 우리 multiome에서 "열렸으나 미발현" CRE 비율을 lineage별로 추정해 본 논문의 <25% 유지 통계와 비교.
+- Evidence sources:
+  - `analysis/chromatin-rna-coupling/martin-2023-hspc-chromatin/martin-2023-hspc-chromatin_core.md` Executive Summary/Methods/Results/Tables
+  - `analysis/chromatin-rna-coupling/martin-2023-hspc-chromatin/martin-2023-hspc-chromatin_lens-academic.md` activation lag 배경/Limitations/Citation
+- Status: `full-analysis`
+
 ## Cross-Paper Signals
 
 - 반복되는 문제:
@@ -234,11 +357,17 @@
   - agreement/disagreement gene set을 high-confidence vs review-needed lag candidate로 분류.
   - enhancer-resolved 또는 peak-level lag modeling으로 gene-level c aggregation 한계 보완.
   - metabolic labeling 또는 time-stamped benchmark를 epigenomic-lag validation design에 차용.
+  - `해석:` chromatin-aware velocity 후보가 늘어남(CRAK-Velo full-analysis 승격) → head-to-head benchmark 비교 대상은 MultiVelo·MultiVeloVAE·MoFlow + CRAK-Velo. CRAK-Velo는 **동일 GSE209878 HSPC에서 MultiVelo와 직접 비교**(동일 데이터·annotation)했고 MultiVelo 대비 단순·빠르며(run-time 15h vs >24h) terminal state·deconvolution 우위 — 우리 head-to-head의 가장 직접적인 진입점. 단 CRAK-Velo도 chromatin–transcription lag를 명시 parameter로 출력하지 않아 region kinetic의 peak-pseudotime 차이를 lag로 후처리해야 함.
+  - `해석:` Luo benchmark는 "전 항목 우월 method 없음"을 17 real + 3 simulation으로 정량 입증 → 단일 default가 아니라 *우리 HSPC data에 대한 자체 검증*으로 정해야 한다. **우리 HSPC(GSE209878)는 Dataset12로 직접 포함됐으나 MultiVelo는 `rna_only=True`(ATAC 비활성)로만 평가** — 우리 epigenomic-lag에 정작 필요한 multi-omic 모드 성능은 이 benchmark가 측정하지 않았다. 따라서 RNA-only 순위만 차용하고 multi-omic 검증은 자체 수행 필요.
+  - `해석:` biology-side(Safi 2022, Martin 2023)는 같은 HSPC 축에서 "chromatin priming이 commitment/transcription에 선행"한다는 *정성적 선행성*을 PDF 근거로 뒷받침 → activation lag 가설의 생물학적 plausibility 배경. Martin은 CRISPRi로 accessibility→expression 인과까지 보이나(단 CD11b enhancer는 ns), 둘 다 **paired RNA/시간 단위 lag를 정량하지 않으므로**(Safi: 다른 batch projection·pseudotime 축; Martin: 외부 GEXC·bulk) lag 정량의 직접 근거는 아니다. 둘 다 mouse라 human HSPC cross-species 일반화는 선결 과제.
 
 ## Missing Evidence
 
-- PDF 필요: 7개 paper 모두 source와 full analysis 있음 (cellDancer/DeepVelo/DeepKINET/mmVelo는 light → full 승급 완료).
-- full analysis 필요: 없음.
+- PDF 확보·분석 완료: **11편 모두 full-analysis** (직전 abstract-only 4편 2026-06-12 승격). 직전 단계의 PDF 미확보 gap은 해소됨. 4편 PDF 확인으로 확정된 핵심 사실:
+  - `el-kazwini-2026-crakvelo`: UniTVelo 확장 semi-mechanistic, MultiVelo 직접 경쟁. **동일 GSE209878 HSPC에서 MultiVelo 대비 우위 + run-time 15h vs >24h**. 단 lag를 명시 parameter로 출력 안 함. Article in Press(unedited)라 $k$/$T$/Table 번호 본문 불일치 — 최종본 교정 모니터링 필요.
+  - `luo-2026-velocity-benchmark`: 15 method(MultiVelo 포함), 17 real + 3 simulation. **우리 HSPC = Dataset12(GSE209878). MultiVelo는 `rna_only=True`로만 평가** — multi-omic 성능 미측정. Dataset12 단독 method 순위 수치는 본문에 없어 mmc1/mmc2/원자료 추출 필요.
+  - `safi-2022-chromatin-priming`: scATAC-seq 단독(paired multiome 아님) + pseudotime 축 → 정성적 priming 선행 지지, lag 정량 직접 근거 아님. **GSE accession 불일치(GSE173075/76 vs GSE148746) + 2023 erratum 미반영** — 재현·인용 전 확인.
+  - `martin-2023-hspc-chromatin`: **review→primary research article 정정**(ATAC-seq + CRISPRi). paired RNA 없음(외부 GEXC), bulk. priming 방향성 + CRISPRi 인과 배경.
 - 확인할 metadata:
   - MoFlow GitHub license.
   - MultiVeloVAE benchmark exact numeric matrix는 source data xlsx에서 추가 추출 가능.
