@@ -85,3 +85,29 @@ categorization:
   importance:
     level: "상"
     perspective: "LLM agent를 scRNA-seq 분석에 실제 적용할 때 어느 task·platform에서 실패하는지 처음으로 정량화한 benchmark paper로, 우리 파이프라인 설계에 직접 참조 가능."
+
+# ───────────────────────────────────────────
+# Stakeholder & priority
+# ───────────────────────────────────────────
+audience:
+  primary: "self"
+  secondary: []
+  note: "분석 자동화(agent) 도입 의사결정 시 R&D 리뷰 참조."
+priority:
+  level: "normal"
+  deadline:
+  reason: "팀 핵심 주제(chromatin-lag)와 직접 관련은 낮으나, 분석 자동화 평가 설계 reference로 가치."
+
+# ───────────────────────────────────────────
+# Workflow metadata
+# ───────────────────────────────────────────
+workflow:
+  created: "2026-06-13"
+  last_updated: "2026-06-13"
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
