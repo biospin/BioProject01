@@ -3,7 +3,7 @@
 > branch: `kkkim-pipeline` · v1 2026-06-13 · **v2 2026-06-13 (methodologist 검토 반영)**
 > 근거: `analysis/epigenomic-lag/_evidence/week2/insight.md` Direction 1 / claim C5, `validation_report.md` §3, `CLAUDE.md` "방법론적 주의사항".
 > 검토 반영: `REVIEW-methodologist-2026-06-13.md` (BLOCKER 5 + MAJOR 다수). v1의 H1 순환·H2 wall-clock 가정·lag accuracy 오해를 수정.
-> 성격: **설계 문서**(코드/실행 전). 실행은 데이터 확보 + 환경(128GB RAM, GPU) 준비 후 Phase별.
+> 성격: **설계 문서**(코드/실행 전). 실행은 데이터 확보 + 환경(128GB RAM; **GPU는 선택** — 이 데이터 규모(11,605 cells)면 CPU로 충분, GPU는 bootstrap 반복 속도 이득만) 준비 후 Phase별.
 
 ---
 
@@ -35,7 +35,7 @@
 | method | 분기/역할 | lag 출력 | 축 배정 | 비고 |
 |---|---|---|---|---|
 | **MultiVelo** | baseline (ODE/discrete) | switch time(scalar) | A + B/C | 단 home-field(§3.3) — annotation은 method-agnostic으로 재정의 |
-| **MultiVeloVAE** | probabilistic multi-sample (δ/κ + Bayesian test) | δ/κ(rate) | A + B/C | GPU. H1 한 축 |
+| **MultiVeloVAE** | probabilistic multi-sample (δ/κ + Bayesian test) | δ/κ(rate) | A + B/C | CPU 실행 가능(GPU는 속도 선택). H1 한 축 |
 | **MoFlow** | latent time-free relay | DTW c-s lag | A + B/C | license 확인. H1 한 축 |
 | **CRAK-Velo** | UniTVelo 확장 semi-mechanistic | **명시 없음** | **A only**(기본) | lag axis는 proxy 독립검증 통과 후만(§4.2), proxy-derived 플래그 |
 | **RNA-only floor (scVelo dynamical, cellDancer)** | chromatin 기여 대조 | rate/lag | **REQUIRED** baseline | chromatin-aware가 RNA-only 대비 *얼마나* 개선하는지의 floor |
@@ -102,7 +102,7 @@ H1 핵심 쌍 = MultiVeloVAE ↔ MoFlow. 단 계보 비독립(MoFlow⊃cellDance
 
 | Phase | 내용 | 산출물 |
 |---|---|---|
-| **P0 환경·데이터·사전체크** | GSE209878 download; **per-cell timepoint label이 통합 객체에 보존됐는지 확인**; license(MoFlow·mmVelo); GPU 1-fit 시간/메모리 실측; dataset-info.yaml | `P0_provenance.md`, `dataset-info.yaml` |
+| **P0 환경·데이터·사전체크** | GSE209878 download; **per-cell timepoint label이 통합 객체에 보존됐는지 확인**; license(MoFlow·mmVelo); CPU 1-fit 시간/메모리 실측(GPU 불필요, 길면만 GPU 검토); dataset-info.yaml | `P0_provenance.md`, `dataset-info.yaml` |
 | **P1 통일 전처리** | 공통 branch + ambient/doublet 제거 + joint peak 확인 + method-agnostic annotation freeze + shared intersection | `preprocess/`, `qc_report.md` |
 | **P2 method 실행** | baseline(RNA-only) + chromatin-aware + scrambled-chromatin ablation; native vs 공통 graph; runtime/memory 로깅 | per-method outputs, `runtime.csv` |
 | **P3 지표·일치도** | A(tie-break)/B(sign·rank 분리)/C(stability) lineage 내; construct-validity sign check | `metrics/`, `concordance.md` |
@@ -113,11 +113,32 @@ H1 핵심 쌍 = MultiVeloVAE ↔ MoFlow. 단 계보 비독립(MoFlow⊃cellDance
 
 ---
 
+## 7b. Compute 자원 (CPU vs GPU — GPU 1대 가용 가정)
+
+전제: 데이터 규모 11,605 cells × ~1,000 genes(+ ~3,939 peaks)는 single-cell 기준 **중소 규모**. GPU 1대 빌릴 수 있으면 충분하며, 이 규모에선 **VRAM이 아니라 system RAM이 실제 병목**이다. 아래 runtime은 *추정* — P0의 1-fit 실측으로 확정한다.
+
+| method | 엔진 | CPU 단일 fit (추정) | GPU 이득 | VRAM 필요 | 비고 |
+|---|---|---|---|---|---|
+| **MultiVelo** | CPU 전용 | ~2h (원논문 124분/12-thread, 동일 데이터) | **없음**(GPU 미지원) | — | 4개 중 RAM·runtime 최대 |
+| **MultiVeloVAE** | PyTorch VAE | ~30분–2h | ~5–10× | 2–6 GB | bootstrap 반복에 GPU 유리 |
+| **MoFlow** | PyTorch Lightning | ~30분–1h | ~5–10× | 2–6 GB | |
+| **CRAK-Velo** | TensorFlow (UniTVelo 확장) | **~15h** (원논문, HSPC) | **큼**(TF GPU 가속) | 4–8 GB | **GPU 최대 수혜** |
+| RNA-only floor (scVelo dyn. / cellDancer) | CPU / DL | scVelo ~10–30분(CPU) | cellDancer만 GPU 선택 | 2–4 GB | |
+| simulator arm | CPU | 경량 | — | — | |
+
+**핵심**
+- **GPU 1대로 충분.** DL 3종(MultiVeloVAE·MoFlow·CRAK-Velo)을 GPU에서 *순차* 실행. 모델·데이터가 작아 8 GB VRAM이면 여유, 24 GB면 넉넉. VRAM은 이 규모에서 병목 아님.
+- **MultiVelo는 GPU 이득 0** → CPU(12+ thread)로 병행, GPU는 DL 메소드에 양보.
+- **GPU의 진짜 가치 = ① CRAK-Velo(15h→대폭 단축) ② bootstrap 반복**(§4D, 모든 metric을 N배) 현실화. GPU 없으면 bootstrap 횟수 축소 또는 posterior sample로 stability 대체.
+- **System RAM이 실제 제약**: 11k cells는 작지만 ATAC peak matrix + 다중 method 중간산출(.h5ad) 동시 적재 → **32–64 GB 권장(128 GB면 여유)**. CLAUDE.md의 128 GB 목표는 이 단계엔 충분.
+
+**권장 환경(1 GPU)**: GPU 8–24 GB VRAM 1대 + CPU 12+ thread + RAM 64 GB↑ + 디스크 ~200–500 GB(raw + intermediate). 이전 설계의 "GPU 필수"는 철회 — *CPU만으로도 실행 가능하되, 1 GPU가 있으면 CRAK-Velo와 bootstrap이 실용적*이 된다.
+
 ## 8. 열린 결정 / 사전체크 (P0에서 확정)
 
 - [ ] **per-cell `timepoint` 라벨**이 *통합 후* 객체에 남아있는지 — 없으면 H2의 약한 형태도 불가.
 - [ ] **license**: MoFlow(=H1 한 축, 없으면 H1 쌍 재구성), mmVelo(CC-BY 4.0 추정, repo 확인).
-- [ ] **GPU**: MultiVeloVAE 1-fit 시간/메모리 → bootstrap 반복 횟수 결정(너무 길면 posterior sample로 stability 대체).
+- [ ] **CPU runtime**: MultiVeloVAE/MoFlow 1-fit 시간/메모리 실측(11k cells면 CPU 충분 예상) → bootstrap 반복 횟수 결정(너무 길면 posterior sample로 stability 대체). GPU는 반복이 비현실적으로 길 때만 도입.
 - [ ] **CBDir+GCBDir** 단일 구현으로 동시 계산 가능 여부.
 - [ ] **CRAK-Velo proxy** 5–10 gene pilot(switch time 대비) — 통과 못 하면 axis A only 유지.
 - [ ] **simulator**: BEELINE/MultiVelo-authors sim script 우선 검토, 없으면 SERGIO를 time-event annotation 가능하게 fork.
