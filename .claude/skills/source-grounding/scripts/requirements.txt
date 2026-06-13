@@ -1,0 +1,5 @@
+ruamel.yaml>=0.18.0
+requests>=2.31.0
+pymupdf>=1.23.0
+markdown>=3.5.0
+mdx_truly_sane_lists>=1.3
