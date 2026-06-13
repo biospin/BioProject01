@@ -1,149 +1,94 @@
-# Lens — Industry: workman-2026-scbench
-
-**소스**: `workman-2026-scbench_core.md` + `sources/workman-2026-scbench.pdf`
-
----
+# Lens — Industry — scBench
 
 ## 1. Categorization
+> paper-info.yaml의 categorization 블록과 동기화.
 
-> 이 섹션은 paper-info.yaml의 categorization 블록과 동기화된다.
-
-### Domain
-
-- single-cell genomics
+### Domain (자동 추출, 검토 표시)
+- single-cell genomics (scRNA-seq)
 - AI/LLM agents
 - bioinformatics benchmarking
 
-### Use case
+### Use case (vocabulary 6개 중)
+- `internal-tool-evaluation` (vocabulary 확장 항목) — scRNA-seq 분석을 LLM agent에 위임할 때 어느 model·task·platform이 실패하는지의 정량 근거. 내부 파이프라인의 agent 선정·검증 기준으로 활용.
+- `methodology-reference` — deterministic grader + evaluation-type tiering + linter + tolerance calibration 설계를, 우리 자체 분석 자동화의 *평가 layer* reference로 차용 가능.
+- `academic-citation` — scRNA-seq agent의 현재 성능 상한·platform 의존성 수치를 본인 논문·제안서에 인용.
 
-- `academic-citation` — LLM agent를 scRNA-seq 분석에 적용할 때 현재 SOTA 성능 한계를 인용하는 표준 reference로 사용 가능
-- `internal-tool-evaluation` — 우리 분석 파이프라인에서 AI agent/LLM 선택 기준을 수립할 때 직접 참조 가능 (어떤 task·platform에서 실패하는지 정량화)
-- `technology-watch` — LLM-driven bioinformatics 분야 트렌드 모니터링: 현재 52.8% SOTA는 사실상 "아직 완전 자동화 불가" 신호
-
-### Importance
-
-- **Level**: 상
-- **Perspective**: frontier LLM agent가 scRNA-seq 분석에서 어떤 task·platform에서 실패하는지 처음으로 정량화한 benchmark로, 우리 파이프라인에 AI agent를 도입하거나 평가할 때 직접 참조 가능한 유일한 정량적 yardstick.
-
----
+### Importance (1개 종합 등급)
+- Level: 상
+- Perspective (1문장): LLM agent를 scRNA-seq 분석에 실제 적용할 때 어느 task·platform에서 실패하는지 처음으로 정량화한 benchmark이며, 우리가 분석 자동화를 도입할 때의 model 선정·검증·human-in-the-loop 설계에 직접 참조 가능.
 
 ## 2. 산업·규제·임상 리스크 (QA / RA)
 
 ### 2.1 데이터·통계적 리스크
-
-- **Benchmark 비공개 비율**: 394개 evaluation 중 30개(7.6%)만 공개. 나머지 364개는 training contamination 방지 명목으로 비공개. 우리가 자체 모델을 동일 benchmark로 평가하는 것은 불가하며, 공개 30개 subset 결과가 full benchmark 결과와 얼마나 일치하는지 검증 불가.
-  - 해석: benchmark 완전 재현·감사가 불가하여 결과를 그대로 수용해야 하는 구조. 신뢰도에 limitation 존재.
-
-- **Tissue-platform confounding**: MissionBio(hematopoietic·CCUS)와 Illumina(DRG)처럼 tissue와 platform이 완전히 confounded. platform 효과와 tissue 특수성을 분리 불가. 특히 MissionBio의 낮은 성능(26.4%)이 platform 비표준성 때문인지 임상 샘플 희귀성 때문인지 판단 불가.
-
-- **Replicate 수**: K=3은 최소 통계 충분성. per-evaluation mean이 {0, 1/3, 2/3, 1} 4개 값만 취해 micro-level 추정 정밀도 낮음. Task category 하위 분석(특히 Trajectory, n=7)은 CI가 너무 넓어 결론 도출 어려움.
-
-- **Evaluation type 비율 미공개**: Scientific / Procedural / Observational 분포가 공개되지 않아 aggregate accuracy의 해석 편향 가능성 배제 불가.
+- **표본 불균형**: task category가 매우 불균형(Cell Typing 118 vs Trajectory 7). 우리가 trajectory/velocity 분석을 agent에 맡길 때의 신뢰도는 이 benchmark로 거의 알 수 없음(`미제공:` trajectory model별 분해 없음).
+- **단일 harness·3 replicate**: harness ablation 없음 → model 정확도가 model 능력인지 harness×model 상호작용인지 분리되지 않음. 운영 model 선정 시 *우리 harness에서 재측정* 필요.
+- **grading 민감도**: tolerance sensitivity analysis 부재. ranking이 grader 설계에 얼마나 robust한지 검증 안 됨.
+- **수치의 시점성**: model lineup(Opus 4.6/4.5, GPT-5.2/5.1, Grok-4.1/4, Gemini 2.5 Pro)과 cost·latency 수치는 빠르게 노후화. 절대 정확도보다 *상대 패턴*(task 난이도 순서, platform swing)이 더 오래 유효.
 
 ### 2.2 임상·기술적 제약
-
-- **본 자료의 성격**: scBench는 임상 진단/치료제 개발 도구가 아닌 AI agent 평가 benchmark. 직접적인 임상 적용 대상이 아님.
-- **계산 자원**: mini-SWE-agent harness 실행 시 LLM API 비용 발생. 394 evaluations × K=3 replicates × 8 모델 = 9,456 실행. frontier model 비용은 상당함. 우리가 자체 평가 시 subset만 가능.
-- **LatchBio 종속성**: 현재 benchmark 운영이 LatchBio에 종속. 서비스 중단·정책 변경 시 외부 연구자의 접근이 제한될 수 있음.
+- **임상 직접 적용성 낮음**: 이 자료는 임상 진단 도구가 아니라 연구용 분석 agent의 평가 benchmark. IVD/LDT/SaMD 같은 임상 pathway와 직접 연결 안 됨.
+- **계산 자원**: agent 실행은 frontier model API + isolated workspace 의존. cost/latency는 Figure 3에 정량화(예: Opus 4.6 latency 303s/eval). 대량 평가 시 API 비용 누적.
+- **데이터 의존성**: eval은 AnnData `.h5ad` 기반. 우리 HSPC multiome 데이터에 그대로 쓰려면 별도 변환·task 정의 필요.
 
 ### 2.3 규제·QA·RA 관점
-
-- **규제 pathway 해당 없음**: scBench는 AI 평가 benchmark이며, FDA IVD/SaMD/LDT 등 직접적 규제 pathway 해당 없음.
-  - 해석: 단, 우리가 AI agent를 임상 진단 보조 목적으로 사용할 경우, scBench 성능 데이터(52.8% 최고 정확도)는 "AI가 아직 임상 의사결정에 단독 사용 불가"임을 지지하는 근거로 활용 가능.
-- **IRB 해당 없음**: 공개 sequencing dataset 사용. 신규 인간 샘플 수집 없음.
-- **Reproducibility for audit**: 코드(latchbio/scbench)와 30개 canonical evaluation은 GitHub에 공개(Creative Commons Attribution 4.0). 나머지 364개 evaluation은 재현·감사 불가.
+- **regulatory pathway**: `미제공:` 본 자료는 analytical/clinical validation(정밀도, sensitivity/specificity 등) 데이터를 제시하지 않는다 — 임상 검증 자료가 아니라 연구 능력 측정 benchmark.
+- **audit 관점 시사**: 오히려 *deterministic grading + linter + tolerance calibration* 구조는, 우리가 분석 자동화에 audit-ready 검증 layer를 붙일 때의 설계 참고가 된다. agent 출력의 pass/fail을 재현적으로 기록하는 틀.
+- **human oversight 권고**: 저자 결론(§3)이 "중간 결과의 엄격한 검증과 사람 감독 없이는 자율 신뢰 불가"라고 명시 → 우리가 agent를 도입할 때 SOP에 human-in-the-loop를 명문화할 근거.
 
 ### 2.4 권위·신뢰 가중치
-
-- **출처**: arXiv preprint (2026-02-09). 동료 심사 미완료.
-  - 1차 출처: arXiv 2602.09063v1 (저자 직접 제출)
-  - 2차 출처: 없음 (인용·뉴스 보도 여부 미확인)
-- **Peer review 여부**: 미완료. preprint 결과를 정책 결정에 인용 시 caveat 명시 필요.
-- **저자 이해상충 (COI)**:
-  - 전원 LatchBio 소속. LatchBio는 bioinformatics SaaS platform 기업.
-  - scBench는 사실상 LatchBio의 AI agent 인프라(Latch Copilot 등)를 홍보하는 benchmark 역할을 할 수 있음.
-  - 해석: Claude Opus가 최고 성능을 기록한 결과의 방향성은 LatchBio의 파트너십·제품 방향과 align될 수 있음. 모델 순위는 참고용으로만 사용하고, 자체 검증 권장.
-- **Funding source**: 미제공. LatchBio 내부 자원으로 추정. 공공 NIH 지원 없음.
-  - 해석: corporate-sponsored benchmark. 결과의 자체 검증 필요성이 높음.
-
----
+- `1차 출처:` 원저자(LatchBio)의 1차 benchmark 결과.
+- **Peer review 여부**: preprint, "Under review" — peer-reviewed 아님. 가중치 하향.
+- **저자 이해상충(COI)**: 저자 전원 LatchBio 소속. LatchBio는 bioinformatics 분석 플랫폼 사업체로 추정되며, 자사 agent/플랫폼 포지셔닝과 이해관계가 있을 수 있음(`해석:`). benchmark 자체는 공개 model을 평가하므로 직접적 자사 우대는 본문에서 드러나지 않으나, framing(agent로 분석 자동화의 필요성)은 사업 방향과 align.
+- **Funding source**: `미제공:` 본문에 funding statement 없음.
 
 ## 3. BD value & 상용화 가능성
 
 ### 3.1 BD-opportunity (외부 자산 정찰)
-
-- **LatchBio**: 민간 bioinformatics SaaS 기업. scBench는 LatchBio Copilot(AI agent 제품)의 마케팅 자산 역할. 라이선싱 대상 기술이라기보다 경쟁사·파트너 관찰 목적에 가까움.
-- **경쟁사 관찰**: Genentech, Broad Institute, 기타 genomics 소프트웨어 회사들이 유사 AI agent를 개발 중이며, scBench 결과를 자사 agent 검증 근거로 활용 시도 가능. 우리도 동일 관점에서 참고.
-- **공동연구 후보**: 해당 없음. LatchBio는 독립 상업 기업이며 공동연구 신호 없음.
-- **시장 영향**: AI-driven scRNA-seq 분석 소프트웨어 시장(Seurat/Scanpy 기반 SaaS, LLM agent 통합 플랫폼)에서 "현재 SOTA 정확도 ~50%"라는 수치가 시장 성숙도·투자 판단에 영향을 줄 수 있음.
+- **LatchBio 관찰 가치**: scRNA-seq + spatial 두 benchmark(scBench, SpatialBench)를 보유 → 분석 agent 평가 영역에서 선점 포지션. 우리가 분석 자동화 제품/내부 도구를 고려한다면 경쟁사/협력 후보로 모니터링 가치.
+- **공개 자산 가능성**: paper-info.yaml에 GitHub(latchbio/scbench)가 url-only로 기록("framework/graders/linter/harness, 30 canonical evals public"). `검토필요:` 단 이 공개 범위는 본 PDF에서 직접 확인되지 않음 — 실제 repo 공개 여부·license 확인 후 BD 판단.
 
 ### 3.2 Commercialization-candidate (자체 제품화)
-
-- **직접 제품화 가능성**: 낮음. scBench 자체는 benchmark framework. 우리가 제품화할 기술 자산이 아님.
-- **간접 활용**:
-  - SW 카테고리: 우리가 자체 scRNA-seq AI agent를 개발·평가할 때 scBench의 공개 30개 evaluation을 내부 QA 테스트셋으로 활용 가능.
-  - Service 카테고리: AI agent bioinformatics 서비스를 외부에 제공할 경우, scBench 공개 subset 기준 성능 인증은 차별화 포인트가 될 수 있음.
-- **TRL**: 해당 없음 (benchmark → 자체 제품화 경로 없음).
-- **IP 자유도**: Creative Commons Attribution 4.0. 자유롭게 활용 가능.
+- 직접 제품화 후보로는 낮음. 이 자료 자체는 평가 도구이지 우리가 팔 Dx/assay/therapeutic이 아님.
+- 단 **SW 관점 간접 가치**: deterministic grader 프레임을 우리 분석 SW의 *내부 회귀 테스트/QA harness*로 자체 구현하는 것은 가능(IP 자유도 높음 — 개념은 공개).
 
 ### 3.3 우리 파이프라인과의 fit
-
-- **현재 dataset 호환**: HSPC 10x Multiome은 scBench 평가 플랫폼(Chromium이 가장 근접)과 부분 일치. 단, MissionBio(Tapestri)처럼 DNA+protein multiome은 아직 scBench 지원 부족.
-- **자원 가능성**: 공개 30개 canonical evaluation은 현재 팀 자원으로 실행 가능. 전체 394개는 접근 불가(비공개).
-- **팀 역량**: scBench 공개 subset을 활용해 우리 AI agent(또는 Claude API 기반 파이프라인)를 내부 평가할 수 있음.
-- **전략적 fit**: AI-augmented scRNA-seq 파이프라인을 구축할 경우 → "어떤 task에서 LLM이 실패하는지 이미 알고 있다"는 것이 설계 우선순위를 결정하는 데 직접 사용 가능.
-  - **Cell typing & DE가 가장 어렵다(34.9%, 27.0%)**: 이 두 단계에 인간 전문가 검토 레이어를 유지해야 함.
-  - **Normalization은 비교적 쉽다(70.4%)**: 자동화 먼저 적용 가능한 단계.
+- **Dataset 호환**: 부분. 우리 HSPC 10x Multiome(GSE209878)은 Chromium platform → scBench에 Chromium eval 60개 포함되어 *간접 참조* 가능. 단 scBench는 scRNA-seq 단독이고 우리는 multiome(ATAC+RNA)이라 task 정의가 그대로 맞지는 않음.
+- **팀 역량**: 우리 팀이 grader/linter 컨셉을 자체 구현할 역량은 충분(코드 중심 workstream).
+- **전략 align**: 우리 핵심 주제(chromatin-RNA lag)와 *직접* align은 약함. agent 분석 자동화를 도입할 경우의 *운영 의사결정*에 align.
 
 ### 3.4 후속 BD·제품 액션 후보
-
-- **[scBench 공개 subset 내부 평가 실행]**
-  - 누가: 바이오인포매틱스 팀
-  - 언제: 지금 (이번 스프린트 또는 다음 달)
-  - 자원: GitHub(latchbio/scbench), Claude API, 로컬 컴퓨팅 환경
-  - 성공 기준: 30개 canonical eval에서 우리 Claude 기반 agent의 accuracy 측정 완료, 내부 보고서 1개
-
-- **[AI agent 적용 우선순위 결정]**
-  - 누가: R&D 리드
-  - 언제: 다음 분기 내 AI agent 도입 논의 시
-  - 자원: 이 분석 문서 1개 + scBench 결과 참고
-  - 성공 기준: "normalization·QC는 AI agent 자동화, cell typing·DE는 human-in-the-loop 유지" 팀 내 결정
-
-- **[LatchBio 동향 모니터링]**
-  - 누가: 기술 트렌드 담당자
-  - 언제: 장기 (분기별 1회 체크)
-  - 자원: arXiv alert, GitHub watch
-  - 성공 기준: scBench full suite 공개 또는 Latch Copilot 기술 업데이트 캐치
-
----
+- GitHub repo 공개 여부·license 확인
+  - 누가: 본인(technical)
+  - 언제: 지금
+  - 자원: 30분 web 확인
+  - 성공 기준: repo 접근 가능 여부 + license 확정 → 자체 grader 프레임 차용 가능성 판단.
+- 내부 agent 평가 mini-harness PoC
+  - 누가: 본인 + 하네스 담당(지용기)
+  - 언제: 다음 분기
+  - 자원: 우리 Chromium/multiome 데이터 1~2개로 deterministic grader 컨셉 적용
+  - 성공 기준: 우리 데이터 단계(QC/normalization)에서 agent pass/fail을 재현적으로 채점하는 PoC 동작.
 
 ## 4. 전문가 코멘트
 
 ### 4.1 종합 등급
-
-- **Level**: 상
-- **Perspective**: AI agent를 scRNA-seq 파이프라인에 도입·평가하려는 모든 팀이 한 번은 읽어야 하는 정량적 baseline. 현재 SOTA가 52.8%라는 수치 자체가 "AI 완전 자동화는 아직 무리"임을 명확히 함.
-- **등급 근거**:
-  - scRNA-seq AI agent 성능을 처음으로 정량화한 benchmark. 경쟁 도구 없음.
-  - 플랫폼 효과(32.7 pp)가 모델 효과(23.6 pp)보다 크다는 발견 → platform-aware agent 설계 필요성의 직접 근거.
-  - Cell typing(34.9%)·DE(27.0%)의 낮은 성능 → 자동화 전략에서 어디에 인간 전문가를 유지해야 하는지 명확한 map 제공.
-  - GitHub 공개(30 eval), CC BY 4.0 → 즉시 내부 활용 가능.
-  - 단점: preprint·LatchBio COI·benchmark 비공개(93%) 구조. 인용 시 caveat 명시 필요.
+- Level: 상
+- Perspective: LLM agent의 scRNA-seq 분석 능력을 task·platform 두 축으로 처음 정량화 — 분석 자동화 도입 의사결정의 1차 근거.
+- 등급 근거:
+  - frontier agent의 현재 상한이 52.8%로 *자율 신뢰 불가* 영역임을 정량 확인(§2.2) → 우리 SOP에 human-in-the-loop를 넣을 직접 근거.
+  - platform 효과(32.7 pp)가 model 효과(23.6 pp)를 초과(§2.4) → 우리 데이터 platform(Chromium)에서 별도 재측정 필요성의 근거.
+  - deterministic grader + evaluation-type tiering + linter + tolerance calibration이라는 *재사용 가능한 평가 설계*(§4.1–4.4)를 제공.
+  - 단 우리 핵심 주제(chromatin-lag/velocity)와 직접 관련은 낮고, trajectory task는 7개로 빈약.
 
 ### 4.2 활용 우선순위
-
-- **지금**: 공개 30개 canonical evaluation 내려받아 내부 AI agent 평가에 활용. AI agent 도입 의사결정 자료로 이 분석 문서 공유.
-- **다음 분기**: AI-augmented 파이프라인 설계 시 "cell typing·DE는 semi-automated" 아키텍처 결정에 직접 반영.
-- **장기**: scBench full suite 공개 시 재평가. LatchBio 신규 benchmark (spatial·multi-omic 통합) 모니터링.
+- 지금: GitHub 공개 여부 확인 + 평가 설계(grader/linter/tolerance) 메모.
+- 다음 분기: 내부 agent 평가 mini-harness PoC(우리 데이터).
+- 장기: 분석 자동화 제품/내부 도구 도입 시 model 선정·검증 기준 문서의 reference.
 
 ### 4.3 발표·미팅에서 들이밀 시점
-
-- **사내 R&D 리뷰**: AI agent 도입 필요성 및 한계를 논의할 때 — "현재 최고 모델도 50% 정확도"를 수치로 제시
-- **BD 미팅**: AI-driven genomics 서비스 제안 시 — "cell typing·DE에서 AI agent는 아직 신뢰 부족, 인간 전문가 필요"라는 포지셔닝 근거
-- **사내 뉴스레터 / 동향 공유**: LLM-bioinformatics 트렌드 업데이트 시 이 benchmark 결과를 스냅샷으로 소개
+- 사내 R&D 리뷰: "분석을 LLM agent에 위임할 때 어디까지 믿을 수 있는가"를 논의할 때 1차 근거 자료.
+- 본인 논문/제안서 introduction: scRNA-seq agent의 한계 정량화 인용.
 
 ### 4.4 추가 탐색 필요 영역
-
-- 질문: LatchBio의 Latch Copilot이 실제 상업 제품으로 scBench에서 어떤 성능을 내는지 확인 필요. 자사 benchmark에서 자사 제품을 평가하지 않은 것은 의도적 회피인지 설계상 limitation인지?
-- 질문: 30개 canonical evaluation을 우리 Claude API 기반 파이프라인으로 돌렸을 때 scBench 논문 결과와 얼마나 일치하는지 — 재현 가능성 자체 검증 필요.
-- 질문: scBench가 peer review 통과 후 (Nature Methods / Bioinformatics 등) 게재되면 citation weight가 올라감. 현재 preprint 상태의 인용은 caveat 동반 필요.
+- 질문: latchbio/scbench repo가 실제 public이고 license가 무엇인지? 우리가 grader 컨셉을 차용할 수 있나?
+- 질문: LatchBio의 사업 모델(분석 플랫폼/agent 제품)은? COI 가중치와 BD 관찰 우선순위에 반영.
+- 질문: multiome(ATAC+RNA) 대상 agent benchmark가 있는가? 없으면 우리 데이터가 차별적 자산이 될 수 있음.

@@ -1,6 +1,6 @@
 # Topic: benchmarking
 
-마지막 갱신: 2026-06-12
+마지막 갱신: 2026-06-13
 
 ## Papers (primary topic으로 등록된 것)
 
