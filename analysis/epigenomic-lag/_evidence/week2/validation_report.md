@@ -32,6 +32,26 @@
 | C11 | supported (full-analysis, biology, 정성적) | `@safi2022chromatinpriming` PDF: commitment에 앞서 stem/lineage program 동시 보유하는 CD9high cluster 3, lympho-myeloid 최초 transition point가 cluster 3에 mapping, distal homogeneity 0.434 vs 0.246, scRNA cluster 3 enrich p<10⁻⁵. `@martin2023hspcchromatin` PDF: HSC-primed CRE <25% 유지, HSC-unique 3,026 peak erythroid GO, CRISPRi CD115 enhancer p<.0001(CD11b enhancer ns). 둘 다 같은 HSPC 축에서 chromatin priming 선행을 정성적으로 supported. | **Safi는 paired multiome 아님**(scATAC↔scRNA 다른 batch projection), transition 축이 pseudotime. **Martin은 paired RNA 없음**(외부 GEXC) + bulk ATAC. 둘 다 시간 단위 gene별 lag 정량 안 함. 둘 다 mouse(human cross-species 미확정). Safi GEO accession 불일치·2023 erratum. | 높음 — "priming 선행"(정성)을 "gene별 lag 정량/인과 근거"로 확대하면 association→causality + modality 비약. | "lag 가설의 생물학적 plausibility/배경"으로 한정. **반드시 동반**: "Safi scATAC 단독·pseudotime, Martin paired RNA 없음 → lag 정량 직접 근거 아님". `검토필요:` Safi GEO accession(GSE173075/76 vs GSE148746)·2023 erratum; cross-species. |
 | C8 | partially-supported (with concrete transferability map) | DeepKINET PDF 정밀 패스 완료. *Transfer 가능*: (i) 2-stage decoupling 학습 전략 (Stage 1 VAE freeze → Stage 2 cell-specific rate decoder, lens-academic §3 PDF p.13–14, core p.111). (ii) 100-repeat multi-method box-plot evaluation + *negative correlation = fail* rule (core p.13 Fig 3b). (iii) Cluster-level set-vs-estimated scatter benchmark template. *Partial*: SERGIO-style chromatin-aware simulator는 *재설계 필요* — DeepKINET은 rate (1/time) 단위 inject, lag는 time 단위 inject (lens-academic §3 PDF p.121). *Transfer 불가*: (i) scEU-seq/scNT-seq RNA labeling 자체는 *chromatin opening event를 label하지 않음* (lens-academic §3 PDF p.114) — single-cell chromatin labeling 표준 부재. (ii) Dynamo-derived rate를 *chromatin lag ground truth*로 차용 불가 — MultiVelo switch time을 차용하면 *circular validation*. | concrete 4-bullet transferability map으로 정리됨; 잔여 gap은 chromatin-aware simulator 설계와 chromatin labeling 표준 부재 | 낮음 (이전 중간 → 명시화로 risk 감소) | "validation design reference 제한" → "framework borrow 가능 / labeling ground truth 불가" 양면으로 표현. 후속: chromatin-aware simulator 설계 (BEELINE, MultiVelo authors simulation script 후보 검토) + DeepKINET-Multiome 형태의 chromatin-aware extension 모니터링. |
 
+## 2b. Status Enum + Novelty (Week3 rubric 정렬)
+
+Week3 과제 안내(박상준)의 Validation 기록 형식에 맞춰, §2의 내부 verdict를 과제 공통 **Status enum**(`Valid` / `Needs Evidence` / `Overstated` / `Unclear` / `Rejected`)으로 매핑하고, 6기준 중 누락돼 있던 **Novelty**(단순 요약이 아닌 새 insight인가, 상/중/하)를 claim별로 명시한다. Week4 Agent 구현 시 출력 형식 통일(토론질문 ⑤)을 위한 정렬 layer다. 내부 verdict(`supported` 등)는 §2에 그대로 유지.
+
+| claim_id | 내부 verdict (§2) | **Status (과제 enum)** | **Novelty** | 조건/메모 |
+|---|---|---|---|---|
+| C1 | supported | **Valid** | 중 | field 재구조화 + cellDancer/DeepVelo predecessor lineage 확인 (신규 발견보다 구조화) |
+| C2 | partially-supported | **Overstated** | 중 | "적합하다" 단정 → `해석:`/병렬 검증 전략으로 하향 |
+| C3 | supported | **Valid** | 하~중 | gene-level c aggregation 한계 — field 공통, 잘 알려진 한계 |
+| C4 | supported | **Valid** | 하 | causal validation 부족 — field 전반 bottleneck (널리 인정됨) |
+| C5 | partially-supported | **Needs Evidence** | 상 | head-to-head 부재라는 구체 gap. 단 "실험"→"computational benchmark" 표현 + 우리 data benchmark 미수행 |
+| C6 | needs-source-check | **Unclear** | 상 | hybrid workflow 신규 아이디어지만 output compatibility 미검증 → follow-up only |
+| C7 | supported (preprint-tier) | **Valid** | 상 | decoder-level peak resolution(≠per-peak ODE rate) 구분 명확. 잔여: preprint 출간 모니터링 |
+| C8 | partially-supported | **Needs Evidence** | 중~상 | validation framework는 transfer 가능(✅), chromatin-aware simulator 재설계·labeling ground truth는 미해결(⚠️/❌) |
+| C9 | supported (full-analysis) | **Valid** | 상 | 동일 GSE209878 HSPC head-to-head 우위는 supported. **조건**: lag 명시 출력 부재 → region kinetic 후처리 필요(확대 시 Overstated) |
+| C10 | supported (full-analysis) | **Valid** | 중 | "no single method superior" + 우리 HSPC=Dataset12 직접. **조건**: MultiVelo `rna_only=True` → multi-omic 미측정, RNA-only 순위만 차용 |
+| C11 | supported (full-analysis, 정성적) | **Valid** | 하~중 | chromatin priming 선행의 생물학적 plausibility(배경). **조건**: Safi scATAC 단독·Martin paired RNA 없음 → gene별 lag 정량 근거 아님, mouse |
+
+**요약**: Valid 7 (C1·C3·C4·C7·C9·C10·C11, 단 C9–C11은 조건부) / Needs Evidence 2 (C5·C8) / Overstated 1 (C2) / Unclear 1 (C6) / Rejected 0. Novelty 상: C5·C6·C7·C9, 중: C1·C2·C8·C10, 하~중: C3·C11, 하: C4. → 설득력↑(Valid)이면서 Novelty 상인 **C7·C9**가 가장 강한 insight, Novelty 상이지만 미검증인 **C5·C6**가 다음 분석 우선순위.
+
 ## 3. Missing Assumptions
 
 - claim: C2
