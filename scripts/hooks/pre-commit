@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# pre-commit — .claude/skills mirror가 root skills/ 와 일치하는지 검증(block).
+#
+# 설계: root skills/ = 유일 source, .claude/skills = 파생 mirror (scripts/sync-skills.sh 로만 갱신).
+# 이 훅은 *수정하지 않고 검증만* 한다 — 어긋나면 커밋을 막고 sync 명령을 안내.
+#
+# 설치 (per-machine, .git/hooks 는 공유 안 됨):
+#   cp scripts/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# 또는:
+#   git config core.hooksPath scripts/hooks
+#
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+if ! "$ROOT/scripts/sync-skills.sh" --check >/dev/null 2>&1; then
+  echo "✗ pre-commit: .claude/skills 가 skills/ 와 어긋나 있습니다." >&2
+  echo "  먼저 동기화하세요:  scripts/sync-skills.sh && git add .claude/skills" >&2
+  exit 1
+fi
