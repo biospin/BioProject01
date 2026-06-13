@@ -3,7 +3,7 @@
 ## Executive Summary
 
 - **무엇**: scRNA-seq 분석을 수행하는 LLM agent(코드를 쓰고 도구를 호출하며 목표를 향해 반복하는 frontier model)를 평가하는 benchmark. 실제 워크플로우에서 추출한 394개의 *검증 가능한(verifiable)* 문제 + deterministic grader로 구성되며, agent가 messy한 real-world 데이터에서 생물학적 결과를 재현할 수 있는지를 pass/fail로 채점한다.
-- **모델 / 방법**: 각 문제는 (1) 분석 단계 직전의 데이터 snapshot(주로 AnnData `.h5ad`), (2) 자연어 task prompt(정확한 JSON 출력 schema 포함), (3) agent의 구조화된 JSON 출력을 채점하는 deterministic grader 3요소로 이루어진다. grader는 5개 family로 분기하고($\mathrm{NumericTolerance}$, $\mathrm{DistributionComparison}$ 등), 각 평가는 scientific / procedural / observational 3개 유형 중 하나로 분류되어 tolerance 폭을 결정한다. 통합 점수는 8개 frontier model을 mini-SWE-agent harness 아래에서 3 replicate로 돌려 산출한다.
+- **모델 / 방법**: 각 문제는 (1) 분석 단계 직전의 데이터 snapshot(주로 AnnData `.h5ad`), (2) 자연어 task prompt(정확한 JSON 출력 schema 포함), (3) agent의 구조화된 JSON 출력을 채점하는 deterministic grader 3요소로 이루어진다. grader는 5개 family로 분기하고($\mathrm{NumericTolerance}$ / $\mathrm{MultipleChoice}$ / $\mathrm{MarkerGenePrecisionRecall}$ / $\mathrm{LabelSetJaccard}$ / $\mathrm{DistributionComparison}$), 각 평가는 scientific / procedural / observational 3개 유형 중 하나로 분류되어 tolerance 폭을 결정한다. 통합 점수는 8개 frontier model을 mini-SWE-agent harness 아래에서 3 replicate로 돌려 산출한다.
 - **핵심 결과**:
   - ① 8개 frontier model 전체 정확도 29–53% 범위. 최고 Claude Opus 4.6 = 52.8% (95% CI 48.3–57.2), 최저 Gemini 2.5 Pro = 29.2%. best–worst spread 23.6 pp.
   - ② Task 난이도 gradient 일관: Normalization이 가장 쉬움(cross-model mean 70.4%), Differential Expression이 가장 어려움(mean 27.0%). 8개 중 7개 model이 동일 난이도 순서.
@@ -55,7 +55,12 @@
 
 ### 확률 / 통계학적 구조
 
-- **Grading model**: 확률 generative model이 아니라 deterministic rule 기반 채점. 출력 모양에 맞는 5개 grader family가 있다. 본문에 명시된 예: cell count류에는 $\mathrm{NumericTolerance}$, cell type proportion류에는 $\mathrm{DistributionComparison}$ (Methods §4.1, §4.4).
+- **Grading model**: 확률 generative model이 아니라 deterministic rule 기반 채점. 출력 모양에 맞는 **5개 grader family**가 있다 (Methods §4.5, 정식 spec은 Appendix C):
+  - $\mathrm{NumericTolerance}$ — cell count·expression level·QC metric 등 수치. absolute($|x-x^*|\le\epsilon$) / relative($|x-x^*|/|x^*|\le\epsilon$) / minimum($x\ge x_{\min}$) / maximum($x\le x_{\max}$) + asymmetric bound의 4(+)개 tolerance mode. 여러 field 독립 검사, 전부 pass해야 함. string→float 강제(실패 시 fail).
+  - $\mathrm{MultipleChoice}$ — 이산 답을 1개 이상의 정답 옵션과 대조. trim + 대문자화, case-insensitive.
+  - $\mathrm{MarkerGenePrecisionRecall}$ — gene list를 canonical marker set과 recall@K(회수율) + precision@K로 대조. gene명 소문자화. recall threshold 보통 $\ge0.50$; precision 기본 $\ge0.60$이나 novel DE gene을 벌하지 않으려 0으로 두기도. cell type별 multi-population 모드 지원.
+  - $\mathrm{LabelSetJaccard}$ — 비순서 set 예측(예: cell type label)을 Jaccard $J(A,B)=|A\cap B|/|A\cup B|$로, 기본 pass threshold 0.90. 누락·초과 라벨 동일 패널티. case-sensitive.
+  - $\mathrm{DistributionComparison}$ — multi-category 비율(예: cell type proportion). 각 ground-truth category를 absolute tolerance(예: $\pm5$ percentage point)로 독립 검사, 전 category pass. 누락 category는 자동 fail, 초과는 무시. 소문자화. all-must-pass라 희소 cell type 무시 불가.
 - **Tolerance 결정**: 각 문제는 scientific / procedural / observational 3개 *evaluation type* 중 하나로 분류되고, 이 유형이 tolerance를 얼마나 공격적으로 풀어줄지를 지배한다 (Methods §4.3). scientific은 가장 넓은 tolerance(method·parameter 모두 agent 재량), procedural은 method가 고정되어 더 tight, observational은 verifiability/anti-shortcut 요건을 완화.
 - **Tolerance calibration**: 같은 데이터에 대해 *여러 valid method·parameter*로 분석을 돌려 acceptable answer의 범위를 잡고, 그 범위를 tolerance로 설정한다 (Methods §4.1). 저자가 parameter를 유일하게 명시하지 않은 경우(예: QC threshold 미보고)는 standard default를 쓰고 tolerance를 넓힌다.
 - **집계 통계**: 통합 정확도는 8 model × 394 eval × 3 replicate를 *two-stage aggregation*으로 묶고, 95% CI를 $t$-분포로 계산한다 (Figure 2 caption).

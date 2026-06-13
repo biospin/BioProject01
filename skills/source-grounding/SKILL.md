@@ -471,6 +471,21 @@ python3 skills/source-grounding/scripts/fetch_sources.py \
 3. `sources/paper.pdf`로 복사.
 4. fetch_sources.py로 supplementary 자동 다운로드.
 
+### 5.1.1 PDF 완전 읽기 검증 (필수 — 절단 오판 방지)
+
+분석 전에 PDF를 **끝까지** 읽었는지 반드시 확인한다. 일부만 읽고 "PDF가 절단됐다 / 뒷 섹션이 없다"고 잘못 결론 내리는 오류를 막는 규칙:
+
+1. **page count는 `file`이 아니라 pymupdf로 확정한다.** `file paper.pdf`의 "N pages"는 linearized·incremental PDF(arXiv 등)에서 *틀린 값*을 보고할 수 있다. 항상:
+   ```bash
+   python3 -c "import fitz; print(len(fitz.open('<path>')))"
+   ```
+   로 실제 페이지 수를 구한다.
+2. **전 페이지를 읽는다.** Read의 `pages`로 1..N 전체를 ≤20p 배치로 나눠 읽는다 (>10p PDF는 `pages` 지정 필수). 일부 페이지만 보고 분석을 시작하지 않는다.
+3. **절단/누락 red-flag 규칙**: 추출 텍스트가 *문장 중간에서 끊기거나*, 본문이 참조하는 `§X`·`Appendix`·`Figure/Table N`이 "안 보인다"고 느껴지면 → 이는 *PDF 결함이 아니라 읽기 누락* 신호로 먼저 간주한다. ① pymupdf page count 재확인, ② 안 읽은 페이지 읽기. **pymupdf page count로 확인하기 전에는 "PDF 절단/미제공"이라고 단정하지 않는다.** 실제로 PDF가 손상/불완전한 경우에만(다운로드 크기 0, 페이지 열기 실패 등) `검토필요:`로 표시한다.
+4. (권장) 확정한 page count를 분석 메모나 provenance에 기록해 재현 시 대조 가능하게 한다.
+
+> 사례(2026-06-13): `workman-2026-scbench`에서 `file`이 "8 pages"로 오보 → 분석이 §4.4에서 멈춰 "§4.5 grader 5종 누락(미제공)"으로 잘못 표기. 실제는 17쪽 완전본. pymupdf page count 확인으로 즉시 드러남.
+
 ### 5.2 DOI나 URL만 주어진 경우
 
 1. DOI/URL에서 메타데이터 fetch (Crossref + publisher landing page).

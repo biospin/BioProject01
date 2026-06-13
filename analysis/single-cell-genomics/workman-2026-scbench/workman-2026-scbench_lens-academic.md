@@ -25,7 +25,7 @@
 - **연결이 약한 주장**: "model 차이가 judgment-heavy 단계에 집중된다"는 결론.
   - 현재 근거: DE·cell typing에서 spread가 큼.
   - 더 필요해 보이는 근거: 어떤 종류의 오류(잘못된 test 선택 vs marker gene 누락 vs 통계 해석 오류)가 차이를 만드는지의 error taxonomy. 현재는 단계 라벨까지만.
-- **`검토필요:`**: PDF가 §4.4 중간에서 절단되어 §4.5(grader family 5종 상세)가 누락. grader family가 5개라 명시됐으나 본문에서 이름이 확인되는 것은 2개($\mathrm{NumericTolerance}$, $\mathrm{DistributionComparison}$). 나머지 3개의 채점 로직을 보지 못한 채 grading 신뢰성을 완전히 평가하기 어렵다.
+- **grading 로직 가시성 (해소됨)**: 5개 grader family가 §4.5에 모두 명시됨 — $\mathrm{NumericTolerance}$ / $\mathrm{MultipleChoice}$ / $\mathrm{MarkerGenePrecisionRecall}$ / $\mathrm{LabelSetJaccard}$ / $\mathrm{DistributionComparison}$ (정식 spec Appendix C). 채점 로직은 auditable하다. 남는 academic 한계는 *tolerance/threshold 민감도 분석 부재*(위 grading robustness 항목)이지 grader 가시성이 아니다. (초기 분석의 "PDF가 §4.4에서 절단" 서술은 page count 오판에 따른 오류 — 실제 PDF는 17쪽 완전본.)
 
 ### 정리되지 않은 질문
 - 질문: tolerance를 흔들면 model ranking이 보존되는가? (grading robustness)
