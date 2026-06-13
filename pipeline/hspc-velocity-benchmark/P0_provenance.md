@@ -7,16 +7,27 @@
 
 ## 1. 데이터 출처 (GSE209878)
 
-- **GEO**: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE209878 (PMID 36229609). Human HSPC, paired 10x Multiome, day0+day7, single donor.
-- **확정 규모**(repo `li-2023-multivelo_core.md`): 11,605 cells · 1,000 genes(joint filtered) · 936 variable fit · 11 Leiden cluster · ~3,939 peaks.
-- **다운로드 경로 2가지**:
-  1. *raw/processed (1차)* — GEO GSE209878 supplementary (CellRanger ARC 출력 + 저자 제공 처리 객체).
-     ```bash
-     # GEO supplementary 묶음 (실제 파일명은 GEO 페이지에서 확인)
-     # 예: GSE209878_RAW.tar, *_matrix.h5, *_atac_fragments.tsv.gz 등
-     ```
-  2. *MultiVelo tutorial 전처리본 (빠른 시작)* — MultiVelo(`welch-lab/MultiVelo`) HSPC 튜토리얼이 제공하는 전처리 AnnData/loom. spliced/unspliced + ATAC peak이 이미 정리돼 있어 P1 진입이 빠름. `검토필요:` 정확한 호스팅 URL은 MultiVelo repo 튜토리얼에서 확정.
+- **GEO**: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE209878 (PMID 36229609). Human HSPC, paired 10x Multiome, single donor (mobilized CD34+). MultiVelo 원논문 데이터.
+- **확정 규모**(repo `li-2023-multivelo_core.md`): 통합 후 11,605 cells · 1,000 genes(joint filtered) · 936 variable fit · 11 Leiden cluster · ~3,939 peaks. (아래는 통합 전 *raw per-sample*.)
+- **2 sample = 2 timepoint** (GSM title로 확정 2026-06-13): `3423-MV-1` = **day0** ("RNA HSPC, 0th day, rep1", GSM6403408/09), `3423-MV-2` = **day7** (GSM6403410/11). → timepoint는 *sample 정체성*으로 보존되어 통합 객체 컬럼 유실과 무관(H2 게이트 부분 해소).
+
+### 재현 다운로드 (다른 PC에서도 그대로)
+```bash
+bash pipeline/hspc-velocity-benchmark/scripts/download_data.sh   # → data/GSE209878/MV-1, MV-2 (~1.9 GB)
+```
+스크립트가 받는 핵심 파일 (sample당, **fragments 9.4GB는 불필요** — peak count가 matrix에 이미 포함):
+
+| 파일 | 내용 | 크기 | URL (base) |
+|---|---|---|---|
+| `matrix.mtx.gz` | CellRanger ARC 통합 matrix (**GEX + ATAC Peaks**) | MV-1 582MB / MV-2 816MB | `…/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-{1,2}_matrix.mtx.gz` |
+| `features.tsv.gz` / `barcodes.tsv.gz` | feature(=gene+peak) · cell 식별자 | 3MB / <1MB | 같은 GSE suppl |
+| `feature_linkage.bedpe.gz` | peak–gene linkage | 소 | 같은 GSE suppl |
+| `gex.loom.gz` | velocyto spliced/unspliced (velocity 입력) | MV-1 164MB / MV-2 274MB | `…/samples/GSM6403nnn/GSM640340{8,→MV-1}, {GSM6403410→MV-2}/suppl/` |
+| `peak_annotation.tsv.gz` | peak→gene 주석 | 소 | `…/samples/…/GSM6403409(MV-1), GSM6403411(MV-2)/suppl/` |
+
+- *받지 않는 것*: `GSE209878_RAW.tar`(9.8GB 전체), `*_atac_fragments.tsv.gz`(MV-1 4.3GB + MV-2 5.1GB; peak 재호출용 — 보통 불필요, 필요 시 `download_data.sh` 맨 아래 OPTIONAL 주석 해제).
 - 저장 위치: `pipeline/hspc-velocity-benchmark/data/` (**gitignore — 커밋 금지**). raw + intermediate 200–500GB 여유 확보.
+- *주의*: GEO raw에는 저자 통합·annotation 객체(11,605 cells + lineage label)가 없다 → 그건 P1 통일 전처리에서 method-agnostic하게 재생성(DESIGN §3).
 
 ---
 
