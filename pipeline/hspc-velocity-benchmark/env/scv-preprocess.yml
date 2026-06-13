@@ -1,0 +1,22 @@
+# 공통 전처리 env (P1 unified preprocessing) — 어떤 velocity method에도 안 묶임.
+# raw 2 sample(MV-1/MV-2) → QC → normalization → HVG → peak-gene → 통합 MuData/AnnData.
+name: scv-preprocess
+channels: [conda-forge, bioconda]
+dependencies:
+  - python=3.11
+  - numpy<2            # scanpy/scvelo 생태계 안정성 (numpy 2.x는 일부 패키지 미대응)
+  - pandas
+  - scipy
+  - scikit-learn
+  - h5py
+  - scanpy
+  - anndata
+  - leidenalg          # method-agnostic Leiden annotation (DESIGN §3)
+  - python-igraph
+  - scrublet           # doublet 제거 (검토자 지적 confound)
+  - pip
+  - pip:
+      - mudata
+      - muon
+      - snapatac2       # ATAC 처리 (peak/fragment); 설치 무거우면 생략 가능
+      # ambient: cellbender 또는 soupx(R) 는 별도 — README 참고

@@ -1,0 +1,19 @@
+# TensorFlow 계열: CRAK-Velo(UniTVelo 확장) + cellDancer. (PyTorch 계열과 분리.)
+# UniTVelo/TF 버전 민감 — 설치는 iteration 필요(검토필요:). GPU는 TF GPU 빌드 별도.
+name: tf
+channels: [conda-forge, bioconda]
+dependencies:
+  - python=3.9            # UniTVelo/TF2 호환 폭이 가장 넓음
+  - numpy<2
+  - pandas
+  - scipy
+  - scanpy
+  - anndata
+  - pip
+  - pip:
+      - tensorflow         # CPU. GPU: tensorflow[and-cuda] 또는 README 참고
+      - unitvelo           # CRAK-Velo의 base
+      - celldancer         # RNA-only relay 계보 reference (TF 기반)
+      - "git+https://github.com/StatBiomed/CRAK-Velo.git"   # BSD-3
+      # CRAK-Velo는 cisTopic 의존 — 무거움. 필요 시:
+      #   - "git+https://github.com/Nour899/cisTopic.git"  (또는 pycisTopic)
