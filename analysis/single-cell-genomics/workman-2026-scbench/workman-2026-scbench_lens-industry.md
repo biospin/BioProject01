@@ -45,7 +45,8 @@
 
 ### 3.1 BD-opportunity (외부 자산 정찰)
 - **LatchBio 관찰 가치**: scRNA-seq + spatial 두 benchmark(scBench, SpatialBench)를 보유 → 분석 agent 평가 영역에서 선점 포지션. 우리가 분석 자동화 제품/내부 도구를 고려한다면 경쟁사/협력 후보로 모니터링 가치.
-- **공개 자산 가능성**: paper-info.yaml에 GitHub(latchbio/scbench)가 url-only로 기록("framework/graders/linter/harness, 30 canonical evals public"). `검토필요:` 단 이 공개 범위는 본 PDF에서 직접 확인되지 않음 — 실제 repo 공개 여부·license 확인 후 BD 판단.
+- **공개 자산 (확인 완료, 2026-06-13 web)**: GitHub `latchbio/scbench` **public, license Apache-2.0**(상용·차용 친화). framework/graders/linter/agent harness 공개, `agent_function` pluggable interface 제공. → deterministic grader 프레임 차용은 license상 자유.
+  - `검토필요:` **수치 불일치** — 논문 §5는 "394 evals, 30 canonical public"인데 *현재 repo README는 "195 problems, 6 canonical public"*. preprint(arXiv 2602.09063 v1) 이후 repo가 갱신된 것으로 보임(`해석:`). BD/차용 판단 시 *repo 현재 상태*(195/6, Apache-2.0)를 기준으로.
 
 ### 3.2 Commercialization-candidate (자체 제품화)
 - 직접 제품화 후보로는 낮음. 이 자료 자체는 평가 도구이지 우리가 팔 Dx/assay/therapeutic이 아님.
@@ -57,11 +58,7 @@
 - **전략 align**: 우리 핵심 주제(chromatin-RNA lag)와 *직접* align은 약함. agent 분석 자동화를 도입할 경우의 *운영 의사결정*에 align.
 
 ### 3.4 후속 BD·제품 액션 후보
-- GitHub repo 공개 여부·license 확인
-  - 누가: 본인(technical)
-  - 언제: 지금
-  - 자원: 30분 web 확인
-  - 성공 기준: repo 접근 가능 여부 + license 확정 → 자체 grader 프레임 차용 가능성 판단.
+- ~~GitHub repo 공개 여부·license 확인~~ **(완료 2026-06-13)**: public, Apache-2.0 → grader 프레임 차용 가능. (repo 현재 195 problems / 6 canonical, 논문은 394/30 — 갱신됨.)
 - 내부 agent 평가 mini-harness PoC
   - 누가: 본인 + 하네스 담당(지용기)
   - 언제: 다음 분기
@@ -80,7 +77,7 @@
   - 단 우리 핵심 주제(chromatin-lag/velocity)와 직접 관련은 낮고, trajectory task는 7개로 빈약.
 
 ### 4.2 활용 우선순위
-- 지금: GitHub 공개 여부 확인 + 평가 설계(grader/linter/tolerance) 메모.
+- 지금: (GitHub 확인 완료 — public/Apache-2.0) 평가 설계(grader/linter/tolerance) 메모 + 차용 PoC 범위 스코핑.
 - 다음 분기: 내부 agent 평가 mini-harness PoC(우리 데이터).
 - 장기: 분석 자동화 제품/내부 도구 도입 시 model 선정·검증 기준 문서의 reference.
 
@@ -89,6 +86,6 @@
 - 본인 논문/제안서 introduction: scRNA-seq agent의 한계 정량화 인용.
 
 ### 4.4 추가 탐색 필요 영역
-- 질문: latchbio/scbench repo가 실제 public이고 license가 무엇인지? 우리가 grader 컨셉을 차용할 수 있나?
+- ~~질문: latchbio/scbench repo가 실제 public이고 license가 무엇인지?~~ **답: public, Apache-2.0 → grader 컨셉 차용 가능.**
 - 질문: LatchBio의 사업 모델(분석 플랫폼/agent 제품)은? COI 가중치와 BD 관찰 우선순위에 반영.
 - 질문: multiome(ATAC+RNA) 대상 agent benchmark가 있는가? 없으면 우리 데이터가 차별적 자산이 될 수 있음.

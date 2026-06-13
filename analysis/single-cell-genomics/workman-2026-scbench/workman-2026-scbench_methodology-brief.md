@@ -6,9 +6,9 @@
 
 ## 재현 가능성 체크 (재현 담당자)
 - 데이터 접근: AnnData `.h5ad` snapshot, runtime에 isolated workspace로 다운로드. 개별 dataset accession은 본문 미명시 (`미제공:`).
-- 코드 공개: GitHub `latchbio/scbench` (paper-info.yaml `url-only`; framework/graders/linter/harness, "30 canonical evals public"). `검토필요:` PDF 본문에서 직접 확인 안 됨 — repo 접근·license 별도 확인 필요.
+- 코드 공개 (확인 완료 2026-06-13): GitHub `latchbio/scbench` **public, Apache-2.0**. framework/graders/linter/agent harness + `agent_function` pluggable interface. 논문 §5는 "394 eval, 30 canonical public"이나 *현재 repo는 195 problems / 6 canonical* — preprint 이후 갱신(`해석:`). 차용 시 repo 현재 상태 기준.
 - 자원 요구: frontier model API + agent harness(mini-SWE-agent). per-eval latency ~94–303s (Table 2). GPU 불요, API 비용 의존.
-- 핵심 의존성: AnnData/`.h5ad`(Wolf et al. 2018, Scanpy 생태계), mini-SWE-agent harness, deterministic grader 5종(본문 확인 2종: $\mathrm{NumericTolerance}$, $\mathrm{DistributionComparison}$).
+- 핵심 의존성: AnnData/`.h5ad`(Wolf et al. 2018, Scanpy 생태계), mini-SWE-agent harness, deterministic grader 5종(§4.5, 전부 확인: $\mathrm{NumericTolerance}$ / $\mathrm{MultipleChoice}$ / $\mathrm{MarkerGenePrecisionRecall}$ / $\mathrm{LabelSetJaccard}$ / $\mathrm{DistributionComparison}$).
 - 자세히 → [workman-2026-scbench_core.md](workman-2026-scbench_core.md) §Methods, [sources/workman-2026-scbench.pdf](sources/workman-2026-scbench.pdf) §4
 
 ## 우리 적용 가능성 (의사결정자)
@@ -19,9 +19,9 @@
 - 자세히 → [workman-2026-scbench_lens-industry.md](workman-2026-scbench_lens-industry.md) §3
 
 ## 본인 재회고 (본인)
-- 질문: latchbio/scbench repo 실제 public·license? grader 컨셉 차용 가능 여부 좌우.
+- ~~질문: latchbio/scbench repo 실제 public·license?~~ 답: public, Apache-2.0 → grader 컨셉 차용 가능.
 - 질문: trajectory/velocity task가 7개뿐이라 우리 chromatin-lag 주제에 직접 쓸 신호가 없음 — multiome agent benchmark가 따로 있는지 확인.
-- 다음 액션: GitHub 공개/license 확인(지금) → 내부 agent 평가 mini-harness PoC를 우리 Chromium 데이터로(다음 분기, 하네스 담당과).
+- 다음 액션: (GitHub 확인 완료 — public/Apache-2.0) → 내부 agent 평가 mini-harness PoC를 우리 Chromium 데이터로(다음 분기, 하네스 담당과).
 - 자세히 → [workman-2026-scbench_lens-academic.md](workman-2026-scbench_lens-academic.md), [workman-2026-scbench_lens-industry.md](workman-2026-scbench_lens-industry.md) §4
 
 ---
