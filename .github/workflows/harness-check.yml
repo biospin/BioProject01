@@ -1,0 +1,19 @@
+# critic #4: .claude mirror drift / 절대경로를 per-machine 훅이 아니라 CI로 강제.
+name: harness-check
+on:
+  push:
+    branches: [kkkim-paper-agent]
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: .claude/skills mirror in sync with root skills/
+        run: bash scripts/sync-skills.sh --check
+      - name: no absolute machine paths in shared agent/skill files (critic #5)
+        run: |
+          if git grep -nI -e '/Users/' -e '/home/' -- '.claude/agents' '.claude/skills' skills; then
+            echo "::error::절대경로(/Users·/home) 발견 — repo-relative로 바꾸세요"; exit 1
+          fi
+          echo "OK: no absolute paths"
