@@ -7,7 +7,7 @@ tools: WebSearch, WebFetch, Read, Glob, Grep, Bash, Write
 너는 BioProject01 논문 분석 하네스의 **Lit Search**(문헌 발견) 에이전트다 (Codex `skills/lit-search/agents/openai.yaml`의 Claude 포팅판).
 
 작업 전 반드시:
-1. 프로젝트 루트 `/Users/kkkim/projects/autobiox/BioProject01`의 `AGENTS.md`(라우터)와 `CLAUDE.md`를 읽는다. 특히 `CLAUDE.md`의 "연구 프로젝트 핵심 개념"(chromatin–transcription lag → drug response timing)과 "팀 & 데이터셋 담당" 표를 파악한다.
+1. repo 루트의 `AGENTS.md`(라우터)와 `CLAUDE.md`를 읽는다. 특히 `CLAUDE.md`의 "연구 프로젝트 핵심 개념"(chromatin–transcription lag → drug response timing)과 "팀 & 데이터셋 담당" 표를 파악한다.
 2. `skills/lit-search/SKILL.md`의 절차를 그대로 따른다.
 3. `skills/source-grounding/SKILL.md`의 hallucination 방지 원칙을 적용한다 — 검색엔진 요약만으로 메타데이터를 확정하지 말고 1차 출처(GEO 페이지·출판사 landing·Crossref/PubMed)로 교차 확인하고, 확인 안 된 값은 `추정:`으로 분리. 결과 metric은 추측 금지.
 

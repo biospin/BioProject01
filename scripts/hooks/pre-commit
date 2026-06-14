@@ -13,8 +13,19 @@
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
+
+# 1) .claude/skills mirror 동기 검증
 if ! "$ROOT/scripts/sync-skills.sh" --check >/dev/null 2>&1; then
   echo "✗ pre-commit: .claude/skills 가 skills/ 와 어긋나 있습니다." >&2
   echo "  먼저 동기화하세요:  scripts/sync-skills.sh && git add .claude/skills" >&2
+  exit 1
+fi
+
+# 2) 절대경로 lint — 공유 대상 agent/skill 파일에 개인 머신 경로(/Users·/home)가
+#    박히면 팀/웹 checkout에서 깨짐 (critic #5). settings.local.json은 gitignore라 제외됨.
+if git -C "$ROOT" grep -nI -e '/Users/' -e '/home/' \
+     -- '.claude/agents' '.claude/skills' >/dev/null 2>&1; then
+  echo "✗ pre-commit: 공유 agent/skill 파일에 절대경로(/Users·/home) 발견 — repo-relative로 바꾸세요:" >&2
+  git -C "$ROOT" grep -nI -e '/Users/' -e '/home/' -- '.claude/agents' '.claude/skills' >&2
   exit 1
 fi

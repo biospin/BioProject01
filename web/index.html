@@ -35,7 +35,7 @@
         <li>
           <span class="step-number">2</span>
           <strong>분석 시작</strong>
-          <span>요청 만들기 후 Run in Codex 실행</span>
+          <span>요청 만들기 후 분석 실행 (Claude/Codex 선택)</span>
           <button type="button" data-scroll-target="prompt-title">실행으로 이동</button>
         </li>
         <li>
@@ -132,9 +132,9 @@
             <button id="downloadPromptBtn" type="button">Prompt 저장</button>
           </div>
         </div>
-        <div id="jobStatus" class="job-status">No active Codex job.</div>
+        <div id="jobStatus" class="job-status">No active job.</div>
         <div id="jobArtifacts" class="job-artifacts" aria-live="polite"></div>
-        <pre id="jobLog" class="job-log">Run in Codex를 누르면 이 위치에 실행 로그와 생성 파일 상태가 표시됩니다.</pre>
+        <pre id="jobLog" class="job-log">분석을 실행하면 이 위치에 실행 로그와 생성 파일 상태가 표시됩니다.</pre>
         <details class="prompt-details">
           <summary>실행 요청 원문 보기</summary>
           <textarea id="promptOutput" class="prompt-output" rows="14" readonly spellcheck="false">Create Run Prompt를 누르면 여기에 실행 요청이 표시됩니다.</textarea>
