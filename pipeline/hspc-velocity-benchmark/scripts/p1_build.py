@@ -45,8 +45,10 @@ def merge_loom(rna, loom_path, name):
     ldata.var_names_make_unique()
     ldata.obs_names = _core_barcodes(ldata.obs_names)
     ldata = ldata[~ldata.obs_names.duplicated()].copy()
-    gshared = [g for g in rna.var_names if g in set(ldata.var_names)]
-    cshared = [c for c in rna.obs_names if c in set(ldata.obs_names)]
+    # set을 루프 밖으로 hoist (안에 두면 매 iteration마다 재구축 → O(n²)).
+    lvar, lobs = set(ldata.var_names), set(ldata.obs_names)
+    gshared = [g for g in rna.var_names if g in lvar]
+    cshared = [c for c in rna.obs_names if c in lobs]
     if not cshared or not gshared:
         print(f"  ⚠ loom 매칭 0 (cells {len(cshared)}, genes {len(gshared)}) → spliced/unspliced 생략")
         return rna
