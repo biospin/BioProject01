@@ -1,9 +1,17 @@
-# CLAUDE.md — kkkim-pipeline (실제 데이터 파이프라인 레이어)
+# CLAUDE.md — kkkim-pipeline (HSPC 연구: 논문 근거 + 파이프라인)
 
-> 이 브랜치(`kkkim-pipeline`)는 **실제 데이터 파이프라인을 돌려 분석**하는 레이어다. paper 분석 레이어(`kkkim-paper-agent`)와 **분리**한다. paper 분석의 *결론*(어떤 method·confound를 쓸지)은 이 파이프라인의 *개념적 입력*이며, paper 분석 산출물·하네스는 여기 두지 않는다.
+> 이 브랜치(`kkkim-pipeline`)는 HSPC 연구의 **단일 작업 브랜치**다. 두 폴더로 분리한다:
+> - **`paper_analysis/`** — paper 분석 *산출물* 14편 (어떤 method·confound를 쓸지의 근거). 분석 *하네스* 자체는 여기 없다 — 외부 재사용 repo `kakyungkim/paper-analysis-harness`에 있다.
+> - **`pipeline/`** — 그 근거로 실제 데이터를 돌리는 코드.
+>
+> paper-agent 브랜치는 archive(보존만)했고, 새 paper 분석은 외부 하네스로 돌려 산출물만 `paper_analysis/`에 반입한다.
 
 ## 무엇을 하는가
 목표: gene별 **chromatin→transcription lag**(activation/shutdown) 정량 → baseline epigenomic feature로 epigenetic drug response timing 예측. 1차 데이터셋 = **Human HSPC 10x Multiome (GSE209878)**.
+
+## paper_analysis/ (근거 레이어)
+- 14편 dual-lens 분석(`core`+`lens-academic`+`lens-industry`+`methodology-brief`) + `_index/`. 파이프라인 method 선택(DESIGN.md)의 근거.
+- 분석 하네스(`AGENTS.md`/skills/web)는 외부 `kakyungkim/paper-analysis-harness`. 새 분석은 거기서 돌리고 산출 폴더만 `paper_analysis/<topic>/<paper-id>/`로 복사.
 
 ## 하네스 (OpenClaw 기반, Claude Code 호환)
 - **이 분석 하네스(`AGENTS.md` + `skills/`)는 박상준(@poqopo) `Harness_Baseline`에서 반입**해 우리 파이프라인에 맞춘 것. 원저작자 박상준 (원 repo LICENSE 미지정 — 공유·수정은 동의 전제).
@@ -25,8 +33,9 @@ SKILL(지침)을 실제로 돌리는 코드:
 - **`HANDOFF.md`**: 현재 상태 + 한 일/할 일. **`TODO.md`**: 할 일 체크리스트.
 
 ## Branch 모델 (중요)
-- `kkkim-pipeline` = **독립 파이프라인 브랜치.** paper-agent에서 **merge 받지 않는다** (paper 산출물을 끌어오지 않음).
-- paper 분석/하네스 = `kkkim-paper-agent`. 거기 것을 여기서 수정하지 않는다.
+- `kkkim-pipeline` = **HSPC 연구 단일 작업 브랜치.** `paper_analysis/`(근거) + `pipeline/`(코드)를 한 브랜치에서 관리.
+- `kkkim-paper-agent` = **archive(보존만).** paper 하네스의 마지막 상태 보존용. 새 작업은 여기서 하지 않는다.
+- paper 분석 *하네스*는 외부 `kakyungkim/paper-analysis-harness`. 하네스 자체 개선은 거기서 한다.
 - `epigenomics`, `braveji-*`, `main` 등 다른 협업자 영역은 안 건드린다.
 
 ## 언어 / commit 규칙

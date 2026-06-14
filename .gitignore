@@ -41,6 +41,23 @@ analysis/**/*_core-with-figures.md
 analysis/**/core.html
 analysis/**/core-with-figures.md
 
+# paper_analysis/ — 외부 하네스 산출물 반입 위치 (analysis/와 동일 규칙)
+paper_analysis/**/sources/*.pdf
+paper_analysis/**/sources/*.PDF
+paper_analysis/**/sources/*.xlsx
+paper_analysis/**/sources/*.docx
+paper_analysis/**/sources/*.pptx
+paper_analysis/**/sources/*.zip
+paper_analysis/**/sources/*.tar.gz
+paper_analysis/**/sources/*.tgz
+paper_analysis/**/sources/.paper_text.txt
+paper_analysis/**/figures/*.png
+paper_analysis/**/figures/.table_cache.json
+paper_analysis/**/*_core.html
+paper_analysis/**/*_core-with-figures.md
+paper_analysis/**/core.html
+paper_analysis/**/core-with-figures.md
+
 # Web dashboard runtime artifacts (per-run, not for sharing).
 # Keep run records (request.json, prompt.md, <engine>-job.json); ignore raw logs + uploads.
 artifacts/web-runs/**/*.log

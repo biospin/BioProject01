@@ -1,12 +1,13 @@
 # BioProject01 — `kkkim-pipeline`
 
-**실제 데이터 파이프라인 레이어.** Human HSPC 10x Multiome(GSE209878)로 gene별 chromatin→transcription **lag**를 정량하고, baseline epigenomic feature로 drug response timing을 예측하는 파이프라인을 돌린다.
+**HSPC 연구 단일 작업 브랜치.** Human HSPC 10x Multiome(GSE209878)로 gene별 chromatin→transcription **lag**를 정량하고, baseline epigenomic feature로 drug response timing을 예측한다. 논문 *근거*와 그것을 돌리는 *코드*를 한 브랜치, 두 폴더로 관리한다.
 
-> 논문 분석 레이어는 별도 브랜치 **`kkkim-paper-agent`** 에 있다. 이 브랜치는 그 분석의 *결론*을 입력으로 실제 분석을 실행하는 곳 (두 레이어 분리, merge 안 받음).
+> 논문 분석 *하네스*(재사용 도구)는 외부 repo **`kakyungkim/paper-analysis-harness`** 에 있다. 새 분석은 거기서 돌리고 산출물만 `paper_analysis/`로 반입한다. 옛 `kkkim-paper-agent` 브랜치는 archive(보존만).
 
 ## 구조
-- `AGENTS.md` + `skills/` — 분석 하네스 (박상준 `Harness_Baseline` 반입, **OpenClaw/Codex 포맷**, Claude Code 호환). dataset 4종 × `download/preprocessing/model/visualization`. active = `human-hspc-10x-multiome`.
+- `paper_analysis/` — paper 분석 산출물 14편(dual-lens) + `_index/`. 아래 파이프라인 method 선택의 근거.
 - `pipeline/hspc-velocity-benchmark/` — 실제 실행 코드(scripts/env/DESIGN/dataset/manifest).
+- `AGENTS.md` + `skills/` — 파이프라인 분석 하네스 (박상준 `Harness_Baseline` 반입, **OpenClaw/Codex 포맷**, Claude Code 호환). dataset 4종 × `download/preprocessing/model/visualization`. active = `human-hspc-10x-multiome`.
 - `SESSION-LOG.md` / `HANDOFF.md` / `TODO.md` — 작업 기록·현황·할 일.
 
 ## 빠른 시작
