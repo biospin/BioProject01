@@ -87,6 +87,7 @@ document folder의 메타데이터는 모두 `paper-info.yaml`에 모은다. cit
 # ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
 
 # Identity
+schema_version: 1                   # paper-info.yaml schema 버전 (마이그레이션 추적, critic #10)
 document_type: "paper"              # Part 7 카탈로그 참조
 title: "Multi-omic single-cell velocity models epigenome-transcriptome interactions..."
 authors:
@@ -96,6 +97,8 @@ authors:
 year: 2024
 venue: "Nature Methods"             # 또는 학회명, 기업명, 발행처
 doi: "10.1038/s41592-024-xxxxx"
+identity_source: "crossref"        # title/authors/year/venue/doi 확정 출처: crossref | pubmed | arxiv | pdf | user (critic #9)
+metadata_confidence: "verified"    # verified(metadata-verify 통과) | unverified | partial
 keywords:
   - "RNA velocity"
   - "multi-omics"
@@ -337,6 +340,15 @@ mkdir -p analysis/<primary-topic>/<paper-id>/sources
 | audience, priority | 사용자에게 짧게 묻기 (skip 시 default 사용) |
 
 자동 fetch가 어렵거나 부분적이면 *missing* 필드를 명시하고 사용자에게 짧게 묻는다.
+
+### 3.2.1 Metadata 검증 (필수 — critic #9)
+
+`paper-id`는 title/authors/year/venue/DOI 위에서 생성되므로, **잘못된 metadata 위에 폴더를 만들면 나중에 rename 비용이 크다.** PDF metadata는 publisher template title이 들어가거나 비어있고, preprint↔published 버전이 섞이기 쉽다. 따라서:
+
+1. **paper-id 확정 *전에* `metadata-verify` skill을 실행한다** (Crossref + PubMed Eutils로 DOI·title·year·venue·authors 교차검증). 권장이 아니라 **필수 단계**.
+2. 결과를 paper-info.yaml에 기록: `identity_source`(어디서 확정했는지: crossref/pubmed/arxiv/pdf/user), `metadata_confidence`(verified/unverified/partial).
+3. 불일치가 있으면 사용자에게 보고하고 확정 후 paper-id를 생성한다.
+4. metadata-verify가 불가한 경우(DOI 없음·오프라인 등)는 `metadata_confidence: unverified`로 두고 그 사실을 명시한다 — 검증된 것처럼 두지 않는다.
 
 ### 3.3 paper.bib 생성
 

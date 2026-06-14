@@ -66,13 +66,15 @@ URL 도메인으로 `blog` / `news` / `webinar` 자동 추론. webinar는 발표
    - Open access면 즉시 성공.
    - Paywall이면 시도한 fallback 체인 + 최종 download URL을 안내, 사용자가 PDF를 `sources/`에 드롭.
 4. BibTeX 생성 (`sources/<paper-id>.bib`).
-5. 분석 진행:
-   - paper / preprint / conference-paper → `core-*` 전부 + `lens-academic` + `lens-industry` + `methodology-brief`.
+5. 분석 진행 — **workflow profile**에 따라 (미지정 시 default = `full`):
+   - **fast** (빠른 스크리닝): source-grounding + abstract/core 핵심. **crop·HTML 없음.** 수 분.
+   - **full** (기본): paper / preprint / conference → `core-*` 전부 + `lens-academic` + `lens-industry` + `methodology-brief`. **HTML 없음** (markdown이 산출물).
+   - **publish**: `full` + HTML report(Figure·Table 임베드) + figure/table extraction.
+   - **slides**: slide용 figure crop만 별도 (Slide Workflow).
    - non-paper (Part 7.3) → 경량 흐름 (`lens-industry` 중심, `methods`·`figure`·`table`은 자료에 따라 선택적).
-6. **HTML report 생성 (default on)**:
-   - `core-to-html` skill 자동 호출 → `<paper-id>_core.html` (Figure·Table 이미지 임베드) + `figures/` 폴더 생성.
-   - 옵션: `<paper-id>_core-with-figures.md` (VS Code preview용) 동시 생성.
-   - 사용자가 prompt에 "HTML 생략", "skip html", "markdown only" 등 명시하면 skip.
+6. **HTML report — opt-in (default OFF)**:
+   - 명시 요청("HTML로", "publish profile", dashboard의 `Render HTML` 버튼) 시에만 `core-to-html` 호출 → `<paper-id>_core.html`(Figure·Table 임베드) + `figures/` 생성. (옵션: `<paper-id>_core-with-figures.md`)
+   - **이유**: figure crop/HTML pipeline이 분석 wall-clock의 주 병목이라(critic #3, `artifacts/2026-06-13-figure-crop-perf-diagnosis.md`) 빠른 분석 경로와 분리한다. 분석 자체는 markdown 기본.
 
 ### 사용자가 직접 해야 할 일 (자동 실패 시만)
 - `sources/`에 PDF/supplementary 직접 드롭 → Claude가 자동 감지 + rename + yaml 갱신 + 분석 재개 (Part 4.3.1).
