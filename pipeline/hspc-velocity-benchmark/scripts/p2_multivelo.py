@@ -74,21 +74,23 @@ def main(n_genes_smoke=0):
         # chromatin smoothing: P1 공유 그래프(connectivities) 사용
         mv.knn_smooth_chrom(atac, conn=rna.obsp["connectivities"])
 
-        # 4-state chromatin model fit (병목)
+        # 4-state chromatin model fit (병목). ⚠️ 결과는 새 adata로 *반환*됨 (in-place 아님).
         # parallel=False(serial): macOS에서 loky 병렬 워커가 native lib(numpy/torch)와 충돌해
         #   SIGSEGV → serial로 안정 실행. (Linux/GPU 환경이면 parallel=True 재검토)
-        mv.recover_dynamics_chrom(rna, atac, max_iter=5, parallel=False, device="cpu")
+        adata_result = mv.recover_dynamics_chrom(
+            rna, atac, max_iter=5, device="cpu",
+            parallel=cfg.MV_PARALLEL, n_jobs=(cfg.MV_NJOBS if cfg.MV_PARALLEL else None))
     print(f"done in {t.sec}s")
 
-    # gene별 switch time(t_sw*) = chromatin→transcription lag 원천
-    keep = [c for c in rna.var.columns if c.startswith("fit_")]
-    genes = rna.var[keep].copy(); genes.index.name = "gene"
+    # gene별 switch time(fit_t_sw1/2/3) = chromatin→transcription lag 원천 + rates
+    keep = [c for c in adata_result.var.columns if c.startswith("fit_")]
+    genes = adata_result.var[keep].copy(); genes.index.name = "gene"
     out_csv = cfg.RESULTS / f"multivelo_genes{tag}.csv"
     genes.to_csv(out_csv)
-    print(f"✓ gene fit {genes.shape} → {out_csv.name}")
+    print(f"✓ gene fit {genes.shape}, cols={keep[:8]}... → {out_csv.name}")
 
     out_h5 = cfg.OUT_VELO / f"multivelo{tag}.h5ad"
-    rna.write_h5ad(out_h5)
+    adata_result.write_h5ad(out_h5)
     print(f"✓ adata → {out_h5}")
 
     log_runtime(cfg.RUNTIME_CSV, method=METHOD, arm=arm,

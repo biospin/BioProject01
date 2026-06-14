@@ -23,5 +23,9 @@ N_NEIGHBORS = p1.N_NEIGHBORS
 RANDOM_SEED = p1.RANDOM_SEED
 MIN_SHARED_COUNTS = 20                      # scVelo filter_and_normalize
 N_JOBS = 4                                  # recover_dynamics 병렬 (CPU)
+# MultiVelo 병렬: OMP_NUM_THREADS=1 고정 시 loky 워커가 fork-safe → 병렬 가능 가정
+#   (thread oversubscription이 macOS SIGSEGV 원인이었음). 검증 후 확정.
+MV_PARALLEL = True
+MV_NJOBS = 6
 
 RUNTIME_CSV = RESULTS / "runtime.csv"       # method×runtime/memory 누적 (DESIGN §4D)
