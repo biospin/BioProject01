@@ -16,6 +16,7 @@ dependencies:
   - scrublet           # doublet 제거 (검토자 지적 confound)
   - pip
   - pip:
+      - scvelo          # loom spliced/unspliced 병합 + velocity 전처리 유틸
       - mudata
       - muon
       - snapatac2       # ATAC 처리 (peak/fragment); 설치 무거우면 생략 가능
