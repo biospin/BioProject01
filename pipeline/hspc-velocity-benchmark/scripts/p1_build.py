@@ -61,17 +61,32 @@ def merge_loom(rna, loom_path, name):
     return rna
 
 
+def _plain(path_gz):
+    """multivelo는 annotation을 plain open()으로 읽음(.gz 미지원) → 필요 시 압축 해제한 경로 반환."""
+    import gzip, shutil
+    from pathlib import Path
+    path_gz = Path(path_gz)
+    if not str(path_gz).endswith(".gz"):
+        return str(path_gz)
+    plain = path_gz.with_suffix("")          # .tsv.gz → .tsv, .bedpe.gz → .bedpe
+    if not plain.exists():
+        with gzip.open(path_gz, "rb") as fi, open(plain, "wb") as fo:
+            shutil.copyfileobj(fi, fo)
+        print(f"  decompress {path_gz.name} → {plain.name}")
+    return str(plain)
+
+
 def aggregate_atac(atac, d, name):
     """multivelo.aggregate_peaks_10x로 peak→gene 집계 → sample 간 공통 gene 축."""
     try:
         import multivelo as mv
         # multivelo 0.1.5 시그니처: (adata_atac, peak_annot_file, linkage_file,
         #   peak_dist=10000, min_corr=0.5, gene_body=False, return_dict=False, parallel=False, n_jobs=1)
-        # 'verbose' 인자 없음 — 넘기면 TypeError.
+        # 'verbose' 인자 없음; annotation은 .gz 미지원 → _plain()으로 해제 경로 전달.
         agg = mv.aggregate_peaks_10x(
             atac,
-            str(d / "peak_annotation.tsv.gz"),
-            str(d / "feature_linkage.bedpe.gz"),
+            _plain(d / "peak_annotation.tsv.gz"),
+            _plain(d / "feature_linkage.bedpe.gz"),
         )
         print(f"  ATAC peak→gene: {atac.shape} → {agg.shape}")
         return agg

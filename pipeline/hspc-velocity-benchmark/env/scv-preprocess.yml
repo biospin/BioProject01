@@ -4,9 +4,9 @@ name: scv-preprocess
 channels: [conda-forge, bioconda]
 dependencies:
   - python=3.11
-  - numpy<2            # scanpy/scvelo 생태계 안정성 (numpy 2.x는 일부 패키지 미대응)
+  - numpy<2            # multivelo 0.1.5/torch ABI: numpy 2.x면 torch import 경고 + 불안정
   - pandas
-  - scipy
+  - scipy<1.14         # multivelo 0.1.5가 sparse .A 사용 → scipy 1.14+에서 제거됨(AttributeError)
   - scikit-learn
   - h5py
   - scanpy
@@ -22,5 +22,9 @@ dependencies:
       - multivelo       # P1 ATAC peak→gene 집계(aggregate_peaks_10x)
       - mudata
       - muon
-      - snapatac2       # ATAC 처리 (peak/fragment); 설치 무거우면 생략 가능
+      # snapatac2 제외: 2.9.0이 numpy>=2 / scipy>=2 강제 → multivelo 0.1.5(numpy<2,scipy<1.14)와
+      #   충돌해 env 재생성 시 핀이 깨진다. P1은 snapatac2 미사용. 필요하면 별도 env에서.
+      # 재확인용 재-핀 (pip resolver가 위 패키지 설치 중 올려놓는 것 방지):
+      - "numpy<2"
+      - "scipy<1.14"
       # ambient: cellbender 또는 soupx(R) 는 별도 — README 참고
