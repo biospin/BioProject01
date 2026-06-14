@@ -87,3 +87,6 @@ pipeline/**/data/
 pipeline/**/*.h5ad
 pipeline/**/*.h5mu
 pipeline/**/*.loom
+
+# stray runtime dump
+settings.txt
