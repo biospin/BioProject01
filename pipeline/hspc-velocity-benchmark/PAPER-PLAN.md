@@ -23,7 +23,12 @@
 - **timecourse 필수**(≥3 시점) — "timing"을 정의하려면.
 - readout = transcriptome (+chromatin이면 가점), human hematopoietic/leukemia 우선.
 - 시나리오 A: 단일 데이터셋이 baseline+timecourse 모두 제공. 시나리오 B: **GSE209878(baseline) + 별도 drug timecourse 페어링**(세포계 정합성·gene 축 매핑이 핵심 가정 → 검증 필요).
-- → `lit-search` 에이전트 결과로 후보 확정 후 이 절 채움. (없으면 wet-lab 옵션 §7.)
+
+### lit-search 결과 (2026-06-14) — 상세: `paper_analysis/epigenomic-lag/_evidence/lit-search/epigenetic-drug-timecourse.md`
+**결론: 요건(epigenetic drug + ≥3 timepoint + transcriptome + heme + multiome 가점) 모두 충족하는 단일 공개 데이터셋 없음.** → **시나리오 A 불가, B(페어링)만 현실적**, 또는 wet-lab(§7).
+- 가장 가까운 scoop = **Todorovski 2024 (GSE229314, NAR Cancer, PMID 39372038)**: baseline *RNA-decay rate*가 inhibitor 반응 선택성 결정. 논리 동형이나 baseline이 chromatin-lag 아님 + bulk + 2/6h 얕음 → **우리의 chromatin-lag×single-cell×timing 조합은 미점유 niche(scoop 위험 중)**. 필수 인용.
+- 페어링 후보(outcome): GSE201662(mouse, ≥3 timepoint, coarse), GSE256354(human AML scRNA+HMA, timing 격자 불명). baseline-chromatin→*sensitivity* 개념 reference = Bhagwat GSE120715(I-BET).
+- **최대 confound = 세포 컨텍스트 불일치**(정상 HSPC baseline ↔ leukemia outcome). 같은 시스템이면 이상적 → wet-lab 권고로 이어짐.
 
 ## 4. 예측 모델 설계 (초안)
 - **target(반응 timing)**: 유전자별 t½(half-response time) 또는 onset time / 반응 속도 상수. timecourse를 유전자별 sigmoid/exponential fit으로 추출.
