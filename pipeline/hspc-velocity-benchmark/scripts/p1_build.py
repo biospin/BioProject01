@@ -10,8 +10,11 @@ raw 2 sample(CellRanger ARC: GEX+Peaks matrix + velocyto loom)
   → 공통 정규화/HVG/neighbor graph → method-agnostic Leiden → 통합 MuData 저장.
 
 실행 (scv-preprocess env; multivelo 필요):
-  conda run -n scv-preprocess pip install multivelo   # 최초 1회
-  conda run -n scv-preprocess python pipeline/hspc-velocity-benchmark/scripts/p1_build.py
+  conda run --no-capture-output -n scv-preprocess python -u \
+      pipeline/hspc-velocity-benchmark/scripts/p1_build.py          # 기본=resume
+  # resume: data/processed/_ckpt/{sample}_rna|atac.h5ad 가 있으면 그 sample(load/loom/ATAC/QC)을
+  #         건너뛰고 이어함. 전부 다시 하려면 끝에 --fresh.
+  # --no-capture-output -u : 단계 로그 실시간 출력 (conda run 버퍼링 방지).
 
 ⚠️ 이전 버그 수정본: (1) scvelo.read → anndata.read_loom, (2) ATAC raw-peak inner-join(62 peak로
    붕괴) → gene-level 집계로 교체. barcode/파일 형식에 따라 1회 iteration 필요할 수 있음(로그 확인).
@@ -144,13 +147,28 @@ def qc_sample(rna, atac, name):
     return rna, atac
 
 
-def build():
+def _ckpt_paths(name):
+    """per-sample 체크포인트 경로 (load+loom+ATAC+QC 까지 끝난 상태)."""
+    cd = cfg.OUT / "_ckpt"
+    return cd / f"{name}_rna.h5ad", cd / f"{name}_atac.h5ad"
+
+
+def build(fresh=False):
+    """fresh=True면 체크포인트 무시하고 전부 재계산. 기본은 완료된 sample 이어하기(resume)."""
     cfg.OUT.mkdir(parents=True, exist_ok=True)
+    (cfg.OUT / "_ckpt").mkdir(exist_ok=True)
     sc.settings.verbosity = 1
     rnas, atacs = [], []
     for name, info in cfg.SAMPLES.items():
-        rna, atac = load_sample(name, info)
-        rna, atac = qc_sample(rna, atac, name)
+        rp, ap = _ckpt_paths(name)
+        if not fresh and rp.exists() and ap.exists():
+            print(f"[{name}] ✓ checkpoint 재사용 (load/loom/ATAC/QC 스킵) → {rp.name}, {ap.name}")
+            rna, atac = sc.read_h5ad(rp), sc.read_h5ad(ap)
+        else:
+            rna, atac = load_sample(name, info)
+            rna, atac = qc_sample(rna, atac, name)
+            rna.write_h5ad(rp); atac.write_h5ad(ap)
+            print(f"[{name}] ✓ checkpoint 저장 → {rp.name}, {ap.name}")
         rnas.append(rna); atacs.append(atac)
 
     # 결합: RNA/ATAC 모두 gene 축 inner-join (ATAC도 이제 gene-level → 공통 gene 다수)
@@ -191,4 +209,5 @@ def build():
 
 
 if __name__ == "__main__":
-    sys.exit(build())
+    # 기본: resume(완료 sample 스킵). --fresh: 체크포인트 무시하고 전부 재계산.
+    sys.exit(build(fresh="--fresh" in sys.argv))
