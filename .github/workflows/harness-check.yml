@@ -17,3 +17,7 @@ jobs:
             echo "::error::절대경로(/Users·/home) 발견 — repo-relative로 바꾸세요"; exit 1
           fi
           echo "OK: no absolute paths"
+      - name: analysis structure valid (critic #11)
+        run: |
+          python3 -m pip install --quiet pyyaml
+          python3 scripts/check_analysis.py

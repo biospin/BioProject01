@@ -45,3 +45,6 @@ analysis/**/core-with-figures.md
 # Keep run records (request.json, prompt.md, <engine>-job.json); ignore raw logs + uploads.
 artifacts/web-runs/**/*.log
 artifacts/uploads/
+# web-runs: 런타임 기록 default-ignore (공유 시 scrub 후 export). 폴더 표식만 유지.
+artifacts/web-runs/**
+!artifacts/web-runs/.gitkeep

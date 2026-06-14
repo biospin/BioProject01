@@ -1,33 +1,19 @@
-# Artifacts
+# Artifacts — 정책 (critic #12)
 
-This directory stores operational outputs that are not paper-level analysis notes.
+paper-level 분석 노트가 아닌 운영 산출물. 역할별로 하위 폴더 분리:
 
-## `web-runs/`
+| 폴더 | 내용 | git |
+|---|---|---|
+| `reports/` | 공유용 리포트·발표·blog·진단 (worklog, presentation, figure-crop 진단, blog) | tracked (`*.md`) |
+| `reviews/` | 교차 크리틱·리뷰 기록 (예: 박상준 하네스 critic) | tracked (`*.md`) |
+| `web-runs/` | 웹 대시보드 런타임 기록 (request/prompt/job/log) | **기본 ignore** — `.gitkeep`만 추적 |
 
-Each click-created paper analysis request is stored in:
+## web-runs 정책
+- 런타임 기록은 **default-ignore** (`.gitignore`: `artifacts/web-runs/**`). local path·token이 섞일 수 있어 그대로 commit하지 않는다.
+- 공유가 필요한 run만 **scrub**(local path/token 제거) 후 `reports/`로 옮겨 commit한다.
+- 절대경로 lint은 `.claude/agents·skills·skills`를 CI(`harness-check.yml`)가 검사. artifacts 공유 전에는 수동 scrub.
 
-```text
-artifacts/web-runs/<run-id>/
-  request.json
-  prompt.md
-  codex-job.json
-  codex.log
-```
-
-`prompt.md` is the handoff from the web dashboard to the existing BioProject01 paper-analysis harness.
-
-## `uploads/`
-
-Local PDFs uploaded through the web dashboard are stored in:
-
-```text
-artifacts/uploads/<timestamp>-<filename>.pdf
-```
-
-The dashboard copies this repo-relative path into the Source field so the normal paper-analysis workflow can run from the uploaded PDF.
-
-## Work Logs
-
-- `2026-06-08-bioproject01-web-dashboard-worklog.md` — reproducible record of the Codex startup fixes, dashboard implementation, deployment path, status UI improvements, and browser preview changes. Includes the **2026-06-09 Claude Code harness port** update (skills/agents ported to `.claude/`, `.gitignore` policy change, and the Trevino re-run comparison).
-- `2026-06-08-bioproject01-web-dashboard-presentation.md` — presentation-ready Markdown deck (Marp slides) for explaining the dashboard harness to teammates. Includes the 2026-06-09 Claude port appendix slides.
-- `blog-harness-codex-to-claude.md` — prose blog post explaining the harness structure and the step-by-step additions (Codex→Claude port, re-run, web dashboard + tutorial, dual-engine execution, fixes). Narrative counterpart to the Marp deck; updated as new work lands.
+## reports/
+- `2026-06-08-...-worklog.md` / `-presentation.md` — web dashboard 작업 기록·발표.
+- `2026-06-13-figure-crop-perf-diagnosis.md` — figure crop 성능 진단.
+- `blog-harness-codex-to-claude.md` — 하네스 blog.
