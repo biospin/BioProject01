@@ -6,7 +6,9 @@
 
 ## 구조
 - `paper_analysis/` — paper 분석 산출물 14편(dual-lens) + `_index/`. 아래 파이프라인 method 선택의 근거.
-- `pipeline/hspc-velocity-benchmark/` — 실제 실행 코드(scripts/env/DESIGN/dataset/manifest).
+- `pipeline/hspc-velocity-benchmark/` — 실제 실행 코드 + 논문 산출물 레이어:
+  - `scripts/`(P0–P5) · `env/` · `DESIGN.md` · `dataset/` · `download_manifest.tsv` — 코드·재현성·Methods.
+  - `results/` — 표·수치가 되는 요약(csv/md, tracked) · `figures/` — 그림 생성 스크립트(이미지는 ignore) · `manuscript/` — 원고(draft/refs/legends).
 - `AGENTS.md` + `skills/` — 파이프라인 분석 하네스 (박상준 `Harness_Baseline` 반입, **OpenClaw/Codex 포맷**, Claude Code 호환). dataset 4종 × `download/preprocessing/model/visualization`. active = `human-hspc-10x-multiome`.
 - `SESSION-LOG.md` / `HANDOFF.md` / `TODO.md` — 작업 기록·현황·할 일.
 

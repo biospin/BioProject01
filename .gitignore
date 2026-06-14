@@ -18,6 +18,26 @@ presentation/
 __pycache__/
 *.pyc
 
+# 논문 산출물 레이어 — 요약/스크립트만 tracked, 대용량·이미지·컴파일물은 ignore
+# results/: csv·md·json 요약만 commit (대용량 중간산출 제외)
+pipeline/**/results/**/*.h5ad
+pipeline/**/results/**/*.h5mu
+pipeline/**/results/**/*.npz
+pipeline/**/results/**/*.npy
+pipeline/**/results/**/*.parquet
+pipeline/**/results/**/*.pkl
+# figures/: 생성 스크립트(*.py)만 commit, 출력 이미지는 제외
+pipeline/**/figures/**/*.png
+pipeline/**/figures/**/*.pdf
+pipeline/**/figures/**/*.svg
+pipeline/**/figures/**/*.tif
+pipeline/**/figures/**/*.tiff
+# manuscript/: md·bib만 commit, 컴파일 산출물은 제외
+pipeline/**/manuscript/**/*.pdf
+pipeline/**/manuscript/**/*.docx
+pipeline/**/manuscript/**/*.aux
+pipeline/**/manuscript/**/*.log
+
 # Source binaries — copyrighted, never commit. Stubs (.url, .bib, abstract.txt)
 # under sources/ are NOT excluded by these patterns and may be committed.
 analysis/**/sources/*.pdf
