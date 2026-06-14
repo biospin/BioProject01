@@ -27,5 +27,9 @@ N_JOBS = 4                                  # recover_dynamics 병렬 (CPU)
 #   (thread oversubscription이 macOS SIGSEGV 원인이었음). 검증 후 확정.
 MV_PARALLEL = True
 MV_NJOBS = 6
+# 진행 로깅용 chunk 크기: gene을 이 단위로 나눠 fit → chunk마다 n/total+ETA 출력.
+# (loky 워커 stdout이 메인으로 안 올라오고 recover_dynamics_chrom이 단일 호출이라
+#  중간 진행이 안 보이는 문제 해결.)
+MV_CHUNK = 50
 
 RUNTIME_CSV = RESULTS / "runtime.csv"       # method×runtime/memory 누적 (DESIGN §4D)

@@ -27,6 +27,7 @@ for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
 import sys
 import scanpy as sc
 import scvelo as scv
+import anndata as ad
 import multivelo as mv
 try:
     import torch; torch.set_num_threads(1)
@@ -75,11 +76,23 @@ def main(n_genes_smoke=0):
         mv.knn_smooth_chrom(atac, conn=rna.obsp["connectivities"])
 
         # 4-state chromatin model fit (병목). ⚠️ 결과는 새 adata로 *반환*됨 (in-place 아님).
-        # parallel=False(serial): macOS에서 loky 병렬 워커가 native lib(numpy/torch)와 충돌해
-        #   SIGSEGV → serial로 안정 실행. (Linux/GPU 환경이면 parallel=True 재검토)
-        adata_result = mv.recover_dynamics_chrom(
-            rna, atac, max_iter=5, device="cpu",
-            parallel=cfg.MV_PARALLEL, n_jobs=(cfg.MV_NJOBS if cfg.MV_PARALLEL else None))
+        # loky 병렬은 OMP=1 고정 시 fork-safe(SIGSEGV 회피, 상단 env 참조).
+        # gene을 chunk로 나눠 호출 → chunk마다 진행/ETA 출력 (단일 호출은 중간 진행 안 보임).
+        import time as _time
+        nj = cfg.MV_NJOBS if cfg.MV_PARALLEL else None
+        chunk = max(1, cfg.MV_CHUNK)
+        parts, _t0 = [], _time.perf_counter()
+        for i in range(0, len(shared), chunk):
+            sub = shared[i:i + chunk]
+            res = mv.recover_dynamics_chrom(
+                rna[:, sub].copy(), atac[:, sub].copy(),
+                max_iter=5, device="cpu", parallel=cfg.MV_PARALLEL, n_jobs=nj)
+            parts.append(res)
+            done = min(i + chunk, len(shared)); el = _time.perf_counter() - _t0
+            eta = el / done * (len(shared) - done)
+            print(f"  [multivelo] {done}/{len(shared)} genes | {el/60:.1f}min elapsed, "
+                  f"ETA ~{eta/60:.0f}min", flush=True)
+        adata_result = ad.concat(parts, axis=1, merge="first") if len(parts) > 1 else parts[0]
     print(f"done in {t.sec}s")
 
     # gene별 switch time(fit_t_sw1/2/3) = chromatin→transcription lag 원천 + rates
