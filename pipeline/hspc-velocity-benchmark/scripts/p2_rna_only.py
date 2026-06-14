@@ -41,10 +41,17 @@ def main():
         adata.X = adata.layers["counts"].copy()
 
     with timer() as t:
-        scv.pp.filter_and_normalize(adata, min_shared_counts=cfg.MIN_SHARED_COUNTS,
-                                    n_top_genes=cfg.N_TOP_GENES)
+        # scVelo 0.3.4: filter_and_normalize에 n_top_genes 인자 없음(→kwargs 오류),
+        #   filter_genes_dispersion 미노출 → gene subset은 별도로. spliced/unspliced 정규화만 위임.
+        scv.pp.filter_and_normalize(adata, min_shared_counts=cfg.MIN_SHARED_COUNTS)
+        # velocity gene set = HVG (P1 flag 재사용; 없으면 재계산)
+        if "highly_variable" not in adata.var.columns:
+            sc.pp.highly_variable_genes(adata, n_top_genes=cfg.N_TOP_GENES)
+        adata = adata[:, adata.var["highly_variable"]].copy()
         scv.pp.moments(adata, n_pcs=cfg.N_PCS, n_neighbors=cfg.N_NEIGHBORS)
         print(f"velocity gene set: {adata.n_vars} genes, {adata.n_obs} cells")
+        if adata.n_vars < 100:
+            print(f"  ⚠ velocity gene {adata.n_vars}개 — 비정상. HVG/spliced 점검 필요.")
         scv.tl.recover_dynamics(adata, n_jobs=cfg.N_JOBS)        # 병목(dynamical fit)
         scv.tl.velocity(adata, mode="dynamical")
         scv.tl.velocity_graph(adata, n_jobs=cfg.N_JOBS)
