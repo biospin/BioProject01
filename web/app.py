@@ -41,6 +41,9 @@ JOBS: dict[str, subprocess.Popen] = {}
 # autonomously with the repo as cwd; only the command and per-engine file names
 # differ. Codex reads the prompt from stdin via `-`; Claude reads it from stdin
 # in non-interactive print mode (`-p`).
+# critic #7: 실행 명령. stdin은 항상 run_dir/prompt.md(web-runs 하위, dashboard 생성 = allowlist),
+# 실행 endpoint는 토큰 필수(exec_token_ok). claude `--dangerously-skip-permissions`는 headless(-p)
+# 자동 실행에 필요해 유지하되, 토큰 게이트 + prompt allowlist + run-dir 격리로 노출면을 제한한다.
 ENGINES: dict[str, dict] = {
     "codex": {
         "command": ["codex", "exec", "--cd", str(REPO_ROOT), "-"],
@@ -734,9 +737,11 @@ def create_prompt(payload: dict) -> str:
     )
     if source_is_pdf:
         lines.append(
-            f"   - Source가 로컬 PDF(`{source}`)다. 분석 폴더를 만든 직후 이 PDF를 "
-            "`analysis/<topic>/<paper-id>/sources/`로 복사(`cp`)해 원문으로 보존하고, "
-            "그 PDF를 1차 grounding 근거로 사용한다. (업로드 원본은 `artifacts/uploads/`에만 있으므로 반드시 복사한다.)"
+            f"   - Source가 로컬 PDF(`{source}`)다. 분석 폴더 생성 직후 **deterministic helper로 복사**한다 "
+            "(직접 `cp` 말 것 — critic #6, source 보존은 스크립트가 책임):\n"
+            f"     `python3 web/scripts/place_source.py {source} analysis/<topic>/<paper-id>`\n"
+            "     → `sources/<paper-id>.pdf` 복사 + sha256 기록(`source_manifest.tsv` + `paper-info.yaml`). "
+            "이 PDF를 1차 grounding 근거로 사용한다."
         )
     lines.extend(
         [
@@ -821,6 +826,15 @@ class AppHandler(BaseHTTPRequestHandler):
             return False
         provided = self.headers.get("X-Dashboard-Token", "")
         return provided != token
+
+    def exec_token_ok(self) -> bool:
+        """LLM 실행(start-*) 엔드포인트 전용 게이트 (critic #7).
+        실행은 *반드시* 토큰이 설정돼 있어야 하고 헤더가 일치해야 한다 — localhost에서도.
+        (prompt 생성/조회는 token_required 정책을 따르지만, 명령 실행은 더 엄격히 fail-closed.)"""
+        token = getattr(self.server, "dashboard_token", "")
+        if not token:
+            return False
+        return self.headers.get("X-Dashboard-Token", "") == token
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
@@ -911,13 +925,17 @@ class AppHandler(BaseHTTPRequestHandler):
                     timeout=300,
                 )
                 json_response(self, 200, result)
-            elif parsed.path == "/api/run/start-codex":
+            elif parsed.path in ("/api/run/start-codex", "/api/run/start-claude"):
+                # critic #7: LLM 실행은 토큰 필수 (미설정 시 차단). dashboard가 임의 명령 launcher가
+                # 되는 것 방지. 실행 prompt는 항상 run_dir/prompt.md (web-runs 하위, dashboard 생성).
+                if not self.exec_token_ok():
+                    json_response(self, 403, {
+                        "error": "execution requires a dashboard token. start with --token "
+                                 "(or BIOP01_DASHBOARD_TOKEN) and enter it in the Team token field."})
+                    return
+                engine = "claude" if parsed.path.endswith("claude") else "codex"
                 payload = read_body(self)
-                result = start_job(payload.get("run_path", ""), "codex")
-                json_response(self, 202, result)
-            elif parsed.path == "/api/run/start-claude":
-                payload = read_body(self)
-                result = start_job(payload.get("run_path", ""), "claude")
+                result = start_job(payload.get("run_path", ""), engine)
                 json_response(self, 202, result)
             else:
                 text_response(self, 404, "not found")
