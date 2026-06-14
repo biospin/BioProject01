@@ -1,4 +1,4 @@
-# MultiVelo(baseline) + scVelo(RNA-only floor). numba 기반, GPU 불요.
+# MultiVelo(baseline) + scVelo(RNA-only floor). numba+torch(CPU) 기반, GPU 불요.
 name: mv
 channels: [conda-forge, bioconda]
 dependencies:
@@ -11,5 +11,6 @@ dependencies:
   - anndata
   - pip
   - pip:
+      - torch           # 최신 multivelo가 의존 (CPU wheel; TF 없으니 프레임워크 충돌 없음)
       - scvelo          # RNA-only baseline (chromatin 기여 대조 floor)
       - multivelo       # welch-lab; chromatin-aware ODE baseline
