@@ -33,20 +33,27 @@
 ## 4. 예측 모델 설계 (초안)
 - **target(반응 timing)**: 유전자별 t½(half-response time) 또는 onset time / 반응 속도 상수. timecourse를 유전자별 sigmoid/exponential fit으로 추출.
 - **features(baseline)**: ① chromatin→transcription lag(Part 1), ② promoter/enhancer ATAC accessibility, ③ bivalency/poising proxy, ④ burst kinetics, ⑤ baseline 발현·spliced/unspliced 비율. (강상관 → regularized; CLAUDE.md #3)
+- **⚠️ 필수 통제 변수 = mRNA decay rate / half-life** (Todorovski 2024 결과). chromatin-lag 단독 예측력을 보고하면 "decay proxy를 chromatin으로 다시 잰 것"으로 환원돼 scoop 위험이 *상*으로 오른다. → **incremental-prediction 설계 필수**: nested model `response_timing ~ decay`(base) vs `~ decay + chromatin_lag`(full)의 **ΔR²/ΔAUC**로 "chromatin-lag이 decay 너머 timing 분산을 설명"함을 보인다.
 - **model**: regularized regression(Elastic Net) baseline → 비선형(GBM) 비교. feature importance로 해석.
 - **평가**: gene-level cross-validation, **chromosome/lineage 단위 hold-out으로 leakage 방지**. permutation null로 예측력 유의성(CLAUDE.md #4).
 
 ## 5. 방법론 엄밀성 (DESIGN에서 승계)
 within-lineage 계산 · rare lineage uncertainty 별도(MK/Baso/pDC/Lymphoid) · cell-cycle/burst/ambient/doublet 통제 · permutation FDR · pseudotime≠wall-clock(lag은 pseudotime 단위) · method≠preprocessing(공통 전처리, P1 완료).
 
-## 6. novelty / scoop 점검 (진행 중)
+## 6. novelty / scoop 점검
 - RNA velocity·multiome lag 측정은 선행 다수(우리 `paper_analysis/` 14편). **차별점 = 그 lag을 "drug response timing의 예측 변수"로 쓰는 것** — 측정에서 예측·인과로 한 걸음.
-- `lit-search` 에이전트가 "baseline epigenome → drug timing 예측" 선행 출판 여부 점검 중. 겹치면 angle 재조정.
+- **Todorovski 2024 (NAR Cancer, GSE229314) — 가장 가까운 선행, scoop 위험 中(조건부 하향 가능).** 상세: `paper_analysis/epigenomic-lag/todorovski-2024-rna-kinetics/todorovski-2024_scoop-analysis.md`.
+  - 그들: baseline=**mRNA decay rate**(SLAM-seq, bulk), outcome=선택적 down-regulation *magnitude*(2h/6h 이산 2점, timing 모델 아님), **chromatin 명시 배제**("independent of chromatin state"), single-cell 아님.
+  - 4축 모두 비겹침(chromatin-lag vs decay / single-cell vs bulk / **timing vs magnitude** / HSPC vs leukemia line). 겹치는 건 "baseline kinetic→drug response" *틀*뿐.
+  - **확장 근거**: chromatin-lag는 production *상류*, decay는 mRNA *하류* → 인과축 양 끝 + 상보. 그들이 chromatin을 selectivity 설명에서 배제 → 우리 white space 정당화가 *그들 논문 안에* 있음.
+  - 필수 인용·대조: Fig2(decay→response AUC 0.86–0.94 = SOTA 바), Fig1(SE down돼도 selectivity 설명 못 함 = white space), Fig3(73-compound 일반화).
+  - **조건**: §4의 decay-통제 incremental 설계를 반드시 따라야 scoop 中→下. 안 하면 上.
 
 ## 7. 리스크 / 결정 포인트
 - **R1 (최대)**: 적합한 공개 drug-timecourse가 없을 수 있음 → (a) cell-line timecourse로 proof-of-concept, (b) 페어링 가정 약화, (c) wet-lab timecourse(팀/협업) 검토.
 - **R2 페어링 타당성**: baseline(HSPC)과 drug(다른 세포계) 페어링 시 세포계 차이가 교란 → 같은 세포계 우선, 아니면 gene-intrinsic feature로 한정.
 - **R3 인과 vs 상관**: "예측"은 상관. 인과 주장하려면 perturbation 일관성/방향성 별도.
+- **R4 decay confound (Todorovski)**: mRNA decay를 통제 안 하면 chromatin-lag 예측력이 decay proxy로 환원 → scoop 上. §4 incremental(nested ΔR²/ΔAUC) 설계로 필수 차단.
 
 ## 8. 마일스톤
 1. (지금) drug-timecourse 데이터 후보 확정 → §3 채움, 시나리오 A/B 결정.
