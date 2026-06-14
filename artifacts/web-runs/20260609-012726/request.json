@@ -1,9 +1,0 @@
-{
-  "created_at": "2026-06-08T16:27:26.228933+00:00",
-  "source": "10.1016/j.cell.2020.09.056",
-  "topic": "chromatin-rna-coupling",
-  "mode": "full",
-  "lens": "both",
-  "notes": "Existing paper folder: analysis/chromatin-rna-coupling/ma-2020-shareseq\nDashboard Analyze button에서 시작한 재분석 요청.\n기존 paper-info.yaml이 있으면 그것을 우선 확인하고, missing 산출물(core/lens/brief/html)을 완성한다.",
-  "status": "prompt-created"
-}

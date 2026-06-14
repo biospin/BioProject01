@@ -1,4 +1,0 @@
-interface:
-  display_name: "Full Slides"
-  short_description: "full.md 기반 OpenClaw Slides 발표자료를 만듭니다."
-  default_prompt: "analysis의 full.md를 기준으로 design.md 스타일을 따라 OpenClaw Slides 발표자료를 만들어줘. full.md가 없으면 먼저 분석이 필요하다고 말해줘."

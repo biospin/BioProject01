@@ -1,1 +1,0 @@
-A relay velocity model infers cell-dependent RNA velocity. cellDancer is a scalable deep neural network that locally infers RNA velocity for each cell from neighbor cells and relays local velocities to provide single-cell resolution inference of transcription, splicing, and degradation kinetics.

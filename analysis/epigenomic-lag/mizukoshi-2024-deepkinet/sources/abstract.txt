@@ -1,1 +1,0 @@
-DeepKINET is a deep generative model that estimates single-cell RNA splicing and degradation rates from scRNA-seq data. It is evaluated using simulations and metabolic labeling datasets and identifies RNA-binding proteins associated with kinetic-rate diversity.

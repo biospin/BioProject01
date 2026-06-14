@@ -1,4 +1,0 @@
-interface:
-  display_name: "Lit Search"
-  short_description: "데이터셋·주제·method로부터 분석에 쓸 새 문헌을 찾아 repo와 중복 제거 후 분류합니다."
-  default_prompt: "이 데이터셋(accession) 또는 주제로 분석에 쓸 문헌을 찾아줘. repo에 이미 있는 것과 새로 확보할 것을 구분하고 역할별로 분류해줘."

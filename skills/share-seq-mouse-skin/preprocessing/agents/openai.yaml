@@ -1,0 +1,4 @@
+interface:
+  display_name: "SHARE-seq Mouse Skin Preprocessing"
+  short_description: "GSE140203 SHARE-seq mouse skin 전처리를 준비합니다."
+  default_prompt: "SHARE-seq mouse skin GSE140203 데이터의 preprocessing plan을 한국어로 작성해줘. paired chromatin/RNA, QC, annotation, pseudotime, output을 포함해줘."

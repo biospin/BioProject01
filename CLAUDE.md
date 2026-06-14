@@ -1,140 +1,42 @@
-# CLAUDE.md
+# CLAUDE.md — kkkim-pipeline (실제 데이터 파이프라인 레이어)
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+> 이 브랜치(`kkkim-pipeline`)는 **실제 데이터 파이프라인을 돌려 분석**하는 레이어다. paper 분석 레이어(`kkkim-paper-agent`)와 **분리**한다. paper 분석의 *결론*(어떤 method·confound를 쓸지)은 이 파이프라인의 *개념적 입력*이며, paper 분석 산출물·하네스는 여기 두지 않는다.
 
-## 이 repo는 무엇인가
+## 무엇을 하는가
+목표: gene별 **chromatin→transcription lag**(activation/shutdown) 정량 → baseline epigenomic feature로 epigenetic drug response timing 예측. 1차 데이터셋 = **Human HSPC 10x Multiome (GSE209878)**.
 
-두 개의 layer가 공존한다:
+## 하네스 (OpenClaw 기반, Claude Code 호환)
+- **이 분석 하네스(`AGENTS.md` + `skills/`)는 박상준(@poqopo) `Harness_Baseline`에서 반입**해 우리 파이프라인에 맞춘 것. 원저작자 박상준 (원 repo LICENSE 미지정 — 공유·수정은 동의 전제).
+- 포맷: `AGENTS.md`(project frame) + `skills/ROUTES.md`(dataset→task 라우팅) + `skills/<dataset>/<task>/SKILL.md` + `agents/openai.yaml`. **이건 OpenClaw/Codex 네이티브 포맷**이라 OpenClaw로 바로 실행 가능하고, Claude Code에서도 동작한다.
+- **OpenClaw 연습 중**: 앞으로 분석을 OpenClaw 기반으로 돌리는 것을 기본 감안한다. skill/agent 포맷(`openai.yaml`)을 유지한다.
+- dataset 4종 × task 4단계(`download→preprocessing→model→visualization`). 우리는 **`human-hspc-10x-multiome`** 가 active.
 
-1. **Paper analysis workspace (현재 활성)** — scientific paper / preprint / industry report / regulatory 문서 등을 dual-lens 구조(`core` + `lens-academic` + `lens-industry` + `methodology-brief`)로 분석해서 `analysis/<topic>/<paper-id>/` 아래에 누적한다. 이 layer의 운영 규칙은 **[AGENTS.md](AGENTS.md)** 가 router로 모두 정의한다. CLAUDE.md는 그것을 중복하지 않는다.
-2. **연구 프로젝트 컨텍스트 (계획)** — Epigenetic Therapy 기반 Response Time 예측. 코드 파이프라인은 아직 없고, 관련 paper들을 layer 1에서 수집/해석하는 단계.
+## 실행 구현 — `pipeline/hspc-velocity-benchmark/`
+SKILL(지침)을 실제로 돌리는 코드:
+- `scripts/download_data.sh` — GSE209878 다운로드 (MV-1=day0, MV-2=day7). `download_manifest.tsv`(sha256), `P0_provenance.md`.
+- `scripts/p1_build.py` — 통일 전처리(공통 branch). `P1_README.md`, `scripts/check_data.py`.
+- `DESIGN.md` — velocity method head-to-head 벤치마크 = model 단계 method-selection. `REVIEW-methodologist-2026-06-13.md`.
+- `env/` — 프레임워크별 격리 conda env 4종(`scv-preprocess`/`mv`/`torch`/`tf`) + `setup_envs.sh`, `README.md`.
+- `dataset/` — GSE209878 dataset card.
+- `BASELINE-ALIGNMENT.md` — Harness_Baseline 정합 기록.
 
-## Paper analysis 작업 시 — AGENTS.md 먼저 읽기
+## 작업 기록
+- **`SESSION-LOG.md`**: 분석 단계에서 한 일을 세션별로 누적 기록.
+- **`HANDOFF.md`**: 현재 상태 + 한 일/할 일. **`TODO.md`**: 할 일 체크리스트.
 
-`AGENTS.md`가 단일 진입점이다. 거기에 정의된 것:
-- Quick Start (DOI / PDF / URL 한 줄로 분석 시작)
-- Dual-lens 출력 구조: `core` (객관적) + `lens-academic` (학계 시선) + `lens-industry` (산업 시선) + `methodology-brief` (재현용 압축본)
-- `paper-info.yaml` = single source of truth
-- `paper-id` naming: `<lastname>-<year>-<short-keyword>` (예: `li-2023-multivelo`)
-- `core.md` section 고정 순서 (Executive Summary → Identity → Background → Methods → Results → Figures → Tables → Supplementary Information → 분석 메모)
-- Skill routing 테이블 — 작업별로 어떤 `skills/<name>/SKILL.md`를 호출하는지
-- Slide 워크플로우는 명시 요청 시에만 (`design.md`를 visual reference로 사용)
+## Branch 모델 (중요)
+- `kkkim-pipeline` = **독립 파이프라인 브랜치.** paper-agent에서 **merge 받지 않는다** (paper 산출물을 끌어오지 않음).
+- paper 분석/하네스 = `kkkim-paper-agent`. 거기 것을 여기서 수정하지 않는다.
+- `epigenomics`, `braveji-*`, `main` 등 다른 협업자 영역은 안 건드린다.
 
-## Claude Code 네이티브 실행 (Codex 하네스 포팅)
+## 언어 / commit 규칙
+- 출력 기본 한국어. 분야 표준 영어 용어 유지(RNA/DNA/ATAC/chromatin/pseudotime/baseline 등).
+- Author: `kakyungkim <kakyung.kim@gmail.com>`. Claude attribution(footer/co-author) **금지**. Remote SSH `git@github.com:biospin/BioProject01.git`.
+- 원문 binary·대용량(.h5ad/.h5mu/.loom/PDF/data)은 `.gitignore`. tracked = `*.md`, `*.yaml`, `*.tsv`(요약), 코드.
 
-이 하네스는 원래 Codex CLI(`AGENTS.md` 라우터 + `skills/*/SKILL.md` + `skills/*/agents/openai.yaml`)에서 동작하도록 만들어졌고, **동일한 하네스를 Claude Code에서도 네이티브로 실행할 수 있게 포팅**했다. 분석 규칙의 single source of truth는 그대로 `AGENTS.md` + `skills/*/SKILL.md`이며, 아래는 Claude가 그것을 자동 인식하게 하는 얇은 등록 레이어다.
-
-- **Skills**: `.claude/skills/<name>/` — Codex `skills/<name>/`의 **committed 복사본** 16개. Claude가 `.claude/skills/`에서 자동 discover한다. 웹(claude.ai/code = GitHub 체크아웃)에서도 동작하도록 심볼릭 링크가 아닌 실제 파일로 둔다. **원본 `skills/`를 고치면 `.claude/skills/`도 재동기화해야 한다** (`cp -R skills/<name> .claude/skills/`).
-- **Agents**: `.claude/agents/*.md` — Codex `skills/*/agents/openai.yaml` 7개(Abstract Analysis, Full Background=core-problem, Full Results=core-results, Full Figure=core-figure, Full Discussion=lens-academic, Full Slides, Question)를 Claude subagent 형식으로 포팅. 각 subagent는 해당 `SKILL.md` + `AGENTS.md` 라우터 + source-grounding 규칙을 읽고 작업한다.
-- 나머지 skill(core-methods, core-table, lens-industry, methodology-brief, source-grounding, core-to-html, paper-scrapper, insight-agent, validation-agent)은 Codex에서도 agent-picker 항목이 아니라 skill로만 호출되므로, Claude에서도 `.claude/skills/`를 통한 skill 호출로 사용한다.
-- 실행 흐름·출력 계약·섹션 구조는 전부 `AGENTS.md`를 따른다. CLAUDE.md는 이를 중복하지 않는다.
-
-## 실제 호출 가능한 스크립트
-
-전부 `python3` 실행. 의존성은 `skills/source-grounding/scripts/requirements.txt`.
-
-```bash
-# Paper source 자동 fetch (PDF / .bib / .url)
-python3 skills/source-grounding/scripts/fetch_sources.py <args>
-
-# analysis/_index/{papers.csv, <topic>.md} 자동 빌드
-python3 skills/source-grounding/scripts/build_index.py
-
-# core.md → figure-embedded HTML report
-python3 skills/core-to-html/scripts/build_html.py <paper-dir>
-
-# PDF figure를 panel별 PNG로 자동/수동 crop
-python3 skills/core-figure/scripts/extract_panels.py <pdf> --page N --figure "Figure 2" \
-  --figure-bbox x0,y0,x1,y1 --out analysis/<topic>/<paper-id>/figures
-
-# (외부 공유용) paper 분석 폴더 압축/공유
-python3 skills/source-grounding/scripts/share_paper.py <paper-dir>
-```
-
-`paper-info.yaml`이 갱신될 때마다 `build_index.py`를 다시 돌려 `_index/`를 일치시킨다.
-
-## 언어 규칙
-
-- 출력 기본은 한국어.
-- 분야 표준 영어 용어는 그대로 유지: `RNA`, `DNA`, `TF`, `chromatin`, `transcription`, `single-cell`, `multi-omics`, `baseline`, `dataset`, `benchmark`, `BD`, `QA`, `RA`, `IND`, `IRB`, `Figure`, `panel` 등.
-- 영어 용어 첫 사용 시 한국어 보충은 1회만.
-
-## Hallucination 방지
-
-분석은 `analysis/<topic>/<paper-id>/sources/`의 원문 PDF + supplementary만 근거로 한다. 외부 지식이 필요하면 `외부 맥락:` 또는 `해석:`으로 명시 분리. 세부 규칙은 `skills/source-grounding/SKILL.md` 한 곳에만 모여 있다 — 다른 skill은 이를 참조만 한다.
-
-## Branch 컨벤션
-
-팀 컨벤션은 **`<사람>-<workstream>`**. 본인 영역 안에서 workstream별로 branch를 따로 둔다.
-
-두 레이어를 **브랜치로 분리**한다. 섞지 않는다.
-
-| Branch | 레이어 | 용도 |
-|---|---|---|
-| `kkkim-paper-agent` | **① paper 분석** | paper-analysis 하네스(`AGENTS.md`/`skills/*`/`.claude/*`/`web/`/`design.md`) + 분석 산출물(`analysis/<topic>/<paper-id>/`, `_evidence`). **새 paper 분석·하네스 수정은 전부 여기.** |
-| `kkkim-pipeline` | **② 실제 파이프라인** | ①의 분석(`analysis/`)을 *입력*으로 **실제 데이터 파이프라인 실행·분석**(`pipeline/`: download→preprocess→model→viz, velocity/lag). 코드·env·데이터 작업은 여기. |
-| `epigenomics`, `braveji-paper-agent`, `main` | — | **건드리지 않는다.** 다른 협업자 영역. |
-
-**레이어 분리 규칙 (중요 — 섞임 방지):**
-- **하네스/AGENTS/skills/.claude/web/paper 분석 = `kkkim-paper-agent`에서만.** `kkkim-pipeline`에서 이것들을 수정하지 않는다.
-- **파이프라인 실행 코드(`pipeline/`)·env·데이터 = `kkkim-pipeline`에서만.**
-- **merge는 단방향: `kkkim-paper-agent` → `kkkim-pipeline`** (pipeline이 최신 분석/하네스를 입력으로 받음). **역방향(`pipeline → paper-agent`) merge 금지.**
-- paper-agent 영역을 pipeline에서 고쳐야 하면 → worktree로 `kkkim-paper-agent`를 띄워 거기서 수정 후 단방향 merge.
-
-**분기 base 결정:**
-- paper analysis framework를 그대로 깔고 코드 작성 → `kkkim-paper-agent`에서 분기(= `kkkim-pipeline`이 이렇게 생김)
-- paper analysis와 독립 작업 → `main`에서 분기
-
-## Git / commit 규칙
-
-- 원문 binary(PDF, xlsx, docx, pptx 등)는 `.gitignore`로 commit 차단. tracked 대상은 `*.md`, `paper-info.yaml`, `*.url`, `*.bib`, `*.json` (figure-map, manifest 등).
-- Author: `kakyungkim <kakyung.kim@gmail.com>` (이 PC의 SSH key가 등록된 GitHub 계정).
-- Commit message에 Claude attribution(`Co-Authored-By: Claude`, `🤖 Generated with Claude Code` 등)은 추가하지 않는다.
-- Remote는 SSH (`git@github.com:biospin/BioProject01.git`). HTTPS+password는 작동하지 않는다.
-
-## 외부 협업 도구
-
-- **Confluence**: Space `VC`, 경로: 프로젝트 진행-AI전용 > 프로젝트#01
-- **JIRA**: Space `BIOP01`
-- **Slack**: 멤버별 openclaw bot
-- **Atlassian MCP 설정**: [openclaw/atlassian-mcp-setup.md](openclaw/atlassian-mcp-setup.md)
-
-## 팀 & 데이터셋 담당
-
-| 담당 데이터셋 | Primary | Secondary | GitHub ID (참고, verify 필요) |
-|---|---|---|---|
-| 10x embryonic mouse brain | 이건규 | — | Geongyu (=gglee/gklee) |
-| SHARE-seq mouse skin | 박상준 | — | (lookup pending) |
-| Human brain multi-ome | 전연수 | 박세진 | Yeonsu-Jeon (brain0106@gmail.com) / sjpark · sezinie000 |
-| Human HSPC 10x Multiome | 김가경 | 류재면 | kakyungkim / JamieLyu |
-| 하네스 | 지용기 | — | braveji18 (=braveji/ykji) |
-
-## 주요 데이터셋
-
-| Dataset | Accession | Data type |
-|---|---|---|
-| 10x embryonic mouse brain | 10x Genomics dataset page | 10x multiome |
-| SHARE-seq mouse skin | GSE140203 | paired chromatin + RNA |
-| Human brain multi-ome | GSE162170 | human multiome |
-| Human HSPC 10x Multiome | GSE209878 | human multiome |
-
-## 연구 프로젝트 핵심 개념 (paper 선정·해석에 활용)
-
-목표: gene별 chromatin-transcription lag structure를 정량화 → baseline epigenomic feature로 epigenetic drug response timing을 예측.
-
-- `activation lag`: chromatin이 열린 뒤 transcription이 시작될 때까지의 시간.
-- `shutdown lag`: transcription이 꺼진 뒤 chromatin이 닫힐 때까지의 시간.
-
-관련 도구 (분석 대상 paper들이 쓰는 것): MultiVelo, MultiVeloVAE, MoFlow, `scanpy`, `anndata`, `muon`, `snapatac2`, `ArchR`. (이 repo의 stack은 아님 — 이건 paper들이 쓰는 라이브러리.)
-
-## 방법론적 주의사항 (paper 해석 시 반복 등장)
-
-1. **Pseudotime ≠ Wall-clock time**: lag estimate는 pseudotime 단위. 실제 시간 단위 검증은 별도 입증 필요.
-2. **Confound 통제**: burst kinetics (mean expression + variance scaling), cell cycle phase를 covariate로 통제하지 않으면 lag estimate가 artifact일 수 있음.
-3. **Multicollinearity**: promoter ATAC, enhancer ATAC, H3K27ac, H3K4me3, TF motif score는 강한 상관 → group lasso 등 regularized model 필요.
-4. **ChIP-seq mismatch**: bulk ChIP (예: GSE70677)을 baseline feature로 쓸 때 cell type 해상도 손실 주의. multiome ATAC peak을 primary로.
-5. **Multiple testing**: gene 단위 가설 (수만 개) → BH correction 또는 permutation 기반 FDR.
-
-## 리소스 요구사항
-
-- RAM 128GB, 저장 1–2TB (dataset당 raw + intermediate 200–500GB), GPU 1대 이상 (MultiVeloVAE 재현용 — 필수).
+## 방법론 주의 (분석 시 반복)
+1. **Pseudotime ≠ wall-clock**: lag은 pseudotime 단위로 보고. (GSE209878 day0/day7은 batch 통합돼 wall-clock anchor로 직접 못 씀.)
+2. **Confound**: cell cycle·burst·ambient/doublet 통제. lineage별(within-lineage) 계산, rare lineage(MK/platelet) uncertainty 별도.
+3. **Multicollinearity**: promoter/enhancer ATAC 등 강상관 → regularized.
+4. **Multiple testing**: gene 단위 → permutation FDR.
+5. method 차이 ≠ preprocessing 차이: 공통 전처리 후 method 분기(C2), 공통 graph ablation.

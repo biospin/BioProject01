@@ -1,430 +1,76 @@
-# Paper Researcher Agent Router (Dual Lens)
-
-이 프로젝트는 scientific paper를 분석하고 구조화된 노트를 `analysis/<primary-topic>/<paper-id>/` 아래에 저장한다. 분석 결과는 **객관적 분석(core)** 과 **두 가지 해석 시선(academic / industry)** 으로 분리한다. `AGENTS.md`는 라우터 역할만 담당한다. 자세한 작성 규칙은 `skills/` 아래의 local skill에 있다.
-
-본 시스템은 paper가 1차 대상이지만 preprint, 학회 자료, industry/corporate 리포트, government/regulatory 문서, white paper, 블로그, 뉴스, webinar 등도 동일한 분석 흐름으로 지원한다 (자세한 분기는 `skills/source-grounding/SKILL.md` Part 7).
-
-## Quick Start (처음 사용자 또는 새 분석 시작)
-
-**분석 시작에 필요한 최소 정보는 한 줄이다.** 자료 종류별로 다음 패턴 중 하나로 시작하면 폴더 생성·`paper-info.yaml` seed·소스 다운로드·분석 진행이 자동으로 흘러간다.
-
-### Paper (기본 — 가장 자주)
-```
-DOI: 10.1038/s41587-022-01476-y 분석해줘
-```
-또는 PDF만 있을 때:
-```
-이 논문 분석해줘: ~/Downloads/multivelo.pdf
-```
-또는 publisher landing URL:
-```
-https://www.nature.com/articles/s41587-022-01476-y 분석해줘
-```
-
-### Preprint
-```
-https://www.biorxiv.org/content/10.1101/2022.12.13.520240v1 분석해줘
-```
-도메인이 bioRxiv·arXiv·medRxiv면 `document_type: preprint`로 자동 설정.
-
-### Industry / Corporate (DOI 없음)
-```
-~/Downloads/bcg-cell-therapy-2024.pdf BCG 2024 cell therapy 시장 리포트로 분석
-~/Downloads/illumina-wp-2024.pdf Illumina 2024 white paper로 분석
-```
-발행기관·연도·자료 종류를 prompt 안에 한 줄로 적는다. 파일명에 `wp`, `whitepaper` 등 단서가 있으면 자동 추론.
-
-### Government / Regulatory
-```
-~/Downloads/fda-guidance-cell-2024.pdf FDA 2024 cell therapy guidance로 분석
-```
-URL이 `fda.gov`, `ema.europa.eu`, `nih.gov` 등이면 자동 추론.
-
-### Web 자료 (블로그 / 뉴스 / 웨비나)
-```
-https://example.com/article 블로그로 분석
-https://www.statnews.com/... 뉴스로 분석
-https://www.youtube.com/watch?v=... 웨비나로 분석 (발표자: <name>)
-```
-URL 도메인으로 `blog` / `news` / `webinar` 자동 추론. webinar는 발표자 1줄 명시 권장.
-
-### 자료 종류가 모호할 때
-```
-이 자료 분석해줘: ~/Downloads/something.pdf
-```
-- Claude가 PDF 메타데이터 + 첫 페이지 보고 추측
-- 모호하면 **1줄 open-ended 질문**: "이 자료의 종류를 알려주세요 (paper / preprint / industry-report / whitepaper / government-report / blog / news / 기타)"
-
-### Topic 결정
-- 기존 topic 사용: `analysis/_index/papers.csv` 또는 `analysis/_index/<topic>.md` 참고. Claude가 자동 추천 후 사용자 확정.
-- 새 topic 필요: Claude가 kebab-case로 제안 후 사용자 확정.
-
-### 자동 수행되는 것
-1. `analysis/<topic>/<paper-id>/` 폴더 생성 (paper-id는 `<lastname>-<year>-<short-keyword>` 자동 생성).
-2. `paper-info.yaml` seed (Crossref API · PDF 메타 · URL · 또는 사용자 1줄 응답 기반).
-3. `sources/` 자동 download 시도 (`skills/source-grounding/scripts/fetch_sources.py`, Part 4.0 정책).
-   - Open access면 즉시 성공.
-   - Paywall이면 시도한 fallback 체인 + 최종 download URL을 안내, 사용자가 PDF를 `sources/`에 드롭.
-4. BibTeX 생성 (`sources/<paper-id>.bib`).
-5. 분석 진행 — **workflow profile**에 따라 (미지정 시 default = `full`):
-   - **fast** (빠른 스크리닝): source-grounding + abstract/core 핵심. **crop·HTML 없음.** 수 분.
-   - **full** (기본): paper / preprint / conference → `core-*` 전부 + `lens-academic` + `lens-industry` + `methodology-brief`. **HTML 없음** (markdown이 산출물).
-   - **publish**: `full` + HTML report(Figure·Table 임베드) + figure/table extraction.
-   - **slides**: slide용 figure crop만 별도 (Slide Workflow).
-   - non-paper (Part 7.3) → 경량 흐름 (`lens-industry` 중심, `methods`·`figure`·`table`은 자료에 따라 선택적).
-6. **HTML report — opt-in (default OFF)**:
-   - 명시 요청("HTML로", "publish profile", dashboard의 `Render HTML` 버튼) 시에만 `core-to-html` 호출 → `<paper-id>_core.html`(Figure·Table 임베드) + `figures/` 생성. (옵션: `<paper-id>_core-with-figures.md`)
-   - **이유**: figure crop/HTML pipeline이 분석 wall-clock의 주 병목이라(critic #3, `artifacts/2026-06-13-figure-crop-perf-diagnosis.md`) 빠른 분석 경로와 분리한다. 분석 자체는 markdown 기본.
-
-### 사용자가 직접 해야 할 일 (자동 실패 시만)
-- `sources/`에 PDF/supplementary 직접 드롭 → Claude가 자동 감지 + rename + yaml 갱신 + 분석 재개 (Part 4.3.1).
-- 모호한 종류 1줄 답변.
-- 새 topic 명명 확정.
-
-### 진행 중 체크: `analysis/_index/`
-`build_index.py`가 자동 갱신하는 `_index/papers.csv`, `_index/<topic>.md`에서 진행 상태(`analysis_status_short`), importance, use_case 등을 한눈에 확인 가능.
-
----
-
-## 출력물의 사용자
-
-- **Academic lens**: 연구자가 후속 논문을 설계하거나, 본인 논문·제안서·학회 발표에서 인용하기 위해 본다. 저자 한계, 분석자 판단, 다음 논문 아이디어, citation 후보가 중심.
-- **Industry lens**: 시니어 바이오인포매티션이 회사 파이프라인·신약개발·진단·BD 관점에서 본다. 규제(QA/RA), BD value, 자체 제품화 가능성, 활용 시나리오, 등급 평가가 중심.
-
-두 lens는 한 paper에 동시에 적용되는 것이 기본이다. 사용자가 한 쪽만 명시하면 skip 가능.
-
-## 언어
-- 기본 출력 언어는 한국어로 작성한다.
-- 분야에서 자연스러운 표준 scientific term은 English로 유지한다. 예: `RNA`, `DNA`, `TF`, `SNP`, `chromatin`, `transcription`, `translation`, `single-cell`, `multi-omics`, `baseline`, `dataset`, `benchmark`, `BD`, `QA`, `RA`, `IND`, `IRB`.
-
-## 서술 톤 / 레지스터 (모든 산출물 공통)
-
-독자는 해당 분야의 숙련 연구자·실무자다(예: 20년+ 경력 바이오인포매티션, BD·제약/CRO 실무자). 출력은 담백하고 프로페셔널하게, 그리고 **"AI가 쓴 티"가 나지 않게** 쓴다. 아래는 실제 AI 글의 특징(자료 기반)으로, 모두 피한다.
-
-피해야 할 AI 말투 — 체크리스트:
-- **단조로운 명제체 반복**: 비슷한 길이의 문장을 "~이다 / ~한다 / ~된다"로만 끝내 백과사전식 리듬을 만드는 것. 문장 길이·종결을 의도적으로 섞는다. 슬라이드는 개조식(명사형 종결: "…확장", "…한계", "…생성")을 기본으로 한다.
-- **과장·상투 은유**: "폭발 / 게임 체인저 / 클라이맥스 / 외계 / 대박", 그리고 "태피스트리 / 심포니 / 모자이크 / 여정 / 풍경" 같은 추상 은유.
-- **"X가 아니라 Y" 반전 프레임**과 **3연속 병렬(rule-of-three)**의 남용 — 한 번은 괜찮지만 반복하면 티가 난다.
-- **전환어구 남발**: 문장·문단 머리의 "또한 / 게다가 / 결론적으로 / 요약하자면".
-- **em 대시(—)·앞머리 화살표(→) 남용**: 한 슬라이드·문단에 몇 개씩 넣지 않는다. (파이프라인·플로우 단계의 →는 예외.)
-- **빈 깊이 동사**: "탐구한다 / 살펴본다 / 심층적으로 분석한다"처럼 내용 없는 포장.
-- **단정 회피·기계적 공손**: "~일 수 있습니다 / 일반적으로 / 도움이 되셨길". 근거가 있는 곳은 단정한다.
-- **권유형·구어체·수사적 질문**: "~하자", "~예요/~거죠", "어떤 X가 잘 될까?".
-
-대신: 정확한 용어·수치·출처로 핵심을 전달하고, 문장 구조를 다양하게, 실제 전문가가 메모하듯 쓴다. 과장이 아니라 수치와 근거로 강조한다. 발표자 노트도 차분한 프로페셔널 구어까지만.
-
-> 근거 자료: AI 글 특징 — em dash·"it's not X, it's Y"·tricolon·listicle (woodard.com, huntingthemuse.net, tropes.fyi); 한국어 명제체 단조 반복·전환어구·추상 은유·빈 깊이 동사 (tilnote.io, letter.wepick.kr). 이 톤 규칙은 source grounding과 함께 모든 `core-*` / `lens-*` / `methodology-brief` / `full-slides` 출력에 적용된다.
-
-## Hallucination 방지의 핵심 원칙
-
-분석은 반드시 `analysis/<primary-topic>/<paper-id>/sources/` 아래의 원문 PDF와 supplementary data만을 근거로 한다. 본문에 없는 수치, 외부 지식, 추측은 사실처럼 쓰지 않는다. 외부 맥락이 필요하면 `외부 맥락:` 또는 `해석:`으로 명시 분리한다.
-
-**원칙의 자세한 정의·예시·금지사항은 `skills/source-grounding/SKILL.md`에 한 곳에 모아둔다.** 다른 skill은 source grounding 원칙을 *따른다*고 짧게 참조만 하고 규칙을 반복하지 않는다.
-
-## 출력 경로
-
-모든 `analysis/...` 경로는 **프로젝트 루트** (예: `/Users/kkkim/projects/autobiox/BioProject01/`) 기준 상대 경로다. *논문 원문 binary*(PDF, xlsx, docx 등)는 `.gitignore`로 commit 차단되어 있고, 분석 노트(`*.md`, `paper-info.yaml`, `.url`, `.bib`)는 git tracked.
-
-```
-analysis/
-├── <primary-topic>/
-│   └── <paper-id>/                # 예: wang-2024-multivelo/
-│       ├── paper-info.yaml        # 메타데이터·citation·카테고리·다운로드 링크 (single source of truth)
-│       ├── <paper-id>_core.md                # 객관적 분석 (개요·문제·방법·결과·Figure·Table)
-│       ├── <paper-id>_lens-academic.md       # 학계 시선 해석
-│       ├── <paper-id>_lens-industry.md       # 산업 시선 해석
-│       ├── <paper-id>_methodology-brief.md   # 재현·검토용 압축본
-│       ├── figures/               # core-figure가 추출한 panel 이미지 (해당 시)
-│       ├── slides/                # full-slides 결과 (해당 시)
-│       └── sources/               # 원문 PDF + supplementary + paper.bib
-│           ├── paper.pdf
-│           ├── paper.bib
-│           └── supp_*.{pdf,xlsx,csv,...}
-└── _index/                        # 자동 생성 인덱스 (build_index.py)
-    ├── papers.csv                 # 엑셀 등에서 정렬·필터용 통합 표
-    ├── <topic>.md                 # topic별 markdown 목록 (다중 topic 지원)
-    └── README.md                  # 인덱스 사용 가이드
-```
-
-### 폴더와 식별자 규칙
-
-- `paper-info.yaml`이 *single source of truth*다. 메타데이터, citation key, BibTeX, 다운로드 링크, 카테고리(domain / use_case / importance), topics 배열이 모두 여기에 있다. 자세한 schema는 `skills/source-grounding/SKILL.md`에 정의.
-- **paper-id 형식**: `<lastname>-<year>-<short-keyword>/`
-  - 예: `wang-2024-multivelo/`, `gao-2024-multivelovae/`, `wang-2024-chromatin-rna-lag/`
-  - keyword는 *저자가 명명한 method/tool 이름* 우선 (MultiVelo, MoFlow 등). 없으면 핵심 어구 1~2단어.
-  - 같은 저자/연도/keyword 충돌 시 `-a`, `-b` suffix.
-  - paper-id는 BibTeX의 citation.key와 *대응하지만 동일하지 않다*. citation.key는 yaml에 별도 저장 (예: 폴더 `wang-2024-multivelo`, citation.key `wang2024multivelo`).
-- **paper-info.yaml 첫 줄에 human-readable header** (주석)를 둔다. 파일 열자마자 어떤 paper인지 즉시 인식.
-  ```yaml
-  # Wang et al., 2024 — MultiVelo — Nature Methods
-  # DOI: 10.1038/s41592-024-xxxxx
-  # Topics: epigenomic-lag, single-cell-genomics  |  Importance: 상
-  ```
-
-### Topic 다중 분류 규칙 (Option E)
-
-- 폴더는 *primary topic*에만 존재한다 (paper 분석은 한 곳에만 저장).
-- 추가 topic은 `paper-info.yaml`의 `topics` 배열에 명시한다 (primary는 첫 번째 항목).
-- topic별 view는 `analysis/_index/<topic>.md`에서 본다 — *primary로 속한 것 + secondary로 속한 것 모두 포함*.
-- `_index/` 디렉토리는 **자동 생성**된다. 사용자가 직접 편집하지 않는다.
-
-### Topic 결정
-
-- 사용자가 topic을 명시하면 그대로 사용한다.
-- 사용자가 topic을 명시하지 않았지만 대화나 기존 묶음에서 명확히 추론 가능하면 그 topic을 사용한다.
-- topic을 안전하게 추론할 수 없으면 분석 전에 짧게 물어본다.
-- topic folder name은 사용자가 준 주제를 kebab-case로 정규화한다. 예: `epigenomic lag` → `epigenomic-lag`.
-
-### Index 갱신
-
-- paper-info.yaml이 새로 생성되거나 갱신될 때마다 `skills/source-grounding/scripts/build_index.py`로 `_index/`를 다시 빌드한다.
-- 자세한 동작은 `skills/source-grounding/SKILL.md` 참고.
-
-## Categorization (paper-info.yaml의 일부)
-
-모든 paper는 다음 카테고리 메타데이터를 갖는다. 분석 과정에서 LLM이 자동으로 채우고 사용자가 검토·수정한다.
-
-- **domain** (분야): abstract / title / venue 정보에서 LLM이 자동 추출. freeform vocabulary로 시작하고 자주 나오는 태그는 추후 누적.
-- **use_case** (활용 시나리오): 아래 6개 vocabulary에서 1~3개. 새 vocabulary 추가는 허용하되 본인 확인을 받는다.
-  - `academic-citation` — 본인 논문·제안서·학회 발표 reference
-  - `methodology-reference` — 방법 차용·변형
-  - `pipeline-applicable` — 우리 데이터·프로세스에 바로 적용
-  - `BD-opportunity` — 외부 자산 라이선싱·공동연구·경쟁사 관찰
-  - `commercialization-candidate` — 자체 제품화 (Dx / assay / SW / therapeutic)
-  - `regulatory-precedent` — FDA / EMA / IRB 참고 사례
-- **importance**: `level` (상 / 중 / 하) + `perspective` (어떤 관점에서 그 등급인지 한두 문장 사유).
-
-domain은 abstract 분석 단계에서, use_case와 importance는 전체 분석 후 `lens-industry` 단계에서 채우는 것이 자연스럽다. 자세한 작성 규칙은 `skills/lens-industry/SKILL.md` 참고.
-
-## Skill Routing
-
-| Task | Skill |
-| --- | --- |
-| 데이터셋(accession)·주제·method로부터 분석에 쓸 새 문헌 발견 (repo 중복 제거 + 역할별 분류) | `skills/lit-search/SKILL.md` |
-| 원문/supplementary 다운로드, paper-info.yaml 작성, 외부 정보 차단 규칙 | `skills/source-grounding/SKILL.md` |
-| Abstract만 빠르게 훑는 경량 분석 | `skills/abstract-analysis/SKILL.md` |
-| `<paper-id>_core.md` 문제 정의 & 연구 목적 | `skills/core-problem/SKILL.md` |
-| `<paper-id>_core.md` 방법론 분석 | `skills/core-methods/SKILL.md` |
-| `<paper-id>_core.md` 주요 결과 (통계 유의성·재현성 강조) | `skills/core-results/SKILL.md` |
-| `<paper-id>_core.md` Figure 분석 | `skills/core-figure/SKILL.md` |
-| `<paper-id>_core.md` Table 분석 | `skills/core-table/SKILL.md` |
-| `<paper-id>_lens-academic.md` 학계 시선 (저자 한계 + 분석자 판단 + 후속 연구 + citation 후보) | `skills/lens-academic/SKILL.md` |
-| `<paper-id>_lens-industry.md` 산업 시선 (QA/RA 리스크 + BD value + 제품화 + 전문가 코멘트 + 카테고리화) | `skills/lens-industry/SKILL.md` |
-| `<paper-id>_methodology-brief.md` 재현·검토용 압축본 | `skills/methodology-brief/SKILL.md` |
-| 여러 paper를 같은 schema로 수집·정규화 | `skills/paper-scrapper/SKILL.md` |
-| paper 묶음에서 연구 흐름·차이·gap 도출 | `skills/insight-agent/SKILL.md` |
-| insight의 근거·논리·과장 여부 검증 | `skills/validation-agent/SKILL.md` |
-| 기존 `<paper-id>_core.md` 기반 정적 slide deck 생성 | `skills/full-slides/SKILL.md` |
-| 분석된 paper에 대한 질문 | `skills/question/SKILL.md` |
-
-## Full Paper Workflow
-
-PDF가 주어졌을 때 다음 순서로 진행한다.
-
-1. **Topic 결정**: 사용자 명시 → 추론 → 모호하면 질문.
-2. **Source 준비** (`skills/source-grounding/SKILL.md`):
-   - `analysis/<primary-topic>/<paper-id>/sources/`에 PDF와 가능한 모든 supplementary를 모은다.
-   - `paper-info.yaml` 스켈레톤 생성 (메타데이터 + citation + 다운로드 링크).
-   - `sources/paper.bib` 생성.
-   - 외부 지식 사용 금지 규칙을 분석 세션 동안 유지한다.
-3. **Metadata 및 domain 추출**: title, authors, year, venue, field, keywords를 `paper-info.yaml`과 `<paper-id>_core.md` 첫 부분에 정리. abstract 기반으로 domain 태그도 LLM이 추출하여 `paper-info.yaml`에 기록.
-4. **`<paper-id>_core.md` 작성** — 객관적 분석. 다음 순서로 skill 호출:
-   - 문제 정의: `core-problem`
-   - 방법론: `core-methods` (adaptive depth — 자료 유형별 깊이 자동 조정)
-   - 주요 결과: `core-results`
-   - Figure 분석: `core-figure`
-   - Table 분석: `core-table`
-5. **`<paper-id>_lens-academic.md` 작성** (`lens-academic`): 저자 한계 / 분석자 판단 / 매끄럽지 않은 지점 / 다음 논문 아이디어 / 본인 논문에서 인용할 후보 문장·수치. *학술적* 한계만 다룬다 (산업·규제·임상은 lens-industry로).
-6. **`<paper-id>_lens-industry.md` 작성** (`lens-industry`): 산업·규제·임상 리스크 / BD value & 상용화 가능성 / 전문가 코멘트(등급·활용 우선순위). 이 단계에서 `paper-info.yaml`의 `use_case`와 `importance`도 채운다.
-7. **`<paper-id>_methodology-brief.md` 작성** (`methodology-brief`): 재현·검토용 압축본. 우리 데이터에 적용/재현 가능한지 빠르게 판단하기 위한 메모.
-8. **Executive Summary (<paper-id>_core.md 맨 앞 추가)** — 위 모든 단계가 끝난 *후* LLM이 <paper-id>_core.md 맨 앞에 bullet 5종을 추가한다. 본인이 분석 노트를 다시 펴봤을 때 **1초 안에 paper 그림을 파악**하기 위함. 1단락 prose가 아니라 *scannable한 bold-labeled bullet* — 길더라도 시선이 한 번에 잡힘. 형식:
-   ```markdown
-   ## Executive Summary
-
-   - **무엇**: [무슨 문제를 풀고자 하는 자료인지, 핵심 contribution 1줄]
-   - **모델 / 방법**: [핵심 method 한 줄. 입력 → 출력, 수학 골격은 $...$ inline. AGENTS.md "표기 규칙"의 LaTeX 규칙 준수]
-   - **핵심 결과**:
-     - ① [Dataset/벤치마크 1] — 한 줄, 수치 1개 포함
-     - ② [Dataset/벤치마크 2] — 한 줄
-     - ③ ... (필요시 최대 5~6개. 같은 dataset의 결과는 묶어서 한 줄)
-   - **우리 적용**: [우리 프로젝트에 어떻게 쓸 수 있는지 한 줄. pipeline-applicable / methodology-reference / academic-citation 중 어느 use_case인지 단서]
-   - **심층**: 한계·재현 ROI는 `<paper-id>_lens-academic.md` / `<paper-id>_lens-industry.md` / `<paper-id>_methodology-brief.md` 참고.
-   ```
-   이 섹션은 별도 skill로 빼지 않고 *분석 마무리 단계*에서 LLM이 직접 작성한다 (core-* 출력을 모아 압축). 한 항목당 *최대 2줄*을 넘기지 않는다 — 풍부한 설명은 본문 sections에 두고, Executive Summary는 *진입점*에 집중.
-
-각 단계의 출력은 위 출력 경로의 해당 파일에 누적해 저장한다. 한 skill이 다른 skill의 출력을 참조할 수 있다 (예: `lens-industry`는 `core-results`의 수치를 인용).
-
-## Evidence-to-Insight Workflow (Week2)
-
-이 workflow는 1주차의 paper-level 분석을 대체하지 않는다. 기존 `analysis/<primary-topic>/<paper-id>/` 분석 폴더는 개별 paper deep analysis의 single source이고, Week2 결과물은 여러 paper를 비교하는 topic-level layer로 별도 관리한다.
-
-### 출력 위치
-
-기본 위치는 다음과 같다.
-
-```text
-analysis/<primary-topic>/_evidence/week2/
-├── scope.md
-├── papers.jsonl
-├── comparison_table.md
-├── evidence_bundle.md
-├── insight.md
-├── validation_report.md
-└── handoff.md
-```
-
-- `analysis/<primary-topic>/<paper-id>/`: 개별 paper 분석. 1주차 산출물 유지.
-- `analysis/<primary-topic>/_evidence/week2/`: 여러 paper를 묶어 비교·해석·검증하는 Week2 산출물.
-- 이미 full analysis가 끝난 paper는 `paper-info.yaml`, `<paper-id>_core.md`, `<paper-id>_lens-academic.md`, `<paper-id>_lens-industry.md`, `<paper-id>_methodology-brief.md`를 우선 evidence로 사용한다.
-- 아직 full analysis가 없는 후보 paper는 abstract, DOI metadata, source URL 기반 record를 만들되, 추정/미제공 필드를 명확히 표시한다.
-
-### 단계
-
-1. **Topic Scope 정의** — `scope.md`
-   - topic, seed paper, keyword, 포함/제외 기준, 우선순위를 적는다.
-   - 예: `epigenomic-lag`, seed: MultiVelo / MultiVeloVAE / MoFlow.
-   - seed/후보를 직접 발굴해야 하면 먼저 `skills/lit-search/SKILL.md`로 dataset(accession)·주제 기반 문헌 발견을 돌려 candidate 목록을 만들고 그 결과를 `scope.md` seed로 넣는다.
-2. **Paper Scrapper 실행** — `skills/paper-scrapper/SKILL.md`
-   - 후보 paper를 수집하고 중복 제거한다.
-   - 모든 paper를 같은 record schema로 정규화한다.
-   - 출력: `papers.jsonl`, `comparison_table.md`, `evidence_bundle.md`.
-3. **Insight Agent 실행** — `skills/insight-agent/SKILL.md`
-   - `evidence_bundle.md`를 읽고 연구 흐름, 차별점, 반복 한계, unresolved gap, 후속 실험/분석 후보를 도출한다.
-   - 출력: `insight.md`.
-4. **Validation Agent 실행** — `skills/validation-agent/SKILL.md`
-   - `evidence_bundle.md`와 `insight.md`를 대조해 근거 부족, 빠진 전제, 과장된 결론, claim별 신뢰도를 점검한다.
-   - 출력: `validation_report.md`.
-5. **Cross Validation / Handoff**
-   - 여러 사람의 Validation Agent 결과가 있으면 일치/불일치 항목을 비교한다.
-   - 팀 지식화가 필요하면 `handoff.md`에 Jira / Confluence에 옮길 수 있는 action item 형태로 정리한다.
-
-### Paper Record Contract
-
-`papers.jsonl`은 한 줄에 paper 하나를 담는다. 모든 record는 가능한 한 아래 field를 유지한다. 값이 없으면 `null`, `[]`, 또는 `미제공:`으로 표시하고 추측으로 채우지 않는다.
-
-```json
-{
-  "record_id": "li-2023-multivelo",
-  "title": "MultiVelo: ...",
-  "authors": ["Li, ..."],
-  "year": 2023,
-  "venue": "Nature Biotechnology",
-  "doi": "...",
-  "url": "...",
-  "local_analysis": "analysis/epigenomic-lag/li-2023-multivelo",
-  "document_type": "paper",
-  "topic_relevance": "왜 이 topic에 들어오는지",
-  "research_question": "논문이 푸는 문제",
-  "assay_or_data": ["10x Multiome", "SHARE-seq"],
-  "method": "핵심 method / model / algorithm",
-  "main_claims": ["claim 1", "claim 2"],
-  "key_results": ["결과와 수치. 근거 위치 포함"],
-  "limitations": ["저자 한계 또는 분석자 한계. prefix 사용"],
-  "follow_up": ["후속 실험/분석 후보"],
-  "evidence_sources": ["core.md §Results", "Figure 2", "paper-info.yaml"],
-  "status": "full-analysis | abstract-only | metadata-only | needs-pdf"
-}
-```
-
-### OpenClaw 운영 반영
-
-OpenClaw에서는 위 workflow를 role별 agent로 나누어 실행한다. 자세한 운영 문서는 `openclaw/week2-agent-setup.md`를 따른다.
-
-- Paper Scrapper Agent: `skills/paper-scrapper/SKILL.md`
-- Insight Agent: `skills/insight-agent/SKILL.md`
-- Validation Agent: `skills/validation-agent/SKILL.md`
-- Integrator / Orchestrator: `handoff.md` 정리 및 Jira / Confluence 이관 준비
-
-## core.md 섹션 구조 (정합성 규칙)
-
-`<paper-id>_core.md`는 `/clear`·`/compact` 후 재생성해도 *같은 구조*가 나오도록 다음 top-level 섹션을 **순서·이름 그대로** 사용한다. paper-style 변형(예: clinical paper의 Patients/Cohort)은 sub-section 수준에서만 허용.
-
-1. **Executive Summary** — 분석 마무리 단계에 추가 (3~5문장).
-2. **Identity** — title / authors / year / venue / DOI / citation key (paper-info.yaml의 Identity 블록 축약).
-3. **Background** — 배경 스토리, 기본 개념, 이 논문의 필요성. `core-problem` skill 출력.
-4. **Methods** — formal task → 확률/통계 구조 → 핵심 method insight → 이전 방법과 차이 → Results에서 효과 → Method 한계. `core-methods` skill 출력.
-5. **Results** — Dataset 1..N → 전체 결과 요약 (+ simulation/ablation 있으면 sub-section). `core-results` skill 출력.
-6. **Figures** — 본문 Figure 1..N → Extended Data Figures (해당 시). `core-figure` skill 출력.
-7. **Tables** — 본문 Table → Supplementary Tables. `core-table` skill 출력. (본문 정식 Table 없으면 "본문에 정식 Table 없음" 한 줄로 표시.)
-8. **Supplementary Information** — Supplementary Notes / 추가 Figure / 추가 Table 정리.
-9. **분석 자체에 대한 메모** (선택) — 분석자가 남기는 self-note. 누락된 검증, 후속 질문, 재검토 항목.
-
-### 표기 규칙
-
-- Section name은 위 **영어 단어 그대로** (Executive Summary, Identity, Background, ...). 한국어 번역 추가 표기 금지 ("Background (배경)" 같은 형태 X).
-- Top-level은 `##` 수준. Sub-section은 `###`, sub-sub는 `####`.
-- 번호 매김 사용 안 함 (`## 1. Background` 형태 X). 순서는 위 8 + 1개로 고정.
-- Figure/Table sub-section 안에서는 다음 3개 sub-sub를 권장 (`####` 수준): "패널별 설명", "본문에서 강조한 비교", "해석 시 주의점".
-- 페이지 ref·accession ID는 본문 inline에 (예: "Dataset 1 — 10x Multiome E18 mouse brain (Wang 2020, GSE140203)").
-- **수식은 LaTeX `$...$` (inline) / `$$...$$` (display) 사용**. backtick code span(`` `...` ``)에 수식을 넣지 않는다 — `core-to-html`의 MathJax 렌더링에서 code span은 의도적으로 제외되므로 HTML에서 raw text로 표시된다. Greek/Sum/Expectation은 LaTeX 명령(`\alpha`, `\rho`, `\sum`, `\mathbb{E}`, `\mathrm{KL}`)으로. 자세한 규칙은 `skills/core-methods/SKILL.md` 언어 규칙 참고.
-
-### 검증
-
-본 정합성 규칙이 지켜졌는지 확인은 build_index 같은 별도 도구가 아닌, **LLM이 마무리 단계에서 self-check**한다. 누락된 섹션 있으면 *그 사유*를 본문에 명시 (예: "## Tables\n본문에 정식 Table 없음.").
-
-## Abstract-only Workflow
-
-사용자가 *초록만* 가지고 있거나 *빠른 스크리닝*만 요청하면:
-
-1. `skills/source-grounding/SKILL.md`로 `paper-info.yaml` 스켈레톤만 생성 (PDF가 없어도 abstract 출처와 메타데이터는 기록).
-2. `skills/abstract-analysis/SKILL.md`로 `analysis/<primary-topic>/<paper-id>/<paper-id>_abstract.md`를 작성.
-3. Abstract에 없는 정보는 추측 금지.
-4. 나중에 full paper 분석을 진행하면 `<paper-id>_abstract.md`는 그대로 보존하고 `<paper-id>_core.md`를 별도로 생성한다. 둘은 공존한다.
-
-## Slide Workflow
-
-사용자가 slides, slide deck, presentation 생성을 명시적으로 요청했을 때만 다음 순서를 따른다.
-
-1. `skills/full-slides/SKILL.md`를 사용한다.
-2. 먼저 `analysis/<primary-topic>/<paper-id>/<paper-id>_core.md`가 존재해야 한다. 없으면 slide를 만들지 말고 full paper 분석이 먼저 필요하다고 말한다.
-3. `design.md`를 필수 visual design reference로 사용한다.
-4. source PDF에서 관련 Figure image를 캡처해 `slides/assets/figures/`에 저장한다.
-5. 각 Figure image는 slide 절반 이하 크기로 유지한다. 큰 multi-panel Figure는 여러 slide로 나눈다.
-6. 출력은 `analysis/<primary-topic>/<paper-id>/slides/` 아래 OpenClaw Slides 기반 browser-previewable journal-meeting deck.
-7. 사용자가 video export를 명시적으로 요청하지 않는 한 video는 render하지 않는다.
-8. 일반 paper analysis 중에는 slides를 자동 생성하지 않는다.
-
-## Question Workflow
-
-사용자가 이미 분석된 paper에 대해 질문하면 다음 순서를 따른다.
-
-1. `skills/question/SKILL.md`를 사용한다.
-2. 답변 우선순위:
-   - 해당 paper의 `<paper-id>_core.md`에 답이 있으면 그 파일만 근거로 답한다.
-   - 그래도 부족하면 같은 paper의 `<paper-id>_lens-academic.md`, `<paper-id>_lens-industry.md`, `<paper-id>_methodology-brief.md`, `paper-info.yaml`을 참고한다.
-   - 다른 분석된 자료에서 답을 찾으면 `<paper-id>에 따르면...` 형식으로 출처를 명시한다. citation이 필요하면 `paper-info.yaml`의 `citation.key`를 사용 (예: `@wang2024multivelo`).
-   - 어떤 분석 파일에도 답이 없으면 그 사실을 말하고 추측하지 않는다.
-3. 원문 PDF/외부 지식을 우선 근거로 삼지 않는다. 필요한 경우 먼저 `<paper-id>_core.md`를 업데이트한 뒤 다시 답한다.
-
-## Lens 선택 규칙 (요약)
-
-- 기본: `paper-info.yaml` + `<paper-id>_core.md` + `<paper-id>_lens-academic.md` + `<paper-id>_lens-industry.md` + `<paper-id>_methodology-brief.md` 모두 작성.
-- 사용자가 "academic만" 또는 "industry만"이라고 명시 → 명시된 lens 파일만 작성. 다른 lens는 생성하지 않는다. 단 `paper-info.yaml`의 `use_case`·`importance`는 industry skip 시에도 LLM이 가능한 범위에서 추출하고 *추정 표시* 후 기록한다 (나중에 필요할 때 본인 확인).
-- 사용자가 "core만"이라고 명시 → lens 파일은 생성하지 않는다.
-- 어떤 경우에도 `paper-info.yaml`, `<paper-id>_core.md`, `sources/`는 필수이다.
-
-## Web Dashboard Workflow
-
-사용자가 "웹으로 논문 분석", "클릭으로 논문 해석", "팀원에게 논문 분석 하네스 배포"처럼 요청하면 `web/` 대시보드를 안내한다.
-
-- 로컬 실행: `python3 web/app.py --port 8765`
-- 팀 LAN 공유: `./web/scripts/share_dashboard.sh`
-- 확인 문서: `web/README.md`, `web/DEPLOY.md`
-- PDF 업로드 저장소: `artifacts/uploads/<timestamp>-<filename>.pdf`
-- 실행 요청 기록: `artifacts/web-runs/<run-id>/request.json`, `artifacts/web-runs/<run-id>/prompt.md`
-- 실행 엔진(둘 다 `prompt.md`를 stdin으로 받아 repo를 cwd로 자율 실행, 한 요청에 독립적으로 둘 다 가능):
-  - `Claude로 분석` → `claude -p --dangerously-skip-permissions`, 기록 `claude-job.json` / `claude.log`
-  - `Codex로 분석` → `codex exec --cd <repo> -`, 기록 `codex-job.json` / `codex.log`
-- 웹 보기:
-  - `Render HTML`은 `skills/core-to-html/scripts/build_html.py <paper-dir>`를 실행한 뒤 `/view/html?paper_path=<paper-dir>` 새 탭으로 연다.
-  - `View Core`는 `<paper-id>_core.md`를 `/view/core?path=<core-md>`에서 browser-readable HTML로 렌더링해 연다.
-- 상태 확인:
-  - 실행 직후 하단 실행 패널의 status card, generated-file badges, 엔진 log tail을 확인한다(`상태 새로고침`).
-  - 대시보드 재시작 후 실행 PID를 잃으면 `finished-unknown`으로 표시하고 `<engine>.log`와 산출물 존재 여부를 기준으로 판단한다.
-
-웹 대시보드는 기존 분석 규칙을 대체하지 않는다. 새 분석 요청을 클릭으로 기록하고, 기존 `AGENTS.md` Full Paper Workflow에 넣을 `prompt.md`를 만든다. 결정적 스크립트 실행은 `analysis/_index/` rebuild와 `<paper-id>_core.html` render에 한정한다. LLM이 필요한 core/lens/methodology 분석은 기존 `skills/` 규칙과 `analysis/<topic>/<paper-id>/` 산출물 계약을 그대로 따른다.
-
-### Web Dashboard Evolution Log
-
-- 2026-06-08: CLI 중심 paper-analysis workflow를 클릭 기반 dashboard로 확장했다. `Run in Codex`, status polling, generated-file badges, browser-readable `View Core`, render 후 새 탭으로 여는 `Render HTML`, LAN 배포 스크립트, 재현 문서와 발표용 문서를 추가했다. 자세한 기록은 `artifacts/2026-06-08-bioproject01-web-dashboard-worklog.md`와 `artifacts/2026-06-08-bioproject01-web-dashboard-presentation.md`를 본다.
-- 2026-06-08: PDF-first web flow를 추가했다. 로컬 PDF는 브라우저에서 업로드해 `artifacts/uploads/`에 저장하고, 반환된 repo-relative path를 Source로 사용해 분석 prompt를 만든다.
+> 출처: 이 분석 하네스(`AGENTS.md` + `skills/`)는 **박상준(@poqopo) `Harness_Baseline`** 에서 반입해 BioProject01 `kkkim-pipeline`(실제 파이프라인 실행)에 맞게 적용함. 원저작자 박상준 (원 repo LICENSE 미지정 — 공유·수정은 박상준 동의 전제). HSPC는 `pipeline/hspc-velocity-benchmark/` 실행 구현과 연결.
+
+# AGENTS.md
+
+이 저장소는 single-cell multi-omic 또는 time-resolved ATAC/RNA 데이터로 gene-specific epigenomic lag structure를 분석하는 작업 공간입니다. 핵심 목표는 chromatin accessibility 변화와 transcription 변화 사이의 시간차를 정량화하고, 이 lag structure가 perturbation 또는 epigenetic drug response timing을 예측하는지 검증하는 것입니다.
+
+## Project Frame
+
+- Chromatin accessibility와 transcription 사이의 lag은 gene마다 다르다.
+- Promoter/enhancer accessibility, histone marks, TF occupancy, regulatory architecture는 activation lag과 shutdown lag의 크기를 설명할 수 있다.
+- Gene-specific lag structure는 perturbation 또는 epigenetic drug에 대한 gene-level response timing 예측 변수로 검증한다.
+- 기존 Model 1/Model 2 이분법은 gene-specific kinetic spectrum으로 확장해서 해석한다.
+
+## Lag Definitions
+
+- `activation lag` 또는 `priming time` = `transcription onset time - chromatin opening time`
+- `shutdown lag` 또는 `closing lag` = `chromatin closing time - transcription shutdown time`
+- `Model 1-like`: chromatin 변화가 먼저 일어나고 transcription 변화가 뒤따르는 패턴
+- `Model 2-like`: transcription 변화가 먼저 일어나고 chromatin 변화가 뒤따르는 패턴
+
+Lag은 기본적으로 연속형 값으로 다루고, 필요할 때만 short/long lag class로 이산화합니다. 시간축은 pseudotime, real time, inferred switch time, DTW alignment time 중 무엇인지 항상 명시합니다.
+
+## Analysis Priorities
+
+1. Gene별 chromatin opening, transcription onset, transcription shutdown, chromatin closing time을 추정하거나 입력으로 받는다.
+2. Gene-specific activation lag과 shutdown lag을 계산하고 confidence, uncertainty, missingness를 함께 남긴다.
+3. Baseline epigenomic features로 lag structure를 예측하는 모델을 만든다.
+4. 예측된 lag structure와 실제 perturbation/drug response timing의 관계를 분리해서 검증한다.
+
+Baseline gene-level feature는 promoter/enhancer accessibility, H3K27ac, H3K27me3, H3K4me3, TF occupancy 또는 motif score, peak-to-gene linkage, CpG density/promoter class를 우선 고려합니다.
+
+## Required Metadata
+
+Feature, label, 결과를 만들 때 다음 정보를 기록합니다.
+
+- genome build와 gene annotation source
+- promoter/enhancer 정의와 peak-to-gene 연결 기준
+- 입력 데이터 형식, sample metadata, replicate 여부
+- time/trajectory definition, lineage 또는 cell state annotation
+- cutoff, sample/group 정의, missingness 처리 방식
+
+## Reference Frame
+
+- MultiVelo, Nature Biotechnology 2023: chromatin/RNA switch time, Model 1/Model 2, priming interval, decoupling interval
+- MultiVeloVAE, Nature Communications 2025: continuous, lineage-specific chromatin/RNA dynamics
+- MoFlow, Nature Communications 2025/2026 record: gene별 DTW 기반 chromatin-vs-spliced RNA lag와 asynchronous timing
+
+참고 연구 재현에 머무르지 말고 activation lag과 shutdown lag이라는 통일된 kinetic variable로 재구성합니다. 외부 데이터셋, accession, portal URL, 사용 조건, 파일 형식은 분석 시점에 공식 출처로 확인합니다.
+
+## Dataset Routing
+
+Dataset-specific workflow는 `skills/ROUTES.md`에 위임합니다.
+
+1. Dataset 작업 요청이면 먼저 `skills/ROUTES.md`를 읽습니다.
+2. Dataset을 먼저 고르고, 그 다음 task type을 고릅니다.
+3. `skills/<dataset>/<task>/SKILL.md`를 사용합니다.
+4. Cross-dataset 작업에서는 dataset별 genome build, annotation, time axis, lineage/cell state, lag definition, uncertainty를 정렬한 뒤 비교합니다.
+
+## Repository Conventions
+
+- `data/`: 입력 데이터 또는 원본 데이터 위치 안내
+- `metadata/`: sample sheet, cell annotations, comparison design, genome build 정보
+- `scripts/`: 재사용 가능한 분석 스크립트
+- `results/`: 최종 결과 테이블, 그림, 리포트
+- `work/`: 중간 산출물
+
+대용량 생물정보 파일은 원본을 덮어쓰지 않고 `results/`, `outputs/`, `work/` 같은 산출물 경로를 사용합니다.
+
+## Tooling And Reporting
+
+- 파일 탐색은 `rg`와 `rg --files`를 우선 사용합니다.
+- 기존 스크립트나 설정이 있으면 새로 만들기 전에 먼저 읽고 같은 스타일로 수정합니다.
+- FASTQ/BAM/BED/bigWig/MTX/H5AD/H5MU 파일은 가능한 경우 헤더, shape, obs/var metadata, 일부 레코드를 확인합니다.
+- 모델 성능은 accuracy보다 ranking, calibration, held-out lineage/dataset generalization, early-vs-late response separation을 중점적으로 평가합니다.
+- 결과 보고에는 변경 파일, 실행 명령, 검증 결과를 간단히 포함합니다.
+- 생물학적 해석은 데이터와 모델이 지지하는 범위 안에서만 작성하고, 불확실한 부분은 명확히 표시합니다.

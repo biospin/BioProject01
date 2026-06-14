@@ -1,4 +1,0 @@
-interface:
-  display_name: "Full Background"
-  short_description: "논문의 배경 스토리를 정리합니다."
-  default_prompt: "이 논문의 Background를 한국어로 분석해줘. 왜 이 논문이 필요했는지, 선행연구가 무엇을 했고 무엇을 못했는지, 이해에 필요한 기본 개념을 정리해줘."

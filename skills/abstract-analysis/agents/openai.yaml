@@ -1,4 +1,0 @@
-interface:
-  display_name: "Abstract Analysis"
-  short_description: "논문 Abstract를 구조화합니다."
-  default_prompt: "이 논문 Abstract를 한국어로 분석하고 연구 목적, gap, 방법, 결과, 기여, 주의점으로 구조화해줘."

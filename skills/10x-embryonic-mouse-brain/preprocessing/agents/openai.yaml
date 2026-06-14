@@ -1,0 +1,4 @@
+interface:
+  display_name: "10x Mouse Brain Preprocessing"
+  short_description: "10x embryonic mouse brain multiome 전처리를 준비합니다."
+  default_prompt: "10x embryonic mouse brain multiome 데이터의 preprocessing plan을 한국어로 작성해줘. 입력 파일, metadata, QC, genome build, time axis, output을 포함해줘."

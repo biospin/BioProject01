@@ -1,4 +1,0 @@
-interface:
-  display_name: "Full Discussion"
-  short_description: "한계와 다음 논문 아이디어를 깊게 정리합니다."
-  default_prompt: "이 논문의 Discussion을 한국어로 분석해줘. 앞선 분석을 바탕으로 limitation, 설명이 매끄럽지 않은 부분, 빠진 부분, 그리고 다음 논문 아이디어로 이어질 final takeaways를 정리해줘."
