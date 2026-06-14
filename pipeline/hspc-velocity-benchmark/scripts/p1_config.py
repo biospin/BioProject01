@@ -35,6 +35,20 @@ N_NEIGHBORS = 30                     # 공통 neighbor graph (shared-graph ablat
 LEIDEN_RES = 1.0                     # method-agnostic annotation (DESIGN §3)
 RANDOM_SEED = 0
 
+# ── lineage marker (method-agnostic annotation; score_genes → Leiden cluster argmax) ──
+# HSPC multiome 표준 marker. var_names에 있는 것만 사용. 모든 P3/P4 지표는 within-lineage.
+LINEAGE_MARKERS = {
+    "HSC/MPP":       ["CD34", "AVP", "HLF", "CRHBP", "MLLT3", "MEIS1"],
+    "Erythroid":     ["GATA1", "KLF1", "HBB", "HBA1", "GYPA", "ALAS2", "TFRC"],
+    "MK":            ["PF4", "PPBP", "ITGA2B", "GP9", "VWF"],          # rare
+    "Myeloid":       ["SPI1", "MPO", "ELANE", "AZU1", "LYZ", "CSF1R", "CD14"],
+    "Lymphoid":      ["IL7R", "DNTT", "CD79A", "EBF1", "VPREB1"],
+    "Baso/Eo/Mast":  ["MS4A2", "CPA3", "HDC", "GATA2"],               # rare
+    "pDC":           ["IRF8", "IRF7", "TCF4", "LILRA4"],              # rare
+}
+# rare lineage = within-lineage 지표에서 uncertainty 별도 보고 (CLAUDE.md 방법론 #2)
+RARE_LINEAGES = {"MK", "Baso/Eo/Mast", "pDC"}
+
 # ── 산출물 경로 ──
 OUT_RNA = OUT / "rna_spliced_unspliced.h5ad"   # spliced/unspliced layer 포함 통합 RNA
 OUT_ATAC = OUT / "atac_peaks.h5ad"             # peak matrix

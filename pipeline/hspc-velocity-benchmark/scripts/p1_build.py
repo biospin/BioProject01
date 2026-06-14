@@ -147,6 +147,37 @@ def qc_sample(rna, atac, name):
     return rna, atac
 
 
+def annotate_lineage(rna):
+    """marker score_genes → Leiden cluster 단위 argmax 할당 (method-agnostic lineage).
+
+    per-cell이 아니라 cluster 단위로 할당해 노이즈에 강함. log-normalized X 전제(build 순서상 충족).
+    var_names에 있는 marker만 사용; rare lineage는 obs['lineage_rare']로 표시.
+    """
+    import pandas as pd
+    used, missing = {}, {}
+    for lin, genes in cfg.LINEAGE_MARKERS.items():
+        present = [g for g in genes if g in rna.var_names]
+        if present:
+            sc.tl.score_genes(rna, present, score_name=f"sig_{lin}", ctrl_size=50,
+                              random_state=cfg.RANDOM_SEED)
+            used[lin] = present
+        miss = [g for g in genes if g not in rna.var_names]
+        if miss:
+            missing[lin] = miss
+    if not used:
+        print("  ⚠ lineage marker가 var_names에 하나도 없음 → lineage 할당 생략")
+        return rna
+    score_cols = [f"sig_{lin}" for lin in used]
+    means = rna.obs.groupby("leiden", observed=True)[score_cols].mean()
+    cl2lin = means.idxmax(axis=1).str.replace("sig_", "", regex=False)
+    rna.obs["lineage"] = rna.obs["leiden"].map(cl2lin).astype("category")
+    rna.obs["lineage_rare"] = rna.obs["lineage"].isin(cfg.RARE_LINEAGES)
+    print(f"  lineage marker 누락(var_names에 없음): {missing or '없음'}")
+    print("  cluster→lineage:\n    " + cl2lin.to_string().replace("\n", "\n    "))
+    print("  lineage 분포:\n    " + rna.obs["lineage"].value_counts().to_string().replace("\n", "\n    "))
+    return rna
+
+
 def _ckpt_paths(name):
     """per-sample 체크포인트 경로 (load+loom+ATAC+QC 까지 끝난 상태)."""
     cd = cfg.OUT / "_ckpt"
@@ -190,7 +221,18 @@ def build(fresh=False):
     sc.pp.neighbors(rna, n_neighbors=cfg.N_NEIGHBORS, random_state=cfg.RANDOM_SEED)
     sc.tl.leiden(rna, resolution=cfg.LEIDEN_RES, random_state=cfg.RANDOM_SEED, key_added="leiden")
     print(f"Leiden clusters: {rna.obs['leiden'].nunique()}")
-    # TODO: marker 기반 lineage 라벨(GATA1/KLF1 erythroid, SPI1/MPO myeloid 등) → rna.obs['lineage']
+
+    # marker 기반 lineage 라벨 (method-agnostic) — 모든 P3/P4 지표가 within-lineage라 P2 선행 게이트
+    rna = annotate_lineage(rna)
+
+    # lineage/timepoint를 ATAC에도 전달 (within-lineage 지표는 양 modality 필요; 동일 cell 집합)
+    import pandas as pd
+    if "lineage" in rna.obs:
+        lin_map = pd.Series(rna.obs["lineage"].astype(str).values, index=rna.obs_names)
+        atac.obs["lineage"] = pd.Categorical(pd.Index(atac.obs_names).map(lin_map))
+        atac.obs["lineage_rare"] = atac.obs["lineage"].isin(cfg.RARE_LINEAGES)
+    atac.obs["leiden"] = pd.Categorical(
+        pd.Index(atac.obs_names).map(pd.Series(rna.obs["leiden"].astype(str).values, index=rna.obs_names)))
 
     # ATAC(gene-level) 정규화 (TODO: multivelo tfidf_norm vs normalize — method 요구 확인)
     sc.pp.normalize_total(atac, target_sum=1e4)
