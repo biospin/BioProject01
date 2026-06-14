@@ -1,0 +1,99 @@
+# Martin, Eric W, 2023 — hspc-chromatin — Stem Cells
+# DOI: 10.1093/stmcls/sxad022
+# Topics: chromatin-rna-coupling (primary), single-cell-genomics  |  Importance: 중
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"   # 재확인 결과 primary research article (PDF header "Original Research", Results·CRISPRi 직접 수행). 이전 "review" 오기 수정 (2026-06-12).
+title: "Dynamics of Chromatin Accessibility During Hematopoietic Stem Cell Differentiation Into Progressively Lineage-Committed Progeny"
+authors:
+  - "Martin, Eric W"
+year: 2023
+venue: "Stem Cells"
+doi: "10.1093/stmcls/sxad022"
+pmid: "36945732"
+pmcid: "PMC10183972"
+keywords:
+  - "hematopoietic stem cells"
+  - "chromatin accessibility"
+  - "differentiation"
+  - "lineage commitment"
+
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2023-05-15"
+
+topics:
+  - "chromatin-rna-coupling"    # primary
+  - "single-cell-genomics"
+
+citation:
+  key: "martin2023hspcchromatin"
+  short_id: "hspc-chromatin"
+  bibtex_file: "sources/martin-2023-hspc-chromatin.bib"
+  bibtex_type: "article"
+
+sources:
+  paper:
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10183972/"
+    local: "sources/martin-2023-hspc-chromatin.pdf"
+    status: "downloaded"
+    note: "Stem Cells, open via PMC10183972. PDF 본문 직접 확보. primary research article."
+  supplementary:
+    - local: "sources/sxad022_suppl_supplementary_materials.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Supplementary Tables S1-S6 legends (exclusively primed peak lists) + Supplementary Figure 1 (MEP lost peaks GREAT/motif)"
+  data:
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184851"
+      type: "geo-accession"
+      status: "url-only"
+      note: "이 연구의 ATAC-seq raw/processed data (mouse, 13 cell types)"
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE162949"
+      type: "geo-accession"
+      status: "url-only"
+      note: "선행 published dataset (HSC + 5 unilineage; Martin 2021)"
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+
+categorization:
+  domain:
+    - "hematopoiesis"
+    - "epigenomics"
+    - "chromatin accessibility"
+    - "ATAC-seq"
+    - "cis-regulatory element"
+  use_case:
+    - "academic-citation"
+    - "methodology-reference"
+  importance:
+    level: "중"
+    perspective: "해석: HSPC 분화 축에서 chromatin priming(접근성이 transcription/계통확정에 선행)을 mouse ATAC-seq 13 cell type으로 직접 보이고 CRISPRi로 functional 검증까지 연결한 primary 근거. activation lag 가설의 방향성 배경 문헌으로 가치가 높으나, paired RNA·시간 단위 lag 정량은 없어 lag 자체의 직접 정량 근거는 아님. 산업·임상 직접 자산은 제한적이라 '상'은 아님."
+
+audience:
+  primary: "self"
+  secondary: []
+  note: "chromatin-rna-coupling / activation lag 가설 배경 문헌"
+priority:
+  level: "normal"
+  deadline: null
+  reason: null
+
+workflow:
+  last_updated: '2026-06-12'
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
+
+# lit-search 발견 맥락
+# 역할: biology(primary research) — HSPC 분화 중 chromatin accessibility dynamics. priming/lag 개념 배경.
+# 2026-06-12: full-paper 재확인에서 document_type을 review→paper로 정정. ATAC-seq + CRISPRi 직접 수행.

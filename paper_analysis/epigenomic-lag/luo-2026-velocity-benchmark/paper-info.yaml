@@ -1,0 +1,101 @@
+# Luo, Ya, 2026 — velocity-benchmark — Cell Reports Methods
+# DOI: 10.1016/j.crmeth.2026.101367
+# Topics: epigenomic-lag (primary), RNA-velocity, single-cell-genomics  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Benchmarking RNA velocity methods across 17 independent studies"
+authors:
+  - "Luo, Ya"
+year: 2026
+venue: "Cell Reports Methods"
+doi: "10.1016/j.crmeth.2026.101367"
+keywords:
+  - "RNA velocity"
+  - "benchmark"
+  - "single-cell"
+
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2026-04-20"
+  preprint:
+    server: "bioRxiv"
+    doi: "10.1101/2025.08.02.668272"
+
+topics:
+  - "epigenomic-lag"            # primary
+  - "RNA-velocity"
+  - "single-cell-genomics"
+
+citation:
+  key: "luo2026velocitybenchmark"
+  short_id: "velocity-benchmark"
+  bibtex_file: "sources/luo-2026-velocity-benchmark.bib"
+  bibtex_type: "article"
+
+sources:
+  paper:
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC13106975/"
+    url_alt:
+      - "https://www.cell.com/cell-reports-methods/fulltext/S2667-2375(26)00067-6"
+    local: "sources/luo-2026-velocity-benchmark.pdf"
+    status: "downloaded"
+    note: "Cell Reports Methods open access (PMC13106975). 자동 fetch 차단 시 PMC에서 PDF 직접 download → sources/에 드롭. | primary: not a PDF (Content-Type=text/html; charset=utf-8) — likely paywall/landing | pmc: no PMC ID (not open-access via PMC) | scihub: Sci-Hub skipped"
+  supplementary:
+    - local: "sources/mmc1.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Supplementary figures/tables (Figure S1-S6, Table S1-S2 추정)"
+    - local: "sources/mmc2.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "대용량 supplementary (고해상도 figure / dataset별 상세 plot 추정)"
+  code:
+    - url: "https://github.com/luo-cloud/veloBench"
+      type: "github"
+      status: "url-only"
+      note: "분석 스크립트. Zenodo 10.5281/zenodo.18699599"
+  data:
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE209878"
+      type: "geo-accession"
+      status: "url-only"
+      note: "Dataset12 Human HSPC — 우리 팀 담당 데이터와 동일 accession"
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+
+categorization:
+  domain:
+    - "RNA velocity"
+    - "single-cell-genomics"
+    - "benchmark"
+    - "hematopoiesis"
+  use_case:
+    - "pipeline-applicable"
+    - "methodology-reference"
+  importance:
+    level: "상"
+    perspective: "우리 HSPC 데이터(GSE209878)가 benchmark Dataset12로 직접 포함되고 scenario별 method 선택 지침을 즉시 적용 가능. 단 MultiVelo가 RNA-only로 평가된 한계는 자체 보완 필요."
+
+related:
+  - key: "li2023multivelo"
+    relation: "cited"
+    note: "MultiVelo 원본(ref 10). benchmark에 rna_only=True로 포함, HSPC GSE209878 = Dataset12 제공"
+
+workflow:
+  last_updated: '2026-06-12'
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
+
+# lit-search 발견 맥락
+# 역할: benchmark — MultiVelo 포함 RNA velocity method 벤치마크. 우리 HSPC 데이터에 어떤 method를 쓸지 근거.

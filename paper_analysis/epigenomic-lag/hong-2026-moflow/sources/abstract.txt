@@ -1,0 +1,43 @@
+1. Nat Commun. 2025 Dec 29;17(1):566. doi: 10.1038/s41467-025-67259-6.
+
+Multi-omic relay velocity modeling uncovers dynamic chromatin-transcription 
+regulation across cell states.
+
+Hong A(1), Lee S(2), Kim K(3)(4)(5).
+
+Author information:
+(1)Interdisciplinary Program in Bioinformatics, Seoul National University, 
+Seoul, Republic of Korea.
+(2)Department of Artificial Intelligence, Inha University, Incheon, Republic of 
+Korea. ss.lee@inha.ac.kr.
+(3)Department of Transdisciplinary Medicine, Seoul National University Hospital, 
+Seoul, Republic of Korea. kwangsookim@snu.ac.kr.
+(4)Center for Data Science, Healthcare AI Research Institute, Seoul National 
+University Hospital, Seoul, Republic of Korea. kwangsookim@snu.ac.kr.
+(5)Department of Medicine, College of Medicine, Seoul National University, 
+Seoul, Republic of Korea. kwangsookim@snu.ac.kr.
+
+Cell fate transitions emerge from dynamic gene expression programs, yet existing 
+RNA velocity models primarily rely on RNA abundance and globally inferred latent 
+time, limiting their ability to capture local regulatory dynamics. To address 
+these limitations, we introduce MoFlow, a deep neural network that integrates 
+multi-omic data within a relay velocity framework. Unlike previous approaches, 
+MoFlow flexibly infers velocity parameters at single-cell resolution without 
+pre-assigned latent time, enabling a comprehensive and locally adaptive 
+estimation of gene expression kinetics. Applied to single cell multi-omic 
+datasets from brain, skin, and blood cells, MoFlow distinguished 
+chromatin-dependent and independent transcriptional regulation, validated 
+transcription repression models, and identified asynchronous gene repression in 
+neural progenitors. It also uncovered transcriptional activation of DNA damage 
+response genes in radial glia with distinct subnuclear localization. By 
+resolving fine-grained regulatory programs, MoFlow advances the interpretability 
+and precision of RNA velocity analysis beyond the limits of existing models.
+
+© 2025. The Author(s).
+
+DOI: 10.1038/s41467-025-67259-6
+PMCID: PMC12808240
+PMID: 41457082 [Indexed for MEDLINE]
+
+Conflict of interest statement: Competing interests: The authors declare no 
+competing interests.
