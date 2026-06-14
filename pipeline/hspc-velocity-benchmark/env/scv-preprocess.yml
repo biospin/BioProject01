@@ -18,6 +18,7 @@ dependencies:
   - pip
   - pip:
       - scvelo          # loom spliced/unspliced 병합 + velocity 전처리 유틸
+      - multivelo       # P1 ATAC peak→gene 집계(aggregate_peaks_10x) (torch 끌어옴)
       - mudata
       - muon
       - snapatac2       # ATAC 처리 (peak/fragment); 설치 무거우면 생략 가능
