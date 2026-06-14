@@ -6,7 +6,7 @@ const state = {
   activeRunPath: "",
   activePrompt: "",
   jobPoller: null,
-  engine: "codex",
+  engine: "claude",   // default engine = Claude (paper-row Analyze 기본, Codex usage-limit 회피)
 };
 
 const ENGINE_LABEL = { codex: "Codex", claude: "Claude" };
@@ -335,7 +335,7 @@ function setActivePrompt(prompt, runPath) {
     ? `Ready to run: ${state.activeRunPath}`
     : "Prompt loaded without a saved run path.";
   $("jobArtifacts").innerHTML = "";
-  $("jobLog").textContent = "Run in Codex를 누르면 이 위치에 실행 로그와 생성 파일 상태가 표시됩니다.";
+  $("jobLog").textContent = "분석을 실행하면 이 위치에 실행 로그와 생성 파일 상태가 표시됩니다.";
 }
 
 async function copyPrompt() {
@@ -392,7 +392,7 @@ async function refreshJob() {
     log("Status skipped", { reason: "create or open a run prompt first" });
     return;
   }
-  const engine = state.engine || "codex";
+  const engine = state.engine || "claude";
   const result = await api(`/api/run/${engine}-status?run_path=${encodeURIComponent(state.activeRunPath)}`);
   renderJobStatus(result);
   if (result.status === "running") {
@@ -409,7 +409,7 @@ async function refreshJob() {
 
 function renderJobStatus(job) {
   const status = job.status || "unknown";
-  const engine = job.engine || state.engine || "codex";
+  const engine = job.engine || state.engine || "claude";
   const name = ENGINE_LABEL[engine] || engine;
   const statusText = {
     running: `Running: ${name}가 분석을 진행 중입니다. 이 화면은 5초마다 자동 갱신됩니다.`,

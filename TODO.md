@@ -4,8 +4,8 @@
 
 - [ ] Open `http://127.0.0.1:8765` and visually verify the dashboard layout.
 - [ ] Create one real paper-analysis request from the web UI.
-- [ ] Click `Run in Codex` for the generated request.
-- [ ] Use `Refresh Status` and inspect `artifacts/web-runs/<run-id>/codex.log`.
+- [ ] Click `Claude로 분석` (또는 `Codex로 분석`) for the generated request.
+- [ ] Use `상태 새로고침` and inspect `artifacts/web-runs/<run-id>/<engine>.log`.
 - [ ] After real analysis files are generated, click `Build Index` and confirm `analysis/_index/papers.csv` updates.
 - [ ] Click `Render HTML` for the new paper and confirm `<paper-id>_core.html` is generated.
 
