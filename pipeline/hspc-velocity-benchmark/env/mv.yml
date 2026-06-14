@@ -3,9 +3,9 @@ name: mv
 channels: [conda-forge, bioconda]
 dependencies:
   - python=3.10
-  - numpy<2
+  - numpy<2            # multivelo 0.1.5/torch ABI
   - pandas
-  - scipy
+  - scipy<1.14         # multivelo 0.1.5가 sparse .A 사용 → scipy 1.14+에서 제거됨(AttributeError)
   - numba
   - scanpy
   - anndata

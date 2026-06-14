@@ -238,6 +238,15 @@ def build(fresh=False):
     sc.pp.normalize_total(atac, target_sum=1e4)
     sc.pp.log1p(atac)
 
+    # cross-env 호환: uns의 None 값(log1p base 등)은 신 anndata가 'null' 인코딩 →
+    #   구 anndata(mv/torch/tf env)가 못 읽음. write 전 제거.
+    def _portable(a):
+        a.uns.pop("log1p", None)
+        for k in list(a.uns):
+            if a.uns[k] is None:
+                del a.uns[k]
+    _portable(rna); _portable(atac)
+
     rna.write_h5ad(cfg.OUT_RNA)
     atac.write_h5ad(cfg.OUT_ATAC)
     try:
