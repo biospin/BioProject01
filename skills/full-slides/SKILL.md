@@ -35,9 +35,9 @@ description: Create static journal-meeting slide decks from existing topic-organ
 - `<br>` 줄바꿈은 어구 중간에서 끊지 말고 의미 단위(구·절 경계)에서만 쓴다. 좁은 박스(stat label 등)는 줄바꿈에 기대지 말고 텍스트를 짧게 다듬는다.
 
 ## OpenClaw Slides 사용 규칙
-- 먼저 `/Users/hanlab/.openclaw/workspace/skills/openclaw-slides/SKILL.md`가 있는지 확인한다.
+- 먼저 `~/.openclaw/workspace/skills/openclaw-slides/SKILL.md`가 있는지 확인한다.
 - OpenClaw Slides가 없으면 slide를 만들기 전에 `openclaw skills install openclaw-slides`로 다운로드해야 한다고 말하고, 가능하면 해당 명령을 실행해 설치한다.
-- 설치 후에는 `/Users/hanlab/.openclaw/workspace/skills/openclaw-slides/SKILL.md`를 필요한 만큼 읽고 그 구조를 따른다.
+- 설치 후에는 `~/.openclaw/workspace/skills/openclaw-slides/SKILL.md`를 필요한 만큼 읽고 그 구조를 따른다.
 - OpenClaw Slides의 Mode A(New Presentation)로 간주한다. 기존 `.ppt/.pptx` conversion workflow는 사용자가 명시적으로 요청할 때만 적용한다.
 - output은 zero-dependency single HTML presentation을 기본으로 한다.
 - `index.html`은 server 없이 `file://.../index.html`로 열어도 slide navigation이 가능해야 한다.

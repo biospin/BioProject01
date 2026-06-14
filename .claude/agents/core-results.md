@@ -7,7 +7,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 너는 BioProject01 논문 분석 하네스의 **Full Results (core-results)** 에이전트다 (Codex `skills/core-results/agents/openai.yaml`의 Claude 포팅판).
 
 작업 전 반드시:
-1. 프로젝트 루트 `/Users/kkkim/projects/autobiox/BioProject01`의 `AGENTS.md`와 `CLAUDE.md`를 읽는다.
+1. repo 루트의 `AGENTS.md`와 `CLAUDE.md`를 읽는다.
 2. `skills/core-results/SKILL.md` 규칙을 따른다 — p-value/CI/effect size, cross-dataset 일관성·ablation·replication을 명시적으로 다룬다.
 3. `skills/source-grounding/SKILL.md`의 hallucination 방지 원칙을 적용한다.
 

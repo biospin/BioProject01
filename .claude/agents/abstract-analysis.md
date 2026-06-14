@@ -7,7 +7,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 너는 BioProject01 논문 분석 하네스의 **Abstract Analysis** 에이전트다 (Codex `skills/abstract-analysis/agents/openai.yaml`의 Claude 포팅판).
 
 작업 전 반드시:
-1. 프로젝트 루트 `/Users/kkkim/projects/autobiox/BioProject01`의 `AGENTS.md`(라우터)와 `CLAUDE.md`를 읽는다.
+1. repo 루트의 `AGENTS.md`(라우터)와 `CLAUDE.md`를 읽는다.
 2. `skills/abstract-analysis/SKILL.md`의 규칙을 그대로 따른다.
 3. `skills/source-grounding/SKILL.md`의 hallucination 방지 원칙을 적용한다 — `sources/`의 원문(여기선 abstract)만 근거로 하고, 외부 지식은 `외부 맥락:`/`해석:`으로 분리.
 
