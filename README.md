@@ -1,6 +1,6 @@
 # BioProject01 — Epigenetic Therapy 기반 Response Time 예측
 
-연구 주제는 *chromatin accessibility 변화를 매개로 한 약물 반응 시간 (response time) 예측* (제안: 박상준). 현 시점에서 본 repo는 **연구의 paper analysis layer만 구축**된 상태 — 관련 scientific paper를 dual-lens 구조로 분석·누적해 baseline evidence를 마련한다. 실제 chromatin-RNA lag prediction / drug response 분석 코드는 아직 작성 전.
+연구 주제는 *chromatin accessibility 변화를 매개로 한 약물 반응 시간 (response time) 예측* (제안: 박상준). 이 브랜치(`kkkim-paper-agent`)는 **paper analysis layer** — 관련 scientific paper를 dual-lens 구조로 분석·누적해 baseline evidence를 마련한다. 그 분석을 입력으로 한 **실제 데이터 파이프라인(전처리·velocity·lag)은 `kkkim-pipeline` 브랜치**에서 진행 중.
 
 자세한 연구 proposal과 review 의견: [`presentation/[주제] Epigenetic Therapy 기반 Response Time 예측.pdf`](presentation/).
 
@@ -20,17 +20,33 @@
 - `figures/` — `core-to-html`이 PDF에서 추출한 panel PNG (smart bbox crop)
 - `<paper-id>_core.html` — figure-embedded HTML 보고서 (MathJax 수식 렌더)
 
-## 분석된 paper (2026-05-26 기준)
+## 분석된 paper (2026-06-14 기준, 총 14편 — 전부 core+lens-academic+lens-industry+methodology-brief 완료)
 
-| paper-id | citation | importance | 핵심 |
-|---|---|---|---|
-| `li-2023-multivelo` | `@li2023multivelo` (Nat Biotechnol 2023) | 상 | MultiVelo — chromatin–RNA ODE multi-omic velocity의 foundational baseline. M1/M2 모델 정의. |
-| `li-2025-multivelovae` | `@li2025multivelovae` (Nat Commun 2025) | 상 | MultiVeloVAE — MultiVelo discrete state를 cVAE + continuous (δ, κ) + Bayesian differential test로 일반화. |
-| `hong-2026-moflow` | `@hong2026moflow` (Nat Commun 2025/26) | 상 | MoFlow — cellDancer relay velocity에 chromatin opening/closing dual hypothesis + lower-loss selection 추가. *latent time-free*. |
-| `li-2023-celldancer` | `@li2023celldancer` (Nat Biotechnol 2023) | 중 | cellDancer — local relay velocity cosine loss + cell-specific kinetic rate. MoFlow의 직접 predecessor. |
-| `cui-2024-deepvelo` | `@cui2024deepvelo` (Genome Biol 2024) | 중 | DeepVelo — GCN + continuity loss + cell/gene-specific kinetic rate. RNA-only foundational baseline. |
-| `mizukoshi-2024-deepkinet` | `@mizukoshi2024deepkinet` (Genome Biol 2024) | 중 | DeepKINET — 2-stage VAE + scEU-seq/scNT-seq metabolic labeling validation reference. |
-| `nomura-2024-mmvelo` | `@nomura2024mmvelo` (bioRxiv preprint 2024) | 상 | mmVelo — mixture-of-experts VAE + *peak-level* chromatin velocity (decoder-resolution). |
+**epigenomic-lag (9)** — velocity/lag method 계보
+| paper-id | venue | 핵심 |
+|---|---|---|
+| `li-2023-multivelo` | Nat Biotechnol 2023 | MultiVelo — chromatin–RNA ODE velocity foundational baseline. M1/M2 모델. (원 GSE209878 HSPC 데이터) |
+| `li-2025-multivelovae` | Nat Commun 2025 | MultiVeloVAE — cVAE + continuous (δ,κ) + Bayesian differential test. |
+| `hong-2026-moflow` | Nat Commun 2026 | MoFlow — latent time-free relay velocity, direct chromatin–RNA lag. |
+| `li-2023-celldancer` | Nat Biotechnol 2023 | cellDancer — relay velocity cosine loss. MoFlow predecessor. |
+| `cui-2024-deepvelo` | Genome Biol 2024 | DeepVelo — GCN + cell-specific kinetics (RNA-only). |
+| `mizukoshi-2024-deepkinet` | Genome Biol 2024 | DeepKINET — kinetic-rate validation framework reference. |
+| `nomura-2024-mmvelo` | bioRxiv 2024 | mmVelo — decoder-level *peak-level* chromatin velocity. |
+| `el-kazwini-2026-crakvelo` | Genome Biol 2026 | CRAK-Velo — UniTVelo 확장, **동일 GSE209878 HSPC에서 MultiVelo 직접 비교**. |
+| `luo-2026-velocity-benchmark` | Cell Reports Methods 2026 | velocity 벤치마크(17 study), 우리 HSPC=Dataset12. "no single best method". |
+
+**chromatin-rna-coupling (3)** — lag 생물학 배경
+| paper-id | venue | 핵심 |
+|---|---|---|
+| `ma-2020-shareseq` | Cell 2020 | SHARE-seq paired chromatin+RNA, lineage priming. |
+| `safi-2022-chromatin-priming` | Cell Reports 2022 | HSPC chromatin priming이 commitment 선행 (mouse scATAC). |
+| `martin-2023-hspc-chromatin` | 2023 | HSPC primed CRE + CRISPRi 인과 (bulk ATAC, paired RNA 없음). |
+
+**single-cell-genomics (2)**
+| paper-id | venue | 핵심 |
+|---|---|---|
+| `trevino-2021-cortex` | Cell 2021 | 발달 인간 피질 multiome (GSE162170). MultiVelo dataset 중 하나. |
+| `workman-2026-scbench` | arXiv 2026 | scBench — scRNA-seq AI agent 벤치마크. |
 
 최신 목록·요약·진행 상태: `analysis/_index/papers.csv` (자동 생성). Topic별 view는 `analysis/_index/<topic>.md`.
 
