@@ -67,17 +67,23 @@ python3 skills/source-grounding/scripts/share_paper.py <paper-dir>
 
 팀 컨벤션은 **`<사람>-<workstream>`**. 본인 영역 안에서 workstream별로 branch를 따로 둔다.
 
-| Branch | 용도 |
-|---|---|
-| `kkkim-paper-agent` | **본인 paper analysis 작업 — 현재 활성 branch.** 새 paper 분석 추가는 여기서. |
-| `kkkim-<workstream>` | 다른 workstream 시작 시 새로 분기 (예: `kkkim-pipeline` = 코드, `kkkim-data` = dataset 전처리). 시작 시점에 만들면 됨. |
-| `epigenomics`, `braveji-paper-agent`, `main` | **건드리지 않는다.** 다른 협업자 영역. |
+두 레이어를 **브랜치로 분리**한다. 섞지 않는다.
+
+| Branch | 레이어 | 용도 |
+|---|---|---|
+| `kkkim-paper-agent` | **① paper 분석** | paper-analysis 하네스(`AGENTS.md`/`skills/*`/`.claude/*`/`web/`/`design.md`) + 분석 산출물(`analysis/<topic>/<paper-id>/`, `_evidence`). **새 paper 분석·하네스 수정은 전부 여기.** |
+| `kkkim-pipeline` | **② 실제 파이프라인** | ①의 분석(`analysis/`)을 *입력*으로 **실제 데이터 파이프라인 실행·분석**(`pipeline/`: download→preprocess→model→viz, velocity/lag). 코드·env·데이터 작업은 여기. |
+| `epigenomics`, `braveji-paper-agent`, `main` | — | **건드리지 않는다.** 다른 협업자 영역. |
+
+**레이어 분리 규칙 (중요 — 섞임 방지):**
+- **하네스/AGENTS/skills/.claude/web/paper 분석 = `kkkim-paper-agent`에서만.** `kkkim-pipeline`에서 이것들을 수정하지 않는다.
+- **파이프라인 실행 코드(`pipeline/`)·env·데이터 = `kkkim-pipeline`에서만.**
+- **merge는 단방향: `kkkim-paper-agent` → `kkkim-pipeline`** (pipeline이 최신 분석/하네스를 입력으로 받음). **역방향(`pipeline → paper-agent`) merge 금지.**
+- paper-agent 영역을 pipeline에서 고쳐야 하면 → worktree로 `kkkim-paper-agent`를 띄워 거기서 수정 후 단방향 merge.
 
 **분기 base 결정:**
-- paper analysis framework를 그대로 깔고 코드 작성 → `kkkim-paper-agent`에서 분기
+- paper analysis framework를 그대로 깔고 코드 작성 → `kkkim-paper-agent`에서 분기(= `kkkim-pipeline`이 이렇게 생김)
 - paper analysis와 독립 작업 → `main`에서 분기
-
-**Paper agent skill에 영향을 주는 변경(`AGENTS.md`, `skills/*`, `design.md`)** 은 반드시 `kkkim-paper-agent`에서 한다. 다른 workstream branch에서 skill 자체를 수정하지 않는다.
 
 ## Git / commit 규칙
 
