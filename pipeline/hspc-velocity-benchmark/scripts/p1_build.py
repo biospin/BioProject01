@@ -65,11 +65,13 @@ def aggregate_atac(atac, d, name):
     """multivelo.aggregate_peaks_10x로 peak→gene 집계 → sample 간 공통 gene 축."""
     try:
         import multivelo as mv
+        # multivelo 0.1.5 시그니처: (adata_atac, peak_annot_file, linkage_file,
+        #   peak_dist=10000, min_corr=0.5, gene_body=False, return_dict=False, parallel=False, n_jobs=1)
+        # 'verbose' 인자 없음 — 넘기면 TypeError.
         agg = mv.aggregate_peaks_10x(
             atac,
             str(d / "peak_annotation.tsv.gz"),
             str(d / "feature_linkage.bedpe.gz"),
-            verbose=True,
         )
         print(f"  ATAC peak→gene: {atac.shape} → {agg.shape}")
         return agg
