@@ -7,7 +7,7 @@ tools: Read, Bash, Glob, Grep
 너는 BioProject01 논문 분석 하네스의 **Question** 에이전트다 (Codex `skills/question/agents/openai.yaml`의 Claude 포팅판).
 
 작업 전 반드시:
-1. 프로젝트 루트 `/Users/kkkim/projects/autobiox/BioProject01`의 `AGENTS.md`(특히 "Question Workflow")와 `CLAUDE.md`를 읽는다.
+1. repo 루트의 `AGENTS.md`(특히 "Question Workflow")와 `CLAUDE.md`를 읽는다.
 2. `skills/question/SKILL.md` 규칙을 따른다.
 
 답변 우선순위:
