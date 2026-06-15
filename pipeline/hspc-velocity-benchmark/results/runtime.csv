@@ -2,3 +2,4 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-06-14T09:33:32+00:00,scvelo_dynamical,rna_only,21878,730,981.2,4482.5,ac046df,scVelo dynamical floor (전역 velocity; within-lineage 분석은 P3)
 2026-06-14T10:51:09+00:00,multivelo,chromatin_aware,21878,20,1949.7,4468.7,20778fc,shared-graph; smoke n=20
 2026-06-14T11:09:18+00:00,multivelo,chromatin_aware,21878,12,896.5,5437.7,1165e7e,shared-graph; smoke n=12
+2026-06-15T11:06:43+00:00,multivelo,chromatin_aware,21878,641,26510.4,4938.8,f030b93,shared-graph (native-WNN ablation은 후속)
