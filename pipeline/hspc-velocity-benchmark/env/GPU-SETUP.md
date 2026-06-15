@@ -41,3 +41,20 @@ export PYTHONPATH=$PWD/vendor/MoFlow/src
 | **MultiVeloVAE** | **~1–2일(추정)** | VAE; 원논문 GPU "수 시간", CPU 10–30× |
 | (참고) MultiVelo | 7.4h ✅ 완료 | numba ODE, CPU |
 - **결론: DL arm은 GPU 필수.** GPU면 둘 다 수 시간 내 예상.
+
+## 6. GPU 머신으로 옮길 것 (substrate 패키징)
+torch arm(MoFlow/MultiVeloVAE)은 **사전 생성한 DL 입력만 복사**하면 전처리 스킵:
+```
+data/velocity/dl_input_rna.h5ad     (~210M, Ms/Mu/spliced/unspliced/X_umap)
+data/velocity/dl_input_atac.h5ad    (~197M, Mc)
+```
+→ `p2_dl_prep.py`는 이미 돌려둠(CPU). GPU 머신은 이 2개(~400M)만 있으면 `p2_moflow.py`/`p2_multivelovae.py` 바로 실행.
+- CRAK-Velo(§7)는 raw 전처리 객체가 더 필요할 수 있음: `data/processed/{rna_spliced_unspliced,atac_peaks}.h5ad`.
+- 코드/runner는 git(kkkim-pipeline)에서 pull. `vendor/`(MoFlow·MultiVeloVAE clone)는 gitignore → `setup_torch_gpu.sh`가 재생성.
+
+## 7. CRAK-Velo (tf arm) — 별도 TensorFlow 스택 (#4)
+- env: `env/tf.yml` (python3.9 + tensorflow + unitvelo + `git+https://github.com/StatBiomed/CRAK-Velo.git`, BSD-3). **cisTopic 의존 — 무거움**(설치 iteration 예상).
+- **PyTorch env와 절대 같은 env 금지**(TF/torch 충돌).
+- GPU 최대 수혜 method(원논문 15h → GPU 수 시간). **CPU 비현실적**.
+- 통합은 torch arm과 동일 패턴: tf env 빌드 → 소형 smoke로 출력→lag(region kinetic) 확인 → full. (CRAK-Velo는 lag 명시 출력 없음 → region kinetic을 lag로 후처리 — DESIGN/paper_analysis C9 참조.)
+- runner는 GPU 머신에서 작성 권장(TF API·cisTopic 입력 확정 필요).

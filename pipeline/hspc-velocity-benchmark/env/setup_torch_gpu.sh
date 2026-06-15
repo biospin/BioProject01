@@ -31,6 +31,8 @@ print("  eval_dtw.py 패치 적용")
 PYEOF
 # 패치②: 없는 simulation import 주석 처리
 sed -i.bak 's|^from \.simulation import simulate|# from .simulation import simulate  # repo 누락(patch)|' "$INIT" && rm -f "$INIT.bak"
+# 패치③: velocity()의 adata_result 오타(미정의 NameError) → adata
+sed -i.bak 's|adata_result\.layers|adata.layers|g' "$VENDOR/MoFlow/src/MoFlow/moflow.py" && rm -f "$VENDOR/MoFlow/src/MoFlow/moflow.py.bak"
 
 echo "[5/5] 검증 (import + GPU 가용)"
 PYTHONPATH="$VENDOR/MoFlow/src" "$PY" - <<'PYEOF'
