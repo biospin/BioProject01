@@ -42,15 +42,23 @@ def main(n_genes=0, gpu=False):
                    device=("cuda" if gpu else None))    # device=None → CPU accelerator
         # velocity()는 fit gene subset + velo layer를 담은 새 adata를 *반환*.
         result = m.velocity(rna, n_jobs=cfg.MV_NJOBS, save_path=str(cfg.OUT_VELO / f"moflow{tag}_out"))
-        # get_dtw(timekey='velo_s_pseudotime') 위해 pseudotime 계산
-        scv.tl.velocity_graph(result, vkey="velo_s")
-        scv.tl.velocity_pseudotime(result, vkey="velo_s")   # → obs['velo_s_pseudotime']
+        # get_dtw(timekey='velo_s_pseudotime') 위해 pseudotime 계산.
+        # ⚠️ velocity_graph는 다중 gene 필요(소수 gene smoke는 실패) → try, 실패 시 lag 생략.
+        pt_ok = True
+        try:
+            scv.tl.velocity_graph(result, vkey="velo_s")
+            scv.tl.velocity_pseudotime(result, vkey="velo_s")   # → obs['velo_s_pseudotime']
+        except Exception as e:
+            pt_ok = False
+            print(f"  ⚠ pseudotime 계산 실패(gene 수 부족 등): {str(e)[:60]} → c-s lag 생략")
     print(f"학습 done in {t.sec}s")
 
     # gene별 c-s lag(time_lag_c_s) 요약 → DESIGN §4B lag-specific (sign 가변)
     rows = {}
     for gene in result.var_names:
         try:
+            if not pt_ok:
+                raise RuntimeError("pseudotime 없음")
             *_, time_lag_c_s, _ = get_dtw(result, gene)
             arr = np.asarray(time_lag_c_s, float)
             rows[gene] = dict(cs_lag_mean=np.nanmean(arr), cs_lag_median=np.nanmedian(arr))
