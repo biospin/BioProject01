@@ -13,6 +13,7 @@ dependencies:
   - pip:
       - torch                 # CPU wheel. GPU: README 참고 (--index-url cu12x)
       - pytorch-lightning     # MoFlow harness
-      # 아래는 github 설치 — import 이름·설치 성공 여부 검토필요(검토필요:)
-      - "git+https://github.com/welch-lab/MultiVeloVAE.git"   # BSD-3
-      - "git+https://github.com/AriHong/MoFlow.git"           # MIT
+      - scvelo                # 공통 substrate 전처리(moments 등) 호환
+      # MultiVeloVAE: env 생성 후 별도 설치 — `pip install git+https://github.com/welch-lab/MultiVeloVAE.git` (BSD-3).
+      # MoFlow: setup.py/pyproject 없음 → pip 설치 불가. repo clone 후 사용:
+      #   `git clone https://github.com/AriHong/MoFlow.git` → PYTHONPATH/스크립트.

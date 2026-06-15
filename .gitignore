@@ -90,3 +90,6 @@ pipeline/**/*.loom
 
 # stray runtime dump
 settings.txt
+
+# vendored 외부 repo (MoFlow 등) — clone, not tracked
+pipeline/**/vendor/
