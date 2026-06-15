@@ -93,3 +93,6 @@ settings.txt
 
 # vendored 외부 repo (MoFlow 등) — clone, not tracked
 pipeline/**/vendor/
+
+# MoFlow 기본 출력 폴더(stray)
+pipeline/**/MoFlow_velocity_/

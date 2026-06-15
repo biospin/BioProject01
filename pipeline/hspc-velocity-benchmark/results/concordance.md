@@ -1,6 +1,8 @@
 # P3 — Concordance & construct-validity
 
 - **multivelo**: fit gene 538
+- **moflow**: _(CSV 없음 — skip)_
+- **multivelovae**: _(CSV 없음 — skip)_
 - **scvelo_floor**: fit gene 487
 
 ## 1. MultiVelo lag (fit_t_sw2 − fit_t_sw1, pseudotime)
@@ -38,7 +40,11 @@
   - Spearman(fit_beta) = -0.079
   - Spearman(fit_gamma) = 0.419
 
+## 3.5 Chromatin-aware lag 일치도 (H1, DESIGN §4B)
+
+- 현재 lag 산출 chromatin-aware method 1개 (['multivelo']) → 2개+ 시 pairwise 자동. MultiVeloVAE/MoFlow(GPU) 추가 후 H1 일치도 산출됨.
+
 ## 4. 한계 · 다음 (DESIGN §4)
 - ⚠️ switch time은 *전역* fit → 진짜 within-lineage 일치도는 per-lineage fit 필요(추후).
-- ⚠️ H1(agreement gene의 bootstrap lag-sign stability)·다중 chromatin-aware method 일치도는 **MultiVeloVAE/MoFlow arm 추가 후** (현재 chromatin-aware=MultiVelo 단독).
-- sign-agreement vs rank-corr 분리 보고 원칙: method가 2+ chromatin-aware일 때 적용.
+- ⚠️ H1 bootstrap lag-sign stability는 반복 fit 필요(GPU에서 DL arm 반복 시).
+- MoFlow c-s lag은 sign 가변 → construct-validity directional check의 1차 대상.
