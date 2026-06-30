@@ -11,3 +11,9 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-06-30T02:38:35+00:00,moflow,chromatin_aware,21878,636,2836.0,8222.8,2572b06,DTW c-s lag; gpu=True
 2026-06-30T04:13:08+00:00,multivelo_scrambled,scrambled_chromatin_null,21878,20,258.5,6258.4,2572b06,within-lineage ATAC shuffle; smoke n=20
 2026-06-30T06:07:56+00:00,multivelo_scrambled,scrambled_chromatin_null,21878,641,6740.2,6258.4,2572b06,within-lineage ATAC shuffle (null)
+2026-06-30T16:27:00+00:00,multivelo_perlineage,perlineage:Lymphoid,8891,11,88.6,6272.0,cd7c3d5,root∪Lymphoid; smoke n=12
+2026-06-30T17:04:39+00:00,multivelo_perlineage,perlineage:Baso/Eo/Mast,10029,476,2211.4,6572.1,cd7c3d5,root∪Baso/Eo/Mast per-lineage refit
+2026-06-30T17:45:36+00:00,multivelo_perlineage,perlineage:Erythroid,11153,487,2454.0,8686.7,cd7c3d5,root∪Erythroid per-lineage refit
+2026-06-30T18:17:35+00:00,multivelo_perlineage,perlineage:Lymphoid,8891,446,1917.7,8686.7,cd7c3d5,root∪Lymphoid per-lineage refit
+2026-06-30T18:50:26+00:00,multivelo_perlineage,perlineage:MK,9679,470,1969.3,8686.7,cd7c3d5,root∪MK per-lineage refit
+2026-06-30T19:51:46+00:00,multivelo_perlineage,perlineage:Myeloid,16458,484,3676.2,10028.0,cd7c3d5,root∪Myeloid per-lineage refit

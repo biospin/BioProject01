@@ -3,6 +3,20 @@
 > **목적**: 이 세션에서 백그라운드로 도는 작업이 중단/다른 창 전환돼도 상태를 잃지 않도록, 단계마다 실시간 갱신. 새 세션은 이 파일 + `HANDOFF.md`만 읽으면 이어받을 수 있다.
 > 최종 갱신: **2026-07-01** (CRAK-Velo lag 부호 검증·수정 ✅; permutation FDR P4 ✅; 4-way H1 통계 확증 완료)
 
+## ✅ 완료 (2026-07-01) — per-lineage MultiVelo refit (진짜 within-lineage H1)
+| 작업 | 로그 | 상태 | 결과 |
+|---|---|---|---|
+| **per-lineage refit** (5 lineage: root∪L 따로 fit) | `scratchpad/perlineage_refit.log` | ✅ 5/5 fit 완료(02:04~04:51) | `results/lineage_refit/*.csv` |
+| **자율 finisher** (PID 357446) | `scratchpad/finish_perlineage.log` | ✅ p3 자동 실행 완료 | `results/lineage_refit.md` |
+
+- **결과**: cross-lineage lag magnitude ρ median=**0.349**(범위 0.234~0.513, 양수 10/10) → lag 일치도 **약함/경계**. 대조군 α_c ρ median=**0.483**(lag보다 robust) → 기존 H1 패턴 재현. per-lineage vs 전역 fit ρ 0.23~0.46(전역 fit이 lineage 신호 뭉갬 → refit 정당). **cross-lineage 축에서도 H1(lag 비robust) 확증.**
+
+- **목적**: 전역 fit lag을 dominant-expression으로 lineage 귀속한 `lineage_lag.md`를 **진짜 per-lineage fit**으로 대체. lag이 gene-intrinsic robust 속성인지(cross-lineage 일치도) = within-method H1 축 추가.
+- **스크립트**: `scripts/p2_multivelo_perlineage.py`(fit, mv env) + `scripts/p3_lineage_refit.py`(분석, scv-preprocess env). 스모크(Lymphoid 12 gene) 통과 후 full launch.
+- **설계**: 각 terminal lineage L = HSC/MPP(root)∪L 세포로 부분집합 → P1 동일 substrate(filter_and_normalize→HVG→moments) → knn_smooth_chrom → recover_dynamics_chrom. root 포함 이유=분화 trajectory 필요.
+- **산출**: `results/lineage_refit/<lin>_genes.csv`(5종) → `results/lineage_refit.md`(A.분포 B.cross-lineage lag ρ C.vs전역 D.α_c 대조군).
+- ⚠️ MultiVelo lag sign 구조적(sw2>sw1 항상 양수) → magnitude rank Spearman만 평가.
+
 ## 🔴 GPU 작업 (cuda:1 전용)
 | 작업 | PID | 로그 | 상태 | ETA |
 |---|---|---|---|---|
