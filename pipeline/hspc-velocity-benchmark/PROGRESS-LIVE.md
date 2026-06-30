@@ -1,7 +1,7 @@
 # PROGRESS-LIVE — 진행 중 작업 추적 보드
 
 > **목적**: 이 세션에서 백그라운드로 도는 작업이 중단/다른 창 전환돼도 상태를 잃지 않도록, 단계마다 실시간 갱신. 새 세션은 이 파일 + `HANDOFF.md`만 읽으면 이어받을 수 있다.
-> 최종 갱신: **2026-06-30 17:45** (cisTopic ✅완료; CRAK-Velo fit 59% 진행; scrambled ✅완료)
+> 최종 갱신: **2026-07-01** (CRAK-Velo lag 부호 검증·수정 ✅; permutation FDR P4 ✅; 4-way H1 통계 확증 완료)
 
 ## 🔴 GPU 작업 (cuda:1 전용)
 | 작업 | PID | 로그 | 상태 | ETA |
@@ -29,16 +29,20 @@
 - [x] vendor clone (CRAK-Velo, cisTopic) + torch_scatter
 - [x] 입력 substrate `p2_crakvelo_prep.py` → consensus 197,482 peak + gencode 좌표 (`crakvelo_{atac,rna}_prepro.h5ad`)
 - [x] **cisTopic** `p2_crakvelo_cistopic.py` → `crakvelo_atac_postpro.h5ad`  ✅ 완료(~16:20)
-- [🔄] CRAK-Velo fit `p2_crakvelo.sh` + `p2_crakvelo_config.json` → `crakvelo_fit/`  ← 실행 중(17:11, cuda:1)
-- [ ] lag 추출 (MoFlow식 DTW c-s lag) → `results/crakvelo_genes.csv`
-- [ ] p3_concordance METHODS에 `crakvelo` 등록 → 4-way H1 산출 + 문서
+- [x] CRAK-Velo fit `p2_crakvelo.sh` + `p2_crakvelo_config.json` → `crakvelo_fit/`  ✅ (06-30 ~19:14)
+- [x] lag 추출 (MoFlow식 DTW c-s lag) → `results/crakvelo_genes.csv`
+- [x] p3_concordance METHODS에 `crakvelo` 등록 → 4-way H1 산출 + 문서
+- [x] **lag 부호 convention 검증·수정**(2026-07-01) → `results/crakvelo_sign_check.md`. `dtw_lag`이 MoFlow와 반대 부호(버그)였음 → `i−j`로 통일(양수=chromatin선행), 단위·marker 검증. csv·concordance 재산출. **블로커 해소.**
 - ⚠️ caveat: ATAC batch(day0/day7) 미보정 + peak-count overlap합산(fragments 미보유). 4-way H1 문서에 명기.
 
 ## CPU 작업 — 단계 체크리스트
 - [x] scrambled-chromatin 러너 `p2_multivelo_scrambled.py` (within-lineage ATAC 셔플) + smoke 검증
 - [x] **scrambled full run** → `scrambled_genes.csv` (538 gene)
 - [x] `results/scrambled_null.md` — 검정 완료 (verdict: chromatin lag 미구동, marginal 기여만)
-- [ ] permutation FDR (P4) — 4-way 완료 후 (DESIGN §85, lineage 내 shuffle)
+- [x] **permutation FDR (P4)** `scripts/p4_permutation_fdr.py` → `results/permutation_fdr.md` (2026-07-01):
+  - (A) cross-method concordance permutation FDR: moflow×crakvelo ρ=−0.151(q=0.017✅), moflow×mvvae ρ=+0.083(q=0.051✅), crak×mvvae ρ=−0.040(q=0.47). **유의해도 effect 극약·방향 불일치.**
+  - (B) per-gene sign-consistency agreement-set = **0/598 gene**(FDR<0.10) → 공집합. **H1(lag method-민감) 통계 확증.**
+  - ⚠️ 범위 밖(추후): lineage 내 pseudotime-shuffle per-gene lag-크기 FDR(재-fit 필요), marker enrichment hypergeometric(§4C 2차).
 
 ---
 ### 변경 로그 (append-only)
@@ -50,3 +54,12 @@
 - 17:11 — **CRAK-Velo fit launch**(cuda:1, PID 296334, env tf, --w 100000). 실행 중. [BIOP01 창 입력불가 → BIOP02 창에서 관측·대리 기록 18:15]
 - 17:0x — tf-keras 2.15.1 설치(CRAK-Velo가 TF_USE_LEGACY_KERAS 강제 → optimizer ImportError 해결). 15:16 FINDINGS.md 종합본 신설. 논문 하네스 수령→제안서(`collab_workspace/harness/PROPOSAL-*.md`), 설치는 팀 상의 후.
 - 18:29 — **자율 finisher 가동**(`scratchpad/finish_crakvelo.sh`, setsid·PID 307943): fit 완료 대기 → lag 추출(`p2_crakvelo_lag.py`) → 4-way concordance(crakvelo가 METHODS 등록됨) → 결과 staging. **창 닫혀도 완주**. ⚠️ CRAK-Velo lag sign convention은 marker로 검증 후 FINDINGS 반영(자동 안 함). 실패 시 안전 로그만(가짜 결과 금지).
+
+- 19:15 ✅ **CRAK-Velo fit→lag→4-way 자율 완주**(창 닫힌 상태에서).
+  - 산출: results/crakvelo_genes.csv, concordance.md(4-way 갱신, §3.5 자동).
+  - ⚠️ **CRAK-Velo lag sign convention 미검증** — marker(AZU1/ELANE/MPO Myeloid=양수 기대) sanity는 finish_crakvelo.log 참조.
+    sign OK 확인 후에만 FINDINGS.md canonical 4-way 결론 반영할 것(자동 안 함).
+
+- 2026-07-01 ✅ **블로커 해소 + P4 완료** (Task 1·2):
+  - **(1) CRAK-Velo lag 부호 검증·수정** → `results/crakvelo_sign_check.md`. 합성 신호 검증으로 `dtw_lag`(manual DP)이 MoFlow `fastdtw`와 **반대 부호**(버그)임 확인 → `i−j`로 통일(양수=chromatin선행). 단위검증 PASS, marker(CSF1R/S100A9 양수=chromatin선행, MoFlow myeloid markers도 양수) 생물학 검증. csv·concordance §3.5/§18 **재산출**. 부호 통일 후 moflow×crakvelo는 ρ +0.151→**−0.151**(genome-wide 약한 음의 일치, marker는 동의). **FINDINGS canonical 반영 가능.**
+  - **(2) permutation FDR(P4)** `scripts/p4_permutation_fdr.py` → `results/permutation_fdr.md`. (A) 2/3 쌍 유의하나 effect 극약·방향 불일치. (B) agreement-set 0/598(FDR<0.1) = 공집합. **H1(lag method-민감) 통계 확증.**

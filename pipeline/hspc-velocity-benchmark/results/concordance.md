@@ -2,6 +2,7 @@
 
 - **multivelo**: fit gene 538
 - **moflow**: fit gene 636
+- **crakvelo**: fit gene 868
 - **multivelovae**: fit gene 641
 - **scvelo_floor**: fit gene 487
 
@@ -14,6 +15,7 @@
 > MultiVelo와 달리 sign이 구조 제약 없는 method만 방향을 답할 수 있다(DESIGN §4B).
 
 - **moflow** (n=636): median +0.000, chromatin-leads(>0) **44.8%** / rna-leads(<0) 43.2% | Wilcoxon p=0.0309 → 방향 편향 미미(median≈0)
+- **crakvelo** (n=868): median +0.000, chromatin-leads(>0) **41.1%** / rna-leads(<0) 43.3% | Wilcoxon p=0.0171 → 방향 편향 미미(median≈0)
 - **multivelovae** (n=641): median -0.002, chromatin-leads(>0) **49.3%** / rna-leads(<0) 50.7% | Wilcoxon p=7.68e-06 → 방향 편향 미미(median≈0)
 > ~50/50면 전역 'chromatin이 transcription을 prime한다'는 데이터 미지지 (MultiVelo의 100%는 §1 모델 제약 아티팩트).
 
@@ -49,10 +51,15 @@
 
 ## 3.5 Chromatin-aware lag 일치도 (H1, DESIGN §4B)
 
-- lag 산출 method: ['multivelo', 'moflow', 'multivelovae']
+> ✅ **CRAK-Velo lag 부호 검증·수정 완료(2026-07-01, `crakvelo_sign_check.md`)**: `dtw_lag`이 MoFlow와 반대 부호(버그)였음 → `i−j`로 통일(양수=chromatin선행), 단위·marker 검증. 아래 crakvelo 관련 수치는 **수정 후** 값.
+
+- lag 산출 method: ['multivelo', 'moflow', 'crakvelo', 'multivelovae']
 - **multivelo×moflow** (shared 537): Spearman(rank) **-0.038** (p=0.38) | sign-agreement 생략(한쪽 sign 구조적)
+- **multivelo×crakvelo** (shared 287): Spearman(rank) **0.003** (p=0.96) | sign-agreement 생략(한쪽 sign 구조적)
 - **multivelo×multivelovae** (shared 538): Spearman(rank) **-0.010** (p=0.81) | sign-agreement 생략(한쪽 sign 구조적)
+- **moflow×crakvelo** (shared 330): Spearman(rank) **-0.151** (p=0.006) | sign-agreement **32.4%**
 - **moflow×multivelovae** (shared 636): Spearman(rank) **0.083** (p=0.036) | sign-agreement **48.1%**
+- **crakvelo×multivelovae** (shared 334): Spearman(rank) **-0.040** (p=0.47) | sign-agreement **38.6%**
 > rank-corr와 sign-agreement는 분리 보고(병합 금지, DESIGN §4B).
 
 ## 3.6 진단 — per-rate 일치 + apples-to-apples lag

@@ -51,7 +51,14 @@ def zbin(x, order, nbin):
 
 
 def dtw_lag(c, s):
-    """DTW warping path 기반 c(chromatin) vs s(spliced) 시간차. 양수=chromatin 선행."""
+    """DTW warping path 기반 c(chromatin) vs s(spliced) 시간차. 양수=chromatin 선행.
+
+    ★ sign convention (2026-07-01 검증, scripts/p3_crakvelo_sign_check.py):
+      이 manual DP backtrack의 path 방향이 MoFlow의 fastdtw와 **반대**라,
+      naive `j − i`는 chromatin-leading 입력에 음수를 돌려줬다(검증: 합성 switch
+      신호에서 fastdtw=+30 vs j−i=−72). MoFlow(eval_dtw.get_dtw)와 부호를
+      통일하기 위해 `i − j`로 부호를 맞춘다 → 양수 = chromatin 선행.
+    """
     n, m = len(c), len(s)
     D = np.full((n + 1, m + 1), np.inf)
     D[0, 0] = 0.0
@@ -63,7 +70,7 @@ def dtw_lag(c, s):
     # backtrack
     i, j, offs = n, m, []
     while i > 0 and j > 0:
-        offs.append(j - i)            # j(spliced idx) − i(chromatin idx): 양수 = chromatin 선행
+        offs.append(i - j)            # i(chromatin idx) − j(spliced idx): 양수 = chromatin 선행 (MoFlow fastdtw와 부호 통일)
         step = np.argmin([D[i - 1, j - 1], D[i - 1, j], D[i, j - 1]])
         if step == 0:
             i, j = i - 1, j - 1
