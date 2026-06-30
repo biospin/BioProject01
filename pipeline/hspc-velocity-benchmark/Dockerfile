@@ -42,7 +42,11 @@ RUN mamba env create -f env/mv.yml && mamba clean -a -y
 RUN mamba env create -f env/torch.yml && mamba clean -a -y
 RUN set -eux; PY=/opt/conda/envs/torch/bin/python; \
     "$PY" -m pip install --no-cache-dir 'setuptools<80' fastdtw; \
-    "$PY" -m pip install --no-cache-dir 'git+https://github.com/welch-lab/MultiVeloVAE.git'; \
+    # MultiVeloVAE pyproject.toml license 포맷 패치 (setuptools>=61 strict validation 우회)
+    git clone --depth 1 https://github.com/welch-lab/MultiVeloVAE.git /tmp/MultiVeloVAE; \
+    sed -i 's/^license = "BSD-3-Clause"/license = {text = "BSD-3-Clause"}/' /tmp/MultiVeloVAE/pyproject.toml; \
+    "$PY" -m pip install --no-cache-dir /tmp/MultiVeloVAE --no-build-isolation; \
+    rm -rf /tmp/MultiVeloVAE; \
     git clone --depth 1 https://github.com/AriHong/MoFlow.git /opt/bench/vendor/MoFlow; \
     sed -i 's|^from \.simulation import simulate|# from .simulation import simulate  # repo 누락(patch)|' \
         /opt/bench/vendor/MoFlow/src/MoFlow/__init__.py; \

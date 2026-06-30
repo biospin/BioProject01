@@ -26,7 +26,7 @@ from p2_util import timer, peak_mem_mb, log_runtime
 METHOD = "multivelovae"
 
 
-def main(n_genes=0, gpu=False):
+def main(n_genes=0, gpu=False, n_epochs=None):
     cfg.OUT_VELO.mkdir(parents=True, exist_ok=True); cfg.RESULTS.mkdir(parents=True, exist_ok=True)
     tag = ".smoke" if n_genes else ""
     rna = sc.read_h5ad(cfg.OUT_VELO / "dl_input_rna.h5ad")
@@ -36,12 +36,17 @@ def main(n_genes=0, gpu=False):
     var0 = set(rna.var.columns)               # train 후 추가되는 fit 컬럼 식별용
     print(f"MultiVeloVAE: {rna.n_vars} genes, {rna.n_obs} cells, gpu={gpu}")
 
+    train_kwargs = dict(plot=False)
+    if n_epochs is not None:
+        train_kwargs["n_epochs"] = n_epochs
     with timer() as t:
         model = vv.VAEChrom(rna, atac, device=("cuda:0" if gpu else "cpu"),
                             plot_init=False, cluster_key="leiden", embed="umap")
-        model.train(plot=False)
+        model.train(**train_kwargs)
     print(f"학습 done in {t.sec}s")
 
+    # save_anndata()로 rate 컬럼({key}_alpha_c/alpha/beta/gamma)을 rna.var에 기록
+    model.save_anndata()
     new_cols = [c for c in rna.var.columns if c not in var0]   # {key}_alpha_c/alpha/beta/gamma/...
     genes = rna.var[new_cols].copy(); genes.index.name = "gene"
     out_csv = cfg.RESULTS / f"multivelovae_genes{tag}.csv"; genes.to_csv(out_csv)
@@ -56,4 +61,5 @@ def main(n_genes=0, gpu=False):
 
 if __name__ == "__main__":
     n = int(sys.argv[sys.argv.index("--genes") + 1]) if "--genes" in sys.argv else 0
-    sys.exit(main(n_genes=n, gpu=("--gpu" in sys.argv)))
+    ep = int(sys.argv[sys.argv.index("--n_epochs") + 1]) if "--n_epochs" in sys.argv else None
+    sys.exit(main(n_genes=n, gpu=("--gpu" in sys.argv), n_epochs=ep))

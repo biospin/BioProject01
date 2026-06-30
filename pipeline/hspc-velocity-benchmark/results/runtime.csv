@@ -3,3 +3,11 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-06-14T10:51:09+00:00,multivelo,chromatin_aware,21878,20,1949.7,4468.7,20778fc,shared-graph; smoke n=20
 2026-06-14T11:09:18+00:00,multivelo,chromatin_aware,21878,12,896.5,5437.7,1165e7e,shared-graph; smoke n=12
 2026-06-15T11:06:43+00:00,multivelo,chromatin_aware,21878,641,26510.4,4938.8,f030b93,shared-graph (native-WNN ablation은 후속)
+2026-06-29T19:12:41+00:00,multivelo,chromatin_aware,21878,641,6819.6,6258.8,2572b06,shared-graph (native-WNN ablation은 후속)
+2026-06-29T19:19:10+00:00,scvelo_dynamical,rna_only,21878,730,367.1,4654.7,2572b06,scVelo dynamical floor (전역 velocity; within-lineage 분석은 P3)
+2026-06-29T20:17:03+00:00,multivelovae,chromatin_aware,21878,641,932.5,3844.4,2572b06,cVAE δ/κ; gpu=True
+2026-06-29T22:46:49+00:00,multivelovae,chromatin_aware,21878,641,1100.7,3820.1,2572b06,cVAE δ/κ; gpu=False
+2026-06-30T01:49:56+00:00,moflow,chromatin_aware,21878,12,191.6,2936.2,2572b06,DTW c-s lag; gpu=True; smoke n=12
+2026-06-30T02:38:35+00:00,moflow,chromatin_aware,21878,636,2836.0,8222.8,2572b06,DTW c-s lag; gpu=True
+2026-06-30T04:13:08+00:00,multivelo_scrambled,scrambled_chromatin_null,21878,20,258.5,6258.4,2572b06,within-lineage ATAC shuffle; smoke n=20
+2026-06-30T06:07:56+00:00,multivelo_scrambled,scrambled_chromatin_null,21878,641,6740.2,6258.4,2572b06,within-lineage ATAC shuffle (null)

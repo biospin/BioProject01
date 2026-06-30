@@ -27,8 +27,9 @@ from MoFlow.eval_dtw import get_dtw
 METHOD = "moflow"
 
 
-def main(n_genes=0, gpu=False):
+def main(n_genes=0, gpu=False, n_jobs=None):
     cfg.OUT_VELO.mkdir(parents=True, exist_ok=True); cfg.RESULTS.mkdir(parents=True, exist_ok=True)
+    n_jobs = n_jobs or cfg.MV_NJOBS              # per-gene Lightning Trainer 병렬도(GPU util 낮음→코어 수가 속도 좌우)
     tag = ".smoke" if n_genes else ""
     rna = sc.read_h5ad(cfg.OUT_VELO / "dl_input_rna.h5ad")
     atac = sc.read_h5ad(cfg.OUT_VELO / "dl_input_atac.h5ad")
@@ -41,7 +42,7 @@ def main(n_genes=0, gpu=False):
         m = MOFlow(rna, atac, embed="X_umap",
                    device=("cuda" if gpu else None))    # device=None → CPU accelerator
         # velocity()는 fit gene subset + velo layer를 담은 새 adata를 *반환*.
-        result = m.velocity(rna, n_jobs=cfg.MV_NJOBS, save_path=str(cfg.OUT_VELO / f"moflow{tag}_out"))
+        result = m.velocity(rna, n_jobs=n_jobs, save_path=str(cfg.OUT_VELO / f"moflow{tag}_out"))
         # get_dtw(timekey='velo_s_pseudotime') 위해 pseudotime 계산.
         # ⚠️ velocity_graph는 다중 gene 필요(소수 gene smoke는 실패) → try, 실패 시 lag 생략.
         pt_ok = True
@@ -79,4 +80,5 @@ def main(n_genes=0, gpu=False):
 
 if __name__ == "__main__":
     n = int(sys.argv[sys.argv.index("--genes") + 1]) if "--genes" in sys.argv else 0
-    sys.exit(main(n_genes=n, gpu=("--gpu" in sys.argv)))
+    nj = int(sys.argv[sys.argv.index("--n-jobs") + 1]) if "--n-jobs" in sys.argv else None
+    sys.exit(main(n_genes=n, gpu=("--gpu" in sys.argv), n_jobs=nj))

@@ -23,19 +23,33 @@ import p1_config as p1
 
 # method → (csv, lag 정의). lag = chromatin→transcription. CSV 없으면 자동 skip.
 # chromatin-aware lag이 2개+ 모이면 pairwise sign-agreement+Spearman(DESIGN §4B) 자동 수행.
+# rates: 표준 rate명 → 해당 method의 CSV 컬럼. method간 동일 정의로 비교(§3.6 apples-to-apples)에 사용.
 METHODS = {
     "multivelo": dict(csv=cfg.RESULTS / "multivelo_genes.csv",
                       lag=lambda d: d["fit_t_sw2"] - d["fit_t_sw1"],   # sign 구조적(단조)
-                      timing="fit_t_sw2", sign_informative=False),
+                      timing="fit_t_sw2", sign_informative=False,
+                      rates=dict(alpha_c="fit_alpha_c", alpha="fit_alpha",
+                                 beta="fit_beta", gamma="fit_gamma")),
     "moflow": dict(csv=cfg.RESULTS / "moflow_genes.csv",
                    lag=lambda d: d["cs_lag_median"],                    # DTW c-s lag, sign 가변
-                   timing=None, sign_informative=True),
+                   timing=None, sign_informative=True, rates={}),
+    "crakvelo": dict(csv=cfg.RESULTS / "crakvelo_genes.csv",
+                     lag=lambda d: d["cs_lag_median"],                  # DTW c-s lag (CRAK-Velo native), sign 가변
+                     timing=None, sign_informative=True, rates={}),
     "multivelovae": dict(csv=cfg.RESULTS / "multivelovae_genes.csv",
-                         lag=None,        # GPU run 후 {key}_* 컬럼 확인해 δ/κ 기반 lag 정의(TODO)
-                         timing=None, sign_informative=True),
+                         # lag proxy: 1/alpha_c - 1/alpha (chromatin transition time - RNA induction time)
+                         # alpha_c=chromatin opening rate, alpha=transcription rate (VAEChrom save_anndata cols)
+                         # NOTE: 양수=chromatin이 더 느리게 전환(선행 의미 없음), 음수=RNA 먼저. sign 가변 ✓
+                         lag=lambda d: (1.0 / d["vae_alpha_c"].clip(1e-6) - 1.0 / d["vae_alpha"].clip(1e-6))
+                                       if "vae_alpha_c" in d.columns and "vae_alpha" in d.columns
+                                       else None,
+                         timing=None, sign_informative=True,
+                         rates=dict(alpha_c="vae_alpha_c", alpha="vae_alpha",
+                                    beta="vae_beta", gamma="vae_gamma")),
     # floor(scVelo)는 chromatin 없음 → lag 없음. timing(fit_t_)만 비교용.
     "scvelo_floor": dict(csv=cfg.RESULTS / "rna_only_dynamical_genes.csv",
-                         lag=None, timing="fit_t_", sign_informative=False),
+                         lag=None, timing="fit_t_", sign_informative=False,
+                         rates=dict(alpha="fit_alpha", beta="fit_beta", gamma="fit_gamma")),
 }
 # construct-validity marker (lineage). 양수 lag(chromatin 선행) 기대.
 MARKERS = {k: v for k, v in p1.LINEAGE_MARKERS.items()}
@@ -72,6 +86,29 @@ def main():
           "`sw2−sw1`은 *정의상 항상 양수*다. 따라서 100%는 priming 증거가 아니라 모델 제약 — "
           "**sign은 무정보, lag *크기*의 gene간 변이만 정보**다. 진짜 directional sign check는 "
           "sign이 가변인 method(MoFlow DTW c-s lag 등)에서 수행해야 함(DESIGN §4B).", ""]
+
+    # 1.5 Directional lag — sign 가변 method(MoFlow 등): "chromatin이 정말 선행하나" 직접 검정
+    from scipy.stats import wilcoxon
+    L += ["## 1.5 Directional lag (sign-가변 method) — chromatin 선행 여부",
+          "> MultiVelo와 달리 sign이 구조 제약 없는 method만 방향을 답할 수 있다(DESIGN §4B).", ""]
+    dir_methods = [m for m in data if METHODS[m].get("sign_informative") and METHODS[m].get("lag")]
+    if dir_methods:
+        for m in dir_methods:
+            lg = METHODS[m]["lag"](data[m]).dropna()
+            pp = float((lg > 0).mean()); pn = float((lg < 0).mean())
+            try:
+                _, wp = wilcoxon(lg[lg != 0]); wtxt = f"Wilcoxon p={wp:.3g}"
+            except Exception:
+                wtxt = "Wilcoxon NA"
+            bias = "방향 편향 미미(median≈0)" if abs(lg.median()) < 0.05 else \
+                   ("chromatin 선행 편향" if lg.median() > 0 else "RNA 선행 편향")
+            L.append(f"- **{m}** (n={len(lg)}): median {lg.median():+.3f}, "
+                     f"chromatin-leads(>0) **{pp:.1%}** / rna-leads(<0) {pn:.1%} | {wtxt} → {bias}")
+        L.append("> ~50/50면 전역 'chromatin이 transcription을 prime한다'는 데이터 미지지 "
+                 "(MultiVelo의 100%는 §1 모델 제약 아티팩트).")
+    else:
+        L.append("- sign-가변 method 없음 (MoFlow 등 추가 시 산출).")
+    L.append("")
 
     # 2. construct-validity: marker gene lag 부호
     L += ["## 2. Construct-validity — marker gene lag (크기)", "",
@@ -144,6 +181,38 @@ def main():
         L.append(f"- 현재 lag 산출 chromatin-aware method {len(lag_methods)}개 "
                  f"({list(lag_methods)}) → 2개+ 시 pairwise 자동. "
                  "MultiVeloVAE/MoFlow(GPU) 추가 후 H1 일치도 산출됨.")
+    L.append("")
+
+    # 3.6 진단: per-rate 일치 + apples-to-apples lag (α_c,α 컬럼 둘 다 가진 method 쌍)
+    # §3.5의 무상관이 진짜 method 불일치인지 lag 정의 불일치(proxy)인지 분리. 상세: h1_lag_diagnostic.md
+    L += ["## 3.6 진단 — per-rate 일치 + apples-to-apples lag", ""]
+    rate_methods = [m for m in data
+                    if "alpha_c" in METHODS[m].get("rates", {})
+                    and "alpha" in METHODS[m].get("rates", {})]
+    if len(rate_methods) >= 2:
+        for i in range(len(rate_methods)):
+            for j in range(i + 1, len(rate_methods)):
+                A, B = rate_methods[i], rate_methods[j]
+                dA, dB = data[A], data[B]; rA, rB = METHODS[A]["rates"], METHODS[B]["rates"]
+                sh = sorted(set(dA.index) & set(dB.index))
+                if len(sh) < 10:
+                    L.append(f"- {A}×{B}: shared {len(sh)} (<10) → 생략"); continue
+                L.append(f"- **{A}×{B}** (shared {len(sh)}) — 같은 정의로 통일 비교:")
+                for prm in ["alpha_c", "alpha", "beta", "gamma"]:
+                    if prm in rA and prm in rB:
+                        r, p = spearmanr(dA.loc[sh, rA[prm]].astype(float),
+                                         dB.loc[sh, rB[prm]].astype(float))
+                        tag = " ⚠️" if (prm == "alpha_c" and abs(r) < 0.5) else ""
+                        L.append(f"  - Spearman({prm}) = {r:+.3f} (p={p:.2g}){tag}")
+                # apples-to-apples rate-proxy lag = 1/α_c − 1/α (양쪽 동일 정의)
+                la = 1.0 / dA.loc[sh, rA["alpha_c"]].clip(1e-6) - 1.0 / dA.loc[sh, rA["alpha"]].clip(1e-6)
+                lb = 1.0 / dB.loc[sh, rB["alpha_c"]].clip(1e-6) - 1.0 / dB.loc[sh, rB["alpha"]].clip(1e-6)
+                r, p = spearmanr(la, lb); sa = float((np.sign(la) == np.sign(lb)).mean())
+                L.append(f"  - **rate-proxy lag(1/α_c−1/α) 통일**: Spearman {r:+.3f} (p={p:.2g}) | "
+                         f"sign-agreement {sa:.1%}")
+        L.append("> α는 강건하나 lag을 결정하는 α_c가 method-민감 → lag 불일치의 근원. 상세 `h1_lag_diagnostic.md`.")
+    else:
+        L.append(f"- α_c·α 모두 가진 method {len(rate_methods)}개 → 2개+ 시 자동.")
     L.append("")
 
     # 4. 한계/다음

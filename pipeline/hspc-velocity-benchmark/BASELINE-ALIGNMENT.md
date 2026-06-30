@@ -25,17 +25,23 @@
 | Harness_Baseline (지침) | 우리 (실행, `pipeline/hspc-velocity-benchmark/`) | 상태 |
 |---|---|---|
 | HSPC `download` | `scripts/download_data.sh` (GSE209878, ~1.8GB 확보·검증) | ✅ |
-| HSPC `preprocessing` | `scripts/p1_build.py` (통일 전처리, DESIGN §3) | 🚧 P1 실행 중 |
-| HSPC `model` (lag 추정 method 선택) | `DESIGN.md` 벤치마크 = model 1단계 **method-selection** | 📐 설계+검토 완료 |
-| HSPC `model` (feature→lag 예측, held-out) | 미착수 (P2 이후) | ⬜ |
+| HSPC `preprocessing` | `scripts/p1_build.py` (통일 전처리, DESIGN §3) | ✅ 완료 2026-06-14 |
+| HSPC `model` (lag 추정 method 선택) | `DESIGN.md` 벤치마크 = model 1단계 **method-selection** | 🔄 P2 진행 중 |
+| HSPC `model` (feature→lag 예측, held-out) | 미착수 (P2 완료 후) | ⬜ |
 | HSPC `visualization` | 미착수 | ⬜ |
 
 > 우리 벤치마크는 baseline의 `model` 단계 중 **"어떤 velocity method로 lag를 추정할지"** 를 엄밀히 정하는 부분. 그 결과가 feature→lag 예측/평가로 이어진다.
 
 ## 5. 채택할 규약 체크리스트 (정합)
 - [x] **download_manifest** 생성 — `download_manifest.tsv` (sample/file/size/sha256/source, 12파일). genome build/access date는 헤더 주석.
-- [ ] **required metadata** 기록: genome build(hg38?), gene annotation source, **lineage label + pseudotime root/direction**, time-axis 명시 → P1 산출(`p1_build.py`/`dataset-info.yaml`)에 반영.
-- [ ] **경로 매핑** 명시: 우리 `pipeline/hspc-velocity-benchmark/data/GSE209878/` ↔ baseline `data/human-hspc-10x-multiome/`. (재배치 대신 매핑 표로 정합; 코드 위치는 BioProject01 유지.)
+- [x] **required metadata** 기록 (2026-06-30):
+  - **genome build**: hg38 (GRCh38) — CellRanger ARC 출력, features.tsv.gz ENSEMBL gene ID 기준.
+  - **gene annotation**: ENSEMBL GRCh38 (CellRanger ARC 기본).
+  - **lineage label**: marker score_genes → Leiden cluster argmax 할당. `rna.obs['lineage']` 7종: HSC/MPP·Erythroid·MK·Myeloid·Lymphoid·Baso/Eo/Mast·pDC. rare: {MK, Baso/Eo/Mast, pDC}.
+  - **pseudotime root/direction**: scVelo dynamical 전역 fit (fuzzy root — 명시적 root 미지정). TODO: P2 within-lineage 분석 시 HSC/MPP cluster를 root로 지정.
+  - **time-axis**: pseudotime 단위(switch time). wall-clock day0/day7은 `timepoint` obs 컬럼. H2(wall-clock anchor) 가능.
+  - **cell count**: MV-1(day0) + MV-2(day7) = 21,878 cells (QC 후). 원논문 11,605는 단일 sample 기준.
+- [x] **경로 매핑**: `pipeline/hspc-velocity-benchmark/data/GSE209878/{MV-1,MV-2}/` ↔ baseline `data/human-hspc-10x-multiome/raw/`. 재배치 없이 매핑으로 정합(코드 BioProject01 유지).
 - [x] **within-lineage + rare-pop + time-axis 규율** — DESIGN.md/REVIEW에 이미 반영(일치).
 
 ## 6. 결정·후속

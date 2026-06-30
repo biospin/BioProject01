@@ -2,6 +2,8 @@
 
 method를 돌린 **요약 결과**만 둔다. 대용량 중간산출(.h5ad/.npz 등)은 `../data/`(gitignore)에 두고, 여기엔 **논문 Table/본문 수치로 직행하는 요약**(`*.csv`, `*.md`)만 commit한다.
 
+> 📌 **결과·해석 종합본 = [`FINDINGS.md`](FINDINGS.md)** — 개별 분석 md를 연구 질문에 맞춰 묶은 canonical 문서. 결과를 볼 땐 여기부터. 개별 md(`concordance.md`/`h1_lag_diagnostic.md`/`scrambled_null.md`/`confound.md`/`cellcycle_genelevel.md`/`lineage_lag.md`)는 상세 근거.
+
 ## 무엇이 tracked / ignored 인가
 - **tracked**: `*.csv`(요약 metric), `*.md`(리포트), `*.json`(작은 설정/요약).
 - **ignored**: `*.h5ad`, `*.npz`, `*.parquet`, per-cell 대용량 등 (`.gitignore` 참고).

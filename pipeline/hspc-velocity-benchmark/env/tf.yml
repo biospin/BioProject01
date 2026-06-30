@@ -11,9 +11,12 @@ dependencies:
   - anndata
   - pip
   - pip:
-      - tensorflow         # CPU. GPU: tensorflow[and-cuda] 또는 README 참고
+      - tensorflow[and-cuda]  # GPU 빌드(본서버 3×A6000). CPU만이면 'tensorflow'.
       - unitvelo           # CRAK-Velo의 base
       - celldancer         # RNA-only relay 계보 reference (TF 기반)
-      - "git+https://github.com/StatBiomed/CRAK-Velo.git"   # BSD-3
+      # ⚠️ CRAK-Velo는 pip 설치 불가 — repo에 setup.py/pyproject.toml 없음(2026-06-30 확인).
+      #    MoFlow와 동일하게 clone + PYTHONPATH로 사용:
+      #      git clone https://github.com/StatBiomed/CRAK-Velo.git vendor/CRAK-Velo
+      #      export PYTHONPATH=$PWD/vendor/CRAK-Velo/src   (실제 패키지 경로는 repo 구조 확인)
       # CRAK-Velo는 cisTopic 의존 — 무거움. 필요 시:
       #   - "git+https://github.com/Nour899/cisTopic.git"  (또는 pycisTopic)
