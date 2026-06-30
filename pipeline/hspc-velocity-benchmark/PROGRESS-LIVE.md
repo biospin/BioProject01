@@ -11,6 +11,16 @@
 
 - **결과**: cross-lineage lag magnitude ρ median=**0.349**(범위 0.234~0.513, 양수 10/10) → lag 일치도 **약함/경계**. 대조군 α_c ρ median=**0.483**(lag보다 robust) → 기존 H1 패턴 재현. per-lineage vs 전역 fit ρ 0.23~0.46(전역 fit이 lineage 신호 뭉갬 → refit 정당). **cross-lineage 축에서도 H1(lag 비robust) 확증.**
 
+## ✅ 완료 (2026-07-01) — 진짜 day0 ATAC baseline feature 어셈블 + 모델
+| 작업 | 스크립트 | 산출 |
+|---|---|---|
+| **day0 ATAC feature 어셈블** | `p5_atac_baseline_features.py` | `atac_baseline_features.{csv,md}` |
+| **ATAC feature → timing 모델** | `p5_lag_model_atac.py` | `lag_model_atac.{csv,md}` |
+
+- crakvelo 197,482 peak에서 **day0 HSC/MPP 8,583 세포** 기준 gene별 promoter(±2kb)/enhancer(±100kb distal) 접근성 → 511 gene. p5_lag_model.py 한계 ①(moflow Mc smoothed proxy) **해소**.
+- **핵심 발견**: held-out lineage CV에서 **robust α는 진짜 ATAC로 예측됨(ρ=+0.309, 6 lineage 전부 양수)**, Mc proxy(−0.089)는 실패. **비robust lag은 ATAC로도 비예측(ρ=+0.05)**. → 같은 feature가 robust target만 예측 = H1 예측가능성 축 재확인 + day0 ATAC 어셈블 가치 입증. drug-timing 모델 입력 경로 = **day0 ATAC → α**(lag 아님). FINDINGS §6 신설.
+- 남은 블로커: **drug perturbation arm**(timing ground truth 데이터 부재) + α_c 전체-refit bootstrap(GPU).
+
 - **목적**: 전역 fit lag을 dominant-expression으로 lineage 귀속한 `lineage_lag.md`를 **진짜 per-lineage fit**으로 대체. lag이 gene-intrinsic robust 속성인지(cross-lineage 일치도) = within-method H1 축 추가.
 - **스크립트**: `scripts/p2_multivelo_perlineage.py`(fit, mv env) + `scripts/p3_lineage_refit.py`(분석, scv-preprocess env). 스모크(Lymphoid 12 gene) 통과 후 full launch.
 - **설계**: 각 terminal lineage L = HSC/MPP(root)∪L 세포로 부분집합 → P1 동일 substrate(filter_and_normalize→HVG→moments) → knn_smooth_chrom → recover_dynamics_chrom. root 포함 이유=분화 trajectory 필요.
