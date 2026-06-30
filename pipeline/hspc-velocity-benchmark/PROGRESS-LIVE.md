@@ -11,6 +11,18 @@
 
 - **결과**: cross-lineage lag magnitude ρ median=**0.349**(범위 0.234~0.513, 양수 10/10) → lag 일치도 **약함/경계**. 대조군 α_c ρ median=**0.483**(lag보다 robust) → 기존 H1 패턴 재현. per-lineage vs 전역 fit ρ 0.23~0.46(전역 fit이 lineage 신호 뭉갬 → refit 정당). **cross-lineage 축에서도 H1(lag 비robust) 확증.**
 
+## 🔵 진행 중 (2026-07-01) — α_c 전체 re-fit bootstrap stability
+| 작업 | PID | 로그 | 상태 | ETA |
+|---|---|---|---|---|
+| **bootstrap 전체 re-fit** (B=12, frac 0.70 비복원 subsample, 530 canonical gene) | py **377590** | `scratchpad/bootstrap_refit.log` | 🔄 refit 0/12 fit 중 | ~6.5h (refit당 ~30min) |
+| **자율 finisher** (PID 377569) | — | `scratchpad/finish_bootstrap_refit.log` | 🔄 12개 채워지면 p3 자동 실행 | — |
+
+- **목적**: `p5_bootstrap_stability.py`(fit 고정→stability 하한)가 명시적으로 남긴 미완 — **전체 re-fit 반복** — 수행. cell subsample마다 MultiVelo를 처음부터 재fit해 **α_c·α·lag의 진짜 재fit 안정성**(rank 일치도·CV·부호flip) 측정.
+- **가설(H1 정합)**: α 계열(α/α_c) rank 일치도 ≫ lag → 'α는 재fit-robust, lag은 비robust'를 재fit 축에서 직접 확증.
+- **스크립트**: `p2_multivelo_bootstrap_refit.py`(mv env, resumable·incremental CSV) + `p3_bootstrap_refit.py`(scv-preprocess). 스모크(B2×12gene) 통과.
+- ⚠️ MultiVelo는 **CPU** fit(n_jobs=16, 32코어 idle) — TODO의 "GPU 반복 fit"은 부정확. subsample 비복원(복원추출은 kNN graph 붕괴).
+- **산출(완료 시)**: `results/bootstrap_refit/refit_<b>.csv`(12) → `results/bootstrap_refit.md` + `bootstrap_refit_pergene.csv`.
+
 ## ✅ 완료 (2026-07-01) — 진짜 day0 ATAC baseline feature 어셈블 + 모델
 | 작업 | 스크립트 | 산출 |
 |---|---|---|
