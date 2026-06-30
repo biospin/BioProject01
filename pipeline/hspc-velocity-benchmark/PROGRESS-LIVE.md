@@ -63,3 +63,9 @@
 - 2026-07-01 ✅ **블로커 해소 + P4 완료** (Task 1·2):
   - **(1) CRAK-Velo lag 부호 검증·수정** → `results/crakvelo_sign_check.md`. 합성 신호 검증으로 `dtw_lag`(manual DP)이 MoFlow `fastdtw`와 **반대 부호**(버그)임 확인 → `i−j`로 통일(양수=chromatin선행). 단위검증 PASS, marker(CSF1R/S100A9 양수=chromatin선행, MoFlow myeloid markers도 양수) 생물학 검증. csv·concordance §3.5/§18 **재산출**. 부호 통일 후 moflow×crakvelo는 ρ +0.151→**−0.151**(genome-wide 약한 음의 일치, marker는 동의). **FINDINGS canonical 반영 가능.**
   - **(2) permutation FDR(P4)** `scripts/p4_permutation_fdr.py` → `results/permutation_fdr.md`. (A) 2/3 쌍 유의하나 effect 극약·방향 불일치. (B) agreement-set 0/598(FDR<0.1) = 공집합. **H1(lag method-민감) 통계 확증.**
+
+- 2026-07-01 ✅ **P5 트랙 3종 완료**(accuracy·stability·predictability):
+  - **simulator(accuracy)** `p5_sim_injected_lag.py` → `sim_injected_lag.md`+png. DTW c-s lag은 ground truth 있어도 lag 크기/순위 회복 실패(Spearman 일관 음수)·부호 regime 의존. H1 근원=construct 정확도 한계.
+  - **bootstrap(stability)** `p5_bootstrap_stability.py` → `bootstrap_stability.{md,csv}`. fit 고정·표집서 부호 83% 안정(가장 약한 stability, H1 모순 아님).
+  - **P5 모델(predictability)** `p5_lag_model.py` → `lag_model.{md,csv}`+png. held-out lineage: 순수 baseline chromatin으로 lag 비예측(ρ=−0.21), +fit feature 순환(ρ=+0.59). → baseline feature·α 중심 모델 방향.
+  - FINDINGS §5(3각 검정) 신설·통합결론 갱신. 다음: 실제 day0 ATAC feature + per-lineage refit + drug perturbation arm(데이터/GPU 대기).
