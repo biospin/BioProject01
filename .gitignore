@@ -26,6 +26,10 @@ pipeline/**/results/**/*.npz
 pipeline/**/results/**/*.npy
 pipeline/**/results/**/*.parquet
 pipeline/**/results/**/*.pkl
+# bootstrap 재fit raw 중간산출(12×) — 요약은 bootstrap_refit_pergene.csv/.md만 track
+pipeline/**/results/bootstrap_refit/
+# scratchpad: 임시 작업파일
+pipeline/**/scratchpad/
 # figures/: 생성 스크립트(*.py)만 commit, 출력 이미지는 제외
 pipeline/**/figures/**/*.png
 pipeline/**/figures/**/*.pdf

@@ -17,3 +17,17 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-06-30T18:17:35+00:00,multivelo_perlineage,perlineage:Lymphoid,8891,446,1917.7,8686.7,cd7c3d5,root∪Lymphoid per-lineage refit
 2026-06-30T18:50:26+00:00,multivelo_perlineage,perlineage:MK,9679,470,1969.3,8686.7,cd7c3d5,root∪MK per-lineage refit
 2026-06-30T19:51:46+00:00,multivelo_perlineage,perlineage:Myeloid,16458,484,3676.2,10028.0,cd7c3d5,root∪Myeloid per-lineage refit
+2026-06-30T20:50:16+00:00,multivelo_bootstrap,bootstrap_refit:b0,10939,12,57.7,6784.2,7a623ef,subsample frac=0.5 seed=20260701
+2026-06-30T20:50:52+00:00,multivelo_bootstrap,bootstrap_refit:b1,10939,12,34.6,7762.0,7a623ef,subsample frac=0.5 seed=20260702
+2026-06-30T21:17:50+00:00,multivelo_bootstrap,bootstrap_refit:b0,15315,498,1566.3,7929.1,c47f87f,subsample frac=0.7 seed=20260701
+2026-06-30T21:43:31+00:00,multivelo_bootstrap,bootstrap_refit:b1,15315,499,1537.7,10607.6,c47f87f,subsample frac=0.7 seed=20260702
+2026-06-30T22:08:16+00:00,multivelo_bootstrap,bootstrap_refit:b2,15315,499,1482.3,10607.6,c47f87f,subsample frac=0.7 seed=20260703
+2026-06-30T22:33:56+00:00,multivelo_bootstrap,bootstrap_refit:b3,15315,500,1536.3,10607.6,c47f87f,subsample frac=0.7 seed=20260704
+2026-06-30T22:58:54+00:00,multivelo_bootstrap,bootstrap_refit:b4,15315,504,1495.1,10607.6,c47f87f,subsample frac=0.7 seed=20260705
+2026-06-30T23:23:56+00:00,multivelo_bootstrap,bootstrap_refit:b5,15315,497,1498.4,10607.6,c47f87f,subsample frac=0.7 seed=20260706
+2026-06-30T23:48:16+00:00,multivelo_bootstrap,bootstrap_refit:b6,15315,501,1457.5,11583.3,c47f87f,subsample frac=0.7 seed=20260707
+2026-07-01T00:16:22+00:00,multivelo_bootstrap,bootstrap_refit:b7,15315,500,1670.6,12884.2,c47f87f,subsample frac=0.7 seed=20260708
+2026-07-01T00:48:03+00:00,multivelo_bootstrap,bootstrap_refit:b8,15315,499,1860.0,12884.2,c47f87f,subsample frac=0.7 seed=20260709
+2026-07-01T01:14:13+00:00,multivelo_bootstrap,bootstrap_refit:b9,15315,501,1555.3,12884.2,c47f87f,subsample frac=0.7 seed=20260710
+2026-07-01T01:46:13+00:00,multivelo_bootstrap,bootstrap_refit:b10,15315,502,1915.4,12884.2,c47f87f,subsample frac=0.7 seed=20260711
+2026-07-01T02:19:16+00:00,multivelo_bootstrap,bootstrap_refit:b11,15315,497,1974.7,12884.2,c47f87f,subsample frac=0.7 seed=20260712
