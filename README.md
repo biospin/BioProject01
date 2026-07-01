@@ -112,7 +112,7 @@ python3 skills/core-figure/scripts/extract_panels.py <pdf> --page N --figure "Fi
 
 | Dataset | Primary | Secondary | GitHub ID |
 |---|---|---|---|
-| 10x embryonic mouse brain | 이건규 | — | Geongyu |
+| 10x embryonic mouse brain | 서정한 | — | JeonghanSeo |
 | SHARE-seq mouse skin | 박상준 | — | — |
 | Human brain multi-ome | 전연수 | 박세진 | sezinie000 / sjpark |
 | Human HSPC 10x Multiome | 김가경 | 류재면 | kakyungkim / JamieLyu |
