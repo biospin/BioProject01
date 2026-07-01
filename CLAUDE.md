@@ -41,6 +41,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 ## 언어 / commit 규칙
 - 출력 기본 한국어. 분야 표준 영어 용어 유지(RNA/DNA/ATAC/chromatin/pseudotime/baseline 등).
 - Author: `kakyungkim <kakyung.kim@gmail.com>`. Claude attribution(footer/co-author) **금지**. Remote SSH `git@github.com:biospin/BioProject01.git`.
+- **커밋 메시지 표기(중요)**: 파이프라인 단계 커밋은 **내부 단계표기 `P0`~`P5`** 를 접두로 쓴다 (예: `P4 permutation FDR 4-way …`, `P5 bootstrap stability …`). `BIOP01-NN`(JIRA 키)은 **그 커밋이 실제로 해당 JIRA 이슈에 대응할 때만** 쓰고, 내부 단계 라벨 용도로는 쓰지 않는다 — 실제 JIRA 키와 충돌하기 때문(BIOP01-24=mouse brain 담당, BIOP01-25~28=BIOP01-23 child task). 과거 `BIOP01-24~28`로 표기된 확증 커밋은 실제로는 내부 P4/P5 작업이었음(추적 시 주의).
 - 원문 binary·대용량(.h5ad/.h5mu/.loom/PDF/data)은 `.gitignore`. tracked = `*.md`, `*.yaml`, `*.tsv`(요약), 코드.
 
 ## 방법론 주의 (분석 시 반복)
