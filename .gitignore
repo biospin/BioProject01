@@ -100,3 +100,8 @@ pipeline/**/vendor/
 
 # MoFlow 기본 출력 폴더(stray)
 pipeline/**/MoFlow_velocity_/
+
+# 개인 작업기록(연구 산출물 아님, 편의상 로컬 유지) — untrack 2026-07-01
+HANDOFF.md
+TODO.md
+SESSION-LOG.md
