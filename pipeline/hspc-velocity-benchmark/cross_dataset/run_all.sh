@@ -18,6 +18,26 @@ if [[ -z "$DATASET" ]]; then
   exit 1
 fi
 
+# ── ⛑️ 안전장치 (2026-07-01) ────────────────────────────────────────
+# p1/p2/p3 스크립트는 아직 --dataset/--config 배선이 없어 이 스크립트를 그대로
+# 돌리면 HSPC 데이터로 돌면서 results/multivelo_genes.csv(HSPC 결과)를 덮어쓴다.
+# RUNBOOK.md '데이터 도착 시 체크리스트' ①~③(config 파라미터화 + dataset별
+# marker/QC 재정의 + 산출물 suffix) 완료 후, CROSS_DATASET_READY=1 로 해제한다.
+CONFIG_FILE="$(cd "$(dirname "$0")" && pwd)/config_${DATASET}.py"
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "❌ config_${DATASET}.py 없음 → config_template.py 복사·편집 후 재실행."
+  echo "   (RUNBOOK.md §2 참조. marker/QC는 조직별 재정의 필수 — §'⚠️ 현재 준비 상태')"
+  exit 2
+fi
+if [[ "${CROSS_DATASET_READY:-0}" != "1" ]]; then
+  echo "❌ 파이프라인이 아직 cross-dataset 배선 미완 (RUNBOOK '데이터 도착 시 체크리스트' ①~③)."
+  echo "   지금 실행하면 HSPC 산출물을 덮어쓸 수 있어 거부한다."
+  echo "   ①config 파라미터화 ②dataset별 marker/QC 재정의 ③산출물 dataset-suffix 완료 후:"
+  echo "      CROSS_DATASET_READY=1 $0 $DATASET ${2:-}"
+  exit 3
+fi
+# ────────────────────────────────────────────────────────────────────
+
 SCRIPT_DIR="$(cd "$(dirname "$0")/../scripts" && pwd)"
 LOG_DIR="/tmp"
 export HDF5_USE_FILE_LOCKING=FALSE

@@ -1,8 +1,13 @@
 """Cross-dataset replication config template.
 
-RUNBOOK.md의 지시에 따라 이 파일을 복사해서 config_<dataset>.py로 저장 후
-아래 ── 수정 필요 ── 섹션만 편집한다.
-나머지(QC/HVG/lineage marker 등)는 HSPC와 동일하게 유지해야 공정한 비교.
+RUNBOOK.md의 지시에 따라 이 파일을 복사해서 config_<dataset>.py로 저장 후 편집한다.
+
+⚠️ 중요(2026-07-01 정정): 아래 LINEAGE_MARKERS/RARE_LINEAGES를 p1_config에서
+그대로 import하는 것은 **human HSPC(조혈) 전용**이라 mouse skin·human brain에
+그대로 쓰면 annotation이 틀린다(세포종·marker가 완전히 다름). 모든 P3/P4 지표가
+within-lineage라 lineage annotation이 틀리면 replication 자체가 무의미하다.
+→ **dataset별로 LINEAGE_MARKERS·RARE_LINEAGES·QC를 조직/species에 맞게 재정의**할 것.
+   (N_HVG/N_PCS/N_NEIGHBORS/LEIDEN_RES 등 method 하이퍼파라미터는 공정 비교 위해 동일 유지.)
 """
 from pathlib import Path
 import sys
@@ -25,9 +30,12 @@ SAMPLES = {
 }
 # ── 여기까지 ──────────────────────────────────────────────────────
 
-# 아래는 HSPC와 동일 유지 (공정 비교 위해 바꾸지 말 것)
-from p1_config import (QC, N_HVG, N_PCS, N_NEIGHBORS, LEIDEN_RES,
-                        RANDOM_SEED, LINEAGE_MARKERS, RARE_LINEAGES)
+# method 하이퍼파라미터는 공정 비교 위해 HSPC와 동일 유지.
+from p1_config import (N_HVG, N_PCS, N_NEIGHBORS, LEIDEN_RES, RANDOM_SEED)
+
+# ⚠️ 아래는 조직/species별로 반드시 재정의 (HSPC 조혈 marker 그대로 쓰면 annotation 틀림).
+#    데이터 도착 후 해당 조직의 표준 marker/QC로 교체할 것.
+from p1_config import (QC, LINEAGE_MARKERS, RARE_LINEAGES)   # TODO: dataset별 재정의
 
 OUT_RNA    = OUT / "rna_spliced_unspliced.h5ad"
 OUT_ATAC   = OUT / "atac_peaks.h5ad"

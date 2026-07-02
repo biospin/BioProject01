@@ -1,7 +1,23 @@
-# Cross-Dataset External Replication — 즉시 실행 가이드
+# Cross-Dataset External Replication — 준비 가이드
 
-> **목적**: BIOP01 벤치마크 결과(method 순위·lag sign)를 외부 multiome 1개로 재현.
-> P5 replication 조건 충족. 데이터 받으면 이 문서만 보고 바로 실행 가능.
+> **목적**: BIOP01 벤치마크 결과(method 순위·lag sign)를 외부 multiome 1개로 재현. P5 replication 조건 충족.
+
+---
+
+## ⚠️ 현재 준비 상태 (2026-07-01 정직한 gap — 데이터 도착 전 반드시 처리)
+
+이 RUNBOOK/`run_all.sh`/`config_template.py`는 **설계 스캐폴드**다. 아래 두 gap 때문에 **"데이터만 받으면 바로 실행"은 아직 불가**하다. 데이터 도착 시 먼저 처리한다.
+
+1. **배선(wiring) gap** — `p1_build.py`/`p2_multivelo.py`/`p3_concordance.py`는 `import p1_config`/`p2_config`를 **하드코딩**하고 `--dataset`/`--config` argparse가 **없다**. 따라서 `run_all.sh skin`을 지금 돌리면 `--dataset`을 무시하고 **HSPC 데이터로 돌면서 `results/multivelo_genes.csv`(HSPC 결과)를 덮어쓴다**. → config를 env(`CROSS_DATASET_CONFIG`)로 주입하거나 argparse 추가 + 산출물에 dataset suffix 필요.
+2. **domain annotation gap (더 근본적)** — `p1_config.LINEAGE_MARKERS`/`QC`/`RARE_LINEAGES`는 **human HSPC(조혈) 전용**(CD34/GATA1/HBB…). mouse skin(keratinocyte)·human brain(neuron/glia)은 세포종·marker가 완전히 다르다. 모든 P3/P4 지표가 within-lineage라 **lineage annotation이 틀리면 replication 자체가 무의미**하다. `config_template.py`는 marker를 HSPC에서 그대로 import하므로(주석 "바꾸지 말 것"), **dataset별 marker/QC 재정의가 필수**다. ← 경로만 파라미터화하면 "돌아가는 것처럼 보이지만 annotation이 쓰레기".
+
+### 데이터 도착 시 체크리스트 (실행 전)
+- [ ] ① config 파라미터화: `CROSS_DATASET_CONFIG` env로 p1/p2/p3가 `config_<dataset>.py`를 읽도록 배선(또는 argparse 추가).
+- [ ] ② dataset별 `LINEAGE_MARKERS`·`QC`·`RARE_LINEAGES` 재정의(조직·species에 맞게). ← template의 "동일 유지" 주석 무시하고 반드시 교체.
+- [ ] ③ 산출물 dataset-suffix(`multivelo_genes_<dataset>.csv` 등) → HSPC 결과 덮어쓰기 방지.
+- [ ] ④ 데이터 형식 확정(raw CellRanger ARC vs processed h5ad) — §1 옵션 A/B 중 결정.
+
+> ⛑️ 안전장치: `run_all.sh`는 위 ①이 안 되어 있으면 실행을 거부한다(HSPC 산출물 보호). 아래 §2 이후 절차는 ①~③ 완료를 전제로 한다.
 
 ---
 
