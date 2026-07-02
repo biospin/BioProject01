@@ -30,6 +30,8 @@ pipeline/**/results/**/*.pkl
 pipeline/**/results/bootstrap_refit/
 # scratchpad: 임시 작업파일
 pipeline/**/scratchpad/
+# proxy_join/out_gate/: gate 플롯(png)은 제외, gate_report.json(요약)만 commit
+pipeline/**/proxy_join/out_gate/*.png
 # figures/: 생성 스크립트(*.py)만 commit, 출력 이미지는 제외
 pipeline/**/figures/**/*.png
 pipeline/**/figures/**/*.pdf

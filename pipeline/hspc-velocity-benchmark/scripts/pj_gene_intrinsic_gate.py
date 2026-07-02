@@ -31,8 +31,12 @@ CONFIG = {
     #   NOTE: HSPC 직접 t½가 없으면 (a) 혈액암 cell line, (b) 정상 면역세포,
     #         (c) 일반 cell line(HeLa/HepG2 등 compiled atlas)로 보존성 일반론.
     "comparison_hl": {
-        # "blood_xxx":   {"path": "data/halflife_blood.csv",   "gene_col": "gene", "hl_col": "t_half_h"},
-        # "atlas_agarwal": {"path": "data/halflife_atlas.csv", "gene_col": "gene", "hl_col": "t_half_h"},
+        # (a) 조혈계 same-study(Todorovski THP-1, AML monocytic) — 같은 SLAM-seq/lab → cell-type차만 격리, 낙관 상한.
+        "thp1_todorovski":   {"path": "data/halflife_thp1.csv",    "gene_col": "gene", "hl_col": "t_half_h"},
+        # (a) 조혈계 cross-study(RNADecayCafe MOLM13, AML) — 독립 lab·독립 파이프라인 → cross-dataset 전이 대표치(주 gate 지표).
+        "molm13_rnadecaycafe": {"path": "data/halflife_molm13.csv", "gene_col": "gene", "hl_col": "t_half_h"},
+        # (b) 일반 atlas cross-study(RNADecayCafe HEK293T, 비조혈) — cross-tissue 하한 참고.
+        "hek293t_rnadecaycafe": {"path": "data/halflife_hek293t.csv", "gene_col": "gene", "hl_col": "t_half_h"},
     },
     # housekeeping gene 목록(보존성 상한 reference; 보통 가장 잘 보존됨). 한 줄 1 gene.
     "housekeeping_list": "data/housekeeping.txt",
