@@ -107,3 +107,8 @@ pipeline/**/MoFlow_velocity_/
 HANDOFF.md
 TODO.md
 SESSION-LOG.md
+
+# 블로그 정리 초안(구글드라이브/JIRA용, 로컬 md 유지) — 2026-07-04
+blog_HSPC_velocity_lag.md
+# blog/ 폴더 전체(구글드라이브가 canonical, 생성물 00_*_blog_all.md·심링크 build_index.py 포함) — 로컬 유지
+blog/
