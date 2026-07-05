@@ -54,3 +54,26 @@ OUT_RNA = OUT / "rna_spliced_unspliced.h5ad"   # spliced/unspliced layer 포함 
 OUT_ATAC = OUT / "atac_peaks.h5ad"             # peak matrix
 OUT_MUDATA = OUT / "hspc_multiome_common.h5mu" # 공통 branch 최종 (rna+atac, timepoint, annotation)
 OUT_QC_REPORT = OUT / "qc_report.md"
+
+# ── cross-dataset 주입 (RUNBOOK 배선 gap ①) ──────────────────────────────────
+# CROSS_DATASET_CONFIG env가 config_<dataset>.py를 가리키면 그 모듈의 dataset-specific
+# 속성(경로·QC·marker)으로 이 모듈 globals를 override 한다. env 미설정 시 HSPC 동작 불변.
+# (PYTHONPATH shim은 `python script.py` 실행 시 script 디렉터리가 sys.path[0]로 먼저 잡혀
+#  무력화되므로 env 방식 채택. method 하이퍼파라미터 N_HVG/N_PCS/... 는 공정 비교 위해 유지.)
+import os as _os
+_XDS = _os.environ.get("CROSS_DATASET_CONFIG")
+if _XDS:
+    import importlib.util as _ilu
+    _xp = Path(_XDS)
+    if not _xp.is_absolute():
+        _xp = (Path(__file__).resolve().parent / _XDS).resolve()
+    _spec = _ilu.spec_from_file_location("_cross_dataset_config", _xp)
+    _mod = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_mod)  # config_<dataset>은 `from p1_config import N_HVG...` (이 모듈 상단서 이미 정의됨 → 순환 안전)
+    for _k in ("DATASET_NAME", "SPECIES", "TISSUE", "GEO_ACCESSION", "DATA", "OUT", "SAMPLES",
+               "QC", "LINEAGE_MARKERS", "RARE_LINEAGES", "OUT_RNA", "OUT_ATAC", "OUT_MUDATA",
+               "MITO_PREFIX", "OUT_QC_REPORT"):
+        if hasattr(_mod, _k):
+            globals()[_k] = getattr(_mod, _k)
+    print(f"[p1_config] cross-dataset override ← {_xp.name} "
+          f"(DATASET={globals().get('DATASET_NAME')}, OUT={OUT})")

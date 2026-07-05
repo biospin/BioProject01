@@ -44,7 +44,7 @@ def main(n_genes_smoke=0):
     cfg.RESULTS.mkdir(parents=True, exist_ok=True)
     scv.settings.verbosity = 1
     arm = "chromatin_aware"
-    tag = ".smoke" if n_genes_smoke else ""
+    tag = cfg.SUFFIX + (".smoke" if n_genes_smoke else "")   # cross-dataset suffix + smoke
 
     rna = sc.read_h5ad(cfg.IN_RNA)
     atac = sc.read_h5ad(cfg.IN_ATAC)

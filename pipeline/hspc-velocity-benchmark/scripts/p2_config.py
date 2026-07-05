@@ -4,8 +4,13 @@
 arm: RNA-only floor / chromatin-aware / scrambled-chromatin(null) / graph ablation.
 각 method는 격리 env에서 실행: RNA-only=scv-preprocess, MultiVelo=mv, VAE/MoFlow=torch, CRAK-Velo=tf.
 """
+import os
 from pathlib import Path
 import p1_config as p1
+
+# cross-dataset 산출물 suffix (RUNBOOK 배선 gap ③). 기본 "" → HSPC 동작 byte-identical.
+# 예: CROSS_DATASET_SUFFIX=_human_brain → results/multivelo_genes_human_brain.csv
+SUFFIX = os.environ.get("CROSS_DATASET_SUFFIX", "")
 
 ROOT = p1.ROOT                              # pipeline/hspc-velocity-benchmark
 PROC = p1.OUT                               # data/processed (P1 산출)

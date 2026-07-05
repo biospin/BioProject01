@@ -63,12 +63,12 @@ def main():
                         "fit_likelihood", "fit_r2", "velocity_genes"] if c in adata.var]
     genes = adata.var[keep].copy()
     genes.index.name = "gene"
-    out_csv = cfg.RESULTS / "rna_only_dynamical_genes.csv"
+    out_csv = cfg.RESULTS / f"rna_only_dynamical_genes{cfg.SUFFIX}.csv"
     genes.to_csv(out_csv)
     print(f"✓ gene 파라미터 {genes.shape} → {out_csv.name} "
           f"(velocity_genes={int(adata.var.get('velocity_genes', pd.Series()).sum())})")
 
-    out_h5 = cfg.OUT_VELO / "rna_only_dynamical.h5ad"
+    out_h5 = cfg.OUT_VELO / f"rna_only_dynamical{cfg.SUFFIX}.h5ad"
     adata.write_h5ad(out_h5)
     print(f"✓ adata → {out_h5}")
 
