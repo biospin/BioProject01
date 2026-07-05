@@ -58,8 +58,8 @@ def main():
         for k in list(a.uns):
             if a.uns[k] is None:
                 del a.uns[k]
-    out_rna = cfg.OUT_VELO / "dl_input_rna.h5ad"
-    out_atac = cfg.OUT_VELO / "dl_input_atac.h5ad"
+    out_rna = cfg.OUT_VELO / f"dl_input_rna{cfg.SUFFIX}.h5ad"
+    out_atac = cfg.OUT_VELO / f"dl_input_atac{cfg.SUFFIX}.h5ad"
     rna.write_h5ad(out_rna); atac.write_h5ad(out_atac)
     print(f"✓ {out_rna.name} + {out_atac.name} (GPU 머신으로 복사 → 학습만)")
     return 0

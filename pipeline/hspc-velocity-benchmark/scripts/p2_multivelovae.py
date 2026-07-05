@@ -28,9 +28,9 @@ METHOD = "multivelovae"
 
 def main(n_genes=0, gpu=False, n_epochs=None):
     cfg.OUT_VELO.mkdir(parents=True, exist_ok=True); cfg.RESULTS.mkdir(parents=True, exist_ok=True)
-    tag = ".smoke" if n_genes else ""
-    rna = sc.read_h5ad(cfg.OUT_VELO / "dl_input_rna.h5ad")
-    atac = sc.read_h5ad(cfg.OUT_VELO / "dl_input_atac.h5ad")
+    tag = cfg.SUFFIX + (".smoke" if n_genes else "")   # cross-dataset suffix + smoke
+    rna = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_rna{cfg.SUFFIX}.h5ad")
+    atac = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_atac{cfg.SUFFIX}.h5ad")
     if n_genes:
         g = list(rna.var_names[:n_genes]); rna = rna[:, g].copy(); atac = atac[:, g].copy()
     var0 = set(rna.var.columns)               # train 후 추가되는 fit 컬럼 식별용
