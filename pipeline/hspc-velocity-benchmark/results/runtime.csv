@@ -31,3 +31,6 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-07-01T01:14:13+00:00,multivelo_bootstrap,bootstrap_refit:b9,15315,501,1555.3,12884.2,c47f87f,subsample frac=0.7 seed=20260710
 2026-07-01T01:46:13+00:00,multivelo_bootstrap,bootstrap_refit:b10,15315,502,1915.4,12884.2,c47f87f,subsample frac=0.7 seed=20260711
 2026-07-01T02:19:16+00:00,multivelo_bootstrap,bootstrap_refit:b11,15315,497,1974.7,12884.2,c47f87f,subsample frac=0.7 seed=20260712
+2026-07-05T03:53:32+00:00,scvelo_dynamical,rna_only,8414,824,177.6,2443.4,dc5c0d2,scVelo dynamical floor (전역 velocity; within-lineage 분석은 P3)
+2026-07-05T04:02:51+00:00,multivelo,chromatin_aware,8414,20,110.1,1796.1,dc5c0d2,shared-graph; smoke n=20
+2026-07-05T09:51:18+00:00,multivelo,chromatin_aware,8414,802,2134.3,1840.8,dc5c0d2,shared-graph (native-WNN ablation은 후속)

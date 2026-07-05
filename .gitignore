@@ -44,6 +44,10 @@ pipeline/**/manuscript/**/*.docx
 pipeline/**/manuscript/**/*.aux
 pipeline/**/manuscript/**/*.log
 
+# cross-dataset 무인 드라이버 런타임 산출 — 로그·sentinel은 일시적, 추적 안 함
+pipeline/**/cross_dataset/*.log
+pipeline/**/cross_dataset/AUTOPIPE_*
+
 # Source binaries — copyrighted, never commit. Stubs (.url, .bib, abstract.txt)
 # under sources/ are NOT excluded by these patterns and may be committed.
 analysis/**/sources/*.pdf

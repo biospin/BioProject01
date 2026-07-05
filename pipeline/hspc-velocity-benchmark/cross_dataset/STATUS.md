@@ -1,24 +1,19 @@
 # Cross-Dataset External Replication — 실행 상태 (LIVE)
 
-> ## ⏭️ 재로그인 시 즉시 이어서 할 것 (2026-07-05 저장)
-> **다운로드·build·finalize 전부 완료됨** (아래 실측 확인). "다운로드 에러"로 보인 건 세션 종료였고 산출물은 완결 상태.
-> **남은 것 = P2 → P3.** 순서:
-> 1. **RNA-only floor (빠름)** — wiring end-to-end 검증 겸:
->    ```bash
->    cd pipeline/hspc-velocity-benchmark/scripts
->    CROSS_DATASET_CONFIG=../cross_dataset/config_human_brain.py CROSS_DATASET_SUFFIX=_human_brain \
->      HDF5_USE_FILE_LOCKING=FALSE conda run --no-capture-output -n scv-preprocess python -u p2_rna_only.py
->    # 성공 = results/rna_only_dynamical_genes_human_brain.csv 생성
->    ```
-> 2. **MultiVelo (~2h CPU, background+log)** — SUFFIX write 확인됨(p2_multivelo.py L47/L101 `tag=cfg.SUFFIX+...` → `multivelo_genes_human_brain.csv`, HSPC 결과 안 덮음):
->    ```bash
->    CROSS_DATASET_CONFIG=../cross_dataset/config_human_brain.py CROSS_DATASET_SUFFIX=_human_brain \
->      HDF5_USE_FILE_LOCKING=FALSE conda run --no-capture-output -n mv python -u p2_multivelo.py \
->      > ../cross_dataset/p2_multivelo_human_brain.log 2>&1 &
->    # (먼저 --genes 20 스모크로 fit 경로 검증 권장)
->    ```
-> 3. **P3 concordance** — HSPC vs human_brain switch_time rank (Spearman). HSPC 백스톱 csv(`results/multivelo_genes.csv`, `rna_only_dynamical_genes.csv`) 둘 다 **git-tracked 확인됨** → concordance 양쪽 입력 확보.
-> **환경 주의**: floor는 `scv-preprocess`(HSPC floor와 동일 env=공정 비교), MultiVelo만 `mv`. STATUS 하단 옛 wiring 예시가 floor를 `-n mv`로 적은 건 무시.
+> ## ⏭️ 재로그인 시 (2026-07-05 13:35 갱신) — 🤖 무인 드라이버가 관장 중, 수동 개입 금지
+> **⛔ 절대 MultiVelo/P3를 수동 재실행하지 말 것.** `run_crossdataset_autonomous.sh`가 detached(PPID=1, 로그아웃 생존)로 돌며
+> MultiVelo 풀런 완료 대기 → 죽으면 자동 재실행(최대 3회) → 완료 시 P3 concordance까지 자동 수행한다. 수동 실행하면 **중복 실행**된다.
+> - **상태 한눈에**: `cat cross_dataset/AUTOPIPE_PROGRESS` (poll마다 갱신 heartbeat). 완료=`cross_dataset/AUTOPIPE_DONE` 생성, 실패=`AUTOPIPE_FAILED`.
+> - **드라이버 생존 확인**: `pgrep -af run_crossdataset_autonomous`. 로그=`cross_dataset/driver.log`.
+> - 진행 이력:
+>   - ✅ **RNA-only floor** — `results/rna_only_dynamical_genes_human_brain.csv` (824 gene, velocity_genes=388).
+>   - ✅ **MultiVelo 스모크(--genes 20)** — 15/20 수렴, fit+SUFFIX 게이트 검증. `multivelo_genes_human_brain.smoke.csv`.
+>   - 🔄 **MultiVelo 풀런** — 802 gene MV_CHUNK=50씩. → `results/multivelo_genes_human_brain.csv` (완료 시).
+>   - ⏭️ **P3 cross-dataset concordance** (자동) — `scripts/p3_crossdataset_concordance.py`: HSPC↔human_brain lag크기 rank Spearman(headline)+timing.
+>      HSPC-vs-HSPC self-test(rho=1.0)·smoke 교집합 실측 검증 완료. → `results/concordance_human_brain.md`. 성공기준 |r|>0.3.
+> - **드라이버가 죽었고 AUTOPIPE_DONE도 없을 때만** 재기동: `cd cross_dataset && setsid bash run_crossdataset_autonomous.sh </dev/null >driver.log 2>&1 &` (idempotent — csv 있으면 P3로 바로 넘어감).
+> **환경 주의**: floor·P3는 `scv-preprocess`(HSPC와 동일 env=공정 비교), MultiVelo만 `mv`.
+> **커밋 안 함** — 사용자 복귀 후 수동. (무인 push 금지)
 
 > **마지막 갱신:** 2026-07-05
 > **배경:** 담당 조율 결과 — 박상준 님이 "kkkim 직접 데이터 분석 진행해도 된다" 허락, 전연수 님 무응답.

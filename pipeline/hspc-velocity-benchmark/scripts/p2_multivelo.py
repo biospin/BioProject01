@@ -84,14 +84,23 @@ def main(n_genes_smoke=0):
         parts, _t0 = [], _time.perf_counter()
         for i in range(0, len(shared), chunk):
             sub = shared[i:i + chunk]
-            res = mv.recover_dynamics_chrom(
-                rna[:, sub].copy(), atac[:, sub].copy(),
-                max_iter=5, device="cpu", parallel=cfg.MV_PARALLEL, n_jobs=nj)
-            parts.append(res)
+            # ⚠️ 청크의 gene이 전부 low-quality면 recover_dynamics_chrom이
+            # ValueError('None of the genes were fitted...')를 던진다. 그 청크만
+            # skip해야 앞선 성공 청크(수백 gene)가 통째로 버려지지 않는다.
+            try:
+                res = mv.recover_dynamics_chrom(
+                    rna[:, sub].copy(), atac[:, sub].copy(),
+                    max_iter=5, device="cpu", parallel=cfg.MV_PARALLEL, n_jobs=nj)
+                parts.append(res)
+            except ValueError as e:
+                print(f"  [multivelo] chunk {i}:{i+chunk} 전부 low-quality → skip ({e})",
+                      flush=True)
             done = min(i + chunk, len(shared)); el = _time.perf_counter() - _t0
             eta = el / done * (len(shared) - done)
             print(f"  [multivelo] {done}/{len(shared)} genes | {el/60:.1f}min elapsed, "
                   f"ETA ~{eta/60:.0f}min", flush=True)
+        if not parts:
+            print("✗ 모든 청크가 low-quality — fit된 gene 없음"); return 1
         adata_result = ad.concat(parts, axis=1, merge="first") if len(parts) > 1 else parts[0]
     print(f"done in {t.sec}s")
 
