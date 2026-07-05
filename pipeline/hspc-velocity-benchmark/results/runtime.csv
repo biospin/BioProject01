@@ -34,3 +34,8 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-07-05T03:53:32+00:00,scvelo_dynamical,rna_only,8414,824,177.6,2443.4,dc5c0d2,scVelo dynamical floor (전역 velocity; within-lineage 분석은 P3)
 2026-07-05T04:02:51+00:00,multivelo,chromatin_aware,8414,20,110.1,1796.1,dc5c0d2,shared-graph; smoke n=20
 2026-07-05T09:51:18+00:00,multivelo,chromatin_aware,8414,802,2134.3,1840.8,dc5c0d2,shared-graph (native-WNN ablation은 후속)
+2026-07-05T15:02:36+00:00,moflow_scrambled,scrambled_chromatin_null,21878,633,6473.6,8582.5,62e384a,within-lineage ATAC shuffle→resmooth; DTW c-s lag; gpu=True
+2026-07-05T15:18:06+00:00,scvelo_dynamical,rna_only,4423,1238,177.7,2195.8,62e384a,scVelo dynamical floor (전역 velocity; within-lineage 분석은 P3)
+2026-07-05T15:24:00+00:00,multivelovae,chromatin_aware,4423,30,249.7,1235.1,62e384a,cVAE δ/κ; gpu=True; smoke n=30
+2026-07-05T15:27:22+00:00,multivelovae,chromatin_aware,4423,1169,175.5,2244.4,62e384a,cVAE δ/κ; gpu=True
+2026-07-05T15:50:13+00:00,multivelo,chromatin_aware,4423,1169,1905.6,2319.5,62e384a,shared-graph (native-WNN ablation은 후속)

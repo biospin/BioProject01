@@ -1,7 +1,54 @@
 # PROGRESS-LIVE — 진행 중 작업 추적 보드
 
 > **목적**: 이 세션에서 백그라운드로 도는 작업이 중단/다른 창 전환돼도 상태를 잃지 않도록, 단계마다 실시간 갱신. 새 세션은 이 파일 + `HANDOFF.md`만 읽으면 이어받을 수 있다.
-> 최종 갱신: **2026-07-01** (CRAK-Velo lag 부호 검증·수정 ✅; permutation FDR P4 ✅; 4-way H1 통계 확증 완료)
+> 최종 갱신: **2026-07-05** (논문 근거 보강 — 3트랙 병렬 실행 중)
+
+## 🔵 진행 중 (2026-07-05) — 논문 근거 보강 3트랙 병렬 (publication hardening)
+> 서사/블로그용 정리 = `manuscript/publication_hardening_log.md`. 전략 근거 = `manuscript/novelty_strategy.md`. 이 표는 **이어받기용 상태판**.
+
+| 트랙 | 작업 | 종류 | 산출(완료 시) | 상태 |
+|---|---|---|---|---|
+| **A** | correctness gate: agreement-set 0/598을 clean 3-method(MultiVelo×MoFlow×MultiVeloVAE)로 재계산 + CRAK sensitivity 강등 | 재분석(CPU, ~시간) | `results/clean_concordance_gate.md`, FINDINGS §1 갱신 | ✅ 완료 (헤드라인 pivot) |
+| **A** | #1 MoFlow-subset held-out 확증 (consistent subset이 MVVAE held-out+ATAC-shuffle에서 생존?) | 재분석(CPU) | `results/moflow_subset_confrontation.md` | ✅ 완료 (§3 예측 falsify) |
+| **B** | 데이터셋 다운로드: E18 mouse brain 5k(cheap-first) + GSE194122 human BMMC(복구경로 진단) | 다운로드 | `cross_dataset/P0_provenance_crossdataset.md` | ✅ 완료 |
+
+**트랙 B 결과:** ① **E18 mouse brain** (`data/e18_mouse_brain/`, 790MB) — spliced/unspliced **제공·검증**(loom 4881 cell, spliced 5.3%/unspliced 5.4% nnz), MultiVelo P1 입력 전부 staging → **즉시 GO**(전처리 거의 0). CellRanger-ARC 1.0.0(문서 2.0.0 정정). mouse symbol → within-dataset H1은 매핑 불필요, cross-dataset lag-rank는 ortholog 매핑 필요. ② **GSE194122 human BMMC** (`data/GSE194122/`, processed 2.79GB) — spliced/unspliced **없음**(layers=['counts']만). 복구=원본 10x GEX possorted BAM(SRR17693266, 28.66GB, public S3, dbGaP 불필요)에 velocyto → **DEFER**(donor당 ~29GB/수시간, 전용 run으로; same-tissue human 조혈이라 복구 시 최고 재현가치). Bonus: MultiVeloVAE figshare에 `3423-MV-2`(=GSE209878 day7) post-processed 객체 → 나중에 reference-lag cross-check 가능.
+| **C** | #2 second-method 인과대조: ATAC-shuffle을 MoFlow에 적용→GPU 재fit→lag 비교 (한계 #4 해소) | **GPU 재fit(cuda:1, ~1h)** | `results/scrambled_null_moflow.md`, `moflow_scrambled_genes.csv` | ✅ **완료** — MoFlow lag도 셔플 생존(모델구조적 확증) |
+| **D** | 두 번째 cross-dataset 재현: E18 mouse brain P1→P2→concordance (HSPC 패턴 lag-fragile/α-robust 재현되나?) | 재분석+선택적 GPU | `results/concordance_e18_mouse_brain.md` (+`*_e18_mouse_brain.csv`) | ✅ **완료 (2026-07-06)** — 재현 YES: within-E18 α 0.81 ≫ lag 0.06, cross-dataset α 0.32 > lag 0.10. FINDINGS §7 병합 완료 |
+| **H** | humanize 윤문: 네 트랙 요약을 쉬운 말로 | 재분석 | `manuscript/four_track_summary.md` | ✅ 완료(등급 A, 변경 0.6%, 내용 보존) |
+| **E(최종)** | **블로그 md 작성 + 구글드라이브 업로드** — 트랙 D 완료 후 four_track_summary + E18 결과 합쳐 산문 블로그로 | 집필+업로드 | `blog/` md + GDrive 프로젝트/blog 하위 | ✅ **완료 (2026-07-06)** — 개별글 #12 Drive 업로드, 로컬 통합본(13편) 재생성. ⚠️Drive 통합본 same-title 2개(1wtZxlc 부분본·1tK2chP 구본) 수동 휴지통 정리 필요 |
+
+## 🔵 진행 중 (2026-07-06) — 다음 단계 2갈래 병렬 (BMMC 복구 + 약물 arm)
+> 블로그 결론의 "다음 걸음"(검증 폭 확대 + 원래 목표 약물 예측) 착수. 둘 다 background agent로 발행.
+
+| 트랙 | 작업 | 성격 | 산출(완료 시) | 상태 |
+|---|---|---|---|---|
+| **F** | GSE194122 human BMMC 복구 — velocyto on possorted BAM(SRR17693266, donor09, 28.66GB S3 sra-pub-src-2) → build→P1→P2→P3, `_GSE194122_bmmc` suffix | 무거운 compute(밤샘 detached) | `results/concordance_GSE194122_bmmc.md` (+gene csv) | 🔄 `hspc-velocity-analyst` 실행 중 — **pre-flight 게이트 우선**(바코드 브리지 h5ad↔BAM CB 매핑 + velocyto run 명령·GRCh38 GTF/rmsk 확인). 게이트 FAIL시 다운로드 중단·보고 |
+| **G** | 약물 타이밍 arm — **데이터 블로커**(gate 충족 단일셋 無, 페어링만). 후보 게이트 검증 + nested-model 설계 확정 | 데이터 검증·설계(compute 아님) | `manuscript/drug_timing_arm_scout.md` | ✅ **완료 (2026-07-06)** — 판정: **공개데이터 4종 전부 headline 부적격**(전사체 시간축이 1점으로 붕괴). 공개데이터는 보조역할만(GSE229314 decay 통제+scoop ref, GSE201662 coarse 타당성demo). **headline timing 주장은 wet-lab 필요.** nested-model(timing~decay vs +chromatin_lag, ΔR²) 설계 locked |
+
+**이어받기(세션 중단 시):**
+- 트랙 F: `results/concordance_GSE194122_bmmc.md` 존재 확인. 없고 프로세스 없으면 → pre-flight 결과부터 재확인(바코드 매핑 실패면 복구 불가). loom 생겼으면 build→P3만 재실행. 선례=`cross_dataset/build_e18_mouse_brain.py`. 출력 전부 `_GSE194122_bmmc` suffix(기존 덮어쓰기 금지).
+- 트랙 G: `manuscript/drug_timing_arm_scout.md` 존재 확인. compute 아니므로 재dispatch 가벼움.
+- 커밋은 사람이(무인 git 금지).
+
+**최종 단계(E) 이어받기 (세션 중단 시):**
+1. 트랙 D 완료 판정: `results/concordance_e18_mouse_brain.md` 존재 확인. 없고 프로세스 없으면 → 트랙 D 재dispatch(체크리스트 5번).
+2. D 완료 시: `manuscript/four_track_summary.md`(humanize 완성본) + `results/concordance_e18_mouse_brain.md`(E18 재현 결과) + `manuscript/publication_hardening_log.md`를 근거로 **블로그 산문 md** 작성 → `blog/` 하위 저장.
+3. 구글드라이브 업로드: **`/blog` 스킬** 사용(프로젝트 폴더 blog 하위로 업로드) 또는 GDrive MCP(`mcp__claude_ai_Google_Drive__create_file`).
+4. 스타일: 사용자 선호 = 쉬운 윤문체(memory `feedback_briefing_plain_style`). 업로드 후 링크 사용자에 보고.
+
+**트랙 C 재시작 정보 (detached):** fit = python PID **881349**(wrapper 881326), `CUDA_VISIBLE_DEVICES=1`, 로그 `data/velocity/moflow_scrambled.log`. fit 완료 시 모니터가 `p3_scrambled_null_moflow.py` 자동 실행 → `data/velocity/moflow_scrambled_stats.txt` → `results/scrambled_null_moflow.md`. sanity: per-gene marginal corr=1.0000(marginal 보존, cell-level 결합만 파괴). real `moflow_genes.csv`/`moflow.h5ad` 미접촉. **재시작 시**: `pgrep -af moflow_scrambled` 로 fit 생존 확인 → 죽었고 `moflow_scrambled.h5ad` 없으면 fit 재실행, 있으면 `p3_scrambled_null_moflow.py`만.
+
+**이어받기 체크리스트 (세션 중단 후):**
+1. `results/clean_concordance_gate.md` 있나? 없고 프로세스 없으면 → 트랙 A 재dispatch(브리프 = HANDOFF 2026-07-05 + novelty_strategy §4.0/§4.1).
+2. `results/moflow_subset_confrontation.md` 있나? 없으면 → 트랙 A 위와 함께.
+3. `cross_dataset/candidate_datasets.md`에 "## Acquisition log 2026-07-05" 있나? 없으면 → 트랙 B 재dispatch. E18은 MultiVelo GitHub에 spliced/unspliced 기존 제공(최저비용) — 여기부터.
+4. `results/scrambled_null_moflow.md` 있나? **트랙 C fit은 완료**(`moflow_scrambled.h5ad` 존재) — md만 없으면 분석 단계만 재실행: `python scripts/p3_scrambled_null_moflow.py`(GPU 불필요, 재분석). h5ad도 없고 `pgrep -af moflow_scrambled` 없으면 fit부터 재실행. `moflow_genes.csv`(real-run) 덮어쓰지 말 것.
+5. **[트랙 D]** `results/concordance_e18_mouse_brain.md` 있나? 없고 프로세스 없으면 → E18 재현 재dispatch. 선례=`cross_dataset/build_human_brain.py`+`config_human_brain.py`+`p3_crossdataset_concordance.py` 미러, 데이터=`data/e18_mouse_brain/`, 출력은 전부 `_e18_mouse_brain` suffix(HSPC/human_brain 덮어쓰기 금지). mouse brain은 `cell_annotations.tsv` 사용(hematopoiesis marker 강제 금지).
+6. 트랙 전부 완료 시 → FINDINGS.md에 트랙 C(2nd 인과대조)·D(2nd 재현) 결과 병합 + HANDOFF/SESSION-LOG 갱신 + (사람) git 커밋.
+- git 커밋은 **사람이** 한다(무인 금지). agent들은 커밋 금지 지시받음.
+
+## ✅ 완료 (2026-07-01) — per-lineage MultiVelo refit (진짜 within-lineage H1)
 
 ## ✅ 완료 (2026-07-01) — per-lineage MultiVelo refit (진짜 within-lineage H1)
 | 작업 | 로그 | 상태 | 결과 |

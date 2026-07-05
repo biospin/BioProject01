@@ -51,8 +51,6 @@
 
 ## 3.5 Chromatin-aware lag 일치도 (H1, DESIGN §4B)
 
-> ✅ **CRAK-Velo lag 부호 검증·수정 완료(2026-07-01, `crakvelo_sign_check.md`)**: `dtw_lag`이 MoFlow와 반대 부호(버그)였음 → `i−j`로 통일(양수=chromatin선행), 단위·marker 검증. 아래 crakvelo 관련 수치는 **수정 후** 값.
-
 - lag 산출 method: ['multivelo', 'moflow', 'crakvelo', 'multivelovae']
 - **multivelo×moflow** (shared 537): Spearman(rank) **-0.038** (p=0.38) | sign-agreement 생략(한쪽 sign 구조적)
 - **multivelo×crakvelo** (shared 287): Spearman(rank) **0.003** (p=0.96) | sign-agreement 생략(한쪽 sign 구조적)
