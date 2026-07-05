@@ -50,3 +50,42 @@ SKILL(지침)을 실제로 돌리는 코드:
 3. **Multicollinearity**: promoter/enhancer ATAC 등 강상관 → regularized.
 4. **Multiple testing**: gene 단위 → permutation FDR.
 5. method 차이 ≠ preprocessing 차이: 공통 전처리 후 method 분기(C2), 공통 graph ablation.
+
+---
+
+## Agent routing & artifact contract (논문 생산 하네스)
+
+> 논문 집필·발표 단계용. 재사용 스캐폴드(Designed by Ka-Kyung Kim, CC BY 4.0) 설치본. 전체 랩 지도·멤버 JD = **`docs/HARNESS.md`**. 도메인 분석 슬롯 = **`hspc-velocity-analyst`**(팀이 채운 유일한 슬롯). 이 브랜치(`kkkim-pipeline`)에 project-scope로 설치.
+
+### 자연어 라우팅
+요청에 agent 이름이 없어도 아래 표로 배정한다. 프로젝트 agent는 `.claude/agents/`. 그림 작업은 `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`를 실행해 소유.
+
+**여러 단계를 엮는 요청 → 단일 agent가 아니라 오케스트레이터 Skill.** "풀 파이프라인 / 프리프린트 업데이트해 제출 준비 / 분석→집필→그림→검수까지 / 그림만 다시 / 리뷰만 다시 / critic 지적 반영"은 **`paper-production-orchestrator`** Skill(`.claude/skills/paper-production-orchestrator/SKILL.md`)로 — 메인 루프가 실행하며 아래 멤버를 순서대로 호출하고 부분 재실행·검증 게이트를 처리한다. 단일 단계 요청은 아래 agent로 직접 라우팅:
+
+| 요청 (자연어) | 첫 agent |
+| --- | --- |
+| "분석 돌려줘 / 재실행 / eval·통계 / 오류 분석 / cross-dataset 재현" | `hspc-velocity-analyst` |
+| "프리프린트/저널/블로그 초안·섹션 써줘" | `manuscript-writer` |
+| "그림 만들어줘 / 그림 번호 정리" | `manuscript-writer` (runs `figures/figNN_*.py`) |
+| "선행연구 / related work / 스쿱 확인" | `literature-scout` |
+| "차별화 각도 / 뭘 새로 해야 하나" | `novelty-strategist` |
+| "가설·실험설계·분석계획 점검·감사" | `research-methodologist` |
+| "제출 전 적대적 자체검토 / 그림 QA" | `paper-critic` |
+| "정식 venue 리뷰 시뮬레이션" | `reviewer` (전역, 선택) |
+| "발표자료/슬라이드/발제" | `presenter` |
+| "로고·아이콘·브랜드·그림 미감" | `design` |
+| "여러 단계를 어떤 순서로 엮을지 계획만" | `paper-orchestrator` (계획만; 실행은 메인 루프) |
+
+### 산출물 계약
+멤버는 중간 결과를 대화에만 남기지 않고 파일로 넘긴다:
+
+| 단계 | Writer | 산출물 | 다음이 읽음 |
+| --- | --- | --- | --- |
+| 분석·eval | `hspc-velocity-analyst` | `pipeline/hspc-velocity-benchmark/results/FINDINGS.md` + `results/*.csv` + `results/*.md` | 집필·검수 |
+| 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft.md`, `figures/*.png` | 검수·리뷰·발표 |
+| 검증 게이트 | (커밋/공개 전) | `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py` 재계산 → FINDINGS.md 대조 | 사람 |
+| 리뷰 | paper-critic / reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
+| 발표 | presenter | 슬라이드/발제 | 사람 |
+| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
+
+**사람 승인 게이트:** 공개(프리프린트/blog)는 **저자·소속·IP·corresponding email 확정** 전까지 보류(manuscript-writer의 `<FILL>`); 커밋/푸시는 사람이 한다(무인 git 금지).
