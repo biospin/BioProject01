@@ -23,11 +23,17 @@
 
 | 트랙 | 작업 | 성격 | 산출(완료 시) | 상태 |
 |---|---|---|---|---|
-| **F** | GSE194122 human BMMC 복구 — velocyto on possorted BAM(SRR17693266, donor09, 28.66GB S3 sra-pub-src-2) → build→P1→P2→P3, `_GSE194122_bmmc` suffix | 무거운 compute(밤샘 detached) | `results/concordance_GSE194122_bmmc.md` (+gene csv) | 🔄 `hspc-velocity-analyst` 실행 중 — **pre-flight 게이트 우선**(바코드 브리지 h5ad↔BAM CB 매핑 + velocyto run 명령·GRCh38 GTF/rmsk 확인). 게이트 FAIL시 다운로드 중단·보고 |
+| **F** | GSE194122 human BMMC 복구 — velocyto on possorted BAM(SRR17693266, donor09, 28.66GB S3 sra-pub-src-2) → build→P1→P2→P3, `_GSE194122_bmmc` suffix | 무거운 compute(밤샘 detached) | `results/concordance_GSE194122_bmmc.md` (+gene csv) | 🔄 **재기동 (2026-07-06 21:17~, PID 959013)** — 1차 시도(06:34)는 stage[1] ref추출서 실패(tar 경로에 버전 접미사 `-2.0.0`·`.gz` 누락). **버그 수정 완료** → genes.gtf(1.42GB, GENCODE v32) 추출 검증 후 재기동. 현재 **stage[3] velocyto run**(BAM/ref skip). PPID=1 로그아웃 생존 실측. **⛔ 수동 재실행 금지** — 아래 이어받기 블록 참조 |
 | **G** | 약물 타이밍 arm — **데이터 블로커**(gate 충족 단일셋 無, 페어링만). 후보 게이트 검증 + nested-model 설계 확정 | 데이터 검증·설계(compute 아님) | `manuscript/drug_timing_arm_scout.md` | ✅ **완료 (2026-07-06)** — 판정: **공개데이터 4종 전부 headline 부적격**(전사체 시간축이 1점으로 붕괴). 공개데이터는 보조역할만(GSE229314 decay 통제+scoop ref, GSE201662 coarse 타당성demo). **headline timing 주장은 wet-lab 필요.** nested-model(timing~decay vs +chromatin_lag, ΔR²) 설계 locked |
 
-**이어받기(세션 중단 시):**
-- 트랙 F: `results/concordance_GSE194122_bmmc.md` 존재 확인. 없고 프로세스 없으면 → pre-flight 결과부터 재확인(바코드 매핑 실패면 복구 불가). loom 생겼으면 build→P3만 재실행. 선례=`cross_dataset/build_e18_mouse_brain.py`. 출력 전부 `_GSE194122_bmmc` suffix(기존 덮어쓰기 금지).
+**🤖 트랙 F 무인 드라이버 실행 중 (2026-07-06 21:17 재기동, PID 959013) — ⛔ 수동 재실행 금지(중복됨):**
+- **1차 실패·수정 이력:** 06:34 1차 기동(PID 916306)은 stage[1] ref추출서 죽음 — `run_bmmc_recovery.sh`의 tar 경로가 `refdata-cellranger-arc-GRCh38-2020-A/genes/genes.gtf`였으나 실제 아카이브는 `...-2.0.0/genes/genes.gtf.gz`(버전 접미사 + gzip). 두 곳 수정(REF_GTF 경로 + tar 추출·gunzip). genes.gtf(1.42GB) 추출 검증 후 21:17 재기동. BAM 28.66GB는 유지·skip.
+- **게이트 PASS** — `cross_dataset/BMMC_PREFLIGHT_GATE.md`(바코드 브리지 92.2%, 형식 `-1` 일치). 복구 GO 확정.
+- **드라이버:** `cross_dataset/run_bmmc_recovery.sh` (setsid, **PPID=1 로그아웃 생존 실측**, PID 959013). 로그 `cross_dataset/bmmc_driver.log`.
+- **생존 확인:** `pgrep -af run_bmmc_recovery`. **상태 한눈에:** `cat cross_dataset/BMMC_PROGRESS`(stage별 heartbeat). 완료=`cross_dataset/BMMC_DONE`, 실패=`cross_dataset/BMMC_FAILED`.
+- **stage:** [0]BAM 다운로드(28.66GB, ~40min) → [1]ref GTF → [2]rmsk(opt) → [3]velocyto(밤샘) → [4]build → [5]floor → [6]MultiVelo → [7]VAE(CUDA:1) → [8]P3. **전 stage idempotent**(산출물 있으면 skip).
+- **완료 시:** `results/concordance_GSE194122_bmmc.md` + gene csv 3종(전부 `_GSE194122_bmmc` suffix, 기존 덮어쓰기 없음). **커밋은 복귀 후 사람이**(무인 git 금지).
+- **드라이버 죽었고 BMMC_DONE도 없을 때만** 재기동: `cd cross_dataset && setsid bash run_bmmc_recovery.sh </dev/null >bmmc_driver.log 2>&1 &` (idempotent — 있는 산출물부터 이어감).
 - 트랙 G: `manuscript/drug_timing_arm_scout.md` 존재 확인. compute 아니므로 재dispatch 가벼움.
 - 커밋은 사람이(무인 git 금지).
 

@@ -27,7 +27,7 @@ BAM_URL="https://sra-pub-src-2.s3.amazonaws.com/SRR17693266/site4_donor09_multio
 BCFILE="$GSE_DIR/s4d9_barcodes_CB_dash1.txt"
 
 REF_TGZ="$DATA/ref/refdata-cellranger-arc-GRCh38-2020-A-2.0.0.tar.gz"
-REF_GTF="$DATA/ref/refdata-cellranger-arc-GRCh38-2020-A/genes/genes.gtf"
+REF_GTF="$DATA/ref/refdata-cellranger-arc-GRCh38-2020-A-2.0.0/genes/genes.gtf"
 RMSK_GTF="$DATA/ref/GRCh38_rmsk.gtf"
 RMSK_TXT="$DATA/ref/hg38_rmsk.txt.gz"
 
@@ -88,10 +88,13 @@ else
     curl -fsSL -C - -o "$REF_TGZ" "$REF_URL" || die "1-ref-dl" "reference 타르볼 다운로드 실패"
     gzip -t "$REF_TGZ" 2>/dev/null || die "1-ref-integrity" "타르볼 gzip 무결성 실패"
   fi
-  log "[1] genes.gtf 추출 (tar -xz)"
-  ( cd "$DATA/ref" && tar -xzf "$REF_TGZ" refdata-cellranger-arc-GRCh38-2020-A/genes/genes.gtf ) \
-    || die "1-ref-extract" "genes.gtf 추출 실패"
-  [ -f "$REF_GTF" ] || die "1-ref-missing" "추출 후 genes.gtf 없음"
+  log "[1] genes.gtf.gz 추출 (tar -xz) + gunzip"
+  # 아카이브 내부 경로는 버전 접미사 -2.0.0 포함, 파일은 gzip 압축(genes.gtf.gz).
+  ( cd "$DATA/ref" && tar -xzf "$REF_TGZ" refdata-cellranger-arc-GRCh38-2020-A-2.0.0/genes/genes.gtf.gz ) \
+    || die "1-ref-extract" "genes.gtf.gz 추출 실패"
+  [ -f "$REF_GTF.gz" ] || die "1-ref-missing" "추출 후 genes.gtf.gz 없음"
+  gunzip -f "$REF_GTF.gz" || die "1-ref-gunzip" "genes.gtf gunzip 실패"
+  [ -f "$REF_GTF" ] || die "1-ref-missing" "gunzip 후 genes.gtf 없음"
 fi
 
 # ── [2] rmsk GTF (optional; 실패해도 velocyto는 -m 없이 진행) ──
