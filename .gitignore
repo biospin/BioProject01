@@ -7,6 +7,7 @@
 # settings*.json and worktrees/ stay per-machine (ignored by .claude/* above).
 !.claude/skills/
 !.claude/agents/
+!.claude/rules/
 
 # Python virtual environment (per-machine, not for sharing)
 .venv/

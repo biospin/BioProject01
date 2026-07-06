@@ -91,3 +91,6 @@ SKILL(지침)을 실제로 돌리는 코드:
 | 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
 
 **사람 승인 게이트:** 공개(프리프린트/blog)는 **저자·소속·IP·corresponding email 확정** 전까지 보류(manuscript-writer의 `<FILL>`). **커밋·push는 작업 완료 시 에이전트가 자동 수행**(2026-07-09 정책 변경 — 기존 '무인 git 금지' 철회, push까지 자동). 단 위 검증 게이트(커밋 전 재계산·FINDINGS 대조)는 유지하고, **프리프린트/blog 외부 공개와 main 병합만 사람 승인**(작업 브랜치 `kkkim-pipeline` push는 자동). 커밋 메시지는 P0~P5 접두 규칙 준수, Claude attribution 금지.
+
+## 글쓰기 규율 (팀 공통, 한국어 산출물)
+@.claude/rules/writing-style.md
