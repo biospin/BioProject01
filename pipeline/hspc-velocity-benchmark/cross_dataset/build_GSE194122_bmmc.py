@@ -157,7 +157,9 @@ def main():
     atac_mask = (full.var['feature_types'] == 'ATAC').values
     atac_var = full.var[atac_mask]
     # counts layer (raw integer peak counts; X는 binarized라 사용 안 함)
-    atac_counts = sub[:, atac_mask].layers['counts']
+    # backed AnnData는 view-of-view 금지 → full에서 (batch, atac) 두 축을 한 번에 인덱싱 후 메모리로 로드
+    batch_mask = (full.obs['batch'] == BATCH).values
+    atac_counts = full[batch_mask, atac_mask].to_memory().layers['counts']
     atac_counts = atac_counts[:] if not sp.issparse(atac_counts) else atac_counts
     atac_counts = sp.csr_matrix(atac_counts)
     # peak 좌표 파싱 'chr1-9776-10668'

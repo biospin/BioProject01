@@ -48,8 +48,11 @@ DONE="$CROSS/BMMC_DONE"
 FAILED="$CROSS/BMMC_FAILED"
 PROGRESS="$CROSS/BMMC_PROGRESS"
 
-# samtools sort 임시 파일을 대용량 디스크로 (system /tmp 소진 방지 — advisor 경고)
-export TMPDIR="$DATA/tmp_bmmc"; mkdir -p "$TMPDIR"
+# samtools sort 임시 파일을 대용량 디스크로 (system /tmp=8G tmpfs 소진 방지 — advisor 경고).
+# ⚠️ 경로는 반드시 짧게: multiprocessing.Manager의 AF_UNIX 소켓 경로 한계 107자.
+#    깊은 $DATA/tmp_bmmc(79자)는 소켓경로 112자 초과→ recover_dynamics EOFError로 floor/MV 실패.
+#    /home/kkkim(=data와 같은 15T /dev/sdb1) 아래 짧은 경로면 큰 디스크 안전성+소켓 길이 둘 다 충족.
+export TMPDIR="/home/kkkim/.tmp_bmmc"; mkdir -p "$TMPDIR"
 export HDF5_USE_FILE_LOCKING=FALSE
 
 log() { echo "[$(date '+%F %T')] $*"; }

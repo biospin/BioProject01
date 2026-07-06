@@ -23,7 +23,7 @@
 
 | 트랙 | 작업 | 성격 | 산출(완료 시) | 상태 |
 |---|---|---|---|---|
-| **F** | GSE194122 human BMMC 복구 — velocyto on possorted BAM(SRR17693266, donor09, 28.66GB S3 sra-pub-src-2) → build→P1→P2→P3, `_GSE194122_bmmc` suffix | 무거운 compute(밤샘 detached) | `results/concordance_GSE194122_bmmc.md` (+gene csv) | 🔄 **재기동 (2026-07-06 21:17~, PID 959013)** — 1차 시도(06:34)는 stage[1] ref추출서 실패(tar 경로에 버전 접미사 `-2.0.0`·`.gz` 누락). **버그 수정 완료** → genes.gtf(1.42GB, GENCODE v32) 추출 검증 후 재기동. 현재 **stage[3] velocyto run**(BAM/ref skip). PPID=1 로그아웃 생존 실측. **⛔ 수동 재실행 금지** — 아래 이어받기 블록 참조 |
+| **F** | GSE194122 human BMMC 복구 — velocyto on possorted BAM(SRR17693266, donor09, 28.66GB S3 sra-pub-src-2) → build→P1→P2→P3, `_GSE194122_bmmc` suffix | 무거운 compute(밤샘 detached) | `results/concordance_GSE194122_bmmc.md` (+gene csv) | ✅ **완주 (2026-07-06 23:12)** — 판정 **재현 YES**: within-BMMC α +0.85(cross-method) ≫ lag −0.09; cross-dataset HSPC↔BMMC α **+0.55**(same-tissue라 셋 중 최강) > lag +0.05. **§7 (C) BMMC 병합 완료.** 도중 버그 3개 수정(ref추출 경로·build view-of-view·floor TMPDIR AF_UNIX). **커밋 대기(사람).** |
 | **G** | 약물 타이밍 arm — **데이터 블로커**(gate 충족 단일셋 無, 페어링만). 후보 게이트 검증 + nested-model 설계 확정 | 데이터 검증·설계(compute 아님) | `manuscript/drug_timing_arm_scout.md` | ✅ **완료 (2026-07-06)** — 판정: **공개데이터 4종 전부 headline 부적격**(전사체 시간축이 1점으로 붕괴). 공개데이터는 보조역할만(GSE229314 decay 통제+scoop ref, GSE201662 coarse 타당성demo). **headline timing 주장은 wet-lab 필요.** nested-model(timing~decay vs +chromatin_lag, ΔR²) 설계 locked |
 
 **🤖 트랙 F 무인 드라이버 실행 중 (2026-07-06 21:17 재기동, PID 959013) — ⛔ 수동 재실행 금지(중복됨):**
@@ -36,6 +36,11 @@
 - **드라이버 죽었고 BMMC_DONE도 없을 때만** 재기동: `cd cross_dataset && setsid bash run_bmmc_recovery.sh </dev/null >bmmc_driver.log 2>&1 &` (idempotent — 있는 산출물부터 이어감).
 - 트랙 G: `manuscript/drug_timing_arm_scout.md` 존재 확인. compute 아니므로 재dispatch 가벼움.
 - 커밋은 사람이(무인 git 금지).
+- **✅ velocyto[3] 완주 (22:41, loom 48MB, RNA 4325×36601 spliced/unspliced 정상)** — 밤샘 비싼 단계 끝. 이후 2개 값싼 코드버그 수정:
+  - **stage[4] build 버그:** `build_GSE194122_bmmc.py:160` backed AnnData view-of-view 금지(`sub[:,atac_mask]`) → `full[batch_mask,atac_mask].to_memory()`로 한 번에 인덱싱. 포그라운드 검증 완료(QC 2850셀, spliced 0.97%/unspliced 1.48%).
+  - **stage[5] floor 버그:** 드라이버 TMPDIR이 깊은 `$DATA/tmp_bmmc`(79자)라 `multiprocessing.Manager` AF_UNIX 소켓 107자 초과 → `recover_dynamics` EOFError. TMPDIR을 `/home/kkkim/.tmp_bmmc`(21자, 같은 15T 디스크)로 수정. memory `tmpdir_afunix_path_too_long` 기록.
+- **🔔 자동완료 감시자 재장전 (2026-07-06 23:0x, background Bash id `blvwd29w3` — 이전 `bqmmim6xi`는 FAILED로 종료됨):** `BMMC_DONE`/`BMMC_FAILED`/드라이버 무증상 사망을 5분 폴링 → 종료 시 메인 루프 재호출되어 concordance 검증 + FINDINGS §7 BMMC 병합 **초안**까지 처리(커밋 X, 사람 검토). 현재 드라이버 PID 967198(PPID 1), **stage[5] floor 진행 중**. **새 세션은 감시자 중복 설치 금지** — `pgrep -f run_bmmc_recovery.sh`로 드라이버 확인, DONE 있으면 병합 직행.
+- **⚠️ 재기동 필요 시:** BMMC 드라이버 코드 2곳 수정됨(commit 아직 안 함). 재기동은 idempotent — `cd cross_dataset && setsid bash run_bmmc_recovery.sh </dev/null >bmmc_driver.log 2>&1 &` → [0]~[4] skip, [5]부터.
 
 **최종 단계(E) 이어받기 (세션 중단 시):**
 1. 트랙 D 완료 판정: `results/concordance_e18_mouse_brain.md` 존재 확인. 없고 프로세스 없으면 → 트랙 D 재dispatch(체크리스트 5번).
