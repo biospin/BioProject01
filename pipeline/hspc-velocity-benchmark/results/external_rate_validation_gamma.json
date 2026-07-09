@@ -1,0 +1,632 @@
+{
+  "rna_only__K562_todorovski": {
+    "all": {
+      "tag": "all",
+      "n": 96,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": 0.084,
+      "ci_thalf": [
+        -0.122,
+        0.286
+      ],
+      "rho_gamma_kdeg": -0.084,
+      "ci_kdeg": [
+        -0.287,
+        0.124
+      ],
+      "p_thalf": 0.41627926237920476,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 87,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": 0.118,
+      "ci_thalf": [
+        -0.092,
+        0.321
+      ],
+      "rho_gamma_kdeg": -0.118,
+      "ci_kdeg": [
+        -0.32,
+        0.091
+      ],
+      "p_thalf": 0.2761829814127693,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 9,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": -0.067,
+      "ci_thalf": [
+        -0.897,
+        0.739
+      ],
+      "rho_gamma_kdeg": 0.067,
+      "ci_kdeg": [
+        -0.739,
+        0.897
+      ],
+      "p_thalf": 0.8646897846262037,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 86,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": -0.013,
+      "ci_thalf": [
+        -0.225,
+        0.203
+      ],
+      "rho_gamma_kdeg": 0.013,
+      "ci_kdeg": [
+        -0.197,
+        0.227
+      ],
+      "p_thalf": 0.9063191169909977,
+      "recovers": false
+    }
+  },
+  "multivelo__K562_todorovski": {
+    "all": {
+      "tag": "all",
+      "n": 116,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": -0.113,
+      "ci_thalf": [
+        -0.291,
+        0.072
+      ],
+      "rho_gamma_kdeg": 0.113,
+      "ci_kdeg": [
+        -0.078,
+        0.292
+      ],
+      "p_thalf": 0.22619251319439623,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 104,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": -0.053,
+      "ci_thalf": [
+        -0.252,
+        0.146
+      ],
+      "rho_gamma_kdeg": 0.053,
+      "ci_kdeg": [
+        -0.147,
+        0.247
+      ],
+      "p_thalf": 0.5924436040986412,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 12,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": -0.385,
+      "ci_thalf": [
+        -0.814,
+        0.321
+      ],
+      "rho_gamma_kdeg": 0.385,
+      "ci_kdeg": [
+        -0.324,
+        0.809
+      ],
+      "p_thalf": 0.21702022575997748,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 107,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": -0.125,
+      "ci_thalf": [
+        -0.309,
+        0.069
+      ],
+      "rho_gamma_kdeg": 0.125,
+      "ci_kdeg": [
+        -0.076,
+        0.31
+      ],
+      "p_thalf": 0.19956739397346882,
+      "recovers": false
+    }
+  },
+  "multivelovae__K562_todorovski": {
+    "all": {
+      "tag": "all",
+      "n": 126,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": 0.066,
+      "ci_thalf": [
+        -0.109,
+        0.235
+      ],
+      "rho_gamma_kdeg": -0.066,
+      "ci_kdeg": [
+        -0.238,
+        0.113
+      ],
+      "p_thalf": 0.4645108996392915,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 113,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": 0.011,
+      "ci_thalf": [
+        -0.176,
+        0.195
+      ],
+      "rho_gamma_kdeg": -0.011,
+      "ci_kdeg": [
+        -0.198,
+        0.175
+      ],
+      "p_thalf": 0.9037794672519219,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 13,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": 0.538,
+      "ci_thalf": [
+        -0.048,
+        0.88
+      ],
+      "rho_gamma_kdeg": -0.538,
+      "ci_kdeg": [
+        -0.877,
+        0.033
+      ],
+      "p_thalf": 0.057634433470466075,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 115,
+      "censor_frac": 0.08055935552515579,
+      "rho_gamma_thalf": -0.004,
+      "ci_thalf": [
+        -0.193,
+        0.187
+      ],
+      "rho_gamma_kdeg": 0.004,
+      "ci_kdeg": [
+        -0.183,
+        0.194
+      ],
+      "p_thalf": 0.9686886460355183,
+      "recovers": false
+    }
+  },
+  "rna_only__THP1_todorovski": {
+    "all": {
+      "tag": "all",
+      "n": 156,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": 0.152,
+      "ci_thalf": [
+        -0.012,
+        0.308
+      ],
+      "rho_gamma_kdeg": -0.152,
+      "ci_kdeg": [
+        -0.312,
+        0.009
+      ],
+      "p_thalf": 0.05809162249204422,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 144,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": 0.167,
+      "ci_thalf": [
+        -0.001,
+        0.328
+      ],
+      "rho_gamma_kdeg": -0.167,
+      "ci_kdeg": [
+        -0.324,
+        0.002
+      ],
+      "p_thalf": 0.045054521167246155,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 12,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.049,
+      "ci_thalf": [
+        -0.732,
+        0.612
+      ],
+      "rho_gamma_kdeg": 0.049,
+      "ci_kdeg": [
+        -0.62,
+        0.736
+      ],
+      "p_thalf": 0.8799185788786749,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 145,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": 0.068,
+      "ci_thalf": [
+        -0.096,
+        0.233
+      ],
+      "rho_gamma_kdeg": -0.068,
+      "ci_kdeg": [
+        -0.236,
+        0.096
+      ],
+      "p_thalf": 0.41318173671654757,
+      "recovers": false
+    }
+  },
+  "multivelo__THP1_todorovski": {
+    "all": {
+      "tag": "all",
+      "n": 178,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.023,
+      "ci_thalf": [
+        -0.172,
+        0.124
+      ],
+      "rho_gamma_kdeg": 0.023,
+      "ci_kdeg": [
+        -0.123,
+        0.17
+      ],
+      "p_thalf": 0.7617482767444357,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 161,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.028,
+      "ci_thalf": [
+        -0.185,
+        0.127
+      ],
+      "rho_gamma_kdeg": 0.028,
+      "ci_kdeg": [
+        -0.127,
+        0.183
+      ],
+      "p_thalf": 0.7245571748324303,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 17,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.086,
+      "ci_thalf": [
+        -0.586,
+        0.465
+      ],
+      "rho_gamma_kdeg": 0.086,
+      "ci_kdeg": [
+        -0.428,
+        0.578
+      ],
+      "p_thalf": 0.7433950261372769,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 169,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.017,
+      "ci_thalf": [
+        -0.163,
+        0.132
+      ],
+      "rho_gamma_kdeg": 0.017,
+      "ci_kdeg": [
+        -0.131,
+        0.167
+      ],
+      "p_thalf": 0.8311278555482154,
+      "recovers": false
+    }
+  },
+  "multivelovae__THP1_todorovski": {
+    "all": {
+      "tag": "all",
+      "n": 193,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.094,
+      "ci_thalf": [
+        -0.237,
+        0.055
+      ],
+      "rho_gamma_kdeg": 0.094,
+      "ci_kdeg": [
+        -0.056,
+        0.238
+      ],
+      "p_thalf": 0.19441964646933305,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 176,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.12,
+      "ci_thalf": [
+        -0.269,
+        0.036
+      ],
+      "rho_gamma_kdeg": 0.12,
+      "ci_kdeg": [
+        -0.033,
+        0.271
+      ],
+      "p_thalf": 0.11191482226269206,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 17,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": 0.186,
+      "ci_thalf": [
+        -0.394,
+        0.672
+      ],
+      "rho_gamma_kdeg": -0.186,
+      "ci_kdeg": [
+        -0.67,
+        0.387
+      ],
+      "p_thalf": 0.4740951399440866,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 180,
+      "censor_frac": 0.034280817026139124,
+      "rho_gamma_thalf": -0.107,
+      "ci_thalf": [
+        -0.258,
+        0.047
+      ],
+      "rho_gamma_kdeg": 0.107,
+      "ci_kdeg": [
+        -0.044,
+        0.254
+      ],
+      "p_thalf": 0.15346132499836804,
+      "recovers": false
+    }
+  },
+  "rna_only__MOLM13_rnadecay": {
+    "all": {
+      "tag": "all",
+      "n": 201,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": 0.208,
+      "ci_thalf": [
+        0.068,
+        0.338
+      ],
+      "rho_gamma_kdeg": -0.208,
+      "ci_kdeg": [
+        -0.337,
+        -0.069
+      ],
+      "p_thalf": 0.003044636922694101,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 188,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": 0.224,
+      "ci_thalf": [
+        0.082,
+        0.355
+      ],
+      "rho_gamma_kdeg": -0.224,
+      "ci_kdeg": [
+        -0.359,
+        -0.085
+      ],
+      "p_thalf": 0.001979963651550829,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 13,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": -0.115,
+      "ci_thalf": [
+        -0.662,
+        0.459
+      ],
+      "rho_gamma_kdeg": 0.115,
+      "ci_kdeg": [
+        -0.46,
+        0.652
+      ],
+      "p_thalf": 0.7073898735142602,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 201,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": 0.208,
+      "ci_thalf": [
+        0.072,
+        0.339
+      ],
+      "rho_gamma_kdeg": -0.208,
+      "ci_kdeg": [
+        -0.34,
+        -0.07
+      ],
+      "p_thalf": 0.003044636922694101,
+      "recovers": false
+    }
+  },
+  "multivelo__MOLM13_rnadecay": {
+    "all": {
+      "tag": "all",
+      "n": 243,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": -0.001,
+      "ci_thalf": [
+        -0.13,
+        0.125
+      ],
+      "rho_gamma_kdeg": 0.001,
+      "ci_kdeg": [
+        -0.126,
+        0.13
+      ],
+      "p_thalf": 0.9920423096496619,
+      "recovers": false
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 222,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": 0.003,
+      "ci_thalf": [
+        -0.132,
+        0.132
+      ],
+      "rho_gamma_kdeg": -0.003,
+      "ci_kdeg": [
+        -0.136,
+        0.134
+      ],
+      "p_thalf": 0.9650885165971299,
+      "recovers": false
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 21,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": -0.191,
+      "ci_thalf": [
+        -0.599,
+        0.26
+      ],
+      "rho_gamma_kdeg": 0.191,
+      "ci_kdeg": [
+        -0.267,
+        0.593
+      ],
+      "p_thalf": 0.40713272974481274,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 243,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": -0.001,
+      "ci_thalf": [
+        -0.131,
+        0.127
+      ],
+      "rho_gamma_kdeg": 0.001,
+      "ci_kdeg": [
+        -0.126,
+        0.125
+      ],
+      "p_thalf": 0.9920423096496619,
+      "recovers": false
+    }
+  },
+  "multivelovae__MOLM13_rnadecay": {
+    "all": {
+      "tag": "all",
+      "n": 264,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": -0.13,
+      "ci_thalf": [
+        -0.255,
+        -0.005
+      ],
+      "rho_gamma_kdeg": 0.13,
+      "ci_kdeg": [
+        0.002,
+        0.254
+      ],
+      "p_thalf": 0.03464080440886769,
+      "recovers": true
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 242,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": -0.164,
+      "ci_thalf": [
+        -0.292,
+        -0.03
+      ],
+      "rho_gamma_kdeg": 0.164,
+      "ci_kdeg": [
+        0.028,
+        0.291
+      ],
+      "p_thalf": 0.010690467721011138,
+      "recovers": true
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 22,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": 0.304,
+      "ci_thalf": [
+        -0.156,
+        0.647
+      ],
+      "rho_gamma_kdeg": -0.304,
+      "ci_kdeg": [
+        -0.649,
+        0.159
+      ],
+      "p_thalf": 0.16847501997645462,
+      "recovers": false
+    },
+    "uncensored": {
+      "tag": "uncensored",
+      "n": 264,
+      "censor_frac": 9.412650602409639e-05,
+      "rho_gamma_thalf": -0.13,
+      "ci_thalf": [
+        -0.257,
+        0.003
+      ],
+      "rho_gamma_kdeg": 0.13,
+      "ci_kdeg": [
+        0.001,
+        0.257
+      ],
+      "p_thalf": 0.03464080440886769,
+      "recovers": true
+    }
+  }
+}
