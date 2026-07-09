@@ -4,6 +4,14 @@
 >
 > **통합 thesis(재프레이밍):** lag은 multiome 스냅샷 + 현 모델군에서 **비식별(non-identifiable)** — chromatin 미구속(ATAC shuffle 불변)·method 미재현·baseline 미예측. **α만이 식별 가능한 불변량**(RNA-pinned; ATAC 없는 floor도 회복). = MultiVelo 저격이 아니라 data+model-class 성질(desk-reject 방어).
 
+## ⏱️ 2026-07-10 갱신 — 커밋 상태 정정 + 신규 3종 착수
+- **정정(이 문서가 stale했음):** 아래 "완료 2건"·"profile-likelihood 데모"는 **이미 커밋됨** — external kinetic α 검증(`results/external_rate_validation.md`)·dissociation(`results/identifiability_dissociation.md`)·**profile-likelihood 식별성(§8, `results/profile_likelihood_identifiability.md`, κ_α/κ_lag median 3.53×·α stiffer 94.57%)** 전부 git tracked + FINDINGS §8 병합. 최고 leverage(profile-likelihood)는 done.
+- **신규 착수(2026-07-10, JIRA 분석=BIOP01-43 / critic=BIOP01-44 박세진):**
+  - ④ **freed-nuisance 전체 게이트**(interior 302, CPU) — 실행 중. nuisance(α_c,β,γ,rescale,scale_cc) 재최적화해도 lag sloppy 유지 확인 → §8 방탄. 산출 `results/profile_likelihood_freed.csv`.
+  - ① **합성 다중-method 양성대조**(GPU, sub-agent) — 실행 중. sharp/고SNR method 일치·smooth/저SNR만 갈림(regime-specific) + FDR 검정력 보정. 산출 `results/sim_positive_control_multimethod.md`.
+  - ③ **2번째 외부 α**(Schwalb GSE75792 K562 TT-seq, CPU, sub-agent) — 실행 중. α 앵커 2번째 독립 소스. 산출 `results/external_rate_validation_schwalb.md`.
+- **cross-dataset #4 macrophage** fit 완료(커밋 `63fb5fa`, floor 881·MV 872·VAE 881), concordance는 지용기(BIOP01-29) downstream 대기.
+
 ## 완료 (CPU, 결과 파일 존재 — 아직 커밋·FINDINGS 병합·블로그화 안 됨)
 
 | 분석 | 결과 파일 | 핵심 결과 | 블로그 소재? |
