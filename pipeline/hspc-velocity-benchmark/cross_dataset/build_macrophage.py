@@ -45,10 +45,16 @@ OUT.mkdir(parents=True, exist_ok=True)
 
 # concat 2 batch 중 macrophage sample만. 실제 obs['batch'] category로 확정(guard가 목록 출력).
 # figshare 설명: "8489-MV-1-9060-MV-3 = One HSPC + one macrophage" → 9060-MV-3 = macrophage.
-MACRO_BATCH_CANDIDATES = ("9060-MV-3", "9060-MV", "9060MV3", "9060")   # 우선순위; 첫 일치 사용
+# ⚠️ 실측(2026-07-09, kkkim heavy-run): figshare postpro는 batch를 sample ID가 아니라 timepoint로 재라벨함
+#    (obs['batch']={'Day 7':6336,'Day 14':3572}). batch×leiden 교차표로 대응 확정:
+#    Day 7 = HSC/CMP/MEP/Prog*/Megakaryocyte (M1·M2 Macrophage 0) = HSPC sample(8489-MV-1);
+#    Day 14 = MDP/Monocyte/M1·M2 Macrophage(479/371) = macrophage 분화 sample(9060-MV-3).
+#    → 'Day 14' subset = macrophage sample(HSPC leakage 차단, 설계 의도 그대로).
+#    또 raw spliced/unspliced layer 존재(nnz 35.6%) → moment fallback 불필요(계약보다 나음).
+MACRO_BATCH_CANDIDATES = ("Day 14", "9060-MV-3", "9060-MV", "9060MV3", "9060")   # 우선순위; 첫 일치 사용
 # HSPC와 동일 하이퍼파라미터 (공정 비교)
 N_HVG, N_PCS, N_NEIGHBORS, LEIDEN_RES, SEED = 2000, 30, 30, 1.0, 0
-QC = dict(min_genes=500, max_genes=8000, max_pct_mito=20.0)
+QC = dict(min_genes=100, max_genes=8000, max_pct_mito=20.0)   # ⚠️ min_genes: figshare postpro는 929 HVG로 축소 + 저자 QC 완료(obs['outlier'] all False)라 HSPC 전전사체 기준 500은 Day14 3572→76 파괴. 실측 median nonzero=320/929 → 100=방어적 no-op(3572/3572 유지). 원 의도("대체로 no-op") 복원.
 RARE = {"DC", "Cycling"}
 
 # lineage marker (config_macrophage와 동일; build 시 var_names 필터)
