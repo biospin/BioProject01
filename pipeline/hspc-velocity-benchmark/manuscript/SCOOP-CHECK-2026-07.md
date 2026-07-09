@@ -33,11 +33,12 @@
 - **핵심 novelty는 lag-benchmark(fresh)에 있음** — 논문 축 그대로 유효(Primary tier: Cell Systems/MSB/eLife 현실적).
 - **§8은 wholly-novel headline이 아님** — Zhang이 switch-time flatness 선취. "우도 기하로의 확증 + α/lag 해리 + multiome 확장"으로 정직 프레이밍하면 방어 가능하나, 이것만으로 Stretch(Nature Methods) tier를 끌어올리진 못함.
 
-## 후속(열린 항목)
-- Zhang 전문에서 **α를 stiff로 대조한 대목이 있는지** 확인(없으면 우리 해리 novelty 경계 선명).
-- Wang 전문(접근 제한) 재독 — velocity ODE 파라미터에 sloppy 분석 적용 supplement 유무.
-- Gorin/Pachter CME(Monod) 계열의 chromatin/switch-time 구조적 식별성 결과 타깃 재검색(telegraph=Gu만 표면화).
-- 실행: **related_work.md에 Zhang·Gu·Wang·BayVel 4편 추가** + §8 서술을 "확증+해리+multiome" 프레이밍으로 조정(manuscript-writer).
+## 후속(열린 항목) — 2026-07-10 오전 마감
+
+- ✅ **[RESOLVED] Zhang은 α(전사율)를 stiff로 대조하지 않음** — 정식 출판본(Biometrics 82(1) ujag018, Zhang·Bochkina·Wade) 확인: 약식별 논의는 **시간 파라미터(latent time τ_c·switch time t0^(2)·shape λ)에 국한**. α는 α(τ,k)=α₁−α₂·exp(−λτ)로 파라미터화되며 λ의 큰 불확실성은 짚으나 **α₁/α₂를 precisely identified/stiff로 지목하지 않는다.** → 우리 **α-stiff/lag-sloppy 해리는 Zhang에 없는 un-pre-empted 기여**임 확정(novelty 경계 sharpen). 단 switch-time flatness 절반은 여전히 Zhang 선취이므로 정면 인용은 유지.
+- ✅ **[RESOLVED] Wang은 cell-state Gaussian 파라미터 대상** — 검색·초록·본문 확인: "each single cell is represented as a multivariate Gaussian … associated with a Fisher information matrix." stiff/sloppy와 'velocity'(파라미터 변화율)는 **(μ,σ) state 좌표의 것**이지 RNA velocity kinetic(α/β/γ/switch/lag) 아님. velocity ODE 파라미터에 sloppy 분석 적용 안 함 → **방법론 아날로그로만 인용, velocity-kinetic 적용은 우리 novel.** (v2 제목 "Sloppiness and Action Constraint in Cell State Transitions".)
+- 🔲 (저순위) Gorin/Pachter CME(Monod) 계열의 chromatin/switch-time **구조적** 식별성 결과 타깃 재검색(telegraph=Gu만 표면화; 추가 위협 낮음).
+- ✅ 실행 완료: related_work.md §(iv)+#6+refs[16~19] 추가(`e818e4f`), §8 프레이밍 "확증+해리+multiome"로 조정(`e818e4f`), freed-nuisance 게이트로 해리 방탄(`a5d467e`). **본문 draft는 사용자 확인 후 착수.**
 
 ## 출처(1차, 검증)
 - Zhang ConsensusVelo — https://www.biorxiv.org/content/10.1101/2024.05.14.594102v1.full.pdf

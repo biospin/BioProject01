@@ -254,8 +254,9 @@ kinetics.** *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/
 title/author list to confirm; distinct from the veloVAE Gu et al. [8].*
 
 [18] Wang. **Sloppiness and Action Constraint in Cell State Transitions: Are Single Cells Sloppy?**
-bioRxiv 2025.12.31.697145 (2025). ⚠️ *Author list to confirm; full text was access-limited (403/429) at
-scoop time — re-read before final cite-and-differentiate wording.*
+bioRxiv 2025.12.31.697145 (v2, 2025/2026). ⚠️ *Author list to confirm. Parameter space **confirmed**
+(2026-07-10): sloppy/stiff Fisher analysis is on cell-state multivariate-Gaussian (μ,σ) coordinates, NOT
+RNA-velocity kinetic parameters — methodological analog only.*
 
 [19] **BayVel: A Bayesian Framework for RNA Velocity Estimation in Single-Cell Transcriptomics.**
 arXiv:2505.03083 (2025). ⚠️ *Preprint; author list to confirm.*
