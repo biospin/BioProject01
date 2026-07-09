@@ -1,5 +1,60 @@
 # Cross-Dataset External Replication — 실행 상태 (LIVE)
 
+---
+
+## §0. 이 작업이 무엇이고 어디서 나왔나 (canonical, 2026-07-09) — 팀 공유용
+
+> **한 줄:** cross-dataset 재현은 **원래 계획의 일부가 아니라, lag이 예상과 다르게 나와서 파생된 확장 분석(extension)**이다.
+> 결과 근거의 canonical 원천은 `../results/FINDINGS.md`, 절차는 이 폴더 `RUNBOOK.md`.
+
+### (1) 원래 분석 계획 (original plan)
+gene별 **chromatin→transcription lag**(activation/shutdown 시점차)을 정량 → baseline epigenomic feature로
+**epigenetic drug-response timing** 예측. 1차 데이터셋 = Human HSPC 10x Multiome(GSE209878).
+전제 검정으로 velocity method head-to-head 벤치마크를 돌려 **"lag이 method-robust한 양인가"(H1)**를 먼저 본다.
+→ **암묵적 기대: lag은 튼튼한(재현되는) 양이다**(priming이 실재하니 측정 가능한 안정된 시점차가 있으리라).
+
+### (2) 예상과 다른 결과 (the pivot) — 확장의 방아쇠
+**lag은 method-robust하지 않았다.** cross-method 크기 일치 |ρ|≤0.08, 부호 일치 48%≈우연, permutation-FDR
+방향 일관 유전자 **0/598**. 반면 **전사율 α는 튼튼**(cross-method ρ=**0.88**) + day0 크로마틴으로 held-out 계통
+예측 가능(ρ=**+0.31**). → "lag robust" 기대가 깨짐. **이 예상외 결과가 아래 확장 분석 전부를 촉발했다.**
+
+### (3) 파생된 확장 분석 (extensions — 원래 계획에 없던 부분, 전부 이 pivot에서 나옴)
+| 확장 | 왜 (예상외 결과에 대한 대응) | 산출 |
+|---|---|---|
+| **E1. 5중 자기검증** | "lag 비robust가 우리 실수/아티팩트 아닌가?" 배제 | `clean_concordance_gate.md`·`permutation_fdr.md`·`confound.md`·`crakvelo_sign_check.md`·(반감기 관문) |
+| **E2. cross-dataset 재현** | "α>lag 순서가 HSPC 우연 아니라 조직·종 넘어 유지되나?" | `concordance_{human_brain,e18_mouse_brain,GSE194122_bmmc}.md` (+ 진행 중) |
+| **E3. profile-likelihood 식별성** | "왜 lag이 fragile한가?" → 목적함수 성질로 승격 | `profile_likelihood_identifiability.md` (α stiffer 94.57%, κ비 median 3.53×) |
+| **E4. drug-timing 타깃 전환** | 원래 목표를 lag이 아니라 **α**로(day0 ATAC→α) 재정렬 | `atac_baseline_features.md`·`lag_model_atac.md`, FINDINGS §6 |
+
+→ **git 커밋도 이 흐름의 챕터다:** `P3 cross-dataset #N …`(E2) · `P3 profile-likelihood …`(E3) · `P3 외부 kinetic 검증 …`(E1/E4) 접두 커밋들이 각 확장에 대응. FINDINGS 발견별 §1~§8이 같은 순서.
+
+### (4) 지금 cross-dataset(E2) 작업 분담 — **여기가 지용기(BIOP01-29) 혼동 지점**
+heavy-run과 downstream을 나눈다. **핵심: heavy-run은 kkkim 몫, downstream이 모집(BIOP01-29) 몫.**
+
+| 단계 | 무엇 | env/자원 | 담당 | 산출 |
+|---|---|---|---|---|
+| **heavy-run (fit 생산)** | build→floor→MultiVelo→VAE(→MoFlow)→P3 | kkkim 홈 conda env(scv-preprocess/mv/torch) + GPU — **kkkim 서버에서만 가능** | **kkkim이 이 서버에서 구동** | `results/{multivelo,rna_only,multivelovae}_genes_<dataset>.csv` |
+| **downstream (BIOP01-29)** | concordance(α vs lag ρ)·bootstrap CI·해석 | **CPU만**, env 셋업·GPU·heavy-run **불필요** | **모집(지용기)** — kkkim fit CSV 위에서 | `results/concordance_<dataset>.md` |
+| critic (BIOP01-39) | 결론·통계·hedge 점검 | — | 모집 | 리뷰 코멘트 |
+
+- ⚠️ **BIOP01-29 본문의 "처리해야 할 2가지(config 파라미터화·LINEAGE_MARKERS 재정의)"는 이미 완료됨** — cross-dataset #1~4가 `CROSS_DATASET_CONFIG`/`CROSS_DATASET_SUFFIX` env 배선을 이미 쓴다(아래 §wiring). 모집자가 새로 할 필요 없음.
+- 팀 공유 GPU env(다른 계정에서 heavy-run 하려면 필요)는 이건규 님께 별건 요청(비긴급). 현 분담대로면 **지용기 님은 env 없이 kkkim fit을 기다렸다 CPU 분석만** 하면 됨.
+
+### (5) 데이터셋 상태 (2026-07-09 현재)
+| # | 데이터셋 | Accession | fit(heavy-run) | downstream(concordance) | cross α / lag |
+|---|---|---|---|---|---|
+| 1 | human fetal cortex | GSE162170 | ✅ | ✅ `concordance_human_brain.md` | +0.475 / +0.19 |
+| 2 | E18 mouse brain | 10x embryonic | ✅ | ✅ `concordance_e18_mouse_brain.md` | +0.32 / +0.10 |
+| 3 | human BMMC | GSE194122 | ✅ | ✅ `concordance_GSE194122_bmmc.md` | +0.55 / +0.05 |
+| 4 | **macrophage 분화** | GSE284047 / figshare 30280333 | 🔄 데이터 staged(2026-07-09), heavy-run 준비 | ⏳ (지용기 substrate 후보) | — |
+| 5 | mouse skin | GSE140203 (SHARE-seq) | ⏳ **DEFER** — 비-10x → bespoke velocyto + mouse→human ortholog + skin lineage annotation 신규 (최고난도). 원본 `GSE140203_RAW.tar`(7.9GB) 다운로드 중 | — | — |
+
+**순서 보존 요지:** 값 자체는 조직이 멀수록 α가 순서대로 낮아지나(BMMC +0.55 > brain +0.475 > E18 +0.32) **lag은 어디서도 무신호(+0.05~+0.19)** → "α robust / lag fragile"가 데이터셋 넘어 보존.
+
+---
+
+> ⚠️ **아래 배너/이하 절은 2026-07-05 human_brain 무인 드라이버 시절 실행 이력**이다(위 §0가 최신·정본). "커밋 안 함/무인 push 금지"는 이후 **작업 브랜치 자동 커밋 정책으로 대체**됨(CLAUDE.md). 절차·wiring 세부는 여전히 유효.
+
 > ## ⏭️ 재로그인 시 (2026-07-05 13:35 갱신) — 🤖 무인 드라이버가 관장 중, 수동 개입 금지
 > **⛔ 절대 MultiVelo/P3를 수동 재실행하지 말 것.** `run_crossdataset_autonomous.sh`가 detached(PPID=1, 로그아웃 생존)로 돌며
 > MultiVelo 풀런 완료 대기 → 죽으면 자동 재실행(최대 3회) → 완료 시 P3 concordance까지 자동 수행한다. 수동 실행하면 **중복 실행**된다.
