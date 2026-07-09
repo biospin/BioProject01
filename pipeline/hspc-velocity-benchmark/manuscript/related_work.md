@@ -113,6 +113,26 @@ RNA-only dynamical/generative velocity that our floor and arms build on: scVelo 
   neurogenesis. This is our **primary cross-dataset** — a transient-TF-rich system where lag is expected
   to be even more method-sensitive, so it is a fair external test of the α-robust/lag-fragile split.
 
+### (iv) Parameter identifiability & likelihood geometry (closest prior art to §8)
+
+Our §8 profiles the MultiVelo objective along the α axis vs the chromatin→transcription lag axis (lag =
+t_sw2 − t_sw1) and finds α **stiff** (well-determined) while the lag direction is **sloppy/near-flat**
+(per-gene curvature ratio κ_α/κ_lag ≈ 3.53×; α stiffer in 94.57% of genes) — a *relative (practical)*
+non-identifiability. The closest prior art each anticipates a component but none combines the dissociation,
+the curvature-ratio framing, and the chromatin-lag extension (scoop check 2026-07-10, `SCOOP-CHECK-2026-07.md`):
+
+| Work | Ref | Overlap → our differentiation |
+| --- | --- | --- |
+| **Quantifying uncertainty in RNA velocity (ConsensusVelo)** | Zhang et al. 2024 [16] | **Closest — cite head-on.** Establishes *weak (near-non-)identifiability* of the cell latent-time / switching-time direction via likelihood flatness and Fisher information of t_c ("the likelihood remains almost constant for any sufficiently large τ_c"); switch time t0^(2) carries large right-skewed posterior uncertainty. → Anticipates the flat-switch-time half. **We differ:** RNA-only (no chromatin lag), single-parameter Fisher (not a Hessian sloppy/stiff spectrum), and it does **not** dissociate a *stiff α* from the sloppy switch (its λ is also weakly identified); Bayesian posterior framing, not profile-likelihood curvature. |
+| **Profile-likelihood identifiability of single-cell bursting kinetics** | Gu et al. 2025, *Bioinformatics* btaf581 [17] | Uses **profile-likelihood** to prove *practical* (not structural) non-identifiability of telegraph-model rates (k_on/k_off/k_syn) from scRNA-seq. → Exact method precedent, but on bursting parameters, not velocity switch-time/lag. (Distinct from [8].) |
+| **Are Single Cells Sloppy? (sloppy/stiff Fisher geometry)** | Wang 2025 [18] | Applies the **sloppy-vs-stiff Fisher-information eigenvalue** framework to single cells ("pronounced sloppiness in single cells"). → Same methodology, but on cell-**state** Gaussian coordinates (μ,σ), not velocity kinetic parameters. Direct methodological analog. |
+| **BayVel: Bayesian RNA velocity** | 2025, arXiv 2505.03083 [19] | Proves **structural** non-identifiability of scVelo dynamical parameters via a time-shift invariance s(t+a, t0on+a,…) = s(t,…). → Complementary global-time-shift degeneracy (a known scale-degeneracy family); our claim is the *relative curvature* dissociation of lag vs α. |
+
+None of the critiqued velocity/chromatin methods (scVelo, MultiVelo, MultiVeloVAE, MoFlow, CRAK-Velo, HALO)
+performs any likelihood-geometry identifiability analysis of the switch-time/lag direction — so §8's
+*application* to velocity kinetics and the α-stiff/lag-sloppy *dissociation* are not pre-empted, but the
+switch-time-flatness observation itself must be credited to Zhang et al. [16].
+
 ---
 
 ## 2. Honest positioning against the closest 3–5 works
@@ -143,6 +163,15 @@ RNA-only dynamical/generative velocity that our floor and arms build on: scVelo 
    warnings into a single, decision-relevant negative result for the chromatin-lag use case, with a
    concrete downstream consequence (a drug-response-timing model must not consume a single-method lag; it
    should use the robust α / day0-ATAC→α path instead).
+
+6. **vs. the velocity-identifiability line (Zhang 2024 [16]; Gu 2025 [17]; Wang 2025 [18]; BayVel [19])** —
+   Zhang already shows the switch-time is weakly identified from the likelihood; Gu brings profile-likelihood
+   to single-cell kinetic rates; Wang brings sloppy/stiff Fisher geometry to single cells. **Our §8 is not
+   the first to note velocity-time flatness — we credit Zhang [16] head-on** — and stands as a *confirmatory
+   mechanism* for our empirical result. The un-pre-empted contribution is the **dissociation** (lag/switch
+   sloppy *while* α is stiff), the **curvature-ratio (κ_α/κ_lag)** framing, and the extension to the
+   **chromatin→transcription lag** in multiome. §8 supports, but does not headline, the paper — the fresh
+   thesis is the cross-method lag benchmark, not the identifiability geometry.
 
 **One-paragraph gap/novelty statement.** Chromatin-informed velocity methods (MultiVelo, MultiVeloVAE,
 MoFlow, CRAK-Velo) each report a gene-level chromatin→transcription lag as a biological readout, and the
@@ -216,6 +245,21 @@ RNA and Chromatin.** *Cell* 183(4), 1103–1116.e20 (2020). doi:10.1016/j.cell.2
 human cerebral cortex at single-cell resolution.** *Cell* 184(19), 5053–5069.e23 (2021).
 doi:10.1016/j.cell.2021.07.039. (GSE162170.)
 
+[16] Zhang et al. **Quantifying uncertainty in RNA velocity (ConsensusVelo).** bioRxiv 2024.05.14.594102
+(2024); *Biometrics* (2026, in press). doi:10.1101/2024.05.14.594102. ⚠️ *Full author list/final venue to
+confirm — closest prior art to §8; cite head-on.*
+
+[17] Gu et al. **Profile-likelihood identifiability analysis of single-cell transcription (telegraph)
+kinetics.** *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/btaf581. ⚠️ *Exact
+title/author list to confirm; distinct from the veloVAE Gu et al. [8].*
+
+[18] Wang. **Sloppiness and Action Constraint in Cell State Transitions: Are Single Cells Sloppy?**
+bioRxiv 2025.12.31.697145 (2025). ⚠️ *Author list to confirm; full text was access-limited (403/429) at
+scoop time — re-read before final cite-and-differentiate wording.*
+
+[19] **BayVel: A Bayesian Framework for RNA Velocity Estimation in Single-Cell Transcriptomics.**
+arXiv:2505.03083 (2025). ⚠️ *Preprint; author list to confirm.*
+
 ---
 
 ### Sources (URLs consulted)
@@ -231,6 +275,10 @@ doi:10.1016/j.cell.2021.07.039. (GSE162170.)
 - Benchmark (17 studies): https://www.cell.com/cell-reports-methods/fulltext/S2667-2375(26)00067-6 · https://www.biorxiv.org/content/10.1101/2025.08.02.668272v1
 - Benchmark (algorithms, 29): https://www.biorxiv.org/content/10.64898/2026.01.03.697314v1.full
 - Chromatin potential (Ma): https://www.cell.com/cell/fulltext/S0092-8674(20)31253-8
+- Zhang ConsensusVelo [16]: https://www.biorxiv.org/content/10.1101/2024.05.14.594102v1.full.pdf
+- Gu profile-likelihood [17]: https://academic.oup.com/bioinformatics/article/41/11/btaf581/8300553
+- Wang "Are Single Cells Sloppy?" [18]: https://www.biorxiv.org/content/10.64898/2025.12.31.697145v1
+- BayVel [19]: https://arxiv.org/html/2505.03083v1
 - Trevino cortex: https://doi.org/10.1016/j.cell.2021.07.039
 - scKINETICS: https://academic.oup.com/bioinformatics/article/39/Supplement_1/i394/7210448
 - ArchVelo: https://www.nature.com/articles/s41467-026-74000-4
