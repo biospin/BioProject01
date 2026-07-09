@@ -122,5 +122,10 @@ pipeline/hspc-velocity-benchmark/cross_dataset/BMMC_FAILED
 
 # 블로그 정리 초안(구글드라이브/JIRA용, 로컬 md 유지) — 2026-07-04
 blog_HSPC_velocity_lag.md
-# blog/ 폴더 전체(구글드라이브가 canonical, 생성물 00_*_blog_all.md·심링크 build_index.py 포함) — 로컬 유지
+# blog/ 폴더 전체(canonical=/workspace/blog + 구글드라이브, 생성물 00_*_blog_all.md·심링크 build_index.py 포함) — 로컬 유지
 blog/
+
+# 세션 잡동사니(백업·jupyter collab db·인증 qr) — 커밋 대상 아님
+.jupyter_ystore.db
+blog_backup_*/
+gdrive_auth_qr.png
