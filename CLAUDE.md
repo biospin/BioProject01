@@ -87,9 +87,9 @@ python3 skills/source-grounding/scripts/share_paper.py <paper-dir>
 
 | 담당 데이터셋 | 담당자 | GitHub ID |
 |---|---|---|
-| 10x embryonic mouse brain | gglee (gklee) | Geongyu |
-| SHARE-seq mouse skin | 박상준 | — |
-| Human brain multi-ome | 전연수 / sjpark | sezinie000 |
+| 10x embryonic mouse brain | 서정한 | JeonghanSeo |
+| SHARE-seq mouse skin | 지용기 | braveji18 |
+| Human brain multi-ome | 박세진 / 지용기 | sjpark / braveji18 |
 | Human HSPC 10x Multiome | kkkim / jamie (jmryu) | kakyungkim / JamieLyu |
 | 하네스 | braveji (ykji) | braveji18 |
 
