@@ -1,0 +1,4 @@
+method,stratum,n,rho_alpha_schwalb,ci_lo_as,ci_hi_as,rho_alpha_todorovski,ci_lo_at,ci_hi_at,rho_schwalb_todorovski
+rna_only,non_HK_matched,50,-0.046,-0.345,0.249,0.229,-0.052,0.485,0.138
+multivelo,non_HK_matched,54,-0.009,-0.284,0.264,0.427,0.142,0.659,0.212
+multivelovae,non_HK_matched,56,-0.059,-0.344,0.22,0.326,0.05,0.569,0.195
