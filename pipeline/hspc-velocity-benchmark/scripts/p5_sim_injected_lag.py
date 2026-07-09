@@ -124,7 +124,7 @@ def main():
             axs[0].scatter(x, y, s=8, alpha=0.5, label=f"σ={sigma}")
         axs[0].axhline(0, color="grey", lw=.6)
         axs[0].set_xlabel("true lag t50(s)−t50(c) (bins)"); axs[0].set_ylabel("recovered DTW c-s lag")
-        axs[0].set_title("true vs recovered (1:1 = 회복)"); axs[0].legend(fontsize=8)
+        axs[0].set_title("true vs recovered (1:1 = perfect recovery)"); axs[0].legend(fontsize=8)
         axs[1].plot(df["noise"], df["spearman"], "o-", label="Spearman(true,rec)")
         axs[1].plot(df["noise"], df["sign_acc"], "s--", label="sign accuracy")
         axs[1].axhline(0.5, color="grey", lw=.6, ls=":")

@@ -35,7 +35,9 @@ for bars in (b1, b2):
         ax.text(r.get_x()+r.get_width()/2, r.get_height()+0.012, f"{r.get_height():.2f}",
                 ha="center", va="bottom", fontsize=9)
 ax.axhline(0.30, color=GRAY, ls=":", lw=1)
-ax.text(len(datasets)-0.5, 0.315, "|ρ|=0.30 replication mark", ha="right", va="bottom", fontsize=8, color=GRAY)
+# 축 안쪽 오른쪽에 고정(x=축좌표, y=데이터좌표)해 잘림 방지
+ax.text(0.99, 0.305, "|ρ|=0.30 replication mark", transform=ax.get_yaxis_transform(),
+        ha="right", va="bottom", fontsize=8, color=GRAY)
 ax.set_xticks(x); ax.set_xticklabels(datasets, fontsize=9)
 ax.set_ylabel("cross-dataset rank Spearman ρ"); ax.set_ylim(0, 0.62)
 ax.set_title("Across tissue and species, α reproduces; chromatin→transcription lag does not\n"
