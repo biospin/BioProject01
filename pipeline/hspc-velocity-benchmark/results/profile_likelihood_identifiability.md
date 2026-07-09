@@ -16,9 +16,8 @@ n=538 gene에서 fixed-nuisance profile likelihood(관심 파라미터 하나만
   fit_t·likelihood 재현 검증 r≈1.0).
 - **fixed-nuisance profile (main, n=538)**: MLE에서 α를 log-perturb, 그리고 lag(=t_sw2−t_sw1)을
   log-perturb하면서 각 방향의 per-cell 곡률 κ = −d²LL/d(ln θ)² 를 측정한다. latent time은 재최적화한다.
-- **freed-nuisance gate (부분)**: β/γ/α_c/rescale/scale_cc 를 재최적화하며 같은 두 방향 곡률비를 재측정한다.
-  현재 CSV는 부분(stale smoke, 사용 가능한 ratio_freed n=1: LMNA 5.30x) — **main(538)이 주장을 담당**하고
-  freed는 방향 확인용 보조다. (전체 재실행은 main CSV를 덮어쓰므로 이번 마무리 단계에선 실행하지 않았다.)
+- **freed-nuisance gate (완주, 2026-07-10, interior 258)**: β/γ/α_c/rescale/scale_cc를 재최적화하며 같은 두 방향 곡률비를 재측정.
+  **해리(α≫lag) 생존**: ratio_freed median **2.49×**, α still stiffer **77.03%**(n=148). 단 β/γ 자유화 시 **α 곡률이 fixed 대비 median 0.19×로 붕괴**(alpha peak collapses) → fixed 3.53×/94.57%는 상한, freed **2.49×/77%가 보수적 하한**이며 서술 기준이다. (`profile_likelihood_freed.csv`; main CSV는 결정론적 재계산으로 불변 확인.)
 
 ## 핵심 수치 (모두 `profile_likelihood_identifiability.csv`에서 재검증)
 | 지표 | 값 |
@@ -93,9 +92,8 @@ the α curvature is significantly larger than the lag curvature (reproduced at t
 ## Method
 - **Objective function**: MultiVelo 4-state chromatin-RNA likelihood (`p3_profile_likelihood.py`; fit_t·likelihood reproduction check r≈1.0).
 - **fixed-nuisance profile (main, n=538)**: from the MLE, log-perturb α, and log-perturb the lag (=t_sw2−t_sw1), measuring the per-cell curvature in each direction κ = −d²LL/d(ln θ)². latent time is re-optimized.
-- **freed-nuisance gate (partial)**: re-optimize β/γ/α_c/rescale/scale_cc and re-measure the same two-direction curvature ratio.
-  The current CSV is partial (stale smoke, available ratio_freed n=1: LMNA 5.30x) — **main (538) carries the claim** and
-  freed is an auxiliary direction check. (A full re-run overwrites the main CSV, so it was not executed in this wrap-up stage.)
+- **freed-nuisance gate (completed, 2026-07-10, interior 258)**: re-optimize β/γ/α_c/rescale/scale_cc and re-measure the two-direction curvature ratio.
+  **The dissociation (α ≫ lag) survives**: ratio_freed median **2.49×**, α still stiffer in **77.03%** (n=148). But freeing β/γ **collapses the α curvature to median 0.19× of fixed** (the α peak collapses) → fixed 3.53×/94.57% is an upper bound, freed **2.49×/77% the conservative lower bound** and the reporting basis. (`profile_likelihood_freed.csv`; main CSV verified unchanged by deterministic recompute.)
 
 ## Key numbers (all re-verified from `profile_likelihood_identifiability.csv`)
 | metric | value |
