@@ -71,7 +71,7 @@ biophysical 대응: scVelo/MultiVelo **α ≡ TT-seq 생산율**. 회복하면 *
 
 ## 한계
 1. **cross-context**: 실측은 leukemia line(K562/THP1/MOLM13), α/γ는 HSPC fit. gene-intrinsic 순위 보존 가정(proxy_join_gate PASS median ρ=0.74로 t½ 차용은 방어된다). 절대율 비교는 금지하고 rank만 본다.
-2. **Part B는 K562 단독**(THP1 TT-seq 생산율 subseries 부재). 독립 2차 소스(Schwalb 2016 GSE75792, K562 TT-seq)는 per-gene rate 재계산이 필요하다(후속).
+2. **Part B는 K562 단독**(THP1 TT-seq 생산율 subseries 부재). ⚠️ **독립 2차 소스(Schwalb 2016 GSE75792, K562 TT-seq)를 추가했으나 NULL이다** — matched non-HK에서 α–Schwalb는 3/3 null(ρ −0.05~−0.01), α–Todorovski는 3/3 양(+0.23~+0.43)이다. 근본 원인은 두 TT-seq 실측이 서로 ρ≈0.15로만 일치(study 간 재현성 낮음)한다는 점이며, 이것이 corroboration 상한이다. 따라서 α 외부 앵커는 현재 1차(Todorovski)에 의존하고 'n=1 외부' 취약성은 이 소스로 제거되지 않는다(정직). 상세는 `external_rate_validation_schwalb.md`.
 3. **Part A γ 역방향**은 "실측이 틀렸다"가 아니라 "그 fit γ가 분해 순위를 못 잡는다"로 읽는다(γ fragile과 정합). MOLM13(무검열)이 K562/THP1(24h cap)보다 신뢰할 만한 reference다.
 4. n이 작다(비-HK overlap 87~251) — CI 폭에 반영된다. HK 층은 n<25로 비정보적이다(참고만).
 5. **abundance 교란(Part B)**: α와 TT-seq 합성율이 둘 다 발현량(abundance)을 따라가서 +0.26이 나올 수 있음(s_ss = α/γ). non-HK 한정(자명 보존 gene 제외)이 부분 완화하고 biophysics(α↔합성율)가 상관을 **예측**하지만, "α가 abundance가 아니라 합성 kinetics를 특정 포착"까지 이 검정만으로는 단정하지 않는다 — rank 방향 검증에 한정한다.
@@ -158,7 +158,7 @@ Biophysical correspondence: scVelo/MultiVelo **α ≡ TT-seq production rate**. 
 
 ## Limitations
 1. **cross-context**: measurements are from leukemia lines (K562/THP1/MOLM13), while α/γ are fit in HSPC. The gene-intrinsic ranking-preservation assumption (proxy_join_gate PASS, median ρ=0.74, so borrowing t½ is defensible). Absolute-rate comparison forbidden — rank only.
-2. **Part B is K562 only** (no THP1 TT-seq production-rate subseries). An independent second source (Schwalb 2016 GSE75792, K562 TT-seq) needs per-gene rate recomputation — follow-up.
+2. **Part B is K562 only** (no THP1 TT-seq production-rate subseries). ⚠️ **An independent second source (Schwalb 2016 GSE75792, K562 TT-seq) was added but is NULL** — in the matched non-HK set α–Schwalb is 3/3 null (ρ −0.05~−0.01) while α–Todorovski is 3/3 positive (+0.23~+0.43). The root cause is that the two TT-seq measurements agree with each other only at ρ≈0.15 (low study-to-study reproducibility), which sets the ceiling on corroboration. So the α external anchor currently rests on the primary source (Todorovski) and the 'n=1 external' vulnerability is not removed by this source. Details: `external_rate_validation_schwalb.md`.
 3. **The Part A γ reversal** is read not as "the measurement is wrong" but as "that fit γ fails to capture the degradation ranking" (consistent with γ fragility). MOLM13 (uncensored) is a more trustworthy reference than K562/THP1 (24h cap).
 4. n is small (non-HK overlap 87~251) — reflected in the CI widths. The HK stratum has n<25 and is uninformative (reference only).
 5. **abundance confound (Part B)**: both α and TT-seq synthesis rate could track abundance, potentially producing +0.26 (s_ss = α/γ). Restricting to non-HK (excluding trivially conserved genes) partly mitigates this and the biophysics (α↔synthesis rate) *predicts* the correlation, but this test alone does not settle that "α captures synthesis kinetics specifically rather than abundance" — it is limited to a rank-direction check.
