@@ -11,7 +11,37 @@
 
 ---
 
+## ⚠️ 정정 (2026-07-10 저녁, kkkim 30분 양성대조 + 지용기 독립 확인) — 아래 "3줄 요약"의 **경로 부분은 폐기됨**
+
+> 원 판정(§3줄 요약·블로커 1)은 **"GEO supplementary만" 조사한 결과**였다. **SRA/ENA deposit을 보지 않은 것이 누락**이다.
+> kkkim이 양성대조로 SRA를 실측해 경로를 뒤집었고, 나(지용기)는 ENA API + fastq 선두 read로 독립 확인했다.
+>
+> **실측 사실 (SRR10428407 = GSM4156608 skin late-anagen RNA, PRJNA588784, 308,650,018 reads)**
+> 1. **99bp index read는 deposit에 없다.** ENA fastq는 단일 파일이고 read는 cDNA(최대 50bp) 하나뿐.
+> 2. **barcode는 이미 디코딩돼 read 이름에 있다.**
+>    실측 예: `@SRR10428407.1 A00794:80:HFTTTDRXX:1:2265:28266:34569_R1.44,R2.50,R3.23,P1.55_ATAATCAAGT`
+>    → 3라운드 barcode 인덱스(`R1/R2/R3`) + `P1` + **말미 10bp UMI**.
+> 3. **저자가 mm10 coordinate-sorted BAM을 SRA에 제출했다.** `submitted_ftp` = `skin.late.anagen.rna.norg.bam`(21GB) + `.bai` (STAR 2.5.3a, mm10).
+>
+> **따라서 폐기되는 것**
+> - ❌ "SRA가 index read를 손상시켰다"는 리스크 — **RNA에는 해당 없음**(index read 자체가 없고 barcode는 온전).
+> - ❌ STARsolo-from-FASTQ + 99bp 재조립 경로 전체. 또한 내가 제시했던
+>   `--soloType CB_UMI_Simple --soloCBstart 1 --soloCBlen 24`는 **그 자체로 오류**였다 —
+>   CB_UMI_Simple은 연속 barcode를 가정하는데 SHARE-seq 3×8bp는 linker로 끊긴 비연속 조합 barcode다.
+>   raw read에 그대로 걸었으면 매칭률 ~0%가 나와 **거짓 NO-GO**로 오판했을 것이다(kkkim 지적).
+> - ❌ mouse STAR genome index(~30GB RAM) 필요성 → **재정렬이 없으므로 RAM 병목 소멸**.
+>
+> **대체 경로 (승인, macrophage/BMMC 전례)**: **velocyto-on-BAM**
+> 21GB BAM 확보 → pysam으로 read 이름의 `(R1,R2,R3)`→`CB:Z`, 말미 10bp→`UB:Z` 재태깅 → `velocyto run`(mm10 GTF) → spliced/unspliced loom.
+>
+> **남은 진짜 게이트는 하나**: spliced/unspliced **nnz**(macrophage 실측 35.6% 참조). 1개 염색체 스모크로 확인.
+> 블로커 2·3 판정(GO)은 그대로 유효하다.
+
+---
+
 ## 3줄 요약 + 종합 판정
+
+> 🚫 아래 1번 항목의 **경로 서술은 위 정정 배너로 대체됨.** 판단 이력 보존을 위해 원문을 남긴다.
 
 1. **spliced/unspliced가 유일한 실질 블로커다.** GSE140203은 **processed UMI count matrix만** 배포하고 BAM·fastq·spliced/unspliced를 **일절 배포하지 않는다**. 공개된 velocity-ready SHARE-seq skin AnnData/loom도 **못 찾았다**(MultiVelo·MultiVeloVAE는 각각 E18 brain·HSPC/EB/macrophage만 배포). 따라서 reads로부터 재정렬(STARsolo Velocyto)이 필수인데, **SRA의 index read(=cell barcode)가 손상돼 있다는 커뮤니티 보고**가 있어 barcode 복원 자체에 리스크가 있다.
 2. **블로커 2·3은 사실상 해결됨.** mouse→human ortholog는 E18에서 이미 쓴 **uppercase 매핑(`.index.str.upper()`)을 verbatim 재사용** 가능하고, skin lineage annotation은 GEO가 **cell-type 파일(`GSM4156597_skin_celltype.txt.gz`)을 직접 배포**하므로 E18처럼 provider annotation을 그대로 쓰면 된다(concordance는 전역 per-gene fit rank라 lineage 비-load-bearing).

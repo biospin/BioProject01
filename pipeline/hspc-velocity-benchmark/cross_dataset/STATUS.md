@@ -49,8 +49,11 @@ heavy-run과 downstream을 나눈다. **핵심: heavy-run은 kkkim 몫, downstre
 | 4 | **macrophage 분화** | GSE284047 / figshare 30280333 | ✅ (kkkim, 2026-07-09) | ✅ `concordance_macrophage.md` (지용기, BIOP01-29) | **+0.643** / +0.148 |
 | 5 | mouse skin | GSE140203 (SHARE-seq) | 🔒 **CONDITIONAL-GO — 게이트 미해제** (Phase 0 완료, `FEASIBILITY_shareseq_skin.md`) | — (담당 지용기, **BIOP01-41**) | — |
 
-> **#5 게이트 (2026-07-10 Phase 0 결론):** GEO `filelist.txt` 실측 결과 GSE140203 supplementary에 **BAM·fastq 0건**, RNA는 UMI count matrix뿐 → **spliced/unspliced 미배포**. 공개 velocity-ready skin loom/h5ad도 없음. STARsolo `--soloFeatures Velocyto` 재정렬이 유일 경로이나 **SRA가 SHARE-seq cell barcode(index read)를 손상시켰다는 커뮤니티 보고**가 있어 복원 가능성 미확인.
-> → **full heavy-run 착수 금지.** 게이트 해제 경로: ① 저자(welch-lab/buenrostrolab) 처리 loom 확보(최저비용, 외부 연락 승인 필요) ② skin fastq 1 lane STARsolo preflight.
+> **#5 게이트 (2026-07-10 저녁 갱신 — 경로 확정):** GEO supplementary에는 spliced/unspliced가 없다(BAM·fastq 0건, UMI count matrix뿐). 그러나 **SRA/ENA deposit에는 있다** — kkkim 양성대조 + 지용기 ENA 독립 확인:
+> `SRR10428407`(=GSM4156608 skin RNA, PRJNA588784, 308.7M reads)의 `submitted_ftp`에 **저자 제작 mm10 coordinate-sorted BAM `skin.late.anagen.rna.norg.bam`(21GB) + `.bai`** 가 있고, **barcode는 read 이름에 선디코딩**돼 있다(`..._R1.44,R2.50,R3.23,P1.55_ATAATCAAGT` = 3라운드 인덱스 + P1 + 10bp UMI). 99bp index read는 deposit에 없다.
+> → **경로 = velocyto-on-BAM** (macrophage/BMMC 전례). pysam 재태깅(read 이름 → `CB:Z`/`UB:Z`) → `velocyto run`(mm10 GTF) → loom. **STAR 재정렬 없음 → mouse index 30GB RAM 병목 소멸.**
+> → ❌ 폐기: "SRA barcode 손상" 리스크(RNA엔 무관) · STARsolo-from-FASTQ 재조립 경로 · `--soloType CB_UMI_Simple`(비연속 조합 barcode에 연속 파라미터 → 거짓 NO-GO 유발).
+> → **남은 진짜 게이트 = spliced/unspliced nnz**(macrophage 실측 35.6% 참조). 1개 염색체 스모크로 확인 후 heavy-run.
 > 블로커 2(mouse→human ortholog: E18 `.index.str.upper()` verbatim 재사용)·3(GEO가 `GSM4156597_skin_celltype.txt.gz` 직접 배포)은 **해소됨**. 값어치: priming best case → "priming이 가장 강한 곳에서도 lag fragile한가"가 최강 헤드라인 후보.
 
 **순서 보존 요지:** 값 자체는 조직이 멀수록 α가 순서대로 낮아진다(macrophage +0.643 > BMMC +0.55 > brain +0.475 > E18 +0.32 — macrophage가 HSPC 직계 조혈축이라 최고). 반면 **lag은 어디서도 무신호(+0.05~+0.19)** → "α robust / lag fragile"가 데이터셋 넘어 보존.
