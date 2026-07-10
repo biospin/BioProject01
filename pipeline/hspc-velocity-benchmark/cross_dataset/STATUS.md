@@ -47,7 +47,11 @@ heavy-run과 downstream을 나눈다. **핵심: heavy-run은 kkkim 몫, downstre
 | 2 | E18 mouse brain | 10x embryonic | ✅ | ✅ `concordance_e18_mouse_brain.md` | +0.32 / +0.10 |
 | 3 | human BMMC | GSE194122 | ✅ | ✅ `concordance_GSE194122_bmmc.md` | +0.55 / +0.05 |
 | 4 | **macrophage 분화** | GSE284047 / figshare 30280333 | ✅ (kkkim, 2026-07-09) | ✅ `concordance_macrophage.md` (지용기, BIOP01-29) | **+0.643** / +0.148 |
-| 5 | mouse skin | GSE140203 (SHARE-seq) | ⏳ **DEFER** — 비-10x → bespoke velocyto + mouse→human ortholog + skin lineage annotation 신규 (최고난도). 원본 `GSE140203_RAW.tar`(7.9GB) 다운로드 중 | — (담당 지용기, **BIOP01-41**) | — |
+| 5 | mouse skin | GSE140203 (SHARE-seq) | 🔒 **CONDITIONAL-GO — 게이트 미해제** (Phase 0 완료, `FEASIBILITY_shareseq_skin.md`) | — (담당 지용기, **BIOP01-41**) | — |
+
+> **#5 게이트 (2026-07-10 Phase 0 결론):** GEO `filelist.txt` 실측 결과 GSE140203 supplementary에 **BAM·fastq 0건**, RNA는 UMI count matrix뿐 → **spliced/unspliced 미배포**. 공개 velocity-ready skin loom/h5ad도 없음. STARsolo `--soloFeatures Velocyto` 재정렬이 유일 경로이나 **SRA가 SHARE-seq cell barcode(index read)를 손상시켰다는 커뮤니티 보고**가 있어 복원 가능성 미확인.
+> → **full heavy-run 착수 금지.** 게이트 해제 경로: ① 저자(welch-lab/buenrostrolab) 처리 loom 확보(최저비용, 외부 연락 승인 필요) ② skin fastq 1 lane STARsolo preflight.
+> 블로커 2(mouse→human ortholog: E18 `.index.str.upper()` verbatim 재사용)·3(GEO가 `GSM4156597_skin_celltype.txt.gz` 직접 배포)은 **해소됨**. 값어치: priming best case → "priming이 가장 강한 곳에서도 lag fragile한가"가 최강 헤드라인 후보.
 
 **순서 보존 요지:** 값 자체는 조직이 멀수록 α가 순서대로 낮아진다(macrophage +0.643 > BMMC +0.55 > brain +0.475 > E18 +0.32 — macrophage가 HSPC 직계 조혈축이라 최고). 반면 **lag은 어디서도 무신호(+0.05~+0.19)** → "α robust / lag fragile"가 데이터셋 넘어 보존.
 
