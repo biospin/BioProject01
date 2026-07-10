@@ -40,16 +40,18 @@ heavy-run과 downstream을 나눈다. **핵심: heavy-run은 kkkim 몫, downstre
 - ⚠️ **BIOP01-29 본문의 "처리해야 할 2가지(config 파라미터화·LINEAGE_MARKERS 재정의)"는 이미 완료됨** — cross-dataset #1~4가 `CROSS_DATASET_CONFIG`/`CROSS_DATASET_SUFFIX` env 배선을 이미 쓴다(아래 §wiring). 모집자가 새로 할 필요 없음.
 - 팀 공유 GPU env(다른 계정에서 heavy-run 하려면 필요)는 이건규 님께 별건 요청(비긴급). 현 분담대로면 **지용기 님은 env 없이 kkkim fit을 기다렸다 CPU 분석만** 하면 됨.
 
-### (5) 데이터셋 상태 (2026-07-09 현재)
+### (5) 데이터셋 상태 (2026-07-10 갱신)
 | # | 데이터셋 | Accession | fit(heavy-run) | downstream(concordance) | cross α / lag |
 |---|---|---|---|---|---|
 | 1 | human fetal cortex | GSE162170 | ✅ | ✅ `concordance_human_brain.md` | +0.475 / +0.19 |
 | 2 | E18 mouse brain | 10x embryonic | ✅ | ✅ `concordance_e18_mouse_brain.md` | +0.32 / +0.10 |
 | 3 | human BMMC | GSE194122 | ✅ | ✅ `concordance_GSE194122_bmmc.md` | +0.55 / +0.05 |
-| 4 | **macrophage 분화** | GSE284047 / figshare 30280333 | 🔄 데이터 staged(2026-07-09), heavy-run 준비 | ⏳ (지용기 substrate 후보) | — |
-| 5 | mouse skin | GSE140203 (SHARE-seq) | ⏳ **DEFER** — 비-10x → bespoke velocyto + mouse→human ortholog + skin lineage annotation 신규 (최고난도). 원본 `GSE140203_RAW.tar`(7.9GB) 다운로드 중 | — | — |
+| 4 | **macrophage 분화** | GSE284047 / figshare 30280333 | ✅ (kkkim, 2026-07-09) | ✅ `concordance_macrophage.md` (지용기, BIOP01-29) | **+0.643** / +0.148 |
+| 5 | mouse skin | GSE140203 (SHARE-seq) | ⏳ **DEFER** — 비-10x → bespoke velocyto + mouse→human ortholog + skin lineage annotation 신규 (최고난도). 원본 `GSE140203_RAW.tar`(7.9GB) 다운로드 중 | — (담당 지용기, **BIOP01-41**) | — |
 
-**순서 보존 요지:** 값 자체는 조직이 멀수록 α가 순서대로 낮아지나(BMMC +0.55 > brain +0.475 > E18 +0.32) **lag은 어디서도 무신호(+0.05~+0.19)** → "α robust / lag fragile"가 데이터셋 넘어 보존.
+**순서 보존 요지:** 값 자체는 조직이 멀수록 α가 순서대로 낮아진다(macrophage +0.643 > BMMC +0.55 > brain +0.475 > E18 +0.32 — macrophage가 HSPC 직계 조혈축이라 최고). 반면 **lag은 어디서도 무신호(+0.05~+0.19)** → "α robust / lag fragile"가 데이터셋 넘어 보존.
+
+> ⚠️ **정직 caveat (macrophage)**: cross lag +0.148의 bootstrap 95%CI는 [+0.027, +0.263]로 ±0.2를 벗어나 **TOST 등가는 아니다**("약한 양수"). 헤드라인 주장은 등가가 아니라 within-dataset **Δρ dissociation** (ρ_α−ρ_lag = **+0.843**, 95%CI [+0.773, +0.912], 0 제외)이므로 서사는 영향받지 않는다. `concordance_macrophage.md` §B·caveat 참조.
 
 ---
 
