@@ -16,7 +16,7 @@
 | `celldancer` | cellDancer(참고 method, 격리) | pytorch-lightning(하드핀) | 불요 |
 | `seqtools` | STAR·sra-tools·velocyto (cross-dataset raw seq 처리) | — | 불요 |
 
-> **명명·위치(2026-07-11):** velocity 메서드 env는 `velo-*` 접두(구 mv/tf/torch). 유틸(정렬·SRA·loom)은 `seqtools`로 통합(구 star+sratools+velocyto). 팀공유 `/opt/envs`=velo-mv·velo-tf·celldancer·seqtools, 개인 `~/miniconda3/envs`=velo-torch·scv-preprocess. `conda run -n <env>`는 envs_dirs로 자동 해소. (BIOP02 `spatialpatho`는 별개, 손대지 않음.)
+> **명명·위치(2026-07-11):** velocity 메서드 env는 `velo-*` 접두(구 mv/tf/torch). 유틸(정렬·SRA·loom)은 `seqtools`로 통합(구 star+sratools+velocyto). 팀공유 `/opt/envs`=velo-mv·velo-tf·velo-torch·celldancer·seqtools(velocity 전부), 개인 `~/miniconda3/envs`=scv-preprocess(협업서버 구동용, jupyter로 팀 접근). `conda run -n <env>`는 envs_dirs로 자동 해소. ※ `/opt/envs`가 컨테이너 간 실제 공유 마운트인지는 팀원 `ls /opt/envs`로 확인 필요(미공유 시 `/workspace`로 이전). (BIOP02 `spatialpatho`는 별개, 손대지 않음.)
 
 ## 사전 준비
 - miniconda 또는 mambaforge. **mamba 권장**(conda solve가 느림): `CONDA=mamba`.
