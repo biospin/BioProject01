@@ -127,7 +127,7 @@ else
   mkdir -p "$VELO_OUT"
   RMSK_ARG=(); [ "$USE_RMSK" = 1 ] && RMSK_ARG=(-m "$RMSK_GTF")
   log "[3] velocyto run 시작 (rmsk=$USE_RMSK, TMPDIR=$TMPDIR)"
-  "$CONDA" run --no-capture-output -n velocyto velocyto run \
+  "$CONDA" run --no-capture-output -n seqtools velocyto run \
       -b "$BCFILE" -o "$VELO_OUT" -e "$SAMPLEID" \
       "${RMSK_ARG[@]}" -@ 8 --samtools-memory 4000 \
       "$BAM" "$REF_GTF" || die "3-velocyto" "velocyto run 실패"
