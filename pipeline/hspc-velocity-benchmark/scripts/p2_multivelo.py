@@ -8,7 +8,7 @@ chromatin model을 fit → gene별 switch time(chromatin/RNA) = chromatin→tran
 (DESIGN §3 shared-graph 공정성). native-WNN ablation은 후속.
 
 실행 (mv env):
-  conda run --no-capture-output -n mv python -u \
+  conda run --no-capture-output -n velo-mv python -u \
       pipeline/hspc-velocity-benchmark/scripts/p2_multivelo.py            # full
   ... p2_multivelo.py --genes 20      # 스모크 테스트(소수 gene, 파이프라인만 검증)
 

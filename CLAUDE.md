@@ -24,7 +24,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 - `scripts/download_data.sh` — GSE209878 다운로드 (MV-1=day0, MV-2=day7). `download_manifest.tsv`(sha256), `P0_provenance.md`.
 - `scripts/p1_build.py` — 통일 전처리(공통 branch). `P1_README.md`, `scripts/check_data.py`.
 - `DESIGN.md` — velocity method head-to-head 벤치마크 = model 단계 method-selection. `REVIEW-methodologist-2026-06-13.md`.
-- `env/` — 프레임워크별 격리 conda env 4종(`scv-preprocess`/`mv`/`torch`/`tf`) + `setup_envs.sh`, `README.md`.
+- `env/` — 프레임워크별 격리 conda env(`scv-preprocess`/`velo-mv`/`velo-torch`/`velo-tf`/`celldancer`) + 유틸 `seqtools`(STAR·sra-tools·velocyto) + `setup_envs.sh`, `README.md`. (2026-07-11 명명: velocity env는 `velo-*` 접두. 팀공유 `/opt/envs`, 개인 `~/miniconda3/envs` 혼재 — `conda run -n <env>`로 해소.)
 - `dataset/` — GSE209878 dataset card.
 - `BASELINE-ALIGNMENT.md` — Harness_Baseline 정합 기록.
 

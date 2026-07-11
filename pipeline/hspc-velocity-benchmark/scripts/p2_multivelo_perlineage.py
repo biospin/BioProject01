@@ -14,7 +14,7 @@ pseudotime 전 구간에서 fit 하므로 progenitor→terminal 분화 trajector
 초기 chromatin 동역학 소실). p2_multivelo.py(전역)와 substrate·파라미터 동일, cell subset만 다름.
 
 실행 (mv env):
-  conda run --no-capture-output -n mv python -u \
+  conda run --no-capture-output -n velo-mv python -u \
       pipeline/hspc-velocity-benchmark/scripts/p2_multivelo_perlineage.py        # full (5 lineage)
   ... p2_multivelo_perlineage.py --genes 20                  # 스모크(소수 gene, 파이프라인만 검증)
   ... p2_multivelo_perlineage.py --lineages Myeloid,Erythroid # 일부 lineage만

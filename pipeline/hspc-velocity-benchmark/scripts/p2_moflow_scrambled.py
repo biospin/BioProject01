@@ -14,7 +14,7 @@ GPU: **CUDA_VISIBLE_DEVICES=1 로 실행** (BIOP01 전용 cuda:1; MoFlow는 devi
 
 실행:
   CUDA_VISIBLE_DEVICES=1 PYTHONPATH=<repo>/vendor/MoFlow/src \
-    conda run --no-capture-output -n torch python -u scripts/p2_moflow_scrambled.py --gpu
+    conda run --no-capture-output -n velo-torch python -u scripts/p2_moflow_scrambled.py --gpu
 출력: results/moflow_scrambled_genes.csv, data/velocity/moflow_scrambled.h5ad, runtime.csv(append)
 """
 from __future__ import annotations

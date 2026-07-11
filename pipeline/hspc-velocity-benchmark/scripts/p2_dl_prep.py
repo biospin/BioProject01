@@ -8,7 +8,7 @@ GPU 머신은 이 산출물만 복사하면 전처리 스킵하고 학습만.
 출력: data/velocity/dl_input_rna.h5ad (Ms/Mu/spliced/unspliced/X_umap),
       data/velocity/dl_input_atac.h5ad (Mc)
 
-실행(CPU 가능): conda run -n torch python pipeline/hspc-velocity-benchmark/scripts/p2_dl_prep.py
+실행(CPU 가능): conda run -n velo-torch python pipeline/hspc-velocity-benchmark/scripts/p2_dl_prep.py
 """
 from __future__ import annotations
 import os

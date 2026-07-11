@@ -1,6 +1,6 @@
 # TensorFlow 계열: CRAK-Velo(UniTVelo 확장) + cellDancer. (PyTorch 계열과 분리.)
 # UniTVelo/TF 버전 민감 — 설치는 iteration 필요(검토필요:). GPU는 TF GPU 빌드 별도.
-name: tf
+name: velo-tf
 channels: [conda-forge, bioconda]
 dependencies:
   - python=3.9            # UniTVelo/TF2 호환 폭이 가장 넓음
@@ -27,5 +27,5 @@ dependencies:
       #   - "git+https://github.com/Nour899/cisTopic.git"  (또는 pycisTopic)
 # ── GPU(본서버 3×A6000): base 설치 성공 확인 후 별도 실행 ──
 #   TF 2.13 = CUDA 11.8 + cuDNN 8.6 계열. conda-forge로 붙이는 게 가장 안전:
-#     mamba install -p /opt/envs/tf -c conda-forge cudatoolkit=11.8 cudnn=8.6
-#   확인: mamba run -p /opt/envs/tf python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+#     mamba install -p /opt/envs/velo-tf -c conda-forge cudatoolkit=11.8 cudnn=8.6
+#   확인: mamba run -p /opt/envs/velo-tf python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"

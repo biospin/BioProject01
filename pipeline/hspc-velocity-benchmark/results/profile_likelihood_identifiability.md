@@ -69,11 +69,11 @@ n=538 gene에서 fixed-nuisance profile likelihood(관심 파라미터 하나만
 ```bash
 cd pipeline/hspc-velocity-benchmark
 # main identifiability (이미 완성 — 재계산 불필요, 재현 시에만):
-conda run --no-capture-output -n mv python -u scripts/p3_profile_likelihood.py
+conda run --no-capture-output -n velo-mv python -u scripts/p3_profile_likelihood.py
 # figure:
-conda run --no-capture-output -n mv python figures/fig05_profile_likelihood.py
+conda run --no-capture-output -n velo-mv python figures/fig05_profile_likelihood.py
 # freed-nuisance 부분 게이트(별도 subset, main CSV 덮어씀 주의):
-conda run --no-capture-output -n mv python -u scripts/p3_profile_likelihood.py --subset 30
+conda run --no-capture-output -n velo-mv python -u scripts/p3_profile_likelihood.py --subset 30
 ```
 
 ---
@@ -143,9 +143,9 @@ the α curvature is significantly larger than the lag curvature (reproduced at t
 ```bash
 cd pipeline/hspc-velocity-benchmark
 # main identifiability (already complete — no recompute needed, only to reproduce):
-conda run --no-capture-output -n mv python -u scripts/p3_profile_likelihood.py
+conda run --no-capture-output -n velo-mv python -u scripts/p3_profile_likelihood.py
 # figure:
-conda run --no-capture-output -n mv python figures/fig05_profile_likelihood.py
+conda run --no-capture-output -n velo-mv python figures/fig05_profile_likelihood.py
 # freed-nuisance partial gate (separate subset, note it overwrites the main CSV):
-conda run --no-capture-output -n mv python -u scripts/p3_profile_likelihood.py --subset 30
+conda run --no-capture-output -n velo-mv python -u scripts/p3_profile_likelihood.py --subset 30
 ```

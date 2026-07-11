@@ -1,5 +1,5 @@
 # MultiVelo(baseline) + scVelo(RNA-only floor). numba+torch(CPU) 기반, GPU 불요.
-name: mv
+name: velo-mv
 channels: [conda-forge, bioconda]
 dependencies:
   - python=3.10

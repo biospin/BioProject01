@@ -27,16 +27,16 @@ MultiVelo switch-time lag)가 lag에 **일치**하고, smooth·저SNR(실제 HSP
   stage0 generate  : env-agnostic. per-grid-cell RNA+ATAC h5ad(Ms/Mu/spliced/unspliced, Mc, connectivities,
                      X_umap) + truth CSV 를 SIM_DIR 에 기록.  (torch env 에서 실행)
   stage1 probe     : **go/no-go gate**. pure-numpy fastdtw c-s estimator 를 W-sweep 에 걸어 식별 corner 존재/위치 확인.
-  stage2a moflow   : conda run -n torch — MoFlow fit → results/sim_positive_control_moflow.csv
-  stage2b multivelo: conda run -n mv    — MultiVelo fit → results/sim_positive_control_multivelo.csv
+  stage2a moflow   : conda run -n velo-torch — MoFlow fit → results/sim_positive_control_moflow.csv
+  stage2b multivelo: conda run -n velo-mv    — MultiVelo fit → results/sim_positive_control_multivelo.csv
   stage3 aggregate : concordance + bootstrap CI + τ-recovery + FDR power → md + csv.
 
 실행:
   python scripts/p5_sim_positive_control.py generate      # (torch env) 합성 h5ad 생성
   python scripts/p5_sim_positive_control.py probe         # gate (fastdtw만; torch)
-  conda run -n torch python scripts/p5_sim_positive_control.py moflow --smoke 15   # 타이밍 스모크
-  conda run -n torch python scripts/p5_sim_positive_control.py moflow
-  conda run -n mv    python scripts/p5_sim_positive_control.py multivelo
+  conda run -n velo-torch python scripts/p5_sim_positive_control.py moflow --smoke 15   # 타이밍 스모크
+  conda run -n velo-torch python scripts/p5_sim_positive_control.py moflow
+  conda run -n velo-mv    python scripts/p5_sim_positive_control.py multivelo
   python scripts/p5_sim_positive_control.py aggregate
 """
 from __future__ import annotations
@@ -280,7 +280,7 @@ def cmd_probe():
 
 
 # ────────────────────────────────────────────────────────────────────────────
-# stage2a moflow — conda run -n torch
+# stage2a moflow — conda run -n velo-torch
 # ────────────────────────────────────────────────────────────────────────────
 def cmd_moflow(smoke=0):
     import scanpy as sc
@@ -333,7 +333,7 @@ def cmd_moflow(smoke=0):
 
 
 # ────────────────────────────────────────────────────────────────────────────
-# stage2b multivelo — conda run -n mv
+# stage2b multivelo — conda run -n velo-mv
 # ────────────────────────────────────────────────────────────────────────────
 def cmd_multivelo(smoke=0):
     import scanpy as sc

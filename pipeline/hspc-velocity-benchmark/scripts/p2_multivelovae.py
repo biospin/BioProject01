@@ -9,7 +9,7 @@ API(welch-lab paper-notebooks 기준): VAEChrom(adata, adata_atac, device, clust
 lag proxy = chromatin opening(alpha_c) 대비 transcription 유도 시점 → P3에서 정의(δ/κ).
 
 실행:
-  conda run -n torch python pipeline/hspc-velocity-benchmark/scripts/p2_multivelovae.py [--genes N] [--gpu]
+  conda run -n velo-torch python pipeline/hspc-velocity-benchmark/scripts/p2_multivelovae.py [--genes N] [--gpu]
 출력: results/multivelovae_genes.csv, data/velocity/multivelovae.h5ad, runtime.csv
 
 ⚠️ scipy<1.14 필요(노트북이 sparse .A 사용). GPU torch는 device='cuda:0'.

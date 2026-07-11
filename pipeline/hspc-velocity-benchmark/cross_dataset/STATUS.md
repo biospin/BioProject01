@@ -134,7 +134,7 @@ heavy-run과 downstream을 나눈다. **핵심: heavy-run은 kkkim 몫, downstre
 ```bash
 cd pipeline/hspc-velocity-benchmark/scripts
 CROSS_DATASET_CONFIG=../cross_dataset/config_human_brain.py CROSS_DATASET_SUFFIX=_human_brain \
-  HDF5_USE_FILE_LOCKING=FALSE conda run --no-capture-output -n mv python -u p2_rna_only.py    # floor
+  HDF5_USE_FILE_LOCKING=FALSE conda run --no-capture-output -n velo-mv python -u p2_rna_only.py    # floor
 #   ...p2_multivelo.py 도 동일 env로. 출력은 자동으로 *_human_brain.csv (HSPC 결과 보호).
 ```
 

@@ -8,7 +8,7 @@
   (3) per-gene lag Spearman ρ (signed & |lag|) + Wilcoxon paired  [MoFlow lag 신뢰도 caveat 동반]
 
 출력: results/scrambled_null_moflow.md 는 사람이 작성(이 스크립트는 숫자만 stdout 으로 방출).
-실행: conda run --no-capture-output -n torch python scripts/p3_scrambled_null_moflow.py
+실행: conda run --no-capture-output -n velo-torch python scripts/p3_scrambled_null_moflow.py
 """
 from __future__ import annotations
 import numpy as np

@@ -81,7 +81,7 @@ if [ -f "$MV_CSV" ] && [ "$(wc -l <"$MV_CSV")" -ge 2 ]; then
 else
   log "[6] p2_multivelo.py (mv env)"
   ( cd "$SCRIPTS" && CROSS_DATASET_CONFIG="$CONFIG" CROSS_DATASET_SUFFIX="$SUFFIX" \
-      "$CONDA" run --no-capture-output -n mv python -u p2_multivelo.py ) \
+      "$CONDA" run --no-capture-output -n velo-mv python -u p2_multivelo.py ) \
     || die "6-mv" "MultiVelo 실패"
   { [ -f "$MV_CSV" ] && [ "$(wc -l <"$MV_CSV")" -ge 2 ]; } || die "6-mv-out" "MultiVelo csv 없음"
 fi
@@ -93,10 +93,10 @@ if [ -f "$VAE_CSV" ] && [ "$(wc -l <"$VAE_CSV")" -ge 2 ]; then
 else
   log "[7] p2_dl_prep.py → p2_multivelovae.py --gpu (torch env, CUDA:1)"
   ( cd "$SCRIPTS" && CROSS_DATASET_CONFIG="$CONFIG" CROSS_DATASET_SUFFIX="$SUFFIX" CUDA_VISIBLE_DEVICES=1 \
-      "$CONDA" run --no-capture-output -n torch python -u p2_dl_prep.py ) \
+      "$CONDA" run --no-capture-output -n velo-torch python -u p2_dl_prep.py ) \
     || die "7-dlprep" "dl_prep 실패"
   ( cd "$SCRIPTS" && CROSS_DATASET_CONFIG="$CONFIG" CROSS_DATASET_SUFFIX="$SUFFIX" CUDA_VISIBLE_DEVICES=1 \
-      "$CONDA" run --no-capture-output -n torch python -u p2_multivelovae.py --gpu ) \
+      "$CONDA" run --no-capture-output -n velo-torch python -u p2_multivelovae.py --gpu ) \
     || die "7-vae" "VAE 실패"
   { [ -f "$VAE_CSV" ] && [ "$(wc -l <"$VAE_CSV")" -ge 2 ]; } || die "7-vae-out" "VAE csv 없음"
 fi

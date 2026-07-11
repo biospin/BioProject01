@@ -9,8 +9,8 @@ VENDOR="$ROOT/vendor"
 
 echo "[1/5] torch env 생성 (miniforge mamba)"
 mamba env create -f "$HERE/torch.yml" || echo "  (이미 있으면 무시)"
-PY="$(conda info --base)/envs/torch/bin/python"
-[ -x "$PY" ] || PY="$HOME/miniforge3/envs/torch/bin/python"
+PY="$(conda info --base)/envs/velo-torch/bin/python"
+[ -x "$PY" ] || PY="$HOME/miniforge3/envs/velo-torch/bin/python"
 
 echo "[2/5] env 보정: setuptools<80(pkg_resources) + fastdtw"
 "$PY" -m pip install -q 'setuptools<80' fastdtw

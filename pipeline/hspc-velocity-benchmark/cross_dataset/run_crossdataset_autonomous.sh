@@ -36,7 +36,7 @@ log "=== autonomous driver 시작 (PID $$, PPID $PPID, SID $(ps -o sid= -p $$ | 
 launch_mv() {
   log "MultiVelo 풀런 launch"
   ( cd "$SCRIPTS" && CROSS_DATASET_CONFIG="$CONFIG" CROSS_DATASET_SUFFIX="$SUFFIX" \
-      HDF5_USE_FILE_LOCKING=FALSE "$CONDA" run --no-capture-output -n mv \
+      HDF5_USE_FILE_LOCKING=FALSE "$CONDA" run --no-capture-output -n velo-mv \
       python -u p2_multivelo.py > "$MV_LOG" 2>&1 ) &
   MV_PID=$!
   log "MultiVelo PID=$MV_PID"

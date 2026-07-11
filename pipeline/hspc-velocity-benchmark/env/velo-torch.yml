@@ -1,6 +1,6 @@
 # PyTorch 계열: MultiVeloVAE + MoFlow. (TensorFlow 계열과 절대 한 env에 두지 말 것.)
 # CPU 기본. GPU는 README의 CUDA 빌드 노트 참고 (1 GPU면 충분).
-name: torch
+name: velo-torch
 channels: [conda-forge]
 dependencies:
   - python=3.10

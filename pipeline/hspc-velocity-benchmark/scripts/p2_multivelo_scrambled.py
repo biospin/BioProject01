@@ -7,7 +7,7 @@ p2_multivelo.py 와 **동일 substrate·동일 fit**, 단 ATAC를 **within-linea
 
 셔플: 각 lineage 내부에서 ATAC 행(cell)을 permute. seed 고정(RANDOM_SEED).
 실행 (mv env, CPU — GPU 미사용 → cisTopic과 병렬 가능):
-  conda run --no-capture-output -n mv python -u scripts/p2_multivelo_scrambled.py        # full(~7h)
+  conda run --no-capture-output -n velo-mv python -u scripts/p2_multivelo_scrambled.py        # full(~7h)
   ... --genes 20    # smoke
 출력: results/scrambled_genes.csv, data/velocity/multivelo_scrambled.h5ad, runtime.csv(append)
 """

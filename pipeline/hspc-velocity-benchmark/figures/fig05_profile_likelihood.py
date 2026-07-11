@@ -10,7 +10,7 @@ Input : results/profile_likelihood_identifiability.csv (+ profile_likelihood_fre
 Output: figures/fig05_profile_likelihood.png  (English labels only; image gitignored)
 
 Run (mv env, needs multivelo for panel D recompute):
-  conda run --no-capture-output -n mv python figures/fig05_profile_likelihood.py
+  conda run --no-capture-output -n velo-mv python figures/fig05_profile_likelihood.py
 """
 from __future__ import annotations
 import sys

@@ -18,4 +18,4 @@ export CUDA_VISIBLE_DEVICES=1
 export PYTHONUNBUFFERED=1
 
 cd "$ROOT/vendor/CRAK-Velo/crak-velo"
-exec conda run --no-capture-output -n tf python -u main.py --config "$CFG" --w "$WIN"
+exec conda run --no-capture-output -n velo-tf python -u main.py --config "$CFG" --w "$WIN"

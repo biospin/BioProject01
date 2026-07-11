@@ -36,9 +36,9 @@ half against the beta/gamma sloppiness (identifiability_dissociation.md) that a
 reviewer would re-run to flatten the alpha peak.
 
 Run (mv env):
-  conda run --no-capture-output -n mv python -u scripts/p3_profile_likelihood.py            # full 538 genes, all-fixed
-  conda run --no-capture-output -n mv python -u scripts/p3_profile_likelihood.py --subset 50 # + freed-nuisance gate on 50 genes
-  conda run --no-capture-output -n mv python -u scripts/p3_profile_likelihood.py --smoke 8   # quick
+  conda run --no-capture-output -n velo-mv python -u scripts/p3_profile_likelihood.py            # full 538 genes, all-fixed
+  conda run --no-capture-output -n velo-mv python -u scripts/p3_profile_likelihood.py --subset 50 # + freed-nuisance gate on 50 genes
+  conda run --no-capture-output -n velo-mv python -u scripts/p3_profile_likelihood.py --smoke 8   # quick
 
 Outputs:
   results/profile_likelihood_identifiability.csv   (per gene: kappa_alpha/lag, ratio, widths, class)

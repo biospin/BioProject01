@@ -17,7 +17,7 @@ lag은 비robust → re-fit마다 크게 흔들려야 한다. 같은 데이터·
   - 추출: fit_alpha_c, fit_alpha, lag=fit_t_sw2−fit_t_sw1. refit별 results/bootstrap_refit/refit_<b>.csv (incremental).
 
 실행 (mv env):
-  conda run --no-capture-output -n mv python -u scripts/p2_multivelo_bootstrap_refit.py            # full B=12
+  conda run --no-capture-output -n velo-mv python -u scripts/p2_multivelo_bootstrap_refit.py            # full B=12
   ... --boot 4 --genes 12 --frac 0.5                                                               # 스모크
 출력: data/velocity/multivelo_bootstrap/refit_<b>.h5ad (gitignore) + results/bootstrap_refit/refit_<b>.csv (tracked)
 """

@@ -102,14 +102,14 @@ cd ~/project/BioProject01/pipeline/hspc-velocity-benchmark/scripts
 
 # MultiVelo (CPU, ~2h)
 HDF5_USE_FILE_LOCKING=FALSE OMP_NUM_THREADS=1 \
-  conda run --no-capture-output -n mv \
+  conda run --no-capture-output -n velo-mv \
   python -u p2_multivelo.py --dataset $DATASET_NAME \
   > /tmp/p2_mv_${DATASET_NAME}.log 2>&1 &
 echo "MultiVelo PID: $!"
 
 # RNA-only floor
 HDF5_USE_FILE_LOCKING=FALSE \
-  conda run --no-capture-output -n mv \
+  conda run --no-capture-output -n velo-mv \
   python -u p2_rna_only.py --dataset $DATASET_NAME \
   > /tmp/p2_rna_${DATASET_NAME}.log 2>&1 &
 ```
@@ -121,7 +121,7 @@ HDF5_USE_FILE_LOCKING=FALSE \
 ```bash
 # HSPC vs 새 dataset lag-sign rank 비교
 HDF5_USE_FILE_LOCKING=FALSE \
-  conda run --no-capture-output -n mv \
+  conda run --no-capture-output -n velo-mv \
   python -u p3_concordance.py --dataset $DATASET_NAME --compare-to hspc \
   > /tmp/p3_${DATASET_NAME}.log 2>&1
 
@@ -136,14 +136,14 @@ cat ~/project/BioProject01/pipeline/hspc-velocity-benchmark/results/concordance_
 ```bash
 # MultiVeloVAE GPU
 HDF5_USE_FILE_LOCKING=FALSE \
-  conda run --no-capture-output -n torch \
+  conda run --no-capture-output -n velo-torch \
   python -u p2_multivelovae.py --dataset $DATASET_NAME --gpu \
   > /tmp/p2_vae_${DATASET_NAME}.log 2>&1 &
 
 # MoFlow GPU
 PYTHONPATH=../ext/MoFlow/src \
   HDF5_USE_FILE_LOCKING=FALSE \
-  conda run --no-capture-output -n torch \
+  conda run --no-capture-output -n velo-torch \
   python -u p2_moflow.py --dataset $DATASET_NAME --gpu \
   > /tmp/p2_moflow_${DATASET_NAME}.log 2>&1 &
 ```

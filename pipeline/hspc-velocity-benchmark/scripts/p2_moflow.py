@@ -9,7 +9,7 @@ sign이 가변이라 DESIGN §4B의 진짜 directional sign check 대상 (MultiV
 
 실행:
   PYTHONPATH=pipeline/hspc-velocity-benchmark/vendor/MoFlow/src \
-    conda run -n torch python pipeline/hspc-velocity-benchmark/scripts/p2_moflow.py [--genes N] [--gpu]
+    conda run -n velo-torch python pipeline/hspc-velocity-benchmark/scripts/p2_moflow.py [--genes N] [--gpu]
 출력: results/moflow_genes.csv, data/velocity/moflow.h5ad, runtime.csv
 """
 from __future__ import annotations
