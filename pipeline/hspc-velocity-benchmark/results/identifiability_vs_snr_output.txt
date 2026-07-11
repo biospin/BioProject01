@@ -1,0 +1,10 @@
+[N] 4-method 공통: 537
+[재현] lag불일치 med=0.317 alpha불일치 med=0.078
+  rho(kappa_lag,lag_disagree)=-0.144 p=1.2e-02
+  rho(kappa_alpha,lag_disagree)=-0.035 p=4.4e-01
+  rho(ratio,lag_disagree)=+0.083 p=1.8e-01
+[SNR분리]
+  단순 rho(kappa_lag,disagree)=-0.144
+  nkeep통제 편상관=-0.069
+  rho(nkeep,disagree)=-0.153  rho(kappa_lag,nkeep)=+0.576
+DONE
