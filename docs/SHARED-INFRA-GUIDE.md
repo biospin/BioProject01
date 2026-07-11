@@ -11,8 +11,8 @@
 
 | 문서 | 위치 | 내용 |
 |---|---|---|
-| **이 가이드** (canonical) | git `docs/SHARED-INFRA-GUIDE.md` + Confluence 하위 | 접속·GPU·env 통합 |
-| 다인 AI 협업 JupyterLab 서버 사용법 | Confluence VC / 44859462 | 접속 정본(본 가이드로 현행화) |
+| **이 가이드** (full canonical) | git `docs/SHARED-INFRA-GUIDE.md` | 접속·GPU·env 통합(전체) |
+| 다인 AI 협업 JupyterLab 서버 사용법 | Confluence VC / 44859462 | 접속·GPU 간결본(이 git 문서로 현행화). ※ Confluence MCP 1000자 cap으로 요약만, 전체는 이 git 문서 |
 | GPU 자원 운용 방안 — A6000 vs RunPod | Confluence VC / 40566786 | 자원 계획·스케줄링 |
 | 서버 변경 + 임베딩 완료 (2026-06-30) | Confluence VC / 46333954 | 서버 이관 기록 |
 | [인프라] 협업 JupyterLab 구축·운영 | Jira SCRUM-5 | 인프라 일감 |
