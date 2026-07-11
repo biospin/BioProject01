@@ -86,8 +86,12 @@ WT 발생 timecourse에서 궤적 확보. multiome이라 GEX+ATAC 쌍 필요(다
 - **ATAC**(설계 필요): 10x Multiome ATAC → 정렬(chromap/cellranger-arc)→fragments→peak/gene-activity + GEX 세포와 barcode 매칭. **cellranger-arc**(GEX+ATAC 조인트, gex_possorted_bam·peak·joint 세포호출 산출)가 표준이나 설치+mm10-arc ref(~10GB)+heavy. vs 수동(STARsolo+chromap+barcode 매칭). → MultiVelo 등이 요구하는 chromatin 입력 형태에 맞춰 결정.
 - 통합 후 P1~P3 concordance(`run_macrophage` 패턴)로 'α-robust/lag-fragile' 재현.
 
-### seqtools env 주의
-aspera-cli를 seqtools에 설치했다 제거함 → scipy 복구됨(STAR·fasterq-dump 정상). velocyto.py는 llvmlite lib 이슈 잔존(full run엔 불필요, 필요시 numba/llvmlite 재설치). aria2c=별도 `/opt/envs/dltools`.
+### ⚠️ 도구 경로 (2026-07-12 정정)
+- **aria2c + fasterq-dump/prefetch = `/opt/envs/dltools`** (다운로드 전용 env). STAR·velocyto·samtools = `/opt/envs/seqtools`. nnz = scv-preprocess python.
+- **주의**: aspera-cli를 seqtools에 설치했다 remove했더니 **sra-tools까지 연쇄 삭제**됨(fasterq-dump 사라짐) → dltools에 재설치. seqtools의 scipy는 복구, velocyto.py는 llvmlite 이슈 잔존(full run엔 불필요).
+
+### 밤샘 1차 실패·복구 (2026-07-12 02:37)
+1차 밤샘(23:00~)이 2/8에서 깨짐: ①다운 3~8번 00:44경 transient 네트워크 blip으로 실패 ②fasterq-dump 부재(위 sra-tools 삭제) ③드라이버가 실패해도 DL_DONE 조기 생성 → GEX 오케스트레이터 빈 결과. → 드라이버 수정(완결성 게이트: 전부 complete여야 DL_DONE, 파일당 5회 재시도, 미완결시 DL_PARTIAL)·sra-tools 복구·sentinel 정리 후 재기동. 재기동 속도 ~25MB/s(경쟁 없어 빠름).
 
 **다음(heavy, 사용자 승인):** full run = 전 GEX run(~400GB) STARsolo Velocyto(또는 cellranger-arc) → 세포 화이트리스트 교집합 → P1~P3 concordance(`run_macrophage` 패턴)로 'α-robust/lag-fragile' 재현 검정. 5번째는 선택(4-vs-4+profile-likelihood로 이미 충분), priming 극대(gastrulation) 헤드라인 강화용.
 
