@@ -75,6 +75,22 @@ WT 발생 timecourse에서 궤적 확보. multiome이라 GEX+ATAC 쌍 필요(다
 - **재개 확인:** `tail -20 dl_fullB.log; cat DL_PROGRESS; ls DL_DONE`. 중단 시 스크립트 재실행(idempotent, 완료분 skip).
 - Phase1 aria2c 다운 → Phase2 fasterq-dump --split-files -e8 변환.
 
+### 🌙 밤샘 자율 실행 상태 + 재개 (2026-07-12 05:xx, 3 프로세스 detached)
+```
+[147269] DL 8/8 완료 → fasterq 변환(dltools) 진행
+[147295] GEX STARsolo Velocyto+QC ← DL_DONE 대기 → GEX_SOLO_DONE에서 멈춤(ATAC는 수동)
+[159402] 결과 watcher → 각 단계 완료 시 RESULTS_SUMMARY.md에 결과+해석 자동 append
+```
+**재개 확인(다음 세션 최우선):**
+```
+cat /home/kkkim/data/gse205117_fullB/RESULTS_SUMMARY.md      # 자동 요약된 결과·해석
+ls  /home/kkkim/data/gse205117_fullB/{DL_DONE,GEX_SOLO_DONE,DL_PARTIAL}
+cat /home/kkkim/data/gse205117_fullB/gex_solo/QC_REPORT.txt  # 4 GEX 런 세포수·nnz
+```
+- 중단 시: `setsid bash cross_dataset/dl_gse205117_fullB.sh …`(완결분 skip) / `run_gse205117_gex_solo.sh`(DL_DONE 대기) / `watch_gse205117_results.sh` 각각 재실행.
+- **핵심 다음 작업 = ATAC 처리(cellranger-arc) → GEX+ATAC 통합 → 다method fit → concordance를 `manuscript/PREREGISTRATION_gse205117.md` 6개 예측에 대조**(통과/실패 그대로, 사후구제 금지). GEX Velocyto는 RNA 측만이라 lag/α cross-method 검정엔 ATAC 필수.
+- 논문 전략(방어 가능선)·사전등록·SNR 검정 = 커밋 `d52416c` 봉인. 전략 상세 `manuscript/STRATEGY_2026-07_elevation.md`.
+
 ### 후속 자동화 (무인 연쇄, 2026-07-12 기동)
 **`cross_dataset/run_gse205117_gex_solo.sh`** (setsid detached, PID 142581) — **DL_DONE 대기 → GEX 4런 STARsolo Velocyto(full, CB_UMI_Simple, CellRanger2.2 세포필터) → filtered 세포 nnz QC → GEX_SOLO_DONE**.
 - 확인: `cat /home/kkkim/data/gse205117_fullB/GEX_SOLO_PROGRESS; ls GEX_SOLO_DONE; cat gex_solo/QC_REPORT.txt`.
