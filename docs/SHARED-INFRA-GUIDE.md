@@ -43,7 +43,10 @@
 ```bash
 bash ~/start_collab_jupyter.sh     # 8899 포트, --ip=0.0.0.0, notebook-dir=~/collab_workspace
 ```
-스크립트가 **kkkim 컨테이너 IP**(`hostname -i`)를 출력함 → 팀원 터널 목적지로 사용.
+- 스크립트가 **kkkim 컨테이너 IP**(`hostname -i`)를 출력함 → 팀원 터널 목적지로 사용.
+- **`setsid`로 완전 detach** → SSH 끊겨도(SIGHUP) 서버 유지. tmux 불필요.
+- **중복 기동 가드**: 이미 8899에 떠 있으면 skip. 재시작하려면 `pkill -f 'jupyter lab.*8899'` 후 재실행.
+- 로그: `tail -f /tmp/collab_jupyter.log`
 
 ### 2.2 접속 (팀원 각자 로컬 PC) — ⚠️ 핵심
 ```bash
