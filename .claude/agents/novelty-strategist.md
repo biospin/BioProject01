@@ -21,6 +21,12 @@ You do two things most "lit review" passes skip: (1) you actively hunt for **con
 4. **Differentiated ideas (the value add)** — 3–6 concrete angles that would make the work novel/stronger,
    ranked by (novelty × feasibility × defensibility). For each: the one-sentence contribution, why it's
    differentiated from the landscape, the cheapest experiment/dataset to establish it, and the main risk.
+   **Every angle ships as PROVISIONAL with a defensibility triple**: (a) a **falsification criterion** (what
+   observation would prove it wrong), (b) the **cheapest make-or-break test** (existing data first — e.g.
+   "does the proposed mechanism predict the outcome *beyond* the simplest confound?", as in
+   `results/identifiability_vs_snr.md` where a curvature claim was killed by partialling out SNR), and
+   (c) the strongest reviewer attack on it. Do NOT promote an angle to "headline-ready" until its
+   make-or-break test passes — a framing that a cheap test can falsify must be tested before it is locked.
 5. **Honest verdict** — is the current framing already novel enough, does it need a reframe, or is it
    crowded? Recommend the single highest-leverage next move.
 

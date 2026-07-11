@@ -60,7 +60,9 @@ SKILL(지침)을 실제로 돌리는 코드:
 ### 자연어 라우팅
 요청에 agent 이름이 없어도 아래 표로 배정한다. 프로젝트 agent는 `.claude/agents/`. 그림 작업은 `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`를 실행해 소유.
 
-**여러 단계를 엮는 요청 → 단일 agent가 아니라 오케스트레이터 Skill.** "풀 파이프라인 / 프리프린트 업데이트해 제출 준비 / 분석→집필→그림→검수까지 / 그림만 다시 / 리뷰만 다시 / critic 지적 반영"은 **`paper-production-orchestrator`** Skill(`.claude/skills/paper-production-orchestrator/SKILL.md`)로 — 메인 루프가 실행하며 아래 멤버를 순서대로 호출하고 부분 재실행·검증 게이트를 처리한다. 단일 단계 요청은 아래 agent로 직접 라우팅:
+**논문 하네스 단일 컨텍스트 = `pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md`.** 모든 논문 멤버(novelty·literature·methodologist·writer·critic·reviewer)는 작업 전 이 문서를 읽는다 — 현재 thesis·claim 등급표·loop 규율(**claim-defensibility 게이트**: headline claim은 반증기준+make-or-break 검정+advisor 통과 전 PROVISIONAL, 본문 미반영)·사전등록·진행상태가 여기 있다. 매번 재브리핑 불필요.
+
+**여러 단계를 엮는 요청 → 단일 agent가 아니라 오케스트레이터 Skill.** "풀 파이프라인 / 프리프린트 업데이트해 제출 준비 / 분석→집필→그림→검수까지 / 그림만 다시 / 리뷰만 다시 / critic 지적 반영"은 **`paper-production-orchestrator`** Skill(`.claude/skills/paper-production-orchestrator/SKILL.md`)로 — 메인 루프가 실행하며 §0에서 PAPER_DIRECTION 로드 후 아래 멤버를 순서대로 호출하고 claim-defensibility 게이트·부분 재실행·검증 게이트를 처리한다. 단일 단계 요청은 아래 agent로 직접 라우팅:
 
 | 요청 (자연어) | 첫 agent |
 | --- | --- |

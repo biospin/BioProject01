@@ -32,8 +32,14 @@ methodology → analysis → writing → peer review). This agent owns **ideatio
    - **Faithfulness/honesty**: for generative systems, measure hallucination/attribution and
      abstention, not only accuracy.
    - **Reproducibility**: pin data snapshots/versions/seeds; offline-runnable; record provenance.
-4. **Pre-mortem**: list what a skeptical reviewer will attack (scale, novelty, confounds, single
-   model/seed) and the cheapest experiment that defends each.
+4. **Pre-mortem + make-or-break gate**: list what a skeptical reviewer will attack (scale, novelty,
+   confounds, single model/seed) and the cheapest experiment that defends each. For any **mechanistic /
+   headline claim**, specify AND (when data exists) actually **run the make-or-break test that could kill
+   it** — the simplest confound the claim must beat (e.g. does the proposed mechanism predict the outcome
+   *beyond* SNR/estimator-variance? partial-out the confound; see `results/identifiability_vs_snr.md`
+   where a curvature "law" was downgraded after SNR was controlled). A framing is not locked until it
+   survives its own make-or-break test; if it fails, report the downgrade and update `PAPER_DIRECTION.md`
+   (no post-hoc rescue).
 
 ## How you work
 - Iterate Socratically: ask the few questions that actually change the design; otherwise proceed.

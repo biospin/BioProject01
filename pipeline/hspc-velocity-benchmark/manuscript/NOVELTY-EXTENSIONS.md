@@ -1,5 +1,9 @@
 # Novelty Extensions — post-4-dataset-replication (highest-leverage additions)
 
+> ⚠️ **2026-07-12 loop 피드백 (claim-defensibility 게이트 결과 — 이 문서의 #1 각도가 검정됨):**
+> 아래 TL;DR·§1이 밀었던 **"lag는 non-identifiable"의 강한(discovery급) 버전** — 즉 "profile-likelihood 곡률(식별가능성)이 재현성을 SNR 넘어 예측한다" — 은 make-or-break 검정에서 **반증됨**: ρ(κ_lag, cross-method 불일치)=−0.14(약함), depth 통제 후 −0.07(붕괴), 곡률↔depth 공선성 0.58 (`results/identifiability_vs_snr.md`, N=537). → **강한 법칙 격상 폐기**, "lag는 저SNR+sloppy(식별가능성 얽힘)"의 **BOUNDED** 버전으로 하향. 헤드라인은 재현성 격차 + **2층 구분(within-method fit자신감 ≠ cross-method 신뢰성)** + velocity 신뢰 결정지도로 이동. 최신 권위 = `PAPER_DIRECTION.md`·`STRATEGY_2026-07_elevation.md`. (아래 원문은 2026-07-07 시점 기록으로 보존 — 사후 구제 아님, 검정으로 갱신됨.)
+
+
 > novelty-strategist deliverable. **Extends** `manuscript/novelty_strategy.md` (2026-07-05) — does not
 > repeat the landscape. Trigger: the 4-dataset replication (HSPC + human_brain + E18 mouse brain + human
 > BMMC) is COMPLETE (`results/FINDINGS.md` §7) and the 2nd causal control (MoFlow ATAC-shuffle) closed
