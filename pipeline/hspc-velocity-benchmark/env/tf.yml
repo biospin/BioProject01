@@ -11,12 +11,21 @@ dependencies:
   - anndata
   - pip
   - pip:
-      - tensorflow[and-cuda]  # GPU 빌드(본서버 3×A6000). CPU만이면 'tensorflow'.
+      # ⚠️ tensorflow[and-cuda] 금지: 'and-cuda' extra는 TF>=2.14에만 존재하는데
+      #    unitvelo/celldancer가 TF<2.14로 묶어 pip이 무한 backtracking(설치 헛돎, 2026-07-11 확인).
+      #    → TF 버전 고정 + [and-cuda] 제거. base 설치 통과 후 GPU는 별도 확보(파일 하단 주석).
+      - tensorflow==2.13.*   # unitvelo 호환대(TF2.11~2.13). CUDA 11.8 계열.
       - unitvelo           # CRAK-Velo의 base
-      - celldancer         # RNA-only relay 계보 reference (TF 기반)
+      # ⚠️ celldancer 제거(2026-07-11): TF 기반 아님 — 실제로는 pytorch-lightning 기반이고
+      #    numpy==1.20.3·pandas==1.3.4·scipy==1.7.2·sklearn==1.0.1·skimage==0.19.2·pl==1.5.2를
+      #    전부 하드핀 → scanpy/tf/unitvelo와 공존 불가. 전용 env로 분리: env/celldancer.yml.
       # ⚠️ CRAK-Velo는 pip 설치 불가 — repo에 setup.py/pyproject.toml 없음(2026-06-30 확인).
       #    MoFlow와 동일하게 clone + PYTHONPATH로 사용:
       #      git clone https://github.com/StatBiomed/CRAK-Velo.git vendor/CRAK-Velo
       #      export PYTHONPATH=$PWD/vendor/CRAK-Velo/src   (실제 패키지 경로는 repo 구조 확인)
       # CRAK-Velo는 cisTopic 의존 — 무거움. 필요 시:
       #   - "git+https://github.com/Nour899/cisTopic.git"  (또는 pycisTopic)
+# ── GPU(본서버 3×A6000): base 설치 성공 확인 후 별도 실행 ──
+#   TF 2.13 = CUDA 11.8 + cuDNN 8.6 계열. conda-forge로 붙이는 게 가장 안전:
+#     mamba install -p /opt/envs/tf -c conda-forge cudatoolkit=11.8 cudnn=8.6
+#   확인: mamba run -p /opt/envs/tf python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
