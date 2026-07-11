@@ -31,12 +31,24 @@ CONDA=mamba bash .../env/setup_envs.sh mv                        # 하나만, ma
 4. `tf` — CRAK-Velo/UniTVelo. **`tensorflow[and-cuda]` 쓰지 말 것**(extra는 TF≥2.14에만 있어 무한 backtracking) → `tensorflow==2.13.*` 고정, GPU는 아래 cudatoolkit로 별도.
 5. `celldancer` — 전용 격리 env(`celldancer.yml`). tf와 절대 합치지 말 것(numpy 하드핀 충돌).
 
-## GPU (1대 가용 — §7b)
-- 기본 yml은 **CPU wheel**. 11k cells는 CPU로 충분(MultiVelo는 GPU 미지원).
-- GPU 쓸 때만:
-  - torch: `pip install torch --index-url https://download.pytorch.org/whl/cu121` (CUDA 버전 맞게)
-  - tf: **`tensorflow[and-cuda]` 금지**(unitvelo가 TF<2.14로 묶어 extra 미제공 → 무한 backtracking). TF2.13 고정 후 `mamba install -p /opt/envs/tf -c conda-forge cudatoolkit=11.8 cudnn=8.6`.
-- 1 GPU를 `torch`·`tf` env가 순차 점유. bootstrap 반복이 CPU로 비현실적일 때만 GPU.
+## GPU 사용법 (팀 공용 — 본서버 3×RTX A6000, 48GB each)
+
+### tf env — GPU 설정 완료(2026-07-11). 팀원 누구나 바로 사용:
+```bash
+conda activate /opt/envs/tf          # 공용 경로 활성화(자기 env 목록에 없어도 -p 경로로 됨)
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"   # A6000 3장 나오면 정상
+```
+- **`conda activate`만으로 GPU 자동 인식** — `activate.d/zz_cuda_ld.sh` 훅이 `LD_LIBRARY_PATH`를 자동 설정(수동 export 불필요). cudatoolkit 11.8 + cudnn 8.8.0 내장.
+- ⚠️ **`tensorflow[and-cuda]` 금지**(unitvelo가 TF<2.14로 묶어 extra 미제공 → 무한 backtracking). TF2.13 고정 후 `mamba install -p /opt/envs/tf -c conda-forge cudatoolkit=11.8 cudnn=8.8.0`으로 붙였음.
+
+### 여러 명이 3장 나눠 쓰는 예절(중요):
+```bash
+export CUDA_VISIBLE_DEVICES=0        # 자기 GPU 1장만 지정(nvidia-smi로 빈 카드 확인 후)
+export TF_FORCE_GPU_ALLOW_GROWTH=true # TF가 카드 메모리 전량 선점하지 않게(안 하면 48GB 통째 독점)
+```
+- TF는 기본적으로 **보이는 GPU 전부 + 메모리 전량**을 잡음 → 반드시 `CUDA_VISIBLE_DEVICES`로 카드 지정. `nvidia-smi`로 빈 카드 먼저 확인.
+- torch env(MultiVeloVAE/MoFlow) GPU 쓸 때: `pip install torch --index-url https://download.pytorch.org/whl/cu121`(별도, 아직 CPU wheel).
+- 참고: 11k cells는 CPU로도 충분(MultiVelo는 GPU 미지원). bootstrap 대량 반복 때만 GPU 권장.
 
 ## 검증 + lock (재현성)
 ```bash
