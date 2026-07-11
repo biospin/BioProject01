@@ -75,6 +75,12 @@ WT 발생 timecourse에서 궤적 확보. multiome이라 GEX+ATAC 쌍 필요(다
 - **재개 확인:** `tail -20 dl_fullB.log; cat DL_PROGRESS; ls DL_DONE`. 중단 시 스크립트 재실행(idempotent, 완료분 skip).
 - Phase1 aria2c 다운 → Phase2 fasterq-dump --split-files -e8 변환.
 
+### 후속 자동화 (무인 연쇄, 2026-07-12 기동)
+**`cross_dataset/run_gse205117_gex_solo.sh`** (setsid detached, PID 142581) — **DL_DONE 대기 → GEX 4런 STARsolo Velocyto(full, CB_UMI_Simple, CellRanger2.2 세포필터) → filtered 세포 nnz QC → GEX_SOLO_DONE**.
+- 확인: `cat /home/kkkim/data/gse205117_fullB/GEX_SOLO_PROGRESS; ls GEX_SOLO_DONE; cat gex_solo/QC_REPORT.txt`.
+- ⚠️ **ATAC 처리·세포통합·P1~P3는 자동화 안 함**(설계·검증 필요, 미검증 heavy 무인실행 방지) → GEX_SOLO_DONE 리포트에서 멈춤. 다음 세션에 ATAC(cellranger-arc/chromap) 설계부터.
+- nnz는 scv-preprocess python(scipy 정상) 사용.
+
 ### 다음: 처리 파이프라인 설계 (다운 완료 후)
 - **GEX**(검증됨): fasterq-dump R1(barcode)+R2(cDNA) → STARsolo CB_UMI_Simple + Velocyto → spliced/unspliced.
 - **ATAC**(설계 필요): 10x Multiome ATAC → 정렬(chromap/cellranger-arc)→fragments→peak/gene-activity + GEX 세포와 barcode 매칭. **cellranger-arc**(GEX+ATAC 조인트, gex_possorted_bam·peak·joint 세포호출 산출)가 표준이나 설치+mm10-arc ref(~10GB)+heavy. vs 수동(STARsolo+chromap+barcode 매칭). → MultiVelo 등이 요구하는 chromatin 입력 형태에 맞춰 결정.
