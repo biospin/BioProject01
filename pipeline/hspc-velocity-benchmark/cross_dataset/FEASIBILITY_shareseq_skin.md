@@ -1,5 +1,27 @@
 # Phase 0 Feasibility — BIOP01-41 SHARE-seq mouse skin (GSE140203, Ma et al. 2020 Cell)
 
+## 🔴 최종 판정 (2026-07-11): **NO-GO — 데이터셋 폐기.** 대체 = GSE205117 (mouse gastrulation)
+
+> 이 문서 이하 전체는 **이력 보존용**이다. 게이트가 실제로 실행됐고, **실패했다.**
+>
+> **실행 결과 (kkkim 서버, 정본 경로 velocyto-on-BAM 완주)**
+> - barcode: **정상** — 0 reads skipped, 50,671 cells. (내가 우려한 "SRA barcode 손상"은 **사실이 아니었다.**)
+> - GTF 정합: **정상** — BAM/GTF 모두 mm10 chr-prefixed.
+> - **spliced nnz 0.02% / unspliced 0.03%** (chr1 희석 보정해도 ~0.56%), per-cell spliced ~14.5개.
+> - **unspliced > spliced** — 3′ 화학의 정상 패턴과 어긋남.
+> → **velocity 신호 자체가 없다.** 파이프라인 실패가 아니라 **데이터 품질 사유의 NO-GO.**
+>
+> **⚠️ 이 문서에서 반드시 가져갈 교훈 2개**
+> 1. **"SRA barcode 손상 → NO-GO"는 거짓 경보였다.** 그 판정을 낳은 STARsolo-from-FASTQ 경로 자체가 틀렸고(비연속 3×8bp barcode에 `CB_UMI_Simple` 연속 파라미터), 이 문서가 경고했던 바로 그 함정에 실제로 빠졌다. **경로가 틀리면 실패 원인을 데이터 탓으로 오독한다.**
+> 2. **nnz 절대 임계(macrophage 35.6%)는 depth-confounded 지표다.** 서브셋·부분 염색체에 그대로 쓰면 안 된다 — GSE205117 20M 서브셋에서 실제로 거짓 NO-GO를 낼 뻔했다. **feasibility는 unspliced/spliced 비율(건강 ~0.3–0.4) + barcode 매칭률 + mapping률로 판정하고, nnz는 같은 depth끼리만 비교한다.**
+>    (내가 게이트 요청 시 "35.6%는 참조값이지 합격선이 아니다"라고 단서를 달았던 지점이 실제 함정으로 드러난 것.)
+>
+> **살아남은 판정**: 블로커 2(mouse→human ortholog = E18 uppercase 매핑 재사용)·3(provider cell-type 라벨 사용)은 **여전히 유효**하며, 대체 데이터셋 GSE205117(mouse)에 그대로 적용된다.
+>
+> 대체 후보 선정·preflight 근거: `CROSSDATASET5_skin-vs-gse205117.md`. 사전등록: `../manuscript/PREREGISTRATION_gse205117.md`.
+
+---
+
 > Literature-scout deliverable. cross-dataset 재현 5번째 후보 데이터셋의 착수 타당성 조사.
 > 조사일 2026-07-10. 웹 조사 + 로컬 코드 읽기만 수행(데이터 다운로드·파이프라인 실행·commit 없음).
 > 근거 URL은 각 절 말미와 문서 끝 Sources에. **검증 못 한 것은 "미확인"으로 표기**.

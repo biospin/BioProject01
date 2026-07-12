@@ -47,14 +47,19 @@ heavy-run과 downstream을 나눈다. **핵심: heavy-run은 kkkim 몫, downstre
 | 2 | E18 mouse brain | 10x embryonic | ✅ | ✅ `concordance_e18_mouse_brain.md` | +0.32 / +0.10 |
 | 3 | human BMMC | GSE194122 | ✅ | ✅ `concordance_GSE194122_bmmc.md` | +0.55 / +0.05 |
 | 4 | **macrophage 분화** | GSE284047 / figshare 30280333 | ✅ (kkkim, 2026-07-09) | ✅ `concordance_macrophage.md` (지용기, BIOP01-29) | **+0.643** / +0.148 |
-| 5 | mouse skin | GSE140203 (SHARE-seq) | 🔒 **CONDITIONAL-GO — 게이트 미해제** (Phase 0 완료, `FEASIBILITY_shareseq_skin.md`) | — (담당 지용기, **BIOP01-41**) | — |
+| — | ~~mouse skin~~ | GSE140203 (SHARE-seq) | ❌ **NO-GO 확정** (velocity 신호 부족, 아래) | 해당 없음 | — |
+| **5** | **mouse gastrulation** (대체 채택) | **GSE205117** (PRJNA843939) | 🔄 preflight **GO 확정** → full-B(4시점) 다운·GEX STARsolo 진행 중 (kkkim) | ⏳ 대기 (지용기, **BIOP01-41**) | — |
 
-> **#5 게이트 (2026-07-10 저녁 갱신 — 경로 확정):** GEO supplementary에는 spliced/unspliced가 없다(BAM·fastq 0건, UMI count matrix뿐). 그러나 **SRA/ENA deposit에는 있다** — kkkim 양성대조 + 지용기 ENA 독립 확인:
-> `SRR10428407`(=GSM4156608 skin RNA, PRJNA588784, 308.7M reads)의 `submitted_ftp`에 **저자 제작 mm10 coordinate-sorted BAM `skin.late.anagen.rna.norg.bam`(21GB) + `.bai`** 가 있고, **barcode는 read 이름에 선디코딩**돼 있다(`..._R1.44,R2.50,R3.23,P1.55_ATAATCAAGT` = 3라운드 인덱스 + P1 + 10bp UMI). 99bp index read는 deposit에 없다.
-> → **경로 = velocyto-on-BAM** (macrophage/BMMC 전례). pysam 재태깅(read 이름 → `CB:Z`/`UB:Z`) → `velocyto run`(mm10 GTF) → loom. **STAR 재정렬 없음 → mouse index 30GB RAM 병목 소멸.**
-> → ❌ 폐기: "SRA barcode 손상" 리스크(RNA엔 무관) · STARsolo-from-FASTQ 재조립 경로 · `--soloType CB_UMI_Simple`(비연속 조합 barcode에 연속 파라미터 → 거짓 NO-GO 유발).
-> → **남은 진짜 게이트 = spliced/unspliced nnz**(macrophage 실측 35.6% 참조). 1개 염색체 스모크로 확인 후 heavy-run.
-> 블로커 2(mouse→human ortholog: E18 `.index.str.upper()` verbatim 재사용)·3(GEO가 `GSM4156597_skin_celltype.txt.gz` 직접 배포)은 **해소됨**. 값어치: priming best case → "priming이 가장 강한 곳에서도 lag fragile한가"가 최강 헤드라인 후보.
+> **#5 skin NO-GO 확정 (2026-07-11) — 사유 정정에 주의.**
+> ❌ **틀린 사유**: "SRA에 barcode read 부재". 이건 STARsolo-from-FASTQ 경로에서 나온 판정인데, 그 경로 자체가 잘못이었다(SHARE-seq 3×8bp 비연속 barcode에 `CB_UMI_Simple` 연속 파라미터 → **거짓 NO-GO**). `FEASIBILITY_shareseq_skin.md`가 경고한 함정에 실제로 빠진 사례.
+> ✅ **맞는 사유**: 정본 경로(velocyto-on-BAM, 저자 BAM, barcode read-이름 선디코딩)를 **완주했고 barcode는 정상**(0 skip, 50,671 cells)·**GTF 정합도 정상**(mm10 chr-prefixed 일치). 그럼에도 **spliced nnz 0.02% / unspliced 0.03%**(chr1 희석 보정해도 ~0.56%), per-cell spliced ~14.5 → **velocity 신호 자체가 얕다.** 게다가 unspliced > spliced로 3′ 화학의 정상 패턴과 어긋난다. → **데이터 품질 사유의 NO-GO**(우리가 못 해서가 아님). Methods에 이 사유로 기재.
+>
+> **⚠️ 방법론 교훈 (다른 데이터셋에도 적용):** **nnz 절대 임계(macrophage 35.6%)는 depth-confounded** — 서브셋·부분 염색체엔 그대로 쓰면 안 된다(GSE205117 20M 서브셋에서 실제로 거짓 NO-GO를 유발할 뻔함). feasibility 판정 지표는 **unspliced/spliced 비율(건강 범위 ~0.3–0.4) + barcode 매칭률 + mapping률**로 본다. nnz는 **같은 depth끼리만** 비교.
+>
+> **#5 대체 = GSE205117 (mouse gastrulation E7.5–8.75, ~59k cells).** 10x Multiome이라 skin 실패요인이 전부 해소된다: R1 = 16bp CB + 12bp UMI(**연속**) + R2 90bp cDNA → STARsolo `CB_UMI_Simple`+`Velocyto` 직산출.
+> preflight 실측: **barcode 유효 100% · genome mapping 95.1% · unspliced/spliced 0.388(건강)**, nnz는 20M→60M에서 2.2배 비례 상승 → 낮은 nnz가 depth 아티팩트임을 입증. **GO 확정.**
+> mouse이므로 cross-dataset은 E18과 동일한 uppercase ortholog 매핑 재사용.
+> **결과는 `manuscript/PREREGISTRATION_gse205117.md`의 봉인된 6개 예측에 그대로 대조한다(사후 구제 금지).** 채점기 = `p3_prereg_gse205117.py`.
 
 **순서 보존 요지:** 값 자체는 조직이 멀수록 α가 순서대로 낮아진다(macrophage +0.643 > BMMC +0.55 > brain +0.475 > E18 +0.32 — macrophage가 HSPC 직계 조혈축이라 최고). 반면 **lag은 어디서도 무신호(+0.05~+0.19)** → "α robust / lag fragile"가 데이터셋 넘어 보존.
 
