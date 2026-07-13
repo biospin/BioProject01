@@ -19,6 +19,9 @@
 | 5 | **per-gene 재현 격차** | lag 불일치 median > α 불일치 median | HSPC 0.317 vs 0.078 |
 | 6 | **priming 극대에서도 fragile** | gastrulation(강한 lineage priming)에서 #2·#3 성립 | 헤드라인 강화 |
 
+> **결정 로그 — MoFlow arm 포함 확정 (2026-07-13, kkkim, 어떤 fit도 산출 전).**
+> 예측5의 per-gene lag 불일치는 **HSPC 원정의(MultiVelo vs MoFlow)** 로 채점한다 — MV vs MultiVeloVAE 치환이 아니다(α는 원정의대로 MV vs VAE). `p2_moflow.py`로 `results/moflow_genes_gse205117.csv`를 산출하며, 채점기(`cross_dataset/p3_prereg_gse205117.py`)가 이 파일을 감지하면 자동으로 원정의로 채점한다(코드 분기 이미 존재). 이 결정은 GEX/ATAC fit이 하나도 없는 시점에 기록되어 held-out 무결성을 유지한다.
+
 ## 반증 기준 (틀리면 틀렸다고 보고 — 사후 구제 금지)
 - **lag cross-method ρ ≥ 0.50** → "priming best-case에서도 fragile" **실패**. lag가 재현되면 우리 핵심 주장이 이 시스템에서 깨짐 → 정직 보고, 조건 좁혀 재서술(사후 α<0.5로 임계 낮추기 금지).
 - **α cross-method ρ < 0.30** → α robustness 실패(전체 논지 약화) → 정직 보고.
