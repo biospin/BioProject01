@@ -1,7 +1,18 @@
 # PROGRESS-LIVE — 진행 중 작업 추적 보드
 
 > **목적**: 이 세션에서 백그라운드로 도는 작업이 중단/다른 창 전환돼도 상태를 잃지 않도록, 단계마다 실시간 갱신. 새 세션은 이 파일 + `HANDOFF.md`만 읽으면 이어받을 수 있다.
-> 최종 갱신: **2026-07-05** (논문 근거 보강 — 3트랙 병렬 실행 중)
+> 최종 갱신: **2026-07-13** (아래 §2026-07-13 블록). 그 아래는 2026-07-05~06 이력.
+
+## 🟢 진행 중 (2026-07-13) — 설계문서 커밋 + GSE205117 재개 + STEP2 착수
+
+| 항목 | 상태 | 근거·경로 |
+|---|---|---|
+| **① 설계문서 2건 커밋·push** | ✅ 완료 | `78b2b97` — WEEK7-PARK-DESIGN-GAP-REVIEW.md + STEP2-CHROMATIN-EXPLAINS-KINETICS-DESIGN.md (미실행 protocol, 팀 검토 전제). origin/kkkim-pipeline push 완료 |
+| **② skin(GSE140203) 재개?** | ❌ **재개 대상 아님** | 원격 `41cc740`(2026-07-12)에서 **NO-GO 확정** — velocyto-on-BAM 완주했으나 spliced nnz 0.02%로 velocity 신호 부족(데이터 품질 사유). 낡은 `SKIN_PREFLIGHT_PROGRESS`는 NO-GO 이전 파일. **대체 = GSE205117**(아래 ③) |
+| **③ GSE205117(mouse gastrulation) heavy-run 재개** | 🔄 GEX STARsolo 진행 | 다운·변환 DONE(8런). GEX solo E7.5 완료, **E8.0 mapping 중 드라이버 사망(13:10, 재부팅 아님)** → E8.0 미완 STARtmp 제거 후 **재기동**. 드라이버 **PID 8400(PPID=1 검증)**, STAR 자식 8513. 로그 `/home/kkkim/data/gse205117_fullB/{gex_solo.log,star_gex.log}`, 진행 `GEX_SOLO_PROGRESS`, 완료=`GEX_SOLO_DONE` |
+| **④ STEP2(GSE70677 크로마틴) 분석 착수** | 🔄 백그라운드 에이전트 | hspc-velocity-analyst 발행(exploratory). 산출 `results/step2/` 전용, **FINDINGS 헤드라인 미접촉**(박상준·팀 게이트). |
+
+**③ GSE205117 이어받기(재로그인 시):** GEX 4런(E7.5/E8.0/E8.5/E8.75) 각 mapping ~13h → **잔여 3런 multi-day.** 드라이버 죽었고 `GEX_SOLO_DONE` 없으면 재기동: 진행 중 SRR의 미완 `gex_solo/<SRR>/` 디렉토리(STARtmp 포함) **먼저 제거** 후 `cd /home/kkkim/data/gse205117_fullB && setsid bash <repo>/cross_dataset/run_gse205117_gex_solo.sh </dev/null >>gex_solo.log 2>&1 &`. `Gene/Summary.csv` 있는 런은 자동 skip. **재기동 후 반드시 `ps -ef|grep run_gse205117`로 PPID=1 실측.** GEX_SOLO_DONE 이후 단계(ATAC 처리→세포통합→build→floor→MultiVelo→VAE→P3)는 **설계 필요**(드라이버가 GEX solo에서 의도적으로 멈춤). 완료 결과는 `manuscript/PREREGISTRATION_gse205117.md` 봉인 6예측에 `p3_prereg_gse205117.py`로 대조(사후구제 금지).
 
 ## 🔵 진행 중 (2026-07-05) — 논문 근거 보강 3트랙 병렬 (publication hardening)
 > 서사/블로그용 정리 = `manuscript/publication_hardening_log.md`. 전략 근거 = `manuscript/novelty_strategy.md`. 이 표는 **이어받기용 상태판**.
