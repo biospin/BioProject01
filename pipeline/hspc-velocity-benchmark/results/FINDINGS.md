@@ -130,6 +130,19 @@ cross-method/cross-dataset의 관찰(§1·§6·§7)이 *왜* 생기는지를 Mul
 - **스코프/한계**: MultiVelo 단일 method의 우도 기하. (`results/profile_likelihood_identifiability.md`, `figures/fig05_profile_likelihood.png`)
 - **선행 대비(스쿱 2026-07-10, `manuscript/SCOOP-CHECK-2026-07.md`)**: §8은 **단독 novelty가 아니라 확증(confirmatory)**이다. **Zhang et al. ConsensusVelo(bioRxiv 2024.05.14.594102)가 switch-time의 weak(near-non-)identifiability를 우도 평탄+Fisher로 이미 보였다 → 정면 인용·차별화 필수.** un-pre-empted 기여 = (i) lag/switch sloppy **WHILE α stiff 해리**, (ii) 곡률비 κ_α/κ_lag 프레이밍, (iii) chromatin→transcription lag(multiome) 확장. Gu 2025(profile-likelihood, bursting rate)·Wang 2025(sloppy/stiff Fisher, cell-state)·BayVel(구조적 time-shift)도 방법 선례로 인용. **논문의 fresh thesis는 §8이 아니라 cross-method lag 벤치마크다.**
 
+### 9. 합성 다중-method 양성대조 — lag 비재현은 method 결함이 아니라 regime-specific (2026-07-10)
+- **설계**: 알려진 onset lag τ를 주입한 chromatin→RNA pulse ODE를 switch-sharpness W × SNR 2D grid로 생성 → 구조가 다른 두 독립 method(MoFlow DTW c-s lag, MultiVelo switch-time lag)에 각각 fit. gene 축 공유, headline ρ마다 paired bootstrap 95% CI(B=10⁴).
+- **결과**: 식별 corner(고SNR·moderate W = W 0.1·SNR 20)에서 두 method가 서로(concordance ρ **+0.454** [+0.20,+0.67], CI 0 배제) 및 주입 ground-truth τ와(MoFlow +0.506, MultiVelo +0.672) 유의하게 일치. SNR이 낮아지면 concordance가 ≈0으로 붕괴(SNR marginal 평균: 20→+0.242, 6→−0.035, 2→−0.005).
+- **판정**: cross-method lag 비일치는 method 결함이 아니라 데이터 regime(식별성)의 성질이다. 실 HSPC가 사는 저SNR·smooth regime의 lag 무상관(§1)에 양성대조로서의 정당성을 준다.
+- **caveat**: 식별 corner는 좁다 — SNR 20에서만 성립하고 per-gene SNR 20은 실 scRNA/multiome엔 비현실적으로 높다 → 오히려 실 HSPC가 비식별 regime에 산다는 주장을 강화(넓은 식별 영역 함의 아님). sharpness는 비단조(moderate 최적).
+- **permutation-FDR 검정력 보정**: n=598·N_perm=10⁴에서 concordant lag |ρ|≳0.15를 power≥0.8로 검출(ρ 0.15→0.99). 실 HSPC의 |ρ|≤0.08은 검출 floor 부근/아래(ρ≈0.08 power 0.58) → §1의 '0/598'은 검정력 부족이 아니라 검출 가능한 효과크기 floor 아래의 신호 부재. (`results/sim_positive_control_multimethod.md`)
+
+### 10. α 외부검증 2차 소스 (Schwalb GSE75792) — 독립 재확인 실패(null), study 간 재현성이 상한 (2026-07-10)
+- **동기**: 1차 외부 α 앵커(Todorovski 2024 K562 TT-seq, non-HK ρ +0.24~+0.29, CI 0 배제)의 "n=1 외부" 취약성을 없애려 2번째 독립 소스(Schwalb 2016 K562 TT-seq)를 같은 방법으로 추가.
+- **결과(matched non-HK, 같은 gene축)**: 세 method 모두 α–Schwalb는 null(ρ −0.05~−0.01, CI 0 포함), α–Todorovski는 양(+0.23~+0.43, MV/VAE CI 0 배제). 2차 소스는 corroboration을 주지 못했다.
+- **결정적 원인**: 두 실측 소스 자체가 서로 약하게만 일치(Schwalb synth vs Todorovski synth ρ **+0.154**, n=1905). 두 "ground truth"가 0.15로만 겹치면 어떤 fit도 둘 다와 강하게 상관할 수 없다 → corroboration 상한. QC1(좌표 join 유효성 ρ+0.154, p=1e-11)로 broken-join 아티팩트는 배제.
+- **해석(asymmetric, 사전등록 유지)**: 이 null은 α를 반증하지 않는다(cross-context + 절대 α 비식별 + 소스 잡음). 핵심 발견은 "TT-seq 합성율 실측 자체가 study 간 rank 재현성이 낮다(ρ≈0.15)"이며, "n=1 외부" 취약성은 이 소스로는 제거되지 않는다 — 1차의 강한 양은 유지되나 이 2차로는 재현도 반증도 아니다(판정 불가에 가깝다). (`results/external_rate_validation_schwalb.md`)
+
 ---
 
 ## drug-timing 목표(P5)와의 연결
@@ -278,6 +291,19 @@ Testing *why* the cross-method/cross-dataset observations (§1·§6·§7) arise,
 - **freed-nuisance gate completed (2026-07-10, interior 258)**: re-optimizing β/γ/α_c/rescale/scale_cc, the **dissociation (α ≫ lag) survives** — `ratio_freed` median **2.49×**, α still stiffer in **77.03%** (n=148) → defends against "the sloppy lag is an artifact of fixing nuisance parameters." **Honest caveat: freeing β/γ collapses the α curvature to median 0.19× of fixed** (the α peak collapses) — so fixed-nuisance 3.53×/94.57% is an **upper bound** and freed 2.49×/77% is the **conservative lower bound**. The claim (α is stiffer than lag) holds under both gates; report on the freed basis. (`results/profile_likelihood_freed.csv`)
 - **Scope/limitations**: the likelihood geometry of the single MultiVelo method. (`results/profile_likelihood_identifiability.md`, `figures/fig05_profile_likelihood.png`)
 - **Prior art (scoop check 2026-07-10, `manuscript/SCOOP-CHECK-2026-07.md`)**: §8 is **confirmatory, not a standalone novelty**. **Zhang et al. ConsensusVelo (bioRxiv 2024.05.14.594102) already showed weak (near-non-)identifiability of the switch-time via likelihood flatness + Fisher information → must be cited head-on.** The un-pre-empted contribution is (i) the lag/switch-sloppy **while α-stiff dissociation**, (ii) the curvature-ratio κ_α/κ_lag framing, (iii) the extension to the chromatin→transcription lag in multiome. Gu 2025 (profile-likelihood on bursting rates), Wang 2025 (sloppy/stiff Fisher on cell state), and BayVel (structural time-shift) are cited as method precedents. **The paper's fresh thesis is the cross-method lag benchmark, not §8.**
+
+### 9. Synthetic multi-method positive control — lag non-reproducibility is regime-specific, not a method defect (2026-07-10)
+- **Design**: a chromatin→RNA pulse ODE with injected onset lag τ, generated over a switch-sharpness W × SNR 2D grid → fit separately to two structurally independent methods (MoFlow DTW c-s lag, MultiVelo switch-time lag). Shared gene axis, paired bootstrap 95% CI (B=10⁴) on every headline ρ.
+- **Result**: in the identifiability corner (high SNR·moderate W = W 0.1·SNR 20) the two methods agree significantly with each other (concordance ρ **+0.454** [+0.20,+0.67], CI excludes 0) and with the injected ground-truth τ (MoFlow +0.506, MultiVelo +0.672). As SNR drops, concordance collapses to ≈0 (SNR marginal means: 20→+0.242, 6→−0.035, 2→−0.005).
+- **Verdict**: cross-method lag non-agreement is a property of the data regime (identifiability), not a method defect. It grants the low-SNR/smooth-regime lag non-correlation of real HSPC (§1) its warrant as a positive control.
+- **caveat**: the corner is narrow — identifiability holds only at SNR 20, and per-gene SNR 20 is unrealistically high for real scRNA/multiome → this strengthens the claim that real HSPC lives in the non-identifiable regime (no broad-identifiability implication). sharpness is non-monotone (optimal at moderate).
+- **permutation-FDR power calibration**: at n=598·N_perm=10⁴ the machine detects a concordant lag of |ρ|≳0.15 with power≥0.8 (ρ 0.15→0.99). Real HSPC's |ρ|≤0.08 is near/below the detection floor (ρ≈0.08 power 0.58) → §1's '0/598' is an absence of signal below the detectable effect-size floor, not a lack of power. (`results/sim_positive_control_multimethod.md`)
+
+### 10. α external validation, 2nd source (Schwalb GSE75792) — independent re-confirmation fails (null); between-study reproducibility is the ceiling (2026-07-10)
+- **Motivation**: to remove the "n=1 external" fragility of the 1st α anchor (Todorovski 2024 K562 TT-seq, non-HK ρ +0.24~+0.29, CI excludes 0), a 2nd independent source (Schwalb 2016 K562 TT-seq) was added with the identical method.
+- **Result (matched non-HK, same gene axis)**: all three methods are null for α–Schwalb (ρ −0.05~−0.01, CI includes 0) but positive for α–Todorovski (+0.23~+0.43, MV/VAE CI excludes 0). The 2nd source gives no corroboration.
+- **Decisive cause**: the two measured sources themselves agree only weakly (Schwalb synth vs Todorovski synth ρ **+0.154**, n=1905). If two "ground truths" overlap only at 0.15, no fit can correlate strongly with both → the corroboration ceiling. QC1 (coordinate-join validity ρ+0.154, p=1e-11) rules out a broken-join artifact.
+- **Interpretation (asymmetric, pre-registered)**: this null does not refute α (cross-context + absolute α non-identifiability + source noise). The core finding is that "measured TT-seq synthesis rate itself has low between-study rank reproducibility (ρ≈0.15)", and the "n=1 external" fragility is not removed by this source — the 1st source's strong positive stands, but this 2nd is neither reproduction nor refutation (close to undecidable). (`results/external_rate_validation_schwalb.md`)
 
 ---
 
