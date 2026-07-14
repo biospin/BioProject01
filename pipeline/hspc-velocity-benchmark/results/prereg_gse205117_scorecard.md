@@ -16,10 +16,9 @@
 - cross **lag 크기 rank** HSPC×gastrulation (shared 111): **+0.028** 95%CI [-0.165, +0.224]
   - ⚠️ mouse→human은 uppercase ortholog 매핑(E18 전례). 누락분은 noise만 더해 결론에 보수적.
 
-- per-gene 불일치 median — **lag 0.307** (n=969, MV vs MultiVeloVAE 치환 (⚠️ **봉인된 결정과의 이탈**)) vs **α 0.052** (n=969, MV vs VAE)
+- per-gene 불일치 median — **lag 0.294** (n=968, MV vs MoFlow `cs_lag_median` (HSPC 원정의, 부호 유지)) vs **α 0.052** (n=969, MV vs VAE)
   - 불일치 = |pct_rank_A − pct_rank_B| (HSPC 원정의 `p3_identifiability_vs_snr.py`와 동일 자).
   - HSPC 기준: lag **0.317** vs α **0.078** (α ~4배 재현). macrophage(치환 정의): 0.280 vs 0.061.
-  - ⚠️ 봉인된 사전등록(2026-07-13)은 예측5를 **MoFlow 원정의**로 채점하도록 확정했으나, `results/moflow_genes_gse205117.csv`가 없어 MV×VAE로 치환했다. **이 채점은 사전등록대로가 아니다** — MoFlow arm 산출 후 재채점할 것.
 
 ## 봉인된 예측 채점
 
@@ -29,12 +28,10 @@
 | 2 | within cross-method lag 재현 | ρ ≤ 0.15 | **-0.026** | ✅ PASS |
 | 3 | α > lag 순서 | Δρ ≥ 0.35 | **+0.979** | ✅ PASS |
 | 4 | cross HSPC↔gastrulation | cross α > +0.20 且 > cross lag | α **+0.415** / lag **+0.028** | ✅ PASS |
-| 5 | per-gene 재현 격차 | lag 불일치 > α 불일치 | **0.307** vs **0.052** | ✅ PASS |
+| 5 | per-gene 재현 격차 | lag 불일치 > α 불일치 | **0.294** vs **0.052** | ✅ PASS |
 | 6 | priming 극대에서도 fragile | #2 且 #3 | — | ✅ PASS |
 
 **종합: 6 PASS / 0 FAIL / 0 N/A**
-
-> 🚨 **사전등록 이탈**: 봉인된 사전등록(2026-07-13)은 예측5를 **MoFlow 원정의**로 채점하도록 확정했으나, `results/moflow_genes_gse205117.csv`가 없어 MV×VAE로 치환했다. **이 채점은 사전등록대로가 아니다** — MoFlow arm 산출 후 재채점할 것.
 
 ## caveat
 - replication 1건 — 강한 일반화 금지. 5축(HSPC + 4 external) 순서 일관성으로만 서술.

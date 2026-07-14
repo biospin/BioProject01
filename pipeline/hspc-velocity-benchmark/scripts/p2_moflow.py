@@ -30,9 +30,9 @@ METHOD = "moflow"
 def main(n_genes=0, gpu=False, n_jobs=None):
     cfg.OUT_VELO.mkdir(parents=True, exist_ok=True); cfg.RESULTS.mkdir(parents=True, exist_ok=True)
     n_jobs = n_jobs or cfg.MV_NJOBS              # per-gene Lightning Trainer 병렬도(GPU util 낮음→코어 수가 속도 좌우)
-    tag = ".smoke" if n_genes else ""
-    rna = sc.read_h5ad(cfg.OUT_VELO / "dl_input_rna.h5ad")
-    atac = sc.read_h5ad(cfg.OUT_VELO / "dl_input_atac.h5ad")
+    tag = cfg.SUFFIX + (".smoke" if n_genes else "")   # cross-dataset suffix + smoke (p2_multivelovae 패턴)
+    rna = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_rna{cfg.SUFFIX}.h5ad")
+    atac = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_atac{cfg.SUFFIX}.h5ad")
     if n_genes:
         g = list(rna.var_names[:n_genes]); rna = rna[:, g].copy(); atac = atac[:, g].copy()
     print(f"MoFlow: {rna.n_vars} genes, {rna.n_obs} cells, gpu={gpu}")
