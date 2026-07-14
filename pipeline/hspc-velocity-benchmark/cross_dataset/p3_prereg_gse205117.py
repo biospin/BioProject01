@@ -48,32 +48,40 @@ T4_CROSS_ALPHA = 0.20    # 예측4: cross α > +0.20 且 cross α > cross lag
 #      MultiVelo lag 부호는 4-state 단조정렬로 구조적 양수(무정보) → **크기(rank)만** 비교. sign 검정 안 함.
 # (R3) 예측3의 Δρ은 **동일 gene set에서 paired** 계산(boot_dr) — ρ_α(MV×VAE) − ρ_lag(MV×VAE).
 #      서로 다른 gene set의 두 ρ를 빼는 것은 금지(가드레일).
-# (R4) 예측5의 per-gene 불일치는 HSPC 원정의(`p3_identifiability_vs_snr.py`)를 따른다:
-#         불일치 = |rank_A − rank_B|, rank는 [0,1] 정규화. 0=완전일치, 1=완전불일치.
-#      ⚠️ HSPC 원정의는 lag을 **MultiVelo vs MoFlow**로 쟀다. GSE205117에 MoFlow arm이 없으면
-#      **MultiVelo vs MultiVeloVAE로 치환**한다(α는 원정의대로 MV vs VAE). 이 치환은 데이터 보기 전에
-#      선언된 것이며, scorecard에 어떤 정의를 썼는지 **반드시 명시**된다. 사후 선택 금지.
+# (R4) 예측5의 per-gene 불일치는 HSPC 원정의(`scripts/p3_identifiability_vs_snr.py` L6-12)를 **그대로** 따른다:
+#         mv_lag = fit_t_sw2 − fit_t_sw1   (**부호 유지**. MV는 4-state 단조라 어차피 ≥0)
+#         mf_lag = cs_lag_median            (**부호 유지** — MoFlow DTW lag은 음수 가능. abs 금지!)
+#         rank   = pandas .rank(pct=True) = r/n   (0<r/n≤1)
+#         lag_disagree   = |mv_lag_r − mf_lag_r| ;  alpha_disagree = |mv_alpha_r − vae_alpha_r|
+#      → HSPC 기준값 lag 0.317 vs α 0.078 과 **같은 자로 재야** 비교가 성립한다.
+#      ⚠️ 2026-07-13 kkkim이 사전등록에 **MoFlow arm 포함을 확정**(fit 산출 전 봉인) → 원정의로 채점한다.
+#         MoFlow fit이 없으면 이는 **봉인된 결정과의 이탈**이므로, 조용히 VAE로 치환하지 않고
+#         scorecard·stderr에 **이탈로 명시 경고**한다. 파일은 있는데 컬럼이 없으면 **하드 실패**(추측 금지).
 # (R5) mouse → cross-dataset 축은 E18과 동일하게 **uppercase ortholog 매핑**(_upper). 완벽하지 않으며
 #      누락분은 noise만 더해 "lag fragile" 결론에 **보수적**으로 작용한다.
 
+# 예측2·3(concordance ρ, Δρ)용 lag = **크기 rank**(가드레일: MV 부호는 구조적 양수라 무정보).
 LAG_MV = lambda d: (d["fit_t_sw2"] - d["fit_t_sw1"]).abs()          # noqa: E731
 LAG_VAE = lambda d: (1.0 / d["vae_alpha_c"].clip(lower=1e-6)        # noqa: E731
                      - 1.0 / d["vae_alpha"].clip(lower=1e-6)).abs()
 
+# 예측5(per-gene 불일치)용 lag = HSPC 원정의 — **부호 유지**(abs 금지). 위와 목적이 다르다.
+SIGNED_LAG_MV = lambda d: d["fit_t_sw2"] - d["fit_t_sw1"]           # noqa: E731
+MOFLOW_LAG_COL = "cs_lag_median"                                     # HSPC 원정의가 쓴 바로 그 컬럼
 
-def norm_rank(v: np.ndarray) -> np.ndarray:
-    """[0,1] 정규화 rank (HSPC 원정의와 동일)."""
+
+def pct_rank(v: np.ndarray) -> np.ndarray:
+    """pandas .rank(pct=True) 와 동일 = 평균rank / n. HSPC 원정의(L10)와 자를 맞춘다."""
     from scipy.stats import rankdata
-    r = rankdata(v)
-    return (r - 1) / (len(r) - 1) if len(r) > 1 else np.zeros_like(r, dtype=float)
+    return rankdata(v) / len(v)
 
 
 def disagree_median(a: pd.Series, b: pd.Series) -> tuple[float, int]:
-    """per-gene 불일치 median = median(|rank_a − rank_b|), rank는 공통 gene 안에서 정규화."""
+    """per-gene 불일치 median = median(|pct_rank_a − pct_rank_b|). rank는 공통 gene 안에서 계산."""
     sh, va, vb = _pair(a, b)
     if len(sh) < 10:
         return float("nan"), len(sh)
-    return float(np.median(np.abs(norm_rank(va) - norm_rank(vb)))), len(sh)
+    return float(np.median(np.abs(pct_rank(va) - pct_rank(vb)))), len(sh)
 
 
 def verdict(ok: bool | None) -> str:
@@ -164,18 +172,36 @@ def main() -> int:
             rows += [dict(section="cross_alpha", label="HSPC×gastr", n=len(sh_a), rho=x_a, lo=xa_lo, hi=xa_hi),
                      dict(section="cross_lag", label="HSPC×gastr", n=len(sh_x), rho=x_l, lo=xl_lo, hi=xl_hi)]
 
-    # ── 예측 5: per-gene 재현 격차 (R4의 조작정의) ─────────────────────
-    if mof is not None and "cs_lag" in mof.columns:
-        lag_b, lag_src = mof["cs_lag"].abs(), "MoFlow (HSPC 원정의)"
+    # ── 예측 5: per-gene 재현 격차 — HSPC 원정의(부호 유지 MV vs MoFlow cs_lag_median) ──
+    deviation = None
+    if mof is not None:
+        if MOFLOW_LAG_COL not in mof.columns:
+            # 파일은 있는데 원정의 컬럼이 없다 → 추측하지 않고 하드 실패.
+            print(f"[중단] moflow_genes{SUFFIX}.csv에 '{MOFLOW_LAG_COL}' 컬럼이 없습니다 "
+                  f"(있는 컬럼: {list(mof.columns)[:8]}). HSPC 원정의로 채점할 수 없습니다.",
+                  file=sys.stderr)
+            return 3
+        lag_a, lag_b = SIGNED_LAG_MV(mv), mof[MOFLOW_LAG_COL]
+        lag_src = f"MoFlow `{MOFLOW_LAG_COL}` (HSPC 원정의, 부호 유지)"
     else:
-        lag_b, lag_src = lag_vae, "MultiVeloVAE (**치환** — MoFlow arm 부재, R4에 사전 선언)"
-    d_lag, n_lag = disagree_median(lag_mv, lag_b)
-    d_alpha, n_alpha = disagree_median(mv["fit_alpha"], vae["vae_alpha"])
+        # 사전등록(2026-07-13)이 MoFlow 포함을 봉인했으므로, 부재는 '이탈'이다. 조용히 넘어가지 않는다.
+        lag_a, lag_b = lag_mv, lag_vae
+        lag_src = "MultiVeloVAE 치환 (⚠️ **봉인된 결정과의 이탈**)"
+        deviation = (f"봉인된 사전등록(2026-07-13)은 예측5를 **MoFlow 원정의**로 채점하도록 확정했으나, "
+                     f"`results/moflow_genes{SUFFIX}.csv`가 없어 MV×VAE로 치환했다. "
+                     f"**이 채점은 사전등록대로가 아니다** — MoFlow arm 산출 후 재채점할 것.")
+        print(f"[경고] {deviation}", file=sys.stderr)
+
+    d_lag, n_lag = disagree_median(lag_a, lag_b)
+    d_alpha, n_alpha = disagree_median(mv["fit_alpha"], vae["vae_alpha"])   # α는 원정의대로 MV vs VAE
     p5 = bool(d_lag > d_alpha) if not (np.isnan(d_lag) or np.isnan(d_alpha)) else None
-    L += ["", f"- per-gene 불일치 median — **lag {d_lag:.3f}** (n={n_lag}, vs {lag_src}) "
-          f"vs **α {d_alpha:.3f}** (n={n_alpha}, MV×VAE)",
-          "  - 불일치 = |정규화 rank_A − rank_B| (HSPC 원정의). HSPC 기준: lag 0.317 vs α 0.078."]
-    rows.append(dict(section="per_gene_disagree", label=f"lag({lag_src})|alpha", n=n_lag,
+    L += ["", f"- per-gene 불일치 median — **lag {d_lag:.3f}** (n={n_lag}, MV vs {lag_src}) "
+          f"vs **α {d_alpha:.3f}** (n={n_alpha}, MV vs VAE)",
+          "  - 불일치 = |pct_rank_A − pct_rank_B| (HSPC 원정의 `p3_identifiability_vs_snr.py`와 동일 자).",
+          "  - HSPC 기준: lag **0.317** vs α **0.078** (α ~4배 재현). macrophage(치환 정의): 0.280 vs 0.061."]
+    if deviation:
+        L += [f"  - ⚠️ {deviation}"]
+    rows.append(dict(section="per_gene_disagree", label=f"lag[{lag_src}]|alpha", n=n_lag,
                      rho=d_lag, lo=d_alpha, hi=np.nan))
 
     # ── 예측 6: priming 극대에서도 fragile = #2 且 #3 ──────────────────
@@ -200,6 +226,8 @@ def main() -> int:
     if n_fail:
         L += ["> ⚠️ **실패한 예측이 있다. 사전등록 원칙상 임계를 사후에 조정하지 않는다** — "
               "실패는 실패로 보고하고, 그것이 무엇을 뜻하는지 논의한다.", ""]
+    if deviation:
+        L += [f"> 🚨 **사전등록 이탈**: {deviation}", ""]
     L += ["## caveat",
           "- replication 1건 — 강한 일반화 금지. 5축(HSPC + 4 external) 순서 일관성으로만 서술.",
           "- cross-dataset은 uppercase ortholog(mouse→human) — 불완전 매핑, 결론에 보수적.",
