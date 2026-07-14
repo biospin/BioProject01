@@ -1,5 +1,29 @@
 # Cross-dataset #5 재점검 + 대체 후보 (2026-07-11)
 
+---
+## 🔄 ATAC 다운스트림 자율 실행 (2026-07-14, kkkim) — 재개용 최상단
+
+**목표: GEX 4/4(완료) + ATAC fragments → build → floor/MV/VAE fit → 사전등록 6예측 채점.** 무거운 단계 전부 detached.
+
+**드라이버(idempotent, sentinel 연쇄) — 죽었고 DONE 없을 때만 재기동:**
+| 단계 | 스크립트 | 완료 sentinel | 로그 |
+|---|---|---|---|
+| ATAC 다운(4 fragments) | `dl_gse205117_atac_frag.sh` | `/home/kkkim/data/gse205117_fullB/atac_frag/ATAC_FRAG_DONE` | `dl_atac_frag.log` |
+| build(atac집계+finalize) | `run_gse205117_build.sh`(→`build_gse205117.py atac/finalize`) | `data/processed_gse205117/.BUILD_DONE` | `build_orch.log`, `build_{atac,finalize}_gse205117.log` |
+| fits(floor+MV+VAE+채점) | `run_gse205117_fits.sh` | `GSE205117_FIT_DONE` | `fits_driver.log`, `GSE205117_FIT_PROGRESS` |
+
+- **★ STARsolo whitelist=None Velocyto 바코드 mislabel 함정(2026-07-14 발견·수정)**: Velocyto/raw barcodes.tsv 문자열이 Gene 바코드와 다른 space라 string match하면 real cell count≈1(garbage). **fix = Velocyto/filtered을 Gene/filtered와 positional로 읽음**(spearman 0.996–0.997, 4시점). 이 버그면 finalize QC에서 세포 27364→44 붕괴; fix 후 27364→10779 생존, spliced nnz 0.0003→0.0744. build_gse205117.py load_gex_timepoint에 positional Spearman≥0.9 assert.
+- **진행상태(2026-07-14 15:39):** 다운 4/4 ✅ · build ✅(10779 cells, obs identical, lineage=gastrulation) · fits 🔄(floor 실행 중 1173 velocity genes → MV smoke+full → VAE cuda:1 → 채점). FINDINGS 미접촉.
+- 재기동: `cd cross_dataset && setsid bash <script> </dev/null >…log 2>&1 &` (완료분 skip).
+- 실패: `.BUILD_FAILED` / `GSE205117_FIT_FAILED` 확인.
+- 산출 fit CSV: `results/{rna_only_dynamical,multivelo,multivelovae}_genes_gse205117.csv`. 채점: `results/prereg_gse205117_scorecard.md`.
+- **바코드 조인 = direct(strip '-1'), 97.3% 실측**(probe_barcode_join_gse205117.py). ATAC gene축 = 우리 gencode vM25 ±10kb 집계.
+- **결과는 `manuscript/PREREGISTRATION_gse205117.md` 봉인 6예측에 그대로 대조**(사후구제 금지). MoFlow arm 미실행 → 예측5는 사전선언된 MV-vs-VAE 치환(R4)으로 채점.
+- FINDINGS.md 헤드라인은 사람 검토 후 병합(§7 gse205117 초안까지만).
+
+---
+
+
 > BIOP01 velocity 벤치마크 5번째 cross-dataset. skin(#5) NO-GO 재점검 + 대체(GSE205117) feasibility·preflight 기록.
 > **git 커밋은 내용 쌓인 뒤**(사용자 지시). 중단 대비 durable 기록.
 
