@@ -5,7 +5,7 @@
 
 ## 1. torch env 빌드 (miniforge)
 ```bash
-mamba env create -f env/torch.yml          # torch+lightning+scvelo+scanpy (CPU). GPU는 §4.
+mamba env create -f env/velo-torch.yml          # torch+lightning+scvelo+scanpy (CPU). GPU는 §4.
 # env에 setuptools/pkg_resources 누락 → 보정 (MoFlow가 옛 pkg_resources API 사용)
 python -m pip install 'setuptools<80' fastdtw     # setuptools 80+는 pkg_resources 제거
 python -m pip install 'git+https://github.com/welch-lab/MultiVeloVAE.git'   # → multivelovae 0.1.0
@@ -53,7 +53,7 @@ data/velocity/dl_input_atac.h5ad    (~197M, Mc)
 - 코드/runner는 git(kkkim-pipeline)에서 pull. `vendor/`(MoFlow·MultiVeloVAE clone)는 gitignore → `setup_torch_gpu.sh`가 재생성.
 
 ## 7. CRAK-Velo (tf arm) — 별도 TensorFlow 스택 (#4)
-- env: `env/tf.yml` (python3.9 + tensorflow + unitvelo + `git+https://github.com/StatBiomed/CRAK-Velo.git`, BSD-3). **cisTopic 의존 — 무거움**(설치 iteration 예상).
+- env: `env/velo-tf.yml` (python3.9 + tensorflow + unitvelo + `git+https://github.com/StatBiomed/CRAK-Velo.git`, BSD-3). **cisTopic 의존 — 무거움**(설치 iteration 예상).
 - **PyTorch env와 절대 같은 env 금지**(TF/torch 충돌).
 - GPU 최대 수혜 method(원논문 15h → GPU 수 시간). **CPU 비현실적**.
 - 통합은 torch arm과 동일 패턴: tf env 빌드 → 소형 smoke로 출력→lag(region kinetic) 확인 → full. (CRAK-Velo는 lag 명시 출력 없음 → region kinetic을 lag로 후처리 — DESIGN/paper_analysis C9 참조.)
