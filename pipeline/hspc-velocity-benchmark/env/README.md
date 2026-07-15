@@ -72,7 +72,7 @@ conda env export -n <env> > pipeline/hspc-velocity-benchmark/env/<env>.lock.yml
 ## Known gotchas (`검토필요:` — 머신에서 iteration 필요)
 - **numpy<2 고정**: scvelo/scanpy 일부가 numpy 2.x 미대응. 충돌 시 numpy 1.26으로.
 - **github 패키지 import 이름**: MultiVeloVAE/MoFlow/CRAK-Velo의 실제 import 이름은 repo 확인 후 검증 명령 수정. 설치 실패 시 repo README의 설치법 우선.
-- **CRAK-Velo cisTopic 의존**: 무거움. CRAK-Velo가 cisTopic을 요구하면 `tf.yml` 주석의 cisTopic 줄 해제(또는 pycisTopic conda). TF/UniTVelo 버전이 가장 잘 깨지는 지점 — UniTVelo repo의 권장 TF 버전에 맞춤.
+- **CRAK-Velo cisTopic 의존**: 무거움. CRAK-Velo가 cisTopic을 요구하면 `velo-tf.yml` 주석의 cisTopic 줄 해제(또는 pycisTopic conda). TF/UniTVelo 버전이 가장 잘 깨지는 지점 — UniTVelo repo의 권장 TF 버전에 맞춤.
 - **scVelo dynamical model**: `scv.tl.recover_dynamics`가 numba 컴파일로 첫 실행 느림(정상).
 - **cellDancer 격리 필수**(2026-07-11): celldancer 1.1.7이 numpy==1.20.3·pandas==1.3.4·scipy==1.7.2·sklearn==1.0.1·skimage==0.19.2·pytorch-lightning==1.5.2를 전부 하드핀. tf(numpy≥1.22)와 한 env면 `ResolutionImpossible`. 반드시 `celldancer.yml` 전용 env(python 3.9 빈 env + pip celldancer). 진짜 충돌은 pip 로그 끝 "depends on numpy" 줄에서 확인(and-cuda 경고는 오진 유발 표면 증상).
 

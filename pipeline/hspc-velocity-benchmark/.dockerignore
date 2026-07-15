@@ -2,9 +2,9 @@
 # Dockerfile은 env/*.yml 만 COPY → 화이트리스트로 그것만 포함, 나머지 제외.
 *
 !env/scv-preprocess.yml
-!env/mv.yml
-!env/torch.yml
-!env/tf.yml
+!env/velo-mv.yml
+!env/velo-torch.yml
+!env/velo-tf.yml
 
 # (명시) 대용량/불필요 — 어차피 위 화이트리스트로 제외되지만 의도 표기
 **/.git
