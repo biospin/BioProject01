@@ -3,15 +3,16 @@
 > **모든 논문 하네스 멤버(novelty-strategist·literature-scout·research-methodologist·manuscript-writer·paper-critic·reviewer)가 작업 시작 전 반드시 읽는 단일 소스.** "무엇을 왜 주장하는가 + 어떤 규율로 검증하는가"를 한눈에. 매번 재브리핑 불필요 — 이 문서가 최신 상태를 담는다.
 > 갱신: **2026-07-18** (novelty 적대적 판정 + make-or-break 결과 반영, 아래 §5 참조). 세부=`STRATEGY_2026-07_elevation.md`, 사전등록=`PREREGISTRATION_gse205117.md`, 검정=`../results/identifiability_vs_snr.md`, 스쿱=`SCOOP-CHECK-2026-07.md`, novelty=`NOVELTY-EXTENSIONS.md`.
 
-## 1. 현재 thesis (한 문장) — 2026-07-18 재프레이밍(음성→양성 헤드라인)
-계산 method를 바꾸면 chromatin-transcription **lag**은 재현되지 않고(cross-method ρ≈0, 5 시스템) 전사속도 **α**는 재현된다(ρ≈0.88). **나아가 목적함수 곡률(내부 식별성)이 어느 velocity 출력이 외부 측정으로 검증되는지를 예측한다** — 강성 랭킹 **α ≫ α_c > β > γ**(전 pairwise p<1e-11)에서 최고 stiff **α는 실측 TT-seq 합성율을 회복**하고 최저 sloppy **γ는 실측 분해율에 역방향**. 이로부터 **측정-앵커된 velocity 신뢰 지도**를 제시한다.
-> 리드 전환: 심사자에겐 "lag 재현 실패"(음성)가 아니라 **"곡률이 측정검증을 예측한다"(양성·제1원리)**를 앞세운다(적대적 판정 R-1/R-2 대응).
+## 1. 현재 thesis (한 문장) — 2026-07-18 재프레이밍 (곡률 헤드라인 시도→기각, 결정지도로 리포지셔닝)
+계산 method를 바꾸면 chromatin-transcription **lag**은 재현되지 않고(cross-method ρ≈0, 5 시스템) 전사속도 **α**는 재현된다(ρ≈0.88). **α는 method 재현성에 더해 실측 TT-seq 합성율에도 앵커되는(외부 검증) 유일한 rate**이고, lag·γ는 method-fragile이며 외부 측정도 회복 못 한다(γ는 심지어 역방향). 이로부터 **측정-앵커된 velocity 신뢰 결정지도**(어느 출력을 믿고 어느 출력은 직교검증이 필요한지)를 제시한다 — 이것이 헤드라인.
+> **곡률→측정검증 헤드라인은 시도했다가 기각**(2026-07-18): 파라미터 내·유전자 간 tertile 검정(`results/curvature_tertile_validation.md`)에서 α는 예측 방향 경향(최고강성 분위 ρ=+0.30, CI 0배제)이나 high−low 차이 미유의(검정력 부족), γ는 gradient 없음. → **곡률→검증은 supporting/suggestive로 강등**, 결정지도가 헤드라인. (advisor 게이트: n=2 일화를 법칙으로 relabel 금지.)
 
 ## 2. 방어 가능한 claim-set (등급 표기 — 하네스는 이 등급을 지킨다)
 | claim | 등급 | 근거 | 반증기준 |
 |---|---|---|---|
 | lag cross-method/dataset 비재현, α 재현 | **CONFIRMED** | §7, 4-vs-4 + per-gene | lag ρ≥0.5면 실패 |
-| **곡률(내부 식별성)이 외부 측정검증을 예측**(α stiff→합성율 회복, γ sloppy→분해율 역방향) | **STRONG** (make-or-break A 통과, 강성랭킹 α≫α_c>β>γ 전 pairwise p<1e-11; advisor 대기) | `results/stiffness_predicts_validation.md` + `external_rate_validation.md` | α/γ 외부측정 순서가 강성 순서와 어긋나면 약화. ⚠️ 직접 외부측정은 α·γ뿐(α_c·β는 내부순위만) |
+| ~~곡률(내부 식별성)이 외부 측정검증을 예측~~ | **DEMOTED → suggestive supporting** (헤드라인 기각 2026-07-18) | tertile 검정 `results/curvature_tertile_validation.md` | **파라미터 내·유전자 간(n=210/201) 검정 결과: α는 예측방향 단조 경향(최고강성 분위 ρ=+0.30 CI 0배제, low 미검증)이나 ρ_high−ρ_low 미유의(검정력부족); γ는 강성-검증 gradient 없음(flat null). 헤드라인의 γ역방향(−0.224)은 scVelo γ였고 곡률 측정 method(MultiVelo)와 불일치. → "곡률→검증"은 supporting 관찰로만, 헤드라인 아님.** |
+| **α는 method-재현+외부 합성율 앵커된 유일 rate; lag·γ는 fragile+외부 미회복** → 측정앵커 신뢰 결정지도 | **STRONG (헤드라인)** | `external_rate_validation.md`(α +0.24~0.29 CI0배제, γ 역/null) + §7 cross-method | α 외부앵커가 무너지거나 γ가 회복되면 약화 |
 | ~~named marker는 chromatin이 lag을 **인과** 결정(Medium-High)~~ → **상관만** | **DOWNGRADED (2026-07-18)** | make-or-break #1 marker-shuffle teeth **NULL** (marker |Δlag| ≈ bulk, MW p=0.58; `results/marker_shuffle_teeth_test.md`) | marker의 method 간 *방향* 일치는 유지, **인과 함의는 뺀다** |
 | within-method fit자신감 ≠ cross-method 신뢰성 (2층) | **STRONG** | per-gene 불일치 데이터 | fit 좋은 유전자가 재현도 잘되면 약화 |
 | velocity 신뢰 결정지도(α/rate 신뢰·lag/timing 불신) | **STRONG** | 위 두 개에서 도출 | — |
@@ -40,6 +41,11 @@
 - ✅ **make-or-break A 통과(양성 헤드라인 확보)**: profile-likelihood를 α_c·β·γ로 확장(`p5_stiffness_all_params.py`) → **곡률이 외부 측정검증을 예측**(α≫α_c>β>γ, p<1e-11; α 회복·γ 역방향). 커밋 69861b8. → §1 thesis·§2 표 갱신.
 - ❌ **make-or-break #1 실패(marker-shuffle teeth NULL)**: 셔플이 named marker lag을 bulk보다 더 안 흔듦(MW p=0.58) → "marker 인과" 주장 **하향**(§2). 핵심 음성결론은 더 깨끗해짐.
 - ❌ **"크로마틴-제어-α 유전자 지도"는 별도 논문 불가(현 데이터로)**: 유일 약물데이터(AG-120)가 타임스케일 불일치(5d/14d vs 시·분 기전)라 α/접근성/lag 전부 null(정보적 아님). Enrichr 응집성 약함(inflammatory/signaling). → **methods 논문의 응용 예시로만**, "올바른 타임스케일 perturbation이 다음 실험"으로 명시. (`stiffness_predicts_validation.md`, `marker_shuffle_teeth_test.md`)
+
+### 2026-07-18 (추가) — advisor 게이트가 A 헤드라인 기각, 결정지도로 리포지셔닝
+- **make-or-break A 재검정 실패**: advisor가 "곡률→검증 make-or-break가 잘못된 축(파라미터 간 랭킹, 외부앵커 n=2)을 쟀다"고 지적 → 파라미터 내·유전자 간 tertile 검정(`p6_curvature_tertile_validation.py`, `results/curvature_tertile_validation.md`). 결과: **α 예측방향 경향이나 미유의(검정력부족), γ flat null, 헤드라인 γ역방향은 scVelo(method 불일치)**. → 곡률→검증 **헤드라인 기각·supporting 강등**.
+- **헤드라인 = 측정앵커 velocity 신뢰 결정지도**로 되돌림(§1). manuscript 재작성은 이 기준. **A 기반 프리프린트/블로그7 헤드라인 보류** — 블로그7 초안은 게시 전 하향 필요.
+- 규율 확인: claim-defensibility 게이트가 실제로 작동(make-or-break 통과처럼 보였으나 advisor가 축 오류 포착 → 본문 미반영으로 방어).
 
 ### 이전 (2026-07-12~15)
 - ✅ 4-vs-4 확증 + §8(SNR-bounded) + 방어가능선 전략 봉인(커밋 d52416c).
