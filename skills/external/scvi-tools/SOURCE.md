@@ -4,5 +4,5 @@
 - BIOP01 적합성: **최상** — scvi-tools의 **MultiVI(multiome RNA+ATAC)·veloVI(RNA velocity)**가 우리 MultiVeloVAE arm과 직결. scVI/scANVI 배치보정·PeakVI(ATAC)도 포함.
 - 도입 방법(라이선스 확인 후): 위 URL의 SKILL.md를 참조해 우리 하네스용으로 **재작성**(복사 아님) 또는 Anthropic에 사용범위 확인.
 
-## smoke-test 결과
-velo-torch에 scvi-tools 미설치 — 도입 시 pip install scvi-tools 필요(velo-torch)
+## 상태: 활성화됨 (2026-07-18)
+velo-torch에 scvi-tools 1.3.3 설치·검증(MULTIVI·PEAKVI·SCVI·VELOVI import OK). 사용법=USING_IN_BIOP01.md(우리 작성). 원본 SKILL.md는 라이선스 미지정이라 미복사.
