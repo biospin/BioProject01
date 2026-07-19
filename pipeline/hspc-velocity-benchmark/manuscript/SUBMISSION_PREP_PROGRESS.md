@@ -11,7 +11,7 @@
 |---|---|---|---|
 | A | 적대적 critic 재검토(2026-07-19 변경분) | ⏳ 백그라운드 | `manuscript/REVIEW-GB-2026-07-19b.md` |
 | B | Supplementary figure 렌더 + AF11 정합 | ⏳ 백그라운드 | `figures/FIGURE_INVENTORY.md` + png |
-| C | refs 26 → 50~85 확장(실문헌·CrossRef 검증) | ⏳ 백그라운드 | `manuscript/REFS_EXPANSION_CANDIDATES.md` |
+| C | refs 26 → 50~85 확장(실문헌·CrossRef 검증) | ✅ **완료(후보목록)** | `manuscript/REFS_EXPANSION_CANDIDATES.md` |
 | D | csv → xlsx 변환 | ✅ **완료** | `results/supp_xlsx/` 11개 파일 |
 | E | A·B·C 결과를 draft에 반영 | ⛔ A·B·C 완료 후 | draft_v2 + draft_v2_ko **동시** |
 | F | GitHub PR로 팀 공유 | ⛔ E 후 | PR(병합은 사람 승인) |
@@ -55,3 +55,8 @@
 - 2026-07-19: A·B·C 백그라운드 착수, 이 진행판 생성.
 - 2026-07-19: 티켓을 BIOP01-61 하나로 통합(62·63은 향후 과제로 재정의해 존치). 상시규칙 memory 갱신 — 티켓은 "한 번에 보고할 결과가 나오는 덩어리" 단위.
 - 2026-07-19: **D 완료** — `scripts/p11_make_supp_xlsx.py`로 Additional file 1~10·12를 xlsx 11개 생성. AF7은 3시트(alpha_TTseq·gamma_halflife·alpha_Schwalb), AF12는 2시트(HSPC_pairs·external_pairs). 원천 누락 0건. AF11(그림)은 B 완료 후.
+- 2026-07-19: **C 완료** — `REFS_EXPANSION_CANDIDATES.md`. 후보 **59편 전부 CrossRef 실물 확인**(서지는 조회 JSON 그대로, 미확인은 제외). 착지 제안: 현재 26 + Tier A 24 = **50편**(GB 하한), A+선별B ≈ **66편**(권장).
+  - ★ **본문에서 이름으로 부르는데 참고문헌 항목이 없는 인용 결함 12건 발견**(직접 재확인함): Schwalb 본문 4회·refs 0 / Todorovski 2회·0 / GSE229305 3회·0 / TOST 3회·0 / sloppy 6회·0 / scrublet·STARsolo·velocyto 각 1회·0. scVelo도 [9]는 2021 perspective이지 method 논문이 아님.
+  - DOI 독립 재검증 2건 통과: Schwalb *Science* 352:1225-1228 (2016) doi:10.1126/science.aad9841 · Todorovski *NAR Cancer* 6 zcae039 (2024) doi:10.1093/narcan/zcae039.
+  - 함정 기록: DeepVelo 동명이인 2종(Chen/Gerstein *Sci Adv* 2022 vs Cui/Wang *Genome Biol* 2024) — 둘 다 인용하거나 둘 다 뺀다. Transtrum 2015는 양날(인용하면 dissociation이 일반현상 사례가 돼 신규성 희석) — 인용하되 무엇이 새로운지 함께 쓸 것.
+  - 후속 필요: STARsolo는 preprint만 확인(STAR Dobin 2013은 **미검증**) · Reactome release 버전 확인 후 DB 논문 인용 여부 결정 · 저자 목록이 6인+et al.로 절단돼 최종 조립 시 전체 저자 재조회 · GSE194122·10x E18 demo 출처 논문은 확정 불가라 accession-only 유지.
