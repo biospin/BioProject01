@@ -10,7 +10,7 @@
 | # | 작업 | 상태 | 산출물 |
 |---|---|---|---|
 | A | 적대적 critic 재검토(2026-07-19 변경분) | ⏳ 백그라운드 | `manuscript/REVIEW-GB-2026-07-19b.md` |
-| B | Supplementary figure 렌더 + AF11 정합 | ⏳ 백그라운드 | `figures/FIGURE_INVENTORY.md` + png |
+| B | Supplementary figure 렌더 + AF11 정합 | ✅ **완료** | `figures/FIGURE_INVENTORY.md` + figS01/03/04/05 |
 | C | refs 26 → 50~85 확장(실문헌·CrossRef 검증) | ✅ **완료(후보목록)** | `manuscript/REFS_EXPANSION_CANDIDATES.md` |
 | D | csv → xlsx 변환 | ✅ **완료** | `results/supp_xlsx/` 11개 파일 |
 | E | A·B·C 결과를 draft에 반영 | ⛔ A·B·C 완료 후 | draft_v2 + draft_v2_ko **동시** |
@@ -60,3 +60,9 @@
   - DOI 독립 재검증 2건 통과: Schwalb *Science* 352:1225-1228 (2016) doi:10.1126/science.aad9841 · Todorovski *NAR Cancer* 6 zcae039 (2024) doi:10.1093/narcan/zcae039.
   - 함정 기록: DeepVelo 동명이인 2종(Chen/Gerstein *Sci Adv* 2022 vs Cui/Wang *Genome Biol* 2024) — 둘 다 인용하거나 둘 다 뺀다. Transtrum 2015는 양날(인용하면 dissociation이 일반현상 사례가 돼 신규성 희석) — 인용하되 무엇이 새로운지 함께 쓸 것.
   - 후속 필요: STARsolo는 preprint만 확인(STAR Dobin 2013은 **미검증**) · Reactome release 버전 확인 후 DB 논문 인용 여부 결정 · 저자 목록이 6인+et al.로 절단돼 최종 조립 시 전체 저자 재조회 · GSE194122·10x E18 demo 출처 논문은 확정 불가라 accession-only 유지.
+- 2026-07-19: **B 완료** — 약속된 다섯 패널 **전부 실물화**. (1) `figS01_per_dataset_concordance` (2) 기존 `fig05_profile_likelihood`(재실행 검증 통과) (3) `figS03_atac_shuffle_lag` (4) `figS04_coupling_shuffle` (5) `figS05_stiffness_tertile_ladder`. 조작 없음. 신규 스크립트 4개 모두 **재계산값이 `results/*.md` 기존 수치와 어긋나면 SystemExit으로 죽는 게이트** 내장, 전부 통과. 라벨 전부 영어(tofu 0).
+  - 정직성 표기 2건: 패널 3·4는 "귀무 분포"가 아니라 **셔플 1회 realization 겹쳐 그리기** → AF11 문구를 "overlaid on the observed"로 교정 필요. coupling MW p=5.6e-75는 **셔플 20회 pooled** 값이고 csv엔 realization 0만 있음(그것만이면 2.0e-40) → 재계산하지 않고 "20회 pooled, 인용"으로 표기.
+  - `fig05_profile_likelihood.py` 헤더가 `velo-mv` env를 요구한다고 적혀 있으나 그 env는 이 서버에 없고 **scv-preprocess에서 패널 A~D 전부 완주** — 헤더 기술이 과함(수정 후보).
+  - 기존 png 8장 중 약속 패널에 해당하는 건 fig05 하나뿐. fig02는 cross-**dataset**(cross-method 아님), fig03·04는 블로그용 개념도.
+  - ⚠️ **에이전트가 제기한 "HSPC lag ρ=+0.163 추적 불가"는 오경보** — 확인 결과 `results/identifiability_dissociation.md`에 ρ_lag(magnitude) **+0.163, 95% CI [+0.078, +0.244]** 로 CI까지 draft와 일치한다. 같은 파일이 "FINDINGS §3.5의 signed −0.010은 MV-magnitude와 VAE-signed를 섞은 범주 불일치"라는 경고도 이미 달아 뒀고, 그것이 draft Table 1 각주 †가 화해시키는 바로 그 지점이다. **draft 수정 불필요.**
+  - png는 `.gitignore` 대상 → 스크립트와 인벤토리만 커밋. 투고 번들은 `FIGURE_INVENTORY.md` §3의 재생성 명령으로 만든다.
