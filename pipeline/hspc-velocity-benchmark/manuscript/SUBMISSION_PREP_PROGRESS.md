@@ -87,3 +87,9 @@
   - 작업 중 사고 2건과 처리: ① 같은 문구가 초록과 본문에 있어 **초록에 인용이 샜다** → 스크립트에서 Background 이전 구간을 구조적으로 배제 ② 스크립트를 처리된 파일에 재실행해 103편이 됐다 → 백업 복구 후 클린 상태에서 1회만 실행.
   - 남은 것(사람): `<FILL>` 저자·소속·corresponding·repository DOI/라이선스. 그 외 자동 처리 가능한 항목은 없음.
   - 참고: Enrichr(speedrichr custom background)는 본문에서 도구명을 부르지 않아 인용 대상이 아니다. 재현성을 위해 Methods에 도구명을 넣을지는 **내용 판단**이라 남겨 둔다.
+- 2026-07-20: **Enrichment 절차를 Methods에 명기 — 재현성 구멍 하나 메움.** Results에 `adjusted p=9.4e-04`가 실려 있는데 그 값을 낸 도구·절차가 Methods에 없었다(Reactome은 라이브러리 이름일 뿐, 계산은 Enrichr speedrichr). 리뷰어가 재현하려면 도구·라이브러리·배경·보정 방식이 필요하다.
+  - 새 소절 「Enrichment analysis」(영/한): Enrichr[66,67,68] + Reactome[42], **speedrichr custom background**, 배경을 **부호 가변 판정 2개 이상인 640개 유전자**로 교체하면 GO 항목이 전부 사라지고 Reactome neutrophil degranulation(n=15)만 남는다는 점, BH 보정, 만장일치 RNA-first 164개는 어느 배경에서도 무유의.
+  - Enrichr 3편 CrossRef 실검증(Chen 2013 · Kuleshov 2016 · Xie 2021). 참고문헌 **66 → 69편**.
+  - **인용결함 검사기가 새 문장의 누락을 즉시 잡았다** — "Benjamini-Hochberg"에 인용이 없었다. BH[65] 부착 후 재통과. 검사축을 만든 값을 바로 회수.
+  - `scripts/p15_renumber_inplace.py` 신설: p12는 번호 없던 상태에 한 번 쓰는 도구라 처리된 파일에 재실행하면 중복된다(실제로 66→103 사고). p15는 **현재 상태에서** 기존 `[n]`을 토큰으로 되돌려 재번호한다. 앞으로 참고문헌을 더 넣을 때는 **p12가 아니라 p15**를 쓴다.
+  - 검증: 영/한 각각 본문 69종 == 목록 69편, 첫 등장 순 1..69, 1:1, 목록 텍스트 69/69 동일, 초록 무인용, 토큰 잔여 0, 재계산 게이트 diff 0.
