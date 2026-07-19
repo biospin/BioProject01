@@ -55,9 +55,9 @@
 - **multivelo×moflow** (shared 537): Spearman(rank) **-0.038** (p=0.38) | sign-agreement 생략(한쪽 sign 구조적)
 - **multivelo×crakvelo** (shared 287): Spearman(rank) **0.003** (p=0.96) | sign-agreement 생략(한쪽 sign 구조적)
 - **multivelo×multivelovae** (shared 538): Spearman(rank) **-0.010** (p=0.81) | sign-agreement 생략(한쪽 sign 구조적)
-- **moflow×crakvelo** (shared 330): Spearman(rank) **-0.151** (p=0.006) | sign-agreement **32.4%**
-- **moflow×multivelovae** (shared 636): Spearman(rank) **0.083** (p=0.036) | sign-agreement **48.1%**
-- **crakvelo×multivelovae** (shared 334): Spearman(rank) **-0.040** (p=0.47) | sign-agreement **38.6%**
+- **moflow×crakvelo** (shared 330): Spearman(rank) **-0.151** (p=0.006) | sign-agreement **42.3%** (n=239, 방향 미정(lag=0) 91개 제외)
+- **moflow×multivelovae** (shared 636): Spearman(rank) **0.083** (p=0.036) | sign-agreement **54.6%** (n=560, 방향 미정(lag=0) 76개 제외)
+- **crakvelo×multivelovae** (shared 334): Spearman(rank) **-0.040** (p=0.47) | sign-agreement **46.6%** (n=277, 방향 미정(lag=0) 57개 제외)
 > rank-corr와 sign-agreement는 분리 보고(병합 금지, DESIGN §4B).
 
 ## 3.6 진단 — per-rate 일치 + apples-to-apples lag

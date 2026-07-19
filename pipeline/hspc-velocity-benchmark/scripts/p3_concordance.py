@@ -171,8 +171,18 @@ def main():
                 si = METHODS[A].get("sign_informative") and METHODS[B].get("sign_informative")
                 line = f"- **{A}×{B}** (shared {len(sh)}): Spearman(rank) **{rho:.3f}** (p={p:.2g})"
                 if si:
-                    sa = float((np.sign(la) == np.sign(lb)).mean())
-                    line += f" | sign-agreement **{sa:.1%}**"
+                    # lag이 정확히 0인 gene은 "방향 미정"이므로 어느 쪽으로도 세지 않는다(2026-07-19 정정).
+                    # 과거 np.sign 비교는 0을 제3범주로 취급해 일치율을 깎았다
+                    # (cs_lag_median에 0이 다수: moflow 76/636, crakvelo 135/868).
+                    # 근거·영향 = results/CORRECTION_sign_agreement_zero_handling.md
+                    nz = (la != 0) & (lb != 0)
+                    n_used, n_ex = int(nz.sum()), int((~nz).sum())
+                    if n_used >= 10:
+                        sa = float(((la[nz] > 0) == (lb[nz] > 0)).mean())
+                        line += (f" | sign-agreement **{sa:.1%}** "
+                                 f"(n={n_used}, 방향 미정(lag=0) {n_ex}개 제외)")
+                    else:
+                        line += f" | sign-agreement 생략(미정 제외 후 n={n_used}<10)"
                 else:
                     line += " | sign-agreement 생략(한쪽 sign 구조적)"
                 L.append(line)
