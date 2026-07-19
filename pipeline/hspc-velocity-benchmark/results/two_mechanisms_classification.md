@@ -2,6 +2,8 @@
 
 > 2026-07-19. 질문(kkkim): ~50/50 chromatin-leading/RNA-first split을 "두 개의 다른 기작"으로 승격해 유전자별로 분류·차등 예측 가능한가? naive(velocity lag 부호)는 이미 죽음(2-method sign-agreement 48%=우연). 부호 가변 3 method(MoFlow·CRAK·VAE)의 방향을 **생물학(canonical marker)으로 규약 정렬** 후 재현성 검정.
 
+> ⚠️ **정정(2026-07-19)**: 아래 pairwise sign-agreement 수치는 **0(방향 미정) 처리를 명시하지 않은 값**이다. `cs_lag_median`에 정확히 0인 값이 다수 있어(MoFlow 76/636, CRAK 135/868) 계산 방식에 따라 값이 달라진다. **정정된 값(0 제외)** = MoFlow×CRAK **42.3%**(n=239) · MoFlow×VAE **54.6%**(n=560) · CRAK×VAE **46.6%**(n=277). 상세·근거 = `results/CORRECTION_sign_agreement_zero_handling.md`. **정성적 결론(per-gene 방향 비재현)은 불변.**
+
 ## 방법
 - 부호 가변 방향 지표: MoFlow `cs_lag_median`, CRAK-Velo `cs_lag_median`, VAE rate-proxy(1/α_c−1/α).
 - 규약 정렬: 각 method에서 myeloid priming marker(ELANE·AZU1·MPO·LYZ·CSF1R) mean − HSC marker(HLF·CRHBP·MEIS1) mean 이 양이면 규약이 생물학과 일치(chromatin-first=+). 셋 다 **flip 불필요**(이미 일치): myeloid−HSC = MoFlow +0.356 · CRAK +1.500 · VAE +0.071.

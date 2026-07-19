@@ -4,6 +4,8 @@
 > MultiVelo lag(sw2−sw1)은 switch-time 단조정렬로 **구조적 양수 = 방향 무정보**라 판정에서 제외(값만 병기).
 > 전체 표: `results/per_gene_direction_by_method.csv` (n=1175 genes).
 
+> ⚠️ **정정(2026-07-19)**: 아래 pairwise sign-agreement 수치는 **0(방향 미정) 처리를 명시하지 않은 값**이다. `cs_lag_median`에 정확히 0인 값이 다수 있어(MoFlow 76/636, CRAK 135/868) 계산 방식에 따라 값이 달라진다. **정정된 값(0 제외)** = MoFlow×CRAK **42.3%**(n=239) · MoFlow×VAE **54.6%**(n=560) · CRAK×VAE **46.6%**(n=277). 상세·근거 = `results/CORRECTION_sign_agreement_zero_handling.md`. **정성적 결론(per-gene 방향 비재현)은 불변.**
+
 ## 합의 분포 (부호 가변 method ≥2개 있는 유전자)
 
 | 합의 | 유전자 수 | 비율 |
