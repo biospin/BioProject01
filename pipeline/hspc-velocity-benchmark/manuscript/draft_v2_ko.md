@@ -283,9 +283,9 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 ## References
 
-[1] La Manno Gioele, Soldatov Ruslan, Zeisel Amit, Braun Emelie, Hochgerner Hannah, Petukhov Viktor, et al. "RNA velocity of single cells." *Nature* **560**(7719), 494–498 (2018). doi:10.1038/s41586-018-0414-6
+[1] La Manno G, Soldatov R, Zeisel A, et al. RNA velocity of single cells. *Nature* 560(7719), 494–498 (2018). doi:10.1038/s41586-018-0414-6.
 
-[2] Cao Junyue, Cusanovich Darren A., Ramani Vijay, Aghamirzaie Delasa, Pliner Hannah A., Hill Andrew J., et al. "Joint profiling of chromatin accessibility and gene expression in thousands of single cells." *Science* **361**(6409), 1380–1385 (2018). doi:10.1126/science.aau0730
+[2] Cao J, Cusanovich DA, Ramani V, et al. Joint profiling of chromatin accessibility and gene expression in thousands of single cells. *Science* 361(6409), 1380–1385 (2018). doi:10.1126/science.aau0730.
 
 [3] Li C, Virgilio MC, Collins KL, Welch JD. Multi-omic single-cell velocity models epigenome–transcriptome interactions and improves cell fate prediction. *Nature Biotechnology* 41, 387–398 (2023). doi:10.1038/s41587-022-01476-y.
 
@@ -303,25 +303,25 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 [10] Gu Y, et al. Bayesian inference of RNA velocity incorporating timepoints, lineage bifurcations, and count data (veloVAE). *PLOS Computational Biology* 22(3), e1014060 (2026). doi:10.1371/journal.pcbi.1014060. [Distinct from MultiVeloVAE [2].]
 
-[11] Qiao Chen, Huang Yuanhua. "Representation learning of RNA velocity reveals robust cell transitions." *Proceedings of the National Academy of Sciences* **118**(49), e2105859118 (2021). doi:10.1073/pnas.2105859118
+[11] Qiao C, Huang Y. Representation learning of RNA velocity reveals robust cell transitions. *Proceedings of the National Academy of Sciences* 118(49), e2105859118 (2021). doi:10.1073/pnas.2105859118.
 
-[12] Gao Mingze, Qiao Chen, Huang Yuanhua. "UniTVelo: temporally unified RNA velocity reinforces single-cell trajectory inference." *Nature Communications* **13**(1), 6586 (2022). doi:10.1038/s41467-022-34188-7
+[12] Gao M, Qiao C, Huang Y. UniTVelo: temporally unified RNA velocity reinforces single-cell trajectory inference. *Nature Communications* 13(1), 6586 (2022). doi:10.1038/s41467-022-34188-7.
 
-[13] Li Shengyu, Zhang Pengzhi, Chen Weiqing, Ye Lingqun, Brannan Kristopher W., Le Nhat-Tu, et al. "A relay velocity model infers cell-dependent RNA velocity." *Nature Biotechnology* **42**(1), 99–108 (2024). doi:10.1038/s41587-023-01728-5
+[13] Li S, Zhang P, Chen W, et al. A relay velocity model infers cell-dependent RNA velocity. *Nature Biotechnology* 42(1), 99–108 (2023). doi:10.1038/s41587-023-01728-5.
 
-[14] Qiu Xiaojie, Zhang Yan, Martin-Rufino Jorge D., Weng Chen, Hosseinzadeh Shayan, Yang Dian, et al. "Mapping transcriptomic vector fields of single cells." *Cell* **185**(4), 690–711.e45 (2022). doi:10.1016/j.cell.2021.12.045
+[14] Qiu X, Zhang Y, Martin-Rufino JD, et al. Mapping transcriptomic vector fields of single cells. *Cell* 185(4), 690-711.e45 (2022). doi:10.1016/j.cell.2021.12.045.
 
-[15] Velten Lars, Haas Simon F., Raffel Simon, Blaszkiewicz Sandra, Islam Saiful, Hennig Bianca P., et al. "Human haematopoietic stem cell lineage commitment is a continuous process." *Nature Cell Biology* **19**(4), 271–281 (2017). doi:10.1038/ncb3493
+[15] Velten L, Haas SF, Raffel S, et al. Human haematopoietic stem cell lineage commitment is a continuous process. *Nature Cell Biology* 19(4), 271–281 (2017). doi:10.1038/ncb3493.
 
-[16] Laurenti Elisa, Göttgens Berthold. "From haematopoietic stem cells to complex differentiation landscapes." *Nature* **553**(7689), 418–426 (2018). doi:10.1038/nature25022
+[16] Laurenti E, Göttgens B. From haematopoietic stem cells to complex differentiation landscapes. *Nature* 553(7689), 418–426 (2018). doi:10.1038/nature25022.
 
-[17] Buenrostro Jason D., Corces M. Ryan, Lareau Caleb A., Wu Beijing, Schep Alicia N., Aryee Martin J., et al. "Integrated Single-Cell Analysis Maps the Continuous Regulatory Landscape of Human Hematopoietic Differentiation." *Cell* **173**(6), 1535–1548.e16 (2018). doi:10.1016/j.cell.2018.03.074
+[17] Buenrostro JD, Corces MR, Lareau CA, et al. Integrated Single-Cell Analysis Maps the Continuous Regulatory Landscape of Human Hematopoietic Differentiation. *Cell* 173(6), 1535-1548.e16 (2018). doi:10.1016/j.cell.2018.03.074.
 
 [18] Ma S, Zhang B, LaFave LM, et al. Chromatin Potential Identified by Shared Single-Cell Profiling of RNA and Chromatin. *Cell* 183(4), 1103–1116.e20 (2020). doi:10.1016/j.cell.2020.09.056.
 
 [19] Trevino AE, Müller F, Andersen J, et al. Chromatin and gene-regulatory dynamics of the developing human cerebral cortex at single-cell resolution. *Cell* 184(19), 5053–5069.e23 (2021). doi:10.1016/j.cell.2021.07.039. (GSE162170.)
 
-[20] Zheng Shijie C., Stein-O'Brien Genevieve, Boukas Leandros, Goff Loyal A., Hansen Kasper D. "Pumping the brakes on RNA velocity by understanding and interpreting RNA velocity estimates." *Genome Biology* **24**(1), 246 (2023). doi:10.1186/s13059-023-03065-x
+[20] Zheng SC, Stein-O’Brien G, Boukas L, Goff LA, Hansen KD. Pumping the brakes on RNA velocity by understanding and interpreting RNA velocity estimates. *Genome Biology* 24(1), 246 (2023). doi:10.1186/s13059-023-03065-x.
 
 [21] Bergen V, Soldatov RA, Kharchenko PV, Theis FJ. RNA velocity — current challenges and future perspectives. *Molecular Systems Biology* 17(8), e10282 (2021). doi:10.15252/msb.202110282.
 
@@ -329,17 +329,17 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 [23] Marot-Lassauzaie V, Bouman BJ, Donaghy FD, Demerdash Y, Essers MAG, Haghverdi L. Towards reliable quantification of cell state velocities. *PLOS Computational Biology* 18(9), e1010031 (2022). doi:10.1371/journal.pcbi.1010031.
 
-[24] Sonrel Anthony, Luetge Almut, Soneson Charlotte, Mallona Izaskun, Germain Pierre-Luc, Knyazev Sergey, et al. "Meta-analysis of (single-cell method) benchmarks reveals the need for extensibility and interoperability." *Genome Biology* **24**(1), 119 (2023). doi:10.1186/s13059-023-02962-5
+[24] Sonrel A, Luetge A, Soneson C, et al. Meta-analysis of (single-cell method) benchmarks reveals the need for extensibility and interoperability. *Genome Biology* 24(1), 119 (2023). doi:10.1186/s13059-023-02962-5.
 
 [25] Luo Y, Ren J, Yang Q, You Z, Zhou Y, Qin Q, Li Q. Benchmarking RNA velocity methods across 17 independent studies. *Cell Reports Methods* 6(4), 101367 (2026). doi:10.1016/j.crmeth.2026.101367. (Preprint: bioRxiv 2025.08.02.668272.)
 
 [26] Huang K, Zhou Y, Wang T, Li X, Zhao X, Liu X, Huang L, Zhou X, Liu J. Benchmarking algorithms for RNA velocity inference. bioRxiv 2026.01.03.697314 (2026). doi:10.64898/2026.01.03.697314. [Preprint, not peer-reviewed.]
 
-[27] Barile Melania, Imaz-Rosshandler Ivan, Inzani Isabella, Ghazanfar Shila, Nichols Jennifer, Marioni John C., et al. "Coordinated changes in gene expression kinetics underlie both mouse and human erythroid maturation." *Genome Biology* **22**(1), 197 (2021). doi:10.1186/s13059-021-02414-y
+[27] Barile M, Imaz-Rosshandler I, Inzani I, et al. Coordinated changes in gene expression kinetics underlie both mouse and human erythroid maturation. *Genome Biology* 22(1), 197 (2021). doi:10.1186/s13059-021-02414-y.
 
-[28] Schwalb Björn, Michel Margaux, Zacher Benedikt, Frühauf Katja, Demel Carina, Tresch Achim, et al. "TT-seq maps the human transient transcriptome." *Science* **352**(6290), 1225–1228 (2016). doi:10.1126/science.aad9841
+[28] Schwalb B, Michel M, Zacher B, et al. TT-seq maps the human transient transcriptome. *Science* 352(6290), 1225–1228 (2016). doi:10.1126/science.aad9841.
 
-[29] Herzog Veronika A, Reichholf Brian, Neumann Tobias, Rescheneder Philipp, Bhat Pooja, Burkard Thomas R, et al. "Thiol-linked alkylation of RNA to assess expression dynamics." *Nature Methods* **14**(12), 1198–1204 (2017). doi:10.1038/nmeth.4435
+[29] Herzog VA, Reichholf B, Neumann T, et al. Thiol-linked alkylation of RNA to assess expression dynamics. *Nature Methods* 14(12), 1198–1204 (2017). doi:10.1038/nmeth.4435.
 
 [30] Begley CG, Ellis LM. Raise standards for preclinical cancer research. *Nature* 483, 531–533 (2012). doi:10.1038/483531a.
 
@@ -355,37 +355,37 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 [36] Ioannidis JPA, Allison DB, Ball CA, et al. Repeatability of published microarray gene expression analyses. *Nature Genetics* 41, 149–155 (2009). doi:10.1038/ng.295.
 
-[37] Weber Lukas M., Saelens Wouter, Cannoodt Robrecht, Soneson Charlotte, Hapfelmeier Alexander, Gardner Paul P., et al. "Essential guidelines for computational method benchmarking." *Genome Biology* **20**(1), 125 (2019). doi:10.1186/s13059-019-1738-8
+[37] Weber LM, Saelens W, Cannoodt R, et al. Essential guidelines for computational method benchmarking. *Genome Biology* 20(1), 125 (2019). doi:10.1186/s13059-019-1738-8.
 
-[38] Luecken Malte D., Büttner M., Chaichoompu K., Danese A., Interlandi M., Mueller M. F., et al. "Benchmarking atlas-level data integration in single-cell genomics." *Nature Methods* **19**(1), 41–50 (2022). doi:10.1038/s41592-021-01336-8
+[38] Luecken MD, Büttner M, Chaichoompu K, et al. Benchmarking atlas-level data integration in single-cell genomics. *Nature Methods* 19(1), 41–50 (2021). doi:10.1038/s41592-021-01336-8.
 
 [39] Zhang et al. Quantifying uncertainty in RNA velocity (ConsensusVelo). bioRxiv 2024.05.14.594102 (2024); *Biometrics* 82(1) ujag018 (in press). doi:10.1101/2024.05.14.594102. [Closest prior art to the profile-likelihood section; cited head-on. Full author list/final venue to confirm.]
 
-[40] Gutenkunst Ryan N, Waterfall Joshua J, Casey Fergal P, Brown Kevin S, Myers Christopher R, Sethna James P. "Universally Sloppy Parameter Sensitivities in Systems Biology Models." *PLoS Computational Biology* **3**(10), e189 (2007). doi:10.1371/journal.pcbi.0030189
+[40] Gutenkunst RN, Waterfall JJ, Casey FP, Brown KS, Myers CR, Sethna JP. Universally Sloppy Parameter Sensitivities in Systems Biology Models. *PLoS Computational Biology* 3(10), e189 (2007). doi:10.1371/journal.pcbi.0030189.
 
-[41] Transtrum Mark K., Machta Benjamin B., Sethna James P. "Geometry of nonlinear least squares with applications to sloppy models and optimization." *Physical Review E* **83**(3), 036701 (2011). doi:10.1103/physreve.83.036701
+[41] Transtrum MK, Machta BB, Sethna JP. Geometry of nonlinear least squares with applications to sloppy models and optimization. *Physical Review E* 83(3), 036701 (2011). doi:10.1103/physreve.83.036701.
 
-[42] Cowland Jack B., Borregaard Niels. "Granulopoiesis and granules of human neutrophils." *Immunological Reviews* **273**(1), 11–28 (2016). doi:10.1111/imr.12440
+[42] Cowland JB, Borregaard N. Granulopoiesis and granules of human neutrophils. *Immunological Reviews* 273(1), 11–28 (2016). doi:10.1111/imr.12440.
 
-[43] Borregaard Niels, Sørensen Ole E., Theilgaard-Mönch Kim. "Neutrophil granules: a library of innate immunity proteins." *Trends in Immunology* **28**(8), 340–345 (2007). doi:10.1016/j.it.2007.06.002
+[43] Borregaard N, Sørensen OE, Theilgaard-Mönch K. Neutrophil granules: a library of innate immunity proteins. *Trends in Immunology* 28(8), 340–345 (2007). doi:10.1016/j.it.2007.06.002.
 
-[44] Gillespie Marc, Jassal Bijay, Stephan Ralf, Milacic Marija, Rothfels Karen, Senff-Ribeiro Andrea, et al. "The reactome pathway knowledgebase 2022." *Nucleic Acids Research* **50**(D1), D687–D692 (2022). doi:10.1093/nar/gkab1028
+[44] Gillespie M, Jassal B, Stephan R, et al. The reactome pathway knowledgebase 2022. *Nucleic Acids Research* 50(D1), D687-D692 (2021). doi:10.1093/nar/gkab1028.
 
-[45] Schep Alicia N, Wu Beijing, Buenrostro Jason D, Greenleaf William J. "chromVAR: inferring transcription-factor-associated accessibility from single-cell epigenomic data." *Nature Methods* **14**(10), 975–978 (2017). doi:10.1038/nmeth.4401
+[45] Schep AN, Wu B, Buenrostro JD, Greenleaf WJ. chromVAR: inferring transcription-factor-associated accessibility from single-cell epigenomic data. *Nature Methods* 14(10), 975–978 (2017). doi:10.1038/nmeth.4401.
 
-[46] Schuirmann Donald J. "A comparison of the Two One-Sided Tests Procedure and the Power Approach for assessing the equivalence of average bioavailability." *Journal of Pharmacokinetics and Biopharmaceutics* **15**(6), 657–680 (1987). doi:10.1007/bf01068419
+[46] Schuirmann DJ. A comparison of the Two One-Sided Tests Procedure and the Power Approach for assessing the equivalence of average bioavailability. *Journal of Pharmacokinetics and Biopharmaceutics* 15(6), 657–680 (1987). doi:10.1007/bf01068419.
 
-[47] Nosek Brian A., Ebersole Charles R., DeHaven Alexander C., Mellor David T. "The preregistration revolution." *Proceedings of the National Academy of Sciences* **115**(11), 2600–2606 (2018). doi:10.1073/pnas.1708274114
+[47] Nosek BA, Ebersole CR, DeHaven AC, Mellor DT. The preregistration revolution. *Proceedings of the National Academy of Sciences* 115(11), 2600–2606 (2018). doi:10.1073/pnas.1708274114.
 
-[48] Todorovski Izabela, Tsang Mary-Jane, Feran Breon, Fan Zheng, Gadipally Sreeja, Yoannidis David, et al. "RNA kinetics influence the response to transcriptional perturbation in leukaemia cell lines." *NAR Cancer* **6**(4), zcae039 (2024). doi:10.1093/narcan/zcae039
+[48] Todorovski I, Tsang MJ, Feran B, et al. RNA kinetics influence the response to transcriptional perturbation in leukaemia cell lines. *NAR Cancer* 6(4), zcae039 (2024). doi:10.1093/narcan/zcae039.
 
-[49] Raue A., Kreutz C., Maiwald T., Bachmann J., Schilling M., Klingmüller U., et al. "Structural and practical identifiability analysis of partially observed dynamical models by exploiting the profile likelihood." *Bioinformatics* **25**(15), 1923–1929 (2009). doi:10.1093/bioinformatics/btp358
+[49] Raue A, Kreutz C, Maiwald T, et al. Structural and practical identifiability analysis of partially observed dynamical models by exploiting the profile likelihood. *Bioinformatics* 25(15), 1923–1929 (2009). doi:10.1093/bioinformatics/btp358.
 
-[50] Kreutz Clemens, Raue Andreas, Kaschek Daniel, Timmer Jens. "Profile likelihood in systems biology." *The FEBS Journal* **280**(11), 2564–2571 (2013). doi:10.1111/febs.12276
+[50] Kreutz C, Raue A, Kaschek D, Timmer J. Profile likelihood in systems biology. *The FEBS Journal* 280(11), 2564–2571 (2013). doi:10.1111/febs.12276.
 
-[51] Villaverde Alejandro F., Barreiro Antonio, Papachristodoulou Antonis. "Structural Identifiability of Dynamic Systems Biology Models." *PLOS Computational Biology* **12**(10), e1005153 (2016). doi:10.1371/journal.pcbi.1005153
+[51] Villaverde AF, Barreiro A, Papachristodoulou A. Structural Identifiability of Dynamic Systems Biology Models. *PLOS Computational Biology* 12(10), e1005153 (2016). doi:10.1371/journal.pcbi.1005153.
 
-[52] Lederer Alex R., Leonardi Maxine, Talamanca Lorenzo, Bobrovskiy Daniil M., Herrera Antonio, Droin Colas, et al. "Statistical inference with a manifold-constrained RNA velocity model uncovers cell cycle speed modulations." *Nature Methods* **21**(12), 2271–2286 (2024). doi:10.1038/s41592-024-02471-8
+[52] Lederer AR, Leonardi M, Talamanca L, et al. Statistical inference with a manifold-constrained RNA velocity model uncovers cell cycle speed modulations. *Nature Methods* 21(12), 2271–2286 (2024). doi:10.1038/s41592-024-02471-8.
 
 [53] Gu et al. Profile-likelihood identifiability analysis of single-cell transcription (telegraph) kinetics. *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/btaf581. [Distinct from [8].]
 
@@ -393,27 +393,27 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 [55] BayVel: A Bayesian Framework for RNA Velocity Estimation in Single-Cell Transcriptomics. arXiv:2505.03083 (2025). [Preprint; author list to confirm.]
 
-[56] Battich Nico, Beumer Joep, de Barbanson Buys, Krenning Lenno, Baron Chloé S., Tanenbaum Marvin E., et al. "Sequencing metabolically labeled transcripts in single cells reveals mRNA turnover strategies." *Science* **367**(6482), 1151–1156 (2020). doi:10.1126/science.aax3072
+[56] Battich N, Beumer J, de Barbanson B, et al. Sequencing metabolically labeled transcripts in single cells reveals mRNA turnover strategies. *Science* 367(6482), 1151–1156 (2020). doi:10.1126/science.aax3072.
 
-[57] Cao Junyue, Zhou Wei, Steemers Frank, Trapnell Cole, Shendure Jay. "Sci-fate characterizes the dynamics of gene expression in single cells." *Nature Biotechnology* **38**(8), 980–988 (2020). doi:10.1038/s41587-020-0480-9
+[57] Cao J, Zhou W, Steemers F, Trapnell C, Shendure J. Sci-fate characterizes the dynamics of gene expression in single cells. *Nature Biotechnology* 38(8), 980–988 (2020). doi:10.1038/s41587-020-0480-9.
 
-[58] Lange Marius, Bergen Volker, Klein Michal, Setty Manu, Reuter Bernhard, Bakhti Mostafa, et al. "CellRank for directed single-cell fate mapping." *Nature Methods* **19**(2), 159–170 (2022). doi:10.1038/s41592-021-01346-6
+[58] Lange M, Bergen V, Klein M, et al. CellRank for directed single-cell fate mapping. *Nature Methods* 19(2), 159–170 (2022). doi:10.1038/s41592-021-01346-6.
 
-[59] Weinreb Caleb, Rodriguez-Fraticelli Alejo, Camargo Fernando D., Klein Allon M. "Lineage tracing on transcriptional landscapes links state to fate during differentiation." *Science* **367**(6479), eaaw3381 (2020). doi:10.1126/science.aaw3381
+[59] Weinreb C, Rodriguez-Fraticelli A, Camargo FD, Klein AM. Lineage tracing on transcriptional landscapes links state to fate during differentiation. *Science* 367(6479), eaaw3381 (2020). doi:10.1126/science.aaw3381.
 
-[60] Kaminow Benjamin, Yunusov Dinar, Dobin Alexander. "STARsolo: accurate, fast and versatile mapping/quantification of single-cell and single-nucleus RNA-seq data." bioRxiv (2021). doi:10.1101/2021.05.05.442755 `[Preprint]`
+[60] Kaminow B, Yunusov D, Dobin A. STARsolo: accurate, fast and versatile mapping/quantification of single-cell and single-nucleus RNA-seq data. (2021). doi:10.1101/2021.05.05.442755. [Preprint, not peer-reviewed.]
 
-[61] Granja Jeffrey M., Corces M. Ryan, Pierce Sarah E., Bagdatli S. Tansu, Choudhry Hani, Chang Howard Y., et al. "ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis." *Nature Genetics* **53**(3), 403–411 (2021). doi:10.1038/s41588-021-00790-6
+[61] Granja JM, Corces MR, Pierce SE, et al. ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. *Nature Genetics* 53(3), 403–411 (2021). doi:10.1038/s41588-021-00790-6.
 
-[62] Stuart Tim, Srivastava Avi, Madad Shaista, Lareau Caleb A., Satija Rahul. "Single-cell chromatin state analysis with Signac." *Nature Methods* **18**(11), 1333–1341 (2021). doi:10.1038/s41592-021-01282-5
+[62] Stuart T, Srivastava A, Madad S, Lareau CA, Satija R. Single-cell chromatin state analysis with Signac. *Nature Methods* 18(11), 1333–1341 (2021). doi:10.1038/s41592-021-01282-5.
 
-[63] Hao Yuhan, Hao Stephanie, Andersen-Nissen Erica, Mauck William M., Zheng Shiwei, Butler Andrew, et al. "Integrated analysis of multimodal single-cell data." *Cell* **184**(13), 3573–3587.e29 (2021). doi:10.1016/j.cell.2021.04.048
+[63] Hao Y, Hao S, Andersen-Nissen E, et al. Integrated analysis of multimodal single-cell data. *Cell* 184(13), 3573-3587.e29 (2021). doi:10.1016/j.cell.2021.04.048.
 
-[64] Bergen Volker, Lange Marius, Peidli Stefan, Wolf F. Alexander, Theis Fabian J. "Generalizing RNA velocity to transient cell states through dynamical modeling." *Nature Biotechnology* **38**(12), 1408–1414 (2020). doi:10.1038/s41587-020-0591-3
+[64] Bergen V, Lange M, Peidli S, Wolf FA, Theis FJ. Generalizing RNA velocity to transient cell states through dynamical modeling. *Nature Biotechnology* 38(12), 1408–1414 (2020). doi:10.1038/s41587-020-0591-3.
 
-[65] Benjamini Yoav, Hochberg Yosef. "Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing." *Journal of the Royal Statistical Society Series B: Statistical Methodology* **57**(1), 289–300 (1995). doi:10.1111/j.2517-6161.1995.tb02031.x
+[65] Benjamini Y, Hochberg Y. Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing. *Journal of the Royal Statistical Society Series B: Statistical Methodology* 57(1), 289–300 (1995). doi:10.1111/j.2517-6161.1995.tb02031.x.
 
-[66] Wolock Samuel L., Lopez Romain, Klein Allon M. "Scrublet: Computational Identification of Cell Doublets in Single-Cell Transcriptomic Data." *Cell Systems* **8**(4), 281–291.e9 (2019). doi:10.1016/j.cels.2018.11.005
+[66] Wolock SL, Lopez R, Klein AM. Scrublet: Computational Identification of Cell Doublets in Single-Cell Transcriptomic Data. *Cell Systems* 8(4), 281-291.e9 (2019). doi:10.1016/j.cels.2018.11.005.
 ---
 
 *Bibliography exported to `manuscript/refs.bib`. Reference count (19) is below the Genome Biology benchmark norm (≈50–85); expanding it is a submission-prep task tracked separately in `GB_BENCHMARK.md` (G3) and is not undertaken here to avoid fabricating citations. Items with "to confirm/verify" notes carry over the flags from `related_work.md`.*

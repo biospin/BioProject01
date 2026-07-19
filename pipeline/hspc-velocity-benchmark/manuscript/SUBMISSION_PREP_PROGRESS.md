@@ -13,7 +13,7 @@
 | B | Supplementary figure 렌더 + AF11 정합 | ✅ **완료** | `figures/FIGURE_INVENTORY.md` + figS01/03/04/05 |
 | C | refs 26 → 50~85 확장(실문헌·CrossRef 검증) | ✅ **완료(후보목록)** | `manuscript/REFS_EXPANSION_CANDIDATES.md` |
 | D | csv → xlsx 변환 | ✅ **완료** | `results/supp_xlsx/` 11개 파일 |
-| E | A·B 반영 완료 / **C(참고문헌) 반영은 남음** | 🔶 부분 | draft_v2 + draft_v2_ko **동시** |
+| E | A·B·C 전부 반영 완료 | ✅ **완료** | draft_v2 + draft_v2_ko **동시** |
 | F | GitHub PR로 팀 공유 | ✅ **완료** | [PR #4](https://github.com/biospin/BioProject01/pull/4) (병합은 사람 승인) |
 
 ### 관련 티켓
@@ -78,3 +78,12 @@
 1. **C(참고문헌) 본문 반영이 유일한 미완**입니다. `REFS_EXPANSION_CANDIDATES.md`의 검증된 후보를 draft에 넣되 **영/한 동시**, 번호는 기존 [1]~[26] 뒤에 append하면 재번호 없이 끝납니다. 우선순위는 **인용 결함 12건**(Schwalb·Todorovski/GSE229305·scVelo 원본·velocyto·sloppy/stiff·profile likelihood·BH·TOST·scrublet·STARsolo·Reactome·과립 마커) — 이건 심사에서 바로 걸릴 구멍입니다.
 2. 후보 파일의 미검증 항목 주의: STARsolo는 preprint만 확인됨(STAR Dobin 2013 **미검증**), Reactome은 실제 사용 release 확인 필요, 저자 목록이 6인+et al.로 절단돼 최종 조립 시 재조회 필요.
 3. DeepVelo 동명이인 2종은 **둘 다 인용하거나 둘 다 제외**.
+- 2026-07-20: **C(참고문헌) 본문 반영 완료 — 26 → 66편.** kkkim 지적 두 건 처리.
+  - **왜 인용 결함 12건이 났나**: 기존 `verify_citations.py`는 *목록 → CrossRef* 방향(내가 적은 문헌이 실존하나)만 본다. 목록에 아예 없는 것은 원리적으로 못 잡는다. 누락분은 대부분 초안 이후 본문이 자라며 생겼다(외부검증·통계규약·전처리·기제 서술). → **`scripts/p13_check_uncited_sources.py` 신설**(*본문 → 목록* 방향). 초록·Additional file 캡션은 규약상 제외. 현재 영/한 **0건 통과**.
+  - **넘버링**: 등장순이 아니었다(9번째 등장이 [14], [16]~[19]는 맨 뒤에서 첫 등장 = 주제별 배정 흔적). → **`scripts/p12_refs_integrate_renumber.py`**로 토큰화 → 앵커 삽입 → **첫 등장 순 1..N 재배정** → 목록 재작성 → 영/한 매핑 대조.
+  - 채택: Tier A 24 + Tier B 16 = 40편 추가. B는 도구 인용 결함(scrublet·STARsolo)과 논지 직결 문헌 우선. **DeepVelo 동명이인 2종은 둘 다 제외.**
+  - **표기 통일**(kkkim "목차가 이상하다"): 신규분이 CrossRef 원문 그대로라 `La Manno Gioele, …` 전체이름+따옴표 제목이었고 기존은 Vancouver 약자여서 두 양식이 섞여 있었다. → **`scripts/p14_normalize_refs.py`**로 DOI 재조회해 family/given을 제대로 받아 약자로 변환(6명 이하 전원, 7명 이상 앞 3명+et al.), 따옴표 제거, 쪽 범위 en dash, preprint 라벨 통일. 40건 변환. `[39]`는 in press라 preprint 오라벨을 되돌림.
+  - 검증: 영/한 각각 본문 66종 == 목록 66편, 첫 등장 순 == 1..66, 1:1 대응, **영/한 목록 텍스트 66/66 동일**, 초록 인용 0.
+  - 작업 중 사고 2건과 처리: ① 같은 문구가 초록과 본문에 있어 **초록에 인용이 샜다** → 스크립트에서 Background 이전 구간을 구조적으로 배제 ② 스크립트를 처리된 파일에 재실행해 103편이 됐다 → 백업 복구 후 클린 상태에서 1회만 실행.
+  - 남은 것(사람): `<FILL>` 저자·소속·corresponding·repository DOI/라이선스. 그 외 자동 처리 가능한 항목은 없음.
+  - 참고: Enrichr(speedrichr custom background)는 본문에서 도구명을 부르지 않아 인용 대상이 아니다. 재현성을 위해 Methods에 도구명을 넣을지는 **내용 판단**이라 남겨 둔다.
