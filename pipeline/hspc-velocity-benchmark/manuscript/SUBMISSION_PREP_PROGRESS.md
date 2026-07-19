@@ -9,12 +9,12 @@
 
 | # | 작업 | 상태 | 산출물 |
 |---|---|---|---|
-| A | 적대적 critic 재검토(2026-07-19 변경분) | ⏳ 백그라운드 | `manuscript/REVIEW-GB-2026-07-19b.md` |
+| A | 적대적 critic 재검토(2026-07-19 변경분) | ✅ **완료·반영** | `manuscript/REVIEW-GB-2026-07-19b.md` |
 | B | Supplementary figure 렌더 + AF11 정합 | ✅ **완료** | `figures/FIGURE_INVENTORY.md` + figS01/03/04/05 |
 | C | refs 26 → 50~85 확장(실문헌·CrossRef 검증) | ✅ **완료(후보목록)** | `manuscript/REFS_EXPANSION_CANDIDATES.md` |
 | D | csv → xlsx 변환 | ✅ **완료** | `results/supp_xlsx/` 11개 파일 |
-| E | A·B·C 결과를 draft에 반영 | ⛔ A·B·C 완료 후 | draft_v2 + draft_v2_ko **동시** |
-| F | GitHub PR로 팀 공유 | ⛔ E 후 | PR(병합은 사람 승인) |
+| E | A·B 반영 완료 / **C(참고문헌) 반영은 남음** | 🔶 부분 | draft_v2 + draft_v2_ko **동시** |
+| F | GitHub PR로 팀 공유 | ✅ **완료** | [PR #4](https://github.com/biospin/BioProject01/pull/4) (병합은 사람 승인) |
 
 ### 관련 티켓
 - **BIOP01-61** — 이 진행판의 A·B·C·D 전부. 통합 티켓.
@@ -66,3 +66,15 @@
   - 기존 png 8장 중 약속 패널에 해당하는 건 fig05 하나뿐. fig02는 cross-**dataset**(cross-method 아님), fig03·04는 블로그용 개념도.
   - ⚠️ **에이전트가 제기한 "HSPC lag ρ=+0.163 추적 불가"는 오경보** — 확인 결과 `results/identifiability_dissociation.md`에 ρ_lag(magnitude) **+0.163, 95% CI [+0.078, +0.244]** 로 CI까지 draft와 일치한다. 같은 파일이 "FINDINGS §3.5의 signed −0.010은 MV-magnitude와 VAE-signed를 섞은 범주 불일치"라는 경고도 이미 달아 뒀고, 그것이 draft Table 1 각주 †가 화해시키는 바로 그 지점이다. **draft 수정 불필요.**
   - png는 `.gitignore` 대상 → 스크립트와 인벤토리만 커밋. 투고 번들은 `FIGURE_INVENTORY.md` §3의 재생성 명령으로 만든다.
+- 2026-07-19: **A 완료·반영** — 자체 critic **MAJOR REVISION**(CRITICAL 1·MAJOR 6·MINOR 8). 전부 영/한 동시 반영, 커밋 `3fee5a1`.
+  - CRITICAL-1: HSPC 문단 헤드라인 수치가 **중심화**인데 봉인 규약의 주 지표는 **원척도**이고 centring은 목록에 없었다 → 모든 수치에 라벨을 붙이고, centring이 사후 진단임과 사전등록 판정은 원척도로 계산됐음을 본문에 명시.
+  - MAJOR: "genuine disagreement" 주장을 MultiVelo 한정으로 축소(0 근처 세 쌍이 전부 MoFlow 쌍) · 천장(15,315 세포 재적합)과 셔플(전량)이 서로 다른 섭동이라 **천장이 하한**임을 자백 · −0.500의 부호규약 유보 복원 · [12]가 rna_only였음을 층③ 문장에 명시 · Background↔Positioning 자기모순 해소 · 부호 일치율에 제외율(0~30.5%)과 기준선 해석 추가 · 신규성 3항목 중 refit 천장이 [13] seed 안정성과 겹침을 인정.
+  - **MAJOR-6은 텍스트가 아니라 실행으로 해결**: 봉인해 놓고 빠뜨렸던 **유전자 셔플 null**을 p10·p10c에 추가해 재실행. multiome 쌍 중 귀무를 넘은 건 MultiVelo×VAE 하나(+0.328), 최대 초과분 둘은 다시 RNA-only 쌍(+0.380·+0.278). **판정 불변**(NEGATIVE / REPLICATED 4/4).
+  - 오경보 1건 기각: "lag ρ=+0.163 추적 불가"는 사실이 아님(`identifiability_dissociation.md`에 CI까지 일치).
+  - 게이트 통과(재계산 diff 0), EN/KO 파리티 28/28, 금지어 0, 화살표 0, Abstract 무수정.
+- 2026-07-19: **F 완료** — PR #4 생성(팀 공유·리뷰용, 병합은 사람 승인). 리뷰 요청 3항: 주장 범위 제한 충분성 / MultiVelo×scVelo 처리 / refs 후보 채택 범위.
+
+### ⏭ 다음 세션이 이어서 할 일
+1. **C(참고문헌) 본문 반영이 유일한 미완**입니다. `REFS_EXPANSION_CANDIDATES.md`의 검증된 후보를 draft에 넣되 **영/한 동시**, 번호는 기존 [1]~[26] 뒤에 append하면 재번호 없이 끝납니다. 우선순위는 **인용 결함 12건**(Schwalb·Todorovski/GSE229305·scVelo 원본·velocyto·sloppy/stiff·profile likelihood·BH·TOST·scrublet·STARsolo·Reactome·과립 마커) — 이건 심사에서 바로 걸릴 구멍입니다.
+2. 후보 파일의 미검증 항목 주의: STARsolo는 preprint만 확인됨(STAR Dobin 2013 **미검증**), Reactome은 실제 사용 release 확인 필요, 저자 목록이 6인+et al.로 절단돼 최종 조립 시 재조회 필요.
+3. DeepVelo 동명이인 2종은 **둘 다 인용하거나 둘 다 제외**.
