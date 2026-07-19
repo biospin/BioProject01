@@ -49,6 +49,14 @@
 - **헤드라인 = 측정앵커 velocity 신뢰 결정지도**로 되돌림(§1). manuscript 재작성은 이 기준. **A 기반 프리프린트/블로그7 헤드라인 보류** — 블로그7 초안은 게시 전 하향 필요.
 - 규율 확인: claim-defensibility 게이트가 실제로 작동(make-or-break 통과처럼 보였으나 advisor가 축 오류 포착 → 본문 미반영으로 방어).
 
+### 2026-07-19 — 층② 세포×유전자 velocity 행렬 감사(BIOP01-59) → NEGATIVE, supporting 편입
+- **범위 확장의 근거**: "감사 대상이 per-gene 모수라 velocity의 실제 용도가 아니다"는 반론이 리뷰어 1번 공격 지점 → 한 층 위(세포×유전자 행렬)를 실제로 쟀다. 사전등록 봉인(`PREREGISTRATION_velocity_matrix.md`) 후 실행.
+- **결과 NEGATIVE — 사전 대조 2종 모두 실패**: (A) multiome끼리 −0.139 < RNA-only 기준선 +0.080(paired Δ −0.206, 예상과 반대) (B) MultiVelo 원본×ATAC셔플 +0.732(중심화 +0.838) = 안 무너짐. **재적합 천장 +0.872**가 "지표가 무딘 게 아니라 실제 불일치"를 확정.
+- **주장 등급**: supporting. **헤드라인 승격 없음** — 동결 헤드라인(신뢰 결정지도)을 한 층 넓힐 뿐. 인과 무력 결론은 재적합 대조군을 가진 **MultiVelo 한정**(MoFlow는 seed 재실행 대조 부재).
+- **선결 게이트 통과**: [12,13] 전문 확인(`NOTE_benchmarks_12_13_scope_check.md`) — 둘 다 임베딩·전이 벡터 수준 채점이며 **행렬의 method 간 비교도, 인과 chromatin 대조군도 없다**. [12]는 ATAC 없이 MultiVelo를 rna_only로 실행. [13]은 행렬을 seed 안정성에만 사용. 우리 결과는 중복도 모순도 아니며, [12]의 A1<0.3(전이 벡터 수준 저일치)과 같은 방향이다.
+- **draft 반영(영/한 동시)**: Results 새 소절 1개 + Methods 소절 1개 + Discussion scope 문장 정밀화(주장 #4: "세포 수준 벡터 미감사" → "행렬은 감사, 임베딩 화살표는 범위 밖") + Positioning 보강 + refs [12,13] 서지 확정 + Additional file 12. **Abstract는 손대지 않는다**(승격 방지).
+- ⚠️ **금지**: "평활되면 겉보기 궤적은 비슷할 것"이라는 도피구 — [12]가 전이 벡터 수준에서도 저일치를 보고하므로 자기 인용에 반박당한다. 남는 여지는 정성적 흐름선까지.
+
 ### 이전 (2026-07-12~15)
 - ✅ 4-vs-4 확증 + §8(SNR-bounded) + 방어가능선 전략 봉인(커밋 d52416c).
 - ✅ 5번째 GSE205117(gastrulation) 완주 — 사전등록 6/0 PASS(MoFlow arm 원정의 재채점, 커밋 9eb0b76). 본문·Table1 반영.

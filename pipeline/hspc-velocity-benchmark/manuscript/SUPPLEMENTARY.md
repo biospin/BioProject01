@@ -83,6 +83,13 @@
 **Format.** .pdf (single bundled file)
 **Status.** **Not yet rendered.** Figure scripts exist in the repository; panels must be generated before submission. Do not cite as existing until rendered.
 
+### Additional file 12: Table S10
+**Title.** Cell-level velocity-matrix audit across methods, with its causal control and reproducibility ceiling.
+**Description.** For every method pair on the 21,878 shared cells and 354 usable genes: per-cell and per-gene cosine similarity, the cell-shuffled null and the excess over it, mean-centred values, and per-(cell,gene) sign agreement with the number of zero (undetermined-direction) entries excluded. Includes the ATAC-shuffle contrast, the MultiVelo bootstrap-refit reproducibility ceiling, and the preregistration document whose falsification criteria were sealed before the fitted matrices were read, together with its scored outcome (both preregistered contrasts failed).
+**Format.** .csv (pair table) + .pdf (preregistration)
+**Source.** `results/velocity_matrix_audit_pairs.csv` · `results/velocity_matrix_audit.json` · `results/velocity_matrix_audit.md` · `manuscript/PREREGISTRATION_velocity_matrix.md`
+**Cited in.** Results (cell×gene velocity matrix); Methods (cell-level velocity-matrix audit); Discussion (scope).
+
 ---
 
 ## Notes for submission preparation
