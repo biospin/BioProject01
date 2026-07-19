@@ -1,0 +1,302 @@
+{
+  "seed": 20260719,
+  "systems": [
+    {
+      "system": "gastrulation (GSE205117, mouse)",
+      "n_cells": 10779,
+      "n_genes": 847,
+      "n_mm_pairs": 3,
+      "n_mr_pairs": 3,
+      "inconclusive": false,
+      "mm_median_raw": 0.059534523636102676,
+      "mr_median_raw": 0.188845694065094,
+      "paired_delta_raw": -0.15908117592334747,
+      "ci_raw": [
+        -0.16205568611621857,
+        -0.15590834617614746
+      ],
+      "replicated_raw": true,
+      "contradicted_raw": false,
+      "mm_median_centered": 0.08039972931146622,
+      "mr_median_centered": 0.21997714042663574,
+      "paired_delta_centered": -0.17223675549030304,
+      "ci_centered": [
+        -0.17503143846988678,
+        -0.16940972208976746
+      ],
+      "replicated_centered": true,
+      "contradicted_centered": false,
+      "replicated": true,
+      "contradicted": false
+    },
+    {
+      "system": "macrophage",
+      "n_cells": 3572,
+      "n_genes": 702,
+      "n_mm_pairs": 1,
+      "n_mr_pairs": 2,
+      "inconclusive": false,
+      "mm_median_raw": 0.2803880572319031,
+      "mr_median_raw": 0.4315270483493805,
+      "paired_delta_raw": -0.15174996852874756,
+      "ci_raw": [
+        -0.16961954534053802,
+        -0.1336037963628769
+      ],
+      "replicated_raw": true,
+      "contradicted_raw": false,
+      "mm_median_centered": -0.16578346490859985,
+      "mr_median_centered": 0.23972666263580322,
+      "paired_delta_centered": -0.4065338373184204,
+      "ci_centered": [
+        -0.4172017574310303,
+        -0.39839866757392883
+      ],
+      "replicated_centered": true,
+      "contradicted_centered": false,
+      "replicated": true,
+      "contradicted": false
+    },
+    {
+      "system": "BMMC (GSE194122)",
+      "n_cells": 2850,
+      "n_genes": 232,
+      "n_mm_pairs": 1,
+      "n_mr_pairs": 2,
+      "inconclusive": false,
+      "mm_median_raw": -0.05459224805235863,
+      "mr_median_raw": 0.23483501374721527,
+      "paired_delta_raw": -0.28892993927001953,
+      "ci_raw": [
+        -0.2999249994754791,
+        -0.2781819701194763
+      ],
+      "replicated_raw": true,
+      "contradicted_raw": false,
+      "mm_median_centered": -0.11028720438480377,
+      "mr_median_centered": 0.16845571994781494,
+      "paired_delta_centered": -0.28114789724349976,
+      "ci_centered": [
+        -0.29344284534454346,
+        -0.26826757192611694
+      ],
+      "replicated_centered": true,
+      "contradicted_centered": false,
+      "replicated": true,
+      "contradicted": false
+    },
+    {
+      "system": "E18 mouse brain",
+      "n_cells": 4423,
+      "n_genes": 973,
+      "n_mm_pairs": 1,
+      "n_mr_pairs": 2,
+      "inconclusive": false,
+      "mm_median_raw": 0.10772432386875153,
+      "mr_median_raw": 0.26827189326286316,
+      "paired_delta_raw": -0.1838650107383728,
+      "ci_raw": [
+        -0.19148039817810059,
+        -0.17645645141601562
+      ],
+      "replicated_raw": true,
+      "contradicted_raw": false,
+      "mm_median_centered": 0.10810516029596329,
+      "mr_median_centered": 0.25263017416000366,
+      "paired_delta_centered": -0.18207529187202454,
+      "ci_centered": [
+        -0.19323289394378662,
+        -0.17406359314918518
+      ],
+      "replicated_centered": true,
+      "contradicted_centered": false,
+      "replicated": true,
+      "contradicted": false
+    }
+  ],
+  "pairs": [
+    {
+      "system": "gastrulation (GSE205117, mouse)",
+      "pair": "MultiVelo x MoFlow",
+      "kind": "multiome x multiome",
+      "cell_cos_median": -0.002707777079194784,
+      "cell_cos_null_shuffled": -0.0005234684213064611,
+      "cell_cos_excess": -0.002184308657888323,
+      "centered_cos_median": -0.00042297717300243676,
+      "sign_agreement": 0.5049899837238694,
+      "n_sign_used": 5893907,
+      "n_sign_excluded_zero": 3235906
+    },
+    {
+      "system": "gastrulation (GSE205117, mouse)",
+      "pair": "MultiVelo x MultiVeloVAE",
+      "kind": "multiome x multiome",
+      "cell_cos_median": 0.19982312619686127,
+      "cell_cos_null_shuffled": 0.03782344236969948,
+      "cell_cos_excess": 0.1619996838271618,
+      "centered_cos_median": 0.24037142097949982,
+      "sign_agreement": 0.5441419664571163,
+      "n_sign_used": 7735292,
+      "n_sign_excluded_zero": 1394521
+    },
+    {
+      "system": "gastrulation (GSE205117, mouse)",
+      "pair": "MultiVelo x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.3956798315048218,
+      "cell_cos_null_shuffled": 0.08384764194488525,
+      "cell_cos_excess": 0.3118321895599365,
+      "centered_cos_median": 0.4316744804382324,
+      "sign_agreement": 0.6022649197165535,
+      "n_sign_used": 6514668,
+      "n_sign_excluded_zero": 2615145
+    },
+    {
+      "system": "gastrulation (GSE205117, mouse)",
+      "pair": "MoFlow x MultiVeloVAE",
+      "kind": "multiome x multiome",
+      "cell_cos_median": -0.010549568571150303,
+      "cell_cos_null_shuffled": -0.011234075762331486,
+      "cell_cos_excess": 0.0006845071911811829,
+      "centered_cos_median": 0.0008534637163393199,
+      "sign_agreement": 0.49640006421309335,
+      "n_sign_used": 6970541,
+      "n_sign_excluded_zero": 2159272
+    },
+    {
+      "system": "gastrulation (GSE205117, mouse)",
+      "pair": "MoFlow x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": -0.025280529633164406,
+      "cell_cos_null_shuffled": -0.0203128382563591,
+      "cell_cos_excess": -0.0049676913768053055,
+      "centered_cos_median": -0.0009704707772471011,
+      "sign_agreement": 0.4822832463349013,
+      "n_sign_used": 5745889,
+      "n_sign_excluded_zero": 3383924
+    },
+    {
+      "system": "gastrulation (GSE205117, mouse)",
+      "pair": "MultiVeloVAE x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.24699747562408447,
+      "cell_cos_null_shuffled": 0.09074804186820984,
+      "cell_cos_excess": 0.15624943375587463,
+      "centered_cos_median": 0.2385767251253128,
+      "sign_agreement": 0.5940255036148634,
+      "n_sign_used": 7463491,
+      "n_sign_excluded_zero": 1666322
+    },
+    {
+      "system": "macrophage",
+      "pair": "MultiVelo x MultiVeloVAE",
+      "kind": "multiome x multiome",
+      "cell_cos_median": 0.2803880572319031,
+      "cell_cos_null_shuffled": 0.25037145614624023,
+      "cell_cos_excess": 0.030016601085662842,
+      "centered_cos_median": -0.16578346490859985,
+      "sign_agreement": 0.5727041716665491,
+      "n_sign_used": 2351722,
+      "n_sign_excluded_zero": 155822
+    },
+    {
+      "system": "macrophage",
+      "pair": "MultiVelo x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.6412204504013062,
+      "cell_cos_null_shuffled": 0.24194708466529846,
+      "cell_cos_excess": 0.3992733657360077,
+      "centered_cos_median": 0.5780863761901855,
+      "sign_agreement": 0.6490206446177509,
+      "n_sign_used": 2157899,
+      "n_sign_excluded_zero": 349645
+    },
+    {
+      "system": "macrophage",
+      "pair": "MultiVeloVAE x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.4414476752281189,
+      "cell_cos_null_shuffled": 0.25591152906417847,
+      "cell_cos_excess": 0.18553614616394043,
+      "centered_cos_median": 0.027070194482803345,
+      "sign_agreement": 0.6588037771023161,
+      "n_sign_used": 2277619,
+      "n_sign_excluded_zero": 229925
+    },
+    {
+      "system": "BMMC (GSE194122)",
+      "pair": "MultiVelo x MultiVeloVAE",
+      "kind": "multiome x multiome",
+      "cell_cos_median": -0.05459224805235863,
+      "cell_cos_null_shuffled": -0.007925694808363914,
+      "cell_cos_excess": -0.04666655324399471,
+      "centered_cos_median": -0.11028720438480377,
+      "sign_agreement": 0.6095845314161388,
+      "n_sign_used": 508799,
+      "n_sign_excluded_zero": 152401
+    },
+    {
+      "system": "BMMC (GSE194122)",
+      "pair": "MultiVelo x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.31468069553375244,
+      "cell_cos_null_shuffled": 0.027706202119588852,
+      "cell_cos_excess": 0.2869744934141636,
+      "centered_cos_median": 0.3918968439102173,
+      "sign_agreement": 0.6934601204099323,
+      "n_sign_used": 423387,
+      "n_sign_excluded_zero": 237813
+    },
+    {
+      "system": "BMMC (GSE194122)",
+      "pair": "MultiVeloVAE x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.15508624911308289,
+      "cell_cos_null_shuffled": 0.17130574584007263,
+      "cell_cos_excess": -0.016219496726989746,
+      "centered_cos_median": -0.014835529029369354,
+      "sign_agreement": 0.7469858301958661,
+      "n_sign_used": 522449,
+      "n_sign_excluded_zero": 138751
+    },
+    {
+      "system": "E18 mouse brain",
+      "pair": "MultiVelo x MultiVeloVAE",
+      "kind": "multiome x multiome",
+      "cell_cos_median": 0.10772432386875153,
+      "cell_cos_null_shuffled": 0.03597710281610489,
+      "cell_cos_excess": 0.07174722105264664,
+      "centered_cos_median": 0.10810516029596329,
+      "sign_agreement": 0.5561191726826326,
+      "n_sign_used": 3447770,
+      "n_sign_excluded_zero": 855809
+    },
+    {
+      "system": "E18 mouse brain",
+      "pair": "MultiVelo x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.28352785110473633,
+      "cell_cos_null_shuffled": 0.049363888800144196,
+      "cell_cos_excess": 0.23416396230459213,
+      "centered_cos_median": 0.2827807664871216,
+      "sign_agreement": 0.6306298021227337,
+      "n_sign_used": 2859803,
+      "n_sign_excluded_zero": 1443776
+    },
+    {
+      "system": "E18 mouse brain",
+      "pair": "MultiVeloVAE x scVelo(RNA)",
+      "kind": "multiome x RNA-only",
+      "cell_cos_median": 0.2724872827529907,
+      "cell_cos_null_shuffled": 0.08315451443195343,
+      "cell_cos_excess": 0.1893327683210373,
+      "centered_cos_median": 0.24321241676807404,
+      "sign_agreement": 0.5985210830393467,
+      "n_sign_used": 3422775,
+      "n_sign_excluded_zero": 880804
+    }
+  ],
+  "n_replicated": 4,
+  "n_contradicted": 0,
+  "verdict": "REPLICATED"
+}
