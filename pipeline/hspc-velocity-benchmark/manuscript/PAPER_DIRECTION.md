@@ -12,7 +12,9 @@
 |---|---|---|---|
 | lag cross-method/dataset 비재현, α 재현 | **CONFIRMED** | §7, 4-vs-4 + per-gene | lag ρ≥0.5면 실패 |
 | ~~곡률(내부 식별성)이 외부 측정검증을 예측~~ | **DEMOTED → suggestive supporting** (헤드라인 기각 2026-07-18) | tertile 검정 `results/curvature_tertile_validation.md` | **파라미터 내·유전자 간(n=210/201) 검정 결과: α는 예측방향 단조 경향(최고강성 분위 ρ=+0.30 CI 0배제, low 미검증)이나 ρ_high−ρ_low 미유의(검정력부족); γ는 강성-검증 gradient 없음(flat null). 헤드라인의 γ역방향(−0.224)은 scVelo γ였고 곡률 측정 method(MultiVelo)와 불일치. → "곡률→검증"은 supporting 관찰로만, 헤드라인 아님.** |
-| **α는 method-재현+외부 합성율 앵커된 유일 rate; lag·γ는 fragile+외부 미회복** → 측정앵커 신뢰 결정지도 | **STRONG (헤드라인)** | `external_rate_validation.md`(α +0.24~0.29 CI0배제, γ 역/null) + §7 cross-method | α 외부앵커가 무너지거나 γ가 회복되면 약화 |
+| **α만 cross-method 재현(0.88); lag·γ는 fragile** → velocity 출력 신뢰 결정지도 | **STRONG (헤드라인)** — 단 leg는 ①재현성 순서 ②인과대조(lag=shuffle불변)로 한정 | §7 cross-method + `scrambled_null.md` | α 재현이 무너지거나 lag가 shuffle에 깨지면 약화 |
+| ~~α가 외부 합성율에 앵커된 *유일* 출력~~ → **corroboration으로 강등** (2026-07-19, BIOP01-54) | **DEMOTED** | `results/coupling_lag_alternative.md` | **head-to-head: 발현량이 α보다 synth 더 잘 예측(abundance 0.41 > α 0.26); synth=abundance×k_deg라 당연. 결정진단: α↔abundance 0.80 < cross-method α 0.88 → α는 발현풀과 완전히 같진 않으나(재현 kinetic 소량) 대부분 겹침. ⚠️ 제목/초록 "the only externally anchored output" 방어불가 → 변경. 외부측정은 '일관성 증거'로만.** |
+| lag 대체(모델-free 크로마틴-RNA 결합) | **REJECTED as headline** (supporting만) | `coupling_lag_alternative.md` | 인과대조 통과(shuffle하면 붕괴, lag과 대비)·최근접 lineage(macrophage +0.28)만 재현·BMMC/brain 미재현 → 재현 가능 대체 아님 |
 | ~~named marker는 chromatin이 lag을 **인과** 결정(Medium-High)~~ → **상관만** | **DOWNGRADED (2026-07-18)** | make-or-break #1 marker-shuffle teeth **NULL** (marker |Δlag| ≈ bulk, MW p=0.58; `results/marker_shuffle_teeth_test.md`) | marker의 method 간 *방향* 일치는 유지, **인과 함의는 뺀다** |
 | within-method fit자신감 ≠ cross-method 신뢰성 (2층) | **STRONG** | per-gene 불일치 데이터 | fit 좋은 유전자가 재현도 잘되면 약화 |
 | velocity 신뢰 결정지도(α/rate 신뢰·lag/timing 불신) | **STRONG** | 위 두 개에서 도출 | — |
