@@ -1,0 +1,229 @@
+{
+  "seed": 20260719,
+  "n_cells": 21878,
+  "n_genes_used": 354,
+  "nan_dropped": {
+    "MultiVelo": 0,
+    "MoFlow": 0,
+    "CRAK-Velo": 0,
+    "MultiVeloVAE": 0,
+    "scVelo(RNA)": 151
+  },
+  "zerovar_dropped": {
+    "MultiVelo": 0,
+    "MoFlow": 0,
+    "CRAK-Velo": 0,
+    "MultiVeloVAE": 0,
+    "scVelo(RNA)": 0
+  },
+  "pairs": [
+    {
+      "pair": "MultiVelo × MoFlow",
+      "kind": "multiome×multiome",
+      "cell_cos_median": -0.0004557252977974713,
+      "ci_lo": -0.0009060107404366136,
+      "ci_hi": 0.00018358459055889398,
+      "cell_cos_null_shuffled": 0.011658143252134323,
+      "cell_cos_excess": -0.012113868549931794,
+      "cell_cos_median_sdscaled": 0.02421310544013977,
+      "gene_cos_median": -0.008450813591480255,
+      "gene_cos_frac_pos": 0.4689265536723164,
+      "sign_agreement": 0.497036554274459,
+      "n_sign_used": 5381067,
+      "n_sign_excluded_zero": 2363745
+    },
+    {
+      "pair": "MultiVelo × CRAK-Velo",
+      "kind": "multiome×multiome",
+      "cell_cos_median": 0.04712708294391632,
+      "ci_lo": 0.04460414499044418,
+      "ci_hi": 0.04989929497241974,
+      "cell_cos_null_shuffled": 0.12362952530384064,
+      "cell_cos_excess": -0.07650244235992432,
+      "cell_cos_median_sdscaled": -0.037656113505363464,
+      "gene_cos_median": 0.11453960835933685,
+      "gene_cos_frac_pos": 0.5932203389830508,
+      "sign_agreement": 0.5005734216563477,
+      "n_sign_used": 6903297,
+      "n_sign_excluded_zero": 841515
+    },
+    {
+      "pair": "MultiVelo × MultiVeloVAE",
+      "kind": "multiome×multiome",
+      "cell_cos_median": -0.4075244665145874,
+      "ci_lo": -0.4191490411758423,
+      "ci_hi": -0.39657992124557495,
+      "cell_cos_null_shuffled": -0.1449025273323059,
+      "cell_cos_excess": -0.2626219391822815,
+      "cell_cos_median_sdscaled": 0.12681004405021667,
+      "gene_cos_median": 0.3484192490577698,
+      "gene_cos_frac_pos": 0.6977401129943502,
+      "sign_agreement": 0.5635718700788913,
+      "n_sign_used": 6903297,
+      "n_sign_excluded_zero": 841515
+    },
+    {
+      "pair": "MultiVelo × scVelo(RNA)",
+      "kind": "multiome×RNA-only",
+      "cell_cos_median": 0.24204328656196594,
+      "ci_lo": 0.23896141350269318,
+      "ci_hi": 0.24532562494277954,
+      "cell_cos_null_shuffled": -0.07770490646362305,
+      "cell_cos_excess": 0.319748193025589,
+      "cell_cos_median_sdscaled": 0.40556347370147705,
+      "gene_cos_median": 0.4115559160709381,
+      "gene_cos_frac_pos": 0.8163841807909604,
+      "sign_agreement": 0.634854230287212,
+      "n_sign_used": 5892685,
+      "n_sign_excluded_zero": 1852127
+    },
+    {
+      "pair": "MoFlow × CRAK-Velo",
+      "kind": "multiome×multiome",
+      "cell_cos_median": -0.00044570775935426354,
+      "ci_lo": -0.0009144868818111718,
+      "ci_hi": 4.413723945617676e-05,
+      "cell_cos_null_shuffled": -0.003093061037361622,
+      "cell_cos_excess": 0.0026473532780073583,
+      "cell_cos_median_sdscaled": -0.021490681916475296,
+      "gene_cos_median": -0.047250814735889435,
+      "gene_cos_frac_pos": 0.4463276836158192,
+      "sign_agreement": 0.5383853561122427,
+      "n_sign_used": 6031076,
+      "n_sign_excluded_zero": 1713736
+    },
+    {
+      "pair": "MoFlow × MultiVeloVAE",
+      "kind": "multiome×multiome",
+      "cell_cos_median": -0.015331254340708256,
+      "ci_lo": -0.015951093286275864,
+      "ci_hi": -0.014755199663341045,
+      "cell_cos_null_shuffled": -0.018342172726988792,
+      "cell_cos_excess": 0.0030109183862805367,
+      "cell_cos_median_sdscaled": 0.004605910740792751,
+      "gene_cos_median": -0.004836573731154203,
+      "gene_cos_frac_pos": 0.480225988700565,
+      "sign_agreement": 0.5154978978875411,
+      "n_sign_used": 6031076,
+      "n_sign_excluded_zero": 1713736
+    },
+    {
+      "pair": "MoFlow × scVelo(RNA)",
+      "kind": "multiome×RNA-only",
+      "cell_cos_median": -0.010149906389415264,
+      "ci_lo": -0.010677921585738659,
+      "ci_hi": -0.009548824280500412,
+      "cell_cos_null_shuffled": -0.007130780257284641,
+      "cell_cos_excess": -0.003019126132130623,
+      "cell_cos_median_sdscaled": -5.385820259107277e-05,
+      "gene_cos_median": -0.02364043891429901,
+      "gene_cos_frac_pos": 0.4519774011299435,
+      "sign_agreement": 0.5162461192290586,
+      "n_sign_used": 4993531,
+      "n_sign_excluded_zero": 2751281
+    },
+    {
+      "pair": "CRAK-Velo × MultiVeloVAE",
+      "kind": "multiome×multiome",
+      "cell_cos_median": -0.4110316038131714,
+      "ci_lo": -0.4187817871570587,
+      "ci_hi": -0.40408310294151306,
+      "cell_cos_null_shuffled": -0.4099482297897339,
+      "cell_cos_excess": -0.0010833740234375,
+      "cell_cos_median_sdscaled": 0.020298033952713013,
+      "gene_cos_median": 0.29677051305770874,
+      "gene_cos_frac_pos": 0.7740112994350282,
+      "sign_agreement": 0.5830592143489086,
+      "n_sign_used": 7744812,
+      "n_sign_excluded_zero": 0
+    },
+    {
+      "pair": "CRAK-Velo × scVelo(RNA)",
+      "kind": "multiome×RNA-only",
+      "cell_cos_median": -0.1693515032529831,
+      "ci_lo": -0.17246316373348236,
+      "ci_hi": -0.1663903445005417,
+      "cell_cos_null_shuffled": -0.1896628737449646,
+      "cell_cos_excess": 0.020311370491981506,
+      "cell_cos_median_sdscaled": 0.04265386983752251,
+      "gene_cos_median": 0.34209075570106506,
+      "gene_cos_frac_pos": 0.731638418079096,
+      "sign_agreement": 0.620577126779109,
+      "n_sign_used": 6415852,
+      "n_sign_excluded_zero": 1328960
+    },
+    {
+      "pair": "MultiVeloVAE × scVelo(RNA)",
+      "kind": "multiome×RNA-only",
+      "cell_cos_median": 0.27130287885665894,
+      "ci_lo": 0.26701489090919495,
+      "ci_hi": 0.275287002325058,
+      "cell_cos_null_shuffled": 0.21662434935569763,
+      "cell_cos_excess": 0.054678529500961304,
+      "cell_cos_median_sdscaled": 0.41981393098831177,
+      "gene_cos_median": 0.4099881649017334,
+      "gene_cos_frac_pos": 0.8757062146892656,
+      "sign_agreement": 0.6431083510031091,
+      "n_sign_used": 6415852,
+      "n_sign_excluded_zero": 1328960
+    }
+  ],
+  "contrastA": {
+    "mm_median": -0.13901807367801666,
+    "mm_ci": [
+      -0.13951997458934784,
+      -0.13845059275627136
+    ],
+    "mr_median": 0.07962562143802643,
+    "mr_ci": [
+      0.07831717282533646,
+      0.0808170735836029
+    ],
+    "paired_delta_median": -0.20599743723869324,
+    "paired_delta_ci": [
+      -0.20728635787963867,
+      -0.20469850301742554
+    ],
+    "ci_disjoint": false,
+    "delta_excludes_zero": false
+  },
+  "contrastB": [
+    {
+      "arm": "MultiVelo",
+      "n_genes": 354,
+      "self_vs_scrambled_median": 0.7316573858261108,
+      "ci": [
+        0.7268924713134766,
+        0.7375699281692505
+      ],
+      "sign_agreement": 0.7888454575119155,
+      "n_sign_used": 6662362,
+      "n_sign_excluded_zero": 1082450,
+      "vs_other_methods": {
+        "MoFlow": -0.0004557252977974713,
+        "CRAK-Velo": 0.04712708294391632,
+        "MultiVeloVAE": -0.4075244665145874
+      }
+    },
+    {
+      "arm": "MoFlow",
+      "n_genes": 353,
+      "self_vs_scrambled_median": 0.10985791683197021,
+      "ci": [
+        0.10872093588113785,
+        0.11084053665399551
+      ],
+      "sign_agreement": 0.564389226107262,
+      "n_sign_used": 4801867,
+      "n_sign_excluded_zero": 2921067,
+      "vs_other_methods": {
+        "MultiVelo": -0.0004557252977974713,
+        "CRAK-Velo": -0.0004373303963802755,
+        "MultiVeloVAE": -0.015331754460930824
+      }
+    }
+  ],
+  "A_pass": false,
+  "B_pass": false,
+  "verdict": "NEGATIVE"
+}
