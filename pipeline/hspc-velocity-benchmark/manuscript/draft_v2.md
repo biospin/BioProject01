@@ -54,6 +54,8 @@ RNA velocity infers the direction and speed of transcriptional change from the b
 
 Each of these outputs has been offered as a biological readout, and the lag in particular is attractive as a mechanistic clock. Our own motivating goal is to predict the *timing* of epigenetic-drug responses from baseline epigenomic features, for which a per-gene activation or shutdown offset would be a natural covariate. But a velocity-derived quantity is usable downstream only if it is *reliable*, and reliability has two faces that are usually tested separately. The first is internal: the same number regardless of which reasonable algorithm produced it. The velocity-critique literature is emphatic that many velocity readouts fail even this — violated model assumptions and multiple kinetic regimes produce wrong velocities [9], the pipelines carry many user-set hyperparameters and are often not actionable [10], and reliable quantification of even the velocity *direction* is non-trivial [11]. Two 2026 benchmarks establish that velocity direction is method-dependent with no universal winner [12,13] — but both score the velocity *vector*, not the individual per-gene outputs, and neither applies a permutation-null concordance test, a causal negative control, or an external measurement anchor. The second face of reliability is external and is almost never tested for velocity: does a fitted rate recover an *independently measured* kinetic quantity? Metabolic-labeling assays (TT-seq for synthesis, SLAM-seq half-lives for degradation) now make this test possible, and it is the stronger bar — a quantity can reproduce across methods and still be a shared artifact, but a quantity that also matches a measurement made by a different technology in different cells is anchored to biology.
 
+This concern is not peculiar to velocity. Independent replication efforts in preclinical biology and in psychology have recovered only a fraction of published findings [20,21,22]; surveys report that most researchers have failed to reproduce work by others, and often their own [23]; a systematic replication effort in cancer biology found that published reports seldom carried enough methodological detail to be repeated without contacting the original authors [24]; and the statistical argument for why this should be expected is long-standing [25]. In genomics specifically, published expression analyses were frequently not repeatable from the paper alone [26]. The variant we address here is narrower and, we suspect, more common than outright irreproducibility: a derived quantity is introduced and demonstrated on illustrative loci, and is then used downstream at a per-gene quantitative level at which its reliability was never tested. Benchmarks of the velocity *vector* exist [12,13], but the individual per-gene outputs have not been audited on the axes we apply here.
+
 We therefore treat the velocity outputs not as findings but as candidates to be sorted by reliability. We benchmark them head-to-head across an RNA-only floor and four chromatin-informed arms in human HSPC 10x Multiome (GSE209878), with a permutation-FDR agreement test, a causal ATAC-shuffle negative control, cross-dataset replication in five external systems including a preregistered test, and a corroborating external anchoring of the fitted rates to measured synthesis and degradation. The framing is a reliability map: which velocity outputs a downstream analyst can trust directly and which require orthogonal validation, rather than a "we beat method X" comparison. Where our objective-function analysis touches parameter identifiability, we note up front that the weak identifiability of velocity switch-times has been shown before by ConsensusVelo via likelihood flatness and Fisher information [16]; that work is confirmatory of our mechanism, and our fresh contribution is the velocity-output reliability map itself — the α-stiff/lag-sloppy *dissociation*, its cross-method reproducibility ordering, its external corroboration, and its multiome extension.
 
 ---
@@ -318,6 +320,20 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 [18] Wang. Sloppiness and Action Constraint in Cell State Transitions: Are Single Cells Sloppy? bioRxiv 2025.12.31.697145 (v2, 2025). [Methodological analog on cell-state Gaussian coordinates.]
 
 [19] BayVel: A Bayesian Framework for RNA Velocity Estimation in Single-Cell Transcriptomics. arXiv:2505.03083 (2025). [Preprint; author list to confirm.]
+
+[20] Begley CG, Ellis LM. Raise standards for preclinical cancer research. *Nature* 483, 531–533 (2012). doi:10.1038/483531a.
+
+[21] Prinz F, Schlange T, Asadullah K. Believe it or not: how much can we rely on published data on potential drug targets? *Nature Reviews Drug Discovery* 10, 712 (2011). doi:10.1038/nrd3439-c1.
+
+[22] Open Science Collaboration. Estimating the reproducibility of psychological science. *Science* 349, aac4716 (2015). doi:10.1126/science.aac4716.
+
+[23] Baker M. 1,500 scientists lift the lid on reproducibility. *Nature* 533, 452–454 (2016). doi:10.1038/533452a.
+
+[24] Errington TM, Mathur M, Denis M, et al. Investigating the replicability of preclinical cancer biology. *eLife* 10, e71601 (2021). doi:10.7554/eLife.71601.
+
+[25] Ioannidis JPA. Why most published research findings are false. *PLoS Medicine* 2(8), e124 (2005). doi:10.1371/journal.pmed.0020124.
+
+[26] Ioannidis JPA, Allison DB, Ball CA, et al. Repeatability of published microarray gene expression analyses. *Nature Genetics* 41, 149–155 (2009). doi:10.1038/ng.295.
 
 ---
 
