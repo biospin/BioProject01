@@ -139,6 +139,7 @@ def main():
     names = list(ARMS)
     pairs = [(a, b) for i, a in enumerate(names) for b in names[i + 1:]]
     perm = rng.permutation(len(ref_cells))     # 세포 짝 셔플 null
+    gperm = rng.permutation(len(genes))        # 유전자 셔플 null (사전등록 §3)
     rows = []
     percell = {}
     for a, b in pairs:
@@ -148,6 +149,7 @@ def main():
         med, lo, hi = boot_median_ci(pc, rng)
         null_pc = np.nanmedian(cos_rows(A, Bm[perm]))
         pg = cos_cols(A, Bm)
+        null_pg = np.nanmedian(cos_cols(A, Bm[:, gperm]))   # 유전자 셔플 null
         pcs = cos_rows(smats[a], smats[b])
         sa, n_used, n_ex = sign_agreement(A, Bm)
         kind = ("multiome×multiome" if a in MULTIOME and b in MULTIOME
@@ -158,6 +160,8 @@ def main():
                          cell_cos_excess=med - float(null_pc),
                          cell_cos_median_sdscaled=float(np.nanmedian(pcs)),
                          gene_cos_median=float(np.nanmedian(pg)),
+                         gene_cos_null_gene_shuffled=float(null_pg),
+                         gene_cos_excess=float(np.nanmedian(pg)) - float(null_pg),
                          gene_cos_frac_pos=float(np.nanmean(pg > 0)),
                          sign_agreement=sa, n_sign_used=n_used, n_sign_excluded_zero=n_ex))
         print(f"    {a:14s}×{b:14s} cell-cos {med:+.3f} (null {null_pc:+.3f}) "

@@ -17,7 +17,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from p10_velocity_matrix_audit import (B_BOOT, SEED, _names, boot_median_ci,
-                                       cos_rows, load, sign_agreement)
+                                       cos_cols, cos_rows, load, sign_agreement)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 V = os.path.join(ROOT, "data", "velocity")
@@ -88,6 +88,9 @@ def run_system(name, arms, rng):
             # 봉인된 규약(사전등록 §2-4): **주 판정은 원척도**. 중심화는 보조.
             percell[(a, b)] = (pc, pcc)
             null = float(np.nanmedian(cos_rows(mats[a], mats[b][perm])))
+            gperm = rng.permutation(len(genes))
+            pg = cos_cols(mats[a], mats[b])
+            null_pg = float(np.nanmedian(cos_cols(mats[a], mats[b][:, gperm])))
             sa, n_used, n_ex = sign_agreement(mats[a], mats[b])
             kind = "multiome x RNA-only" if RNA_ONLY in (a, b) else "multiome x multiome"
             rows.append(dict(system=name, pair=f"{a} x {b}", kind=kind,
@@ -95,6 +98,9 @@ def run_system(name, arms, rng):
                              cell_cos_null_shuffled=null,
                              cell_cos_excess=float(np.nanmedian(pc)) - null,
                              centered_cos_median=float(np.nanmedian(pcc)),
+                             gene_cos_median=float(np.nanmedian(pg)),
+                             gene_cos_null_gene_shuffled=null_pg,
+                             gene_cos_excess=float(np.nanmedian(pg)) - null_pg,
                              sign_agreement=sa, n_sign_used=n_used,
                              n_sign_excluded_zero=n_ex))
             print(f"   {a:14s} x {b:14s} [{kind:19s}] raw {np.nanmedian(pc):+.3f} "

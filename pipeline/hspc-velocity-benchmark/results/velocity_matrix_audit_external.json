@@ -12,8 +12,8 @@
       "mr_median_raw": 0.188845694065094,
       "paired_delta_raw": -0.15908117592334747,
       "ci_raw": [
-        -0.16205568611621857,
-        -0.15590834617614746
+        -0.16186408698558807,
+        -0.15598176419734955
       ],
       "replicated_raw": true,
       "contradicted_raw": false,
@@ -21,8 +21,8 @@
       "mr_median_centered": 0.21997714042663574,
       "paired_delta_centered": -0.17223675549030304,
       "ci_centered": [
-        -0.17503143846988678,
-        -0.16940972208976746
+        -0.17517903447151184,
+        -0.1694859117269516
       ],
       "replicated_centered": true,
       "contradicted_centered": false,
@@ -40,8 +40,8 @@
       "mr_median_raw": 0.4315270483493805,
       "paired_delta_raw": -0.15174996852874756,
       "ci_raw": [
-        -0.16961954534053802,
-        -0.1336037963628769
+        -0.1714121699333191,
+        -0.1334673911333084
       ],
       "replicated_raw": true,
       "contradicted_raw": false,
@@ -49,8 +49,8 @@
       "mr_median_centered": 0.23972666263580322,
       "paired_delta_centered": -0.4065338373184204,
       "ci_centered": [
-        -0.4172017574310303,
-        -0.39839866757392883
+        -0.416879802942276,
+        -0.3979748785495758
       ],
       "replicated_centered": true,
       "contradicted_centered": false,
@@ -68,8 +68,8 @@
       "mr_median_raw": 0.23483501374721527,
       "paired_delta_raw": -0.28892993927001953,
       "ci_raw": [
-        -0.2999249994754791,
-        -0.2781819701194763
+        -0.3003743588924408,
+        -0.27893510460853577
       ],
       "replicated_raw": true,
       "contradicted_raw": false,
@@ -77,8 +77,8 @@
       "mr_median_centered": 0.16845571994781494,
       "paired_delta_centered": -0.28114789724349976,
       "ci_centered": [
-        -0.29344284534454346,
-        -0.26826757192611694
+        -0.29385656118392944,
+        -0.2683451175689697
       ],
       "replicated_centered": true,
       "contradicted_centered": false,
@@ -96,8 +96,8 @@
       "mr_median_raw": 0.26827189326286316,
       "paired_delta_raw": -0.1838650107383728,
       "ci_raw": [
-        -0.19148039817810059,
-        -0.17645645141601562
+        -0.19147780537605286,
+        -0.17608916759490967
       ],
       "replicated_raw": true,
       "contradicted_raw": false,
@@ -105,8 +105,8 @@
       "mr_median_centered": 0.25263017416000366,
       "paired_delta_centered": -0.18207529187202454,
       "ci_centered": [
-        -0.19323289394378662,
-        -0.17406359314918518
+        -0.19321826100349426,
+        -0.1734316051006317
       ],
       "replicated_centered": true,
       "contradicted_centered": false,
@@ -123,6 +123,9 @@
       "cell_cos_null_shuffled": -0.0005234684213064611,
       "cell_cos_excess": -0.002184308657888323,
       "centered_cos_median": -0.00042297717300243676,
+      "gene_cos_median": 0.00023006778792478144,
+      "gene_cos_null_gene_shuffled": 0.004296175204217434,
+      "gene_cos_excess": -0.0040661074162926525,
       "sign_agreement": 0.5049899837238694,
       "n_sign_used": 5893907,
       "n_sign_excluded_zero": 3235906
@@ -135,6 +138,9 @@
       "cell_cos_null_shuffled": 0.03782344236969948,
       "cell_cos_excess": 0.1619996838271618,
       "centered_cos_median": 0.24037142097949982,
+      "gene_cos_median": 0.251178503036499,
+      "gene_cos_null_gene_shuffled": 0.021375516429543495,
+      "gene_cos_excess": 0.22980298660695553,
       "sign_agreement": 0.5441419664571163,
       "n_sign_used": 7735292,
       "n_sign_excluded_zero": 1394521
@@ -147,6 +153,9 @@
       "cell_cos_null_shuffled": 0.08384764194488525,
       "cell_cos_excess": 0.3118321895599365,
       "centered_cos_median": 0.4316744804382324,
+      "gene_cos_median": 0.4368989169597626,
+      "gene_cos_null_gene_shuffled": 0.05534520000219345,
+      "gene_cos_excess": 0.3815537169575691,
       "sign_agreement": 0.6022649197165535,
       "n_sign_used": 6514668,
       "n_sign_excluded_zero": 2615145
@@ -159,6 +168,9 @@
       "cell_cos_null_shuffled": -0.011234075762331486,
       "cell_cos_excess": 0.0006845071911811829,
       "centered_cos_median": 0.0008534637163393199,
+      "gene_cos_median": -0.003687371267005801,
+      "gene_cos_null_gene_shuffled": -0.004080595448613167,
+      "gene_cos_excess": 0.0003932241816073656,
       "sign_agreement": 0.49640006421309335,
       "n_sign_used": 6970541,
       "n_sign_excluded_zero": 2159272
@@ -171,6 +183,9 @@
       "cell_cos_null_shuffled": -0.0203128382563591,
       "cell_cos_excess": -0.0049676913768053055,
       "centered_cos_median": -0.0009704707772471011,
+      "gene_cos_median": -0.008423441089689732,
+      "gene_cos_null_gene_shuffled": -0.004547479562461376,
+      "gene_cos_excess": -0.0038759615272283554,
       "sign_agreement": 0.4822832463349013,
       "n_sign_used": 5745889,
       "n_sign_excluded_zero": 3383924
@@ -183,6 +198,9 @@
       "cell_cos_null_shuffled": 0.09074804186820984,
       "cell_cos_excess": 0.15624943375587463,
       "centered_cos_median": 0.2385767251253128,
+      "gene_cos_median": 0.30075886845588684,
+      "gene_cos_null_gene_shuffled": 0.06786363571882248,
+      "gene_cos_excess": 0.23289523273706436,
       "sign_agreement": 0.5940255036148634,
       "n_sign_used": 7463491,
       "n_sign_excluded_zero": 1666322
@@ -192,9 +210,12 @@
       "pair": "MultiVelo x MultiVeloVAE",
       "kind": "multiome x multiome",
       "cell_cos_median": 0.2803880572319031,
-      "cell_cos_null_shuffled": 0.25037145614624023,
-      "cell_cos_excess": 0.030016601085662842,
+      "cell_cos_null_shuffled": 0.24670478701591492,
+      "cell_cos_excess": 0.03368327021598816,
       "centered_cos_median": -0.16578346490859985,
+      "gene_cos_median": 0.3355141282081604,
+      "gene_cos_null_gene_shuffled": 0.06318223476409912,
+      "gene_cos_excess": 0.2723318934440613,
       "sign_agreement": 0.5727041716665491,
       "n_sign_used": 2351722,
       "n_sign_excluded_zero": 155822
@@ -204,9 +225,12 @@
       "pair": "MultiVelo x scVelo(RNA)",
       "kind": "multiome x RNA-only",
       "cell_cos_median": 0.6412204504013062,
-      "cell_cos_null_shuffled": 0.24194708466529846,
-      "cell_cos_excess": 0.3992733657360077,
+      "cell_cos_null_shuffled": 0.23868556320667267,
+      "cell_cos_excess": 0.4025348871946335,
       "centered_cos_median": 0.5780863761901855,
+      "gene_cos_median": 0.5044817328453064,
+      "gene_cos_null_gene_shuffled": 0.025066187605261803,
+      "gene_cos_excess": 0.4794155452400446,
       "sign_agreement": 0.6490206446177509,
       "n_sign_used": 2157899,
       "n_sign_excluded_zero": 349645
@@ -216,9 +240,12 @@
       "pair": "MultiVeloVAE x scVelo(RNA)",
       "kind": "multiome x RNA-only",
       "cell_cos_median": 0.4414476752281189,
-      "cell_cos_null_shuffled": 0.25591152906417847,
-      "cell_cos_excess": 0.18553614616394043,
+      "cell_cos_null_shuffled": 0.2520076632499695,
+      "cell_cos_excess": 0.18944001197814941,
       "centered_cos_median": 0.027070194482803345,
+      "gene_cos_median": 0.43199169635772705,
+      "gene_cos_null_gene_shuffled": 0.05633404850959778,
+      "gene_cos_excess": 0.3756576478481293,
       "sign_agreement": 0.6588037771023161,
       "n_sign_used": 2277619,
       "n_sign_excluded_zero": 229925
@@ -228,9 +255,12 @@
       "pair": "MultiVelo x MultiVeloVAE",
       "kind": "multiome x multiome",
       "cell_cos_median": -0.05459224805235863,
-      "cell_cos_null_shuffled": -0.007925694808363914,
-      "cell_cos_excess": -0.04666655324399471,
+      "cell_cos_null_shuffled": -0.007675075903534889,
+      "cell_cos_excess": -0.04691717214882374,
       "centered_cos_median": -0.11028720438480377,
+      "gene_cos_median": 0.5237034559249878,
+      "gene_cos_null_gene_shuffled": 0.14597764611244202,
+      "gene_cos_excess": 0.3777258098125458,
       "sign_agreement": 0.6095845314161388,
       "n_sign_used": 508799,
       "n_sign_excluded_zero": 152401
@@ -240,9 +270,12 @@
       "pair": "MultiVelo x scVelo(RNA)",
       "kind": "multiome x RNA-only",
       "cell_cos_median": 0.31468069553375244,
-      "cell_cos_null_shuffled": 0.027706202119588852,
-      "cell_cos_excess": 0.2869744934141636,
+      "cell_cos_null_shuffled": 0.017187878489494324,
+      "cell_cos_excess": 0.2974928170442581,
       "centered_cos_median": 0.3918968439102173,
+      "gene_cos_median": 0.5891293287277222,
+      "gene_cos_null_gene_shuffled": 0.12781327962875366,
+      "gene_cos_excess": 0.4613160490989685,
       "sign_agreement": 0.6934601204099323,
       "n_sign_used": 423387,
       "n_sign_excluded_zero": 237813
@@ -252,9 +285,12 @@
       "pair": "MultiVeloVAE x scVelo(RNA)",
       "kind": "multiome x RNA-only",
       "cell_cos_median": 0.15508624911308289,
-      "cell_cos_null_shuffled": 0.17130574584007263,
-      "cell_cos_excess": -0.016219496726989746,
+      "cell_cos_null_shuffled": 0.17148664593696594,
+      "cell_cos_excess": -0.016400396823883057,
       "centered_cos_median": -0.014835529029369354,
+      "gene_cos_median": 0.6449711322784424,
+      "gene_cos_null_gene_shuffled": 0.235264390707016,
+      "gene_cos_excess": 0.4097067415714264,
       "sign_agreement": 0.7469858301958661,
       "n_sign_used": 522449,
       "n_sign_excluded_zero": 138751
@@ -264,9 +300,12 @@
       "pair": "MultiVelo x MultiVeloVAE",
       "kind": "multiome x multiome",
       "cell_cos_median": 0.10772432386875153,
-      "cell_cos_null_shuffled": 0.03597710281610489,
-      "cell_cos_excess": 0.07174722105264664,
+      "cell_cos_null_shuffled": 0.03663698211312294,
+      "cell_cos_excess": 0.07108734175562859,
       "centered_cos_median": 0.10810516029596329,
+      "gene_cos_median": 0.3868173658847809,
+      "gene_cos_null_gene_shuffled": 0.062119804322719574,
+      "gene_cos_excess": 0.3246975615620613,
       "sign_agreement": 0.5561191726826326,
       "n_sign_used": 3447770,
       "n_sign_excluded_zero": 855809
@@ -276,9 +315,12 @@
       "pair": "MultiVelo x scVelo(RNA)",
       "kind": "multiome x RNA-only",
       "cell_cos_median": 0.28352785110473633,
-      "cell_cos_null_shuffled": 0.049363888800144196,
-      "cell_cos_excess": 0.23416396230459213,
+      "cell_cos_null_shuffled": 0.0455453023314476,
+      "cell_cos_excess": 0.23798254877328873,
       "centered_cos_median": 0.2827807664871216,
+      "gene_cos_median": 0.43290627002716064,
+      "gene_cos_null_gene_shuffled": 0.1318701058626175,
+      "gene_cos_excess": 0.30103616416454315,
       "sign_agreement": 0.6306298021227337,
       "n_sign_used": 2859803,
       "n_sign_excluded_zero": 1443776
@@ -288,9 +330,12 @@
       "pair": "MultiVeloVAE x scVelo(RNA)",
       "kind": "multiome x RNA-only",
       "cell_cos_median": 0.2724872827529907,
-      "cell_cos_null_shuffled": 0.08315451443195343,
-      "cell_cos_excess": 0.1893327683210373,
+      "cell_cos_null_shuffled": 0.08982322365045547,
+      "cell_cos_excess": 0.18266405910253525,
       "centered_cos_median": 0.24321241676807404,
+      "gene_cos_median": 0.3829178810119629,
+      "gene_cos_null_gene_shuffled": 0.14111056923866272,
+      "gene_cos_excess": 0.24180731177330017,
       "sign_agreement": 0.5985210830393467,
       "n_sign_used": 3422775,
       "n_sign_excluded_zero": 880804
