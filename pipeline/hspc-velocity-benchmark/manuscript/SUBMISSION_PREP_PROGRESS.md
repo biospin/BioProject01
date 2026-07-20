@@ -93,3 +93,10 @@
   - **인용결함 검사기가 새 문장의 누락을 즉시 잡았다** — "Benjamini-Hochberg"에 인용이 없었다. BH[65] 부착 후 재통과. 검사축을 만든 값을 바로 회수.
   - `scripts/p15_renumber_inplace.py` 신설: p12는 번호 없던 상태에 한 번 쓰는 도구라 처리된 파일에 재실행하면 중복된다(실제로 66→103 사고). p15는 **현재 상태에서** 기존 `[n]`을 토큰으로 되돌려 재번호한다. 앞으로 참고문헌을 더 넣을 때는 **p12가 아니라 p15**를 쓴다.
   - 검증: 영/한 각각 본문 69종 == 목록 69편, 첫 등장 순 1..69, 1:1, 목록 텍스트 69/69 동일, 초록 무인용, 토큰 잔여 0, 재계산 게이트 diff 0.
+- 2026-07-20: **"크로마틴은 velocity 행렬에 무력하다" 철회 반영**(근거 = `results/velocity_matrix_paired_shuffle.md`, 커밋 `8b995ed`). 기존 비교가 천장은 재표집 15,315 cell, 셔플은 전량 21,878 cell이라 세포집합이 어긋나 있었다. 같은 S_b에서 짝맞추면 셔플이 온전한 범위 아래로 3/3(+0.784·+0.813·+0.810 대 +0.826~+0.887, CI 3/3 비중첩).
+  - **반대 방향의 양성 단정은 하지 않는다.** 같은 세포·같은 설정 run-to-run 귀무가 없어 짝지은 Δ(+0.081·+0.004·+0.063, b=1은 사실상 null)는 크로마틴 기여와 재적합 잡음의 합이다. 이 한계를 본문에 명시했다.
+  - 수정 파일: `draft_v2.md`(Results 문단 1개를 2개로, Methods 층② 소절) · `draft_v2_ko.md`(대응 문단 동시) · `results/velocity_matrix_audit.md`(§0 정정 박스, §1 B행 포인터, §4, §5-2, §6 한계 갱신) · `PAPER_DIRECTION.md` 2026-07-19 블록에 정정 항목 추가(governing doc에 철회된 결론이 남지 않도록).
+  - **Abstract 무수정.** 이 건은 층② 행렬 한정 supporting sub-claim이며, Abstract의 인과 문장은 층① per-gene lag 대상이라 무관하다.
+  - Additional file 번호는 새로 만들지 않고 `results/velocity_matrix_paired_shuffle.md` 경로로만 인용했다. 이 대조에 AF를 새로 부여할지는 사람 판단으로 남긴다.
+  - 사실오류 정정: `scramble_within_lineage`(p2)는 **lineage 내부 ATAC 행(세포) permute**라 draft의 "shuffling ATAC gene labels"를 고쳤다. AF9(p7 coupling)는 실제로 유전자 열 permute(`RNG.permutation(n_genes)`)라 캡션이 맞아 **손대지 않았고**, permutation-FDR의 gene-label shuffle null도 정상이라 그대로 뒀다.
+  - 검증: 재계산 게이트 3종 재실행 diff 0, 금지어 0, 본문 화살표 0, 신규 한국어 문단 em대시 0, 인용결함 검사 0건, heading 파리티 34/34.
