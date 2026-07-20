@@ -1,0 +1,373 @@
+{
+ "design": "run-to-run null: identical cells S_b, ATAC intact, re-fit only",
+ "audit_genes": 354,
+ "orig_cells": 21878,
+ "sealed_criteria": {
+  "positive_enabled": "for all measured b: upper CI(|delta_rr|) < lower CI(delta_paired) AND max upper CI(|delta_rr|) < min observed paired delta (+0.0038)",
+  "retraction_maintained": "any |delta_rr| CI overlaps its paired delta CI"
+ },
+ "primary_njobs": 12,
+ "determinism_njobs": 16,
+ "runs": [
+  {
+   "b": 0,
+   "njobs": 12,
+   "n_cell": 15315,
+   "n_gene": 331,
+   "same_cells": true,
+   "A_centered_ci": [
+    0.887088418006897,
+    0.8852906674146652,
+    0.8889089107513428
+   ],
+   "A2_centered_ci": [
+    0.887088418006897,
+    0.8852906674146652,
+    0.8889089107513428
+   ],
+   "delta_rr": 0.0,
+   "delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "abs_delta_rr": 0.0,
+   "abs_delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "direct_centered_cos_A_A2": 1.0,
+   "direct_raw_cos_A_A2": 1.0,
+   "sign_agreement_A_A2": 1.0,
+   "percell_absdiff": {
+    "max": 0.0,
+    "mean": 0.0,
+    "n_cells_differing": 0,
+    "n_cells": 15315
+   },
+   "velo_identity": {
+    "n_gene": 331,
+    "frac_exact_equal": 1.0,
+    "max_abs_diff": 0.0,
+    "median_abs_diff": 0.0,
+    "bitwise_identical": true
+   },
+   "param_identity": {
+    "comparable": true,
+    "n_gene": 498,
+    "n_param_col": 25,
+    "n_cells_differing": 3,
+    "frac_entries_differing": 0.00024096385542168674,
+    "max_abs_diff": 4.440892098500626e-16,
+    "n_genes_differing": 1,
+    "genes_differing": [
+     "LRIG1"
+    ]
+   },
+   "is_primary": true
+  },
+  {
+   "b": 0,
+   "njobs": 16,
+   "n_cell": 15315,
+   "n_gene": 331,
+   "same_cells": true,
+   "A_centered_ci": [
+    0.887088418006897,
+    0.8852906674146652,
+    0.8889089107513428
+   ],
+   "A2_centered_ci": [
+    0.887088418006897,
+    0.8852906674146652,
+    0.8889089107513428
+   ],
+   "delta_rr": 0.0,
+   "delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "abs_delta_rr": 0.0,
+   "abs_delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "direct_centered_cos_A_A2": 1.0,
+   "direct_raw_cos_A_A2": 1.0,
+   "sign_agreement_A_A2": 1.0,
+   "percell_absdiff": {
+    "max": 0.0,
+    "mean": 0.0,
+    "n_cells_differing": 0,
+    "n_cells": 15315
+   },
+   "velo_identity": {
+    "n_gene": 331,
+    "frac_exact_equal": 1.0,
+    "max_abs_diff": 0.0,
+    "median_abs_diff": 0.0,
+    "bitwise_identical": true
+   },
+   "param_identity": {
+    "comparable": true,
+    "n_gene": 498,
+    "n_param_col": 25,
+    "n_cells_differing": 3,
+    "frac_entries_differing": 0.00024096385542168674,
+    "max_abs_diff": 4.440892098500626e-16,
+    "n_genes_differing": 1,
+    "genes_differing": [
+     "LRIG1"
+    ]
+   },
+   "is_primary": false
+  },
+  {
+   "b": 2,
+   "njobs": 12,
+   "n_cell": 15315,
+   "n_gene": 330,
+   "same_cells": true,
+   "A_centered_ci": [
+    0.8843486309051514,
+    0.8826535403728485,
+    0.8864649534225464
+   ],
+   "A2_centered_ci": [
+    0.8843486309051514,
+    0.8826533660292626,
+    0.8864649534225464
+   ],
+   "delta_rr": 0.0,
+   "delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "abs_delta_rr": 0.0,
+   "abs_delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "direct_centered_cos_A_A2": 1.0,
+   "direct_raw_cos_A_A2": 1.0,
+   "sign_agreement_A_A2": 1.0,
+   "percell_absdiff": {
+    "max": 2.4437904357910156e-06,
+    "mean": 1.602110444309801e-08,
+    "n_cells_differing": 2371,
+    "n_cells": 15315
+   },
+   "velo_identity": {
+    "n_gene": 330,
+    "frac_exact_equal": 0.9974805844933171,
+    "max_abs_diff": 0.008097212761640549,
+    "median_abs_diff": 0.0,
+    "bitwise_identical": false
+   },
+   "param_identity": {
+    "comparable": true,
+    "n_gene": 499,
+    "n_param_col": 25,
+    "n_cells_differing": 16,
+    "frac_entries_differing": 0.001282565130260521,
+    "max_abs_diff": 2.061908674747059,
+    "n_genes_differing": 1,
+    "genes_differing": [
+     "LRIG1"
+    ]
+   },
+   "is_primary": true
+  },
+  {
+   "b": 2,
+   "njobs": 16,
+   "n_cell": 15315,
+   "n_gene": 330,
+   "same_cells": true,
+   "A_centered_ci": [
+    0.8843486309051514,
+    0.8826535403728485,
+    0.8864649534225464
+   ],
+   "A2_centered_ci": [
+    0.8843486309051514,
+    0.8826533660292626,
+    0.8864649534225464
+   ],
+   "delta_rr": 0.0,
+   "delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "abs_delta_rr": 0.0,
+   "abs_delta_rr_ci": [
+    0.0,
+    0.0
+   ],
+   "direct_centered_cos_A_A2": 1.0,
+   "direct_raw_cos_A_A2": 1.0,
+   "sign_agreement_A_A2": 1.0,
+   "percell_absdiff": {
+    "max": 2.4437904357910156e-06,
+    "mean": 1.602110444309801e-08,
+    "n_cells_differing": 2371,
+    "n_cells": 15315
+   },
+   "velo_identity": {
+    "n_gene": 330,
+    "frac_exact_equal": 0.9974805844933171,
+    "max_abs_diff": 0.008097212761640549,
+    "median_abs_diff": 0.0,
+    "bitwise_identical": false
+   },
+   "param_identity": {
+    "comparable": true,
+    "n_gene": 499,
+    "n_param_col": 25,
+    "n_cells_differing": 16,
+    "frac_entries_differing": 0.001282565130260521,
+    "max_abs_diff": 2.061908674747059,
+    "n_genes_differing": 1,
+    "genes_differing": [
+     "LRIG1"
+    ]
+   },
+   "is_primary": false
+  }
+ ],
+ "paired_recompute": [
+  {
+   "b": 0,
+   "delta": 0.08082002401351929,
+   "ci": [
+    0.07919800281524658,
+    0.08248841613531113
+   ],
+   "n_cell": 15315,
+   "n_gene": 331,
+   "sealed_delta": 0.08082002401351929
+  },
+  {
+   "b": 2,
+   "delta": 0.06278204917907715,
+   "ci": [
+    0.06080408990383148,
+    0.06481615155935287
+   ],
+   "n_cell": 15315,
+   "n_gene": 330,
+   "sealed_delta": 0.06278204917907715
+  }
+ ],
+ "verdict": "양성 진술 가능(POSITIVE-ENABLED)",
+ "paired_sealed": {
+  "0": {
+   "delta": 0.08082002401351929,
+   "ci": [
+    0.07919800281524658,
+    0.08248841613531113
+   ]
+  },
+  "1": {
+   "delta": 0.003831803798675537,
+   "ci": [
+    0.0017372831702232362,
+    0.00568871796131134
+   ]
+  },
+  "2": {
+   "delta": 0.06278204917907715,
+   "ci": [
+    0.06080408990383148,
+    0.06481615155935287
+   ]
+  }
+ },
+ "paired_min_observed": 0.003831803798675537,
+ "newnew_identity": [
+  {
+   "b": 0,
+   "velo": {
+    "n_gene": 331,
+    "frac_exact_equal": 1.0,
+    "max_abs_diff": 0.0,
+    "median_abs_diff": 0.0,
+    "bitwise_identical": true
+   },
+   "param": {
+    "n_gene": 498,
+    "n_entries_differing": 0,
+    "max_abs_diff": 0.0
+   }
+  },
+  {
+   "b": 2,
+   "velo": {
+    "n_gene": 330,
+    "frac_exact_equal": 1.0,
+    "max_abs_diff": 0.0,
+    "median_abs_diff": 0.0,
+    "bitwise_identical": true
+   },
+   "param": {
+    "n_gene": 499,
+    "n_entries_differing": 0,
+    "max_abs_diff": 0.0
+   }
+  }
+ ],
+ "verdict_checks": {
+  "per_b": [
+   {
+    "b": 0,
+    "abs_delta_rr_upper": 0.0,
+    "paired_delta_lower": 0.07919800281524658,
+    "passes": true
+   },
+   {
+    "b": 2,
+    "abs_delta_rr_upper": 0.0,
+    "paired_delta_lower": 0.06080408990383148,
+    "passes": true
+   }
+  ],
+  "cond1_all_b_nonoverlap": true,
+  "cond2_below_min_paired": true,
+  "max_abs_delta_rr_upper": 0.0,
+  "paired_min_observed": 0.003831803798675537
+ },
+ "determinism": {
+  "b0_nj12": {
+   "n_gene": 331,
+   "frac_exact_equal": 1.0,
+   "max_abs_diff": 0.0,
+   "median_abs_diff": 0.0,
+   "bitwise_identical": true
+  },
+  "b0_nj16": {
+   "n_gene": 331,
+   "frac_exact_equal": 1.0,
+   "max_abs_diff": 0.0,
+   "median_abs_diff": 0.0,
+   "bitwise_identical": true
+  },
+  "b2_nj12": {
+   "n_gene": 330,
+   "frac_exact_equal": 0.9974805844933171,
+   "max_abs_diff": 0.008097212761640549,
+   "median_abs_diff": 0.0,
+   "bitwise_identical": false
+  },
+  "b2_nj16": {
+   "n_gene": 330,
+   "frac_exact_equal": 0.9974805844933171,
+   "max_abs_diff": 0.008097212761640549,
+   "median_abs_diff": 0.0,
+   "bitwise_identical": false
+  }
+ },
+ "fit_deterministic_all": false,
+ "fit_deterministic_same_day": true,
+ "genes_differing_vs_legacy": [
+  "LRIG1"
+ ]
+}
