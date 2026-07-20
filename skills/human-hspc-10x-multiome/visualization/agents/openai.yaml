@@ -1,4 +1,0 @@
-interface:
-  display_name: "Human HSPC 10x Visualization"
-  short_description: "GSE209878 human HSPC 결과 시각화를 설계합니다."
-  default_prompt: "Human HSPC 10x Multiome 분석 결과의 visualization plan을 한국어로 작성해줘. lineage, pseudotime, lag distribution, representative genes figure를 포함해줘."

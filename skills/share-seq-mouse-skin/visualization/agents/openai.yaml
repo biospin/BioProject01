@@ -1,4 +1,0 @@
-interface:
-  display_name: "SHARE-seq Mouse Skin Visualization"
-  short_description: "GSE140203 mouse skin 결과 시각화를 설계합니다."
-  default_prompt: "SHARE-seq mouse skin 분석 결과의 visualization plan을 한국어로 작성해줘. trajectory, lineage-specific lag, representative genes figure를 포함해줘."

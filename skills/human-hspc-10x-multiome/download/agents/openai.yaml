@@ -1,4 +1,0 @@
-interface:
-  display_name: "Human HSPC 10x Download"
-  short_description: "GSE209878 human HSPC 10x Multiome 데이터 다운로드와 manifest 작성을 준비합니다."
-  default_prompt: "GSE209878 human HSPC 10x Multiome 데이터 다운로드 plan을 한국어로 작성해줘. GEO/SRA, raw/processed 파일, donor/sample/batch metadata, checksum, preprocessing handoff를 포함해줘."

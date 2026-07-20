@@ -1,4 +1,0 @@
-interface:
-  display_name: "Human Brain Multiome Download"
-  short_description: "GSE162170 human brain multiome 데이터 다운로드와 manifest 작성을 준비합니다."
-  default_prompt: "GSE162170 human brain multiome 데이터 다운로드 plan을 한국어로 작성해줘. GEO/SRA, donor/stage/region metadata, access restriction, checksum, preprocessing handoff를 포함해줘."

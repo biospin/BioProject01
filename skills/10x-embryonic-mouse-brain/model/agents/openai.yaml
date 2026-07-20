@@ -1,4 +1,0 @@
-interface:
-  display_name: "10x Mouse Brain Model"
-  short_description: "10x embryonic mouse brain lag 모델을 설계합니다."
-  default_prompt: "10x embryonic mouse brain dataset에서 activation lag과 shutdown lag을 추정하고 예측하는 model plan을 한국어로 작성해줘."

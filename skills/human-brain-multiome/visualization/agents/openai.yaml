@@ -1,4 +1,0 @@
-interface:
-  display_name: "Human Brain Multiome Visualization"
-  short_description: "GSE162170 human brain 결과 시각화를 설계합니다."
-  default_prompt: "Human brain multiome 분석 결과의 visualization plan을 한국어로 작성해줘. donor/stage/region, trajectory, lag distribution, model performance figure를 포함해줘."

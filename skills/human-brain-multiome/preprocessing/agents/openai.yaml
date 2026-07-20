@@ -1,4 +1,0 @@
-interface:
-  display_name: "Human Brain Multiome Preprocessing"
-  short_description: "GSE162170 human brain multiome 전처리를 준비합니다."
-  default_prompt: "Human brain multiome GSE162170 데이터의 preprocessing plan을 한국어로 작성해줘. donor, brain region, developmental stage, QC, annotation, output을 포함해줘."

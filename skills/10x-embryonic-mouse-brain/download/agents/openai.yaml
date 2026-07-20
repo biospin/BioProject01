@@ -1,4 +1,0 @@
-interface:
-  display_name: "10x Mouse Brain Download"
-  short_description: "10x embryonic mouse brain multiome 데이터 다운로드와 manifest 작성을 준비합니다."
-  default_prompt: "10x embryonic mouse brain multiome 데이터 다운로드 plan을 한국어로 작성해줘. 공식 출처 확인, raw/processed 파일, checksum, genome build, local path, preprocessing handoff를 포함해줘."

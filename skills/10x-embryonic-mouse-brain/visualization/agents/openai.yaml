@@ -1,4 +1,0 @@
-interface:
-  display_name: "10x Mouse Brain Visualization"
-  short_description: "10x embryonic mouse brain 결과 시각화를 설계합니다."
-  default_prompt: "10x embryonic mouse brain 분석 결과의 visualization plan을 한국어로 작성해줘. trajectory, lag distribution, model performance, representative genes figure를 포함해줘."

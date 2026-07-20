@@ -1,4 +1,0 @@
-interface:
-  display_name: "Human HSPC 10x Model"
-  short_description: "GSE209878 human HSPC lag 모델을 설계합니다."
-  default_prompt: "Human HSPC 10x Multiome GSE209878 dataset에서 activation lag과 shutdown lag을 추정하고 예측하는 model plan을 한국어로 작성해줘."
