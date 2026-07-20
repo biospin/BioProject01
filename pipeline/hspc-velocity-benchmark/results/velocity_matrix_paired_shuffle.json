@@ -1,0 +1,222 @@
+{
+ "design": "paired ATAC-shuffle refit on identical resampled cell set",
+ "audit_genes": 354,
+ "orig_cells": 21878,
+ "sealed_criteria": {
+  "confirm": "B within A observed range (0.826, 0.887) or CI overlap",
+  "refute": "B substantially below A with non-overlapping CI (paired delta CI excludes 0)"
+ },
+ "ceiling_all6": [
+  {
+   "label": "refit_0.h5ad",
+   "raw_median": 0.5517986416816711,
+   "centered_median": 0.887088418006897,
+   "sign_agreement": 0.76912885509626,
+   "sign_n": 4358873,
+   "sign_excluded": 710392,
+   "n_gene": 331,
+   "n_cell": 15315
+  },
+  {
+   "label": "refit_1.h5ad",
+   "raw_median": 0.7587568163871765,
+   "centered_median": 0.825881838798523,
+   "sign_agreement": 0.7859238445745682,
+   "sign_n": 4387107,
+   "sign_excluded": 666843,
+   "n_gene": 330,
+   "n_cell": 15315
+  },
+  {
+   "label": "refit_10.h5ad",
+   "raw_median": 0.5453760623931885,
+   "centered_median": 0.860474169254303,
+   "sign_agreement": 0.7898134857253797,
+   "sign_n": 4450276,
+   "sign_excluded": 634304,
+   "n_gene": 332,
+   "n_cell": 15315
+  },
+  {
+   "label": "refit_11.h5ad",
+   "raw_median": 0.577311098575592,
+   "centered_median": 0.8444234728813171,
+   "sign_agreement": 0.7852828333742965,
+   "sign_n": 4320954,
+   "sign_excluded": 732996,
+   "n_gene": 330,
+   "n_cell": 15315
+  },
+  {
+   "label": "refit_2.h5ad",
+   "raw_median": 0.6172508597373962,
+   "centered_median": 0.8843486309051514,
+   "sign_agreement": 0.7774896478884601,
+   "sign_n": 4400793,
+   "sign_excluded": 653157,
+   "n_gene": 330,
+   "n_cell": 15315
+  },
+  {
+   "label": "refit_3.h5ad",
+   "raw_median": 0.6618444919586182,
+   "centered_median": 0.8874626755714417,
+   "sign_agreement": 0.7877624603698872,
+   "sign_n": 4347704,
+   "sign_excluded": 736876,
+   "n_gene": 332,
+   "n_cell": 15315
+  }
+ ],
+ "paired": [
+  {
+   "b": 0,
+   "n_cell": 15315,
+   "n_gene": 331,
+   "A": {
+    "label": "A refit_0 (ATAC 온전)",
+    "raw_median": 0.5517986416816711,
+    "centered_median": 0.887088418006897,
+    "sign_agreement": 0.76912885509626,
+    "sign_n": 4358873,
+    "sign_excluded": 710392
+   },
+   "B": {
+    "label": "B refit_shuf_0 (ATAC 셔플)",
+    "raw_median": 0.4864142835140228,
+    "centered_median": 0.7837377190589905,
+    "sign_agreement": 0.7375996686578469,
+    "sign_n": 4370105,
+    "sign_excluded": 699160
+   },
+   "A_centered_ci": [
+    0.887088418006897,
+    0.8852906674146652,
+    0.8889089107513428
+   ],
+   "B_centered_ci": [
+    0.7837377190589905,
+    0.7798830732703209,
+    0.787368954718113
+   ],
+   "delta_centered_median": 0.08082002401351929,
+   "delta_ci": [
+    0.07919800281524658,
+    0.08248841613531113
+   ],
+   "delta_n_cell": 15315,
+   "B_within_A_observed_range": false,
+   "ci_overlap_AB": false,
+   "delta_ci_excludes_zero": true
+  },
+  {
+   "b": 1,
+   "n_cell": 15315,
+   "n_gene": 330,
+   "A": {
+    "label": "A refit_1 (ATAC 온전)",
+    "raw_median": 0.7587568163871765,
+    "centered_median": 0.825881838798523,
+    "sign_agreement": 0.7859238445745682,
+    "sign_n": 4387107,
+    "sign_excluded": 666843
+   },
+   "B": {
+    "label": "B refit_shuf_1 (ATAC 셔플)",
+    "raw_median": 0.38562488555908203,
+    "centered_median": 0.8134980201721191,
+    "sign_agreement": 0.7658272256333087,
+    "sign_n": 4345471,
+    "sign_excluded": 708479
+   },
+   "A_centered_ci": [
+    0.825881838798523,
+    0.824475884437561,
+    0.8269956707954407
+   ],
+   "B_centered_ci": [
+    0.8134980201721191,
+    0.809822478890419,
+    0.8170501992106438
+   ],
+   "delta_centered_median": 0.003831803798675537,
+   "delta_ci": [
+    0.0017372831702232362,
+    0.00568871796131134
+   ],
+   "delta_n_cell": 15315,
+   "B_within_A_observed_range": false,
+   "ci_overlap_AB": false,
+   "delta_ci_excludes_zero": true
+  },
+  {
+   "b": 2,
+   "n_cell": 15315,
+   "n_gene": 330,
+   "A": {
+    "label": "A refit_2 (ATAC 온전)",
+    "raw_median": 0.6172508597373962,
+    "centered_median": 0.8843486309051514,
+    "sign_agreement": 0.7774896478884601,
+    "sign_n": 4400793,
+    "sign_excluded": 653157
+   },
+   "B": {
+    "label": "B refit_shuf_2 (ATAC 셔플)",
+    "raw_median": 0.581304669380188,
+    "centered_median": 0.8097572326660156,
+    "sign_agreement": 0.7449363102335863,
+    "sign_n": 4372602,
+    "sign_excluded": 681348
+   },
+   "A_centered_ci": [
+    0.8843486309051514,
+    0.8826535403728485,
+    0.8864649534225464
+   ],
+   "B_centered_ci": [
+    0.8097572326660156,
+    0.8070075511932373,
+    0.8118804350495339
+   ],
+   "delta_centered_median": 0.06278204917907715,
+   "delta_ci": [
+    0.06080408990383148,
+    0.06481615155935287
+   ],
+   "delta_n_cell": 15315,
+   "B_within_A_observed_range": false,
+   "ci_overlap_AB": false,
+   "delta_ci_excludes_zero": true
+  }
+ ],
+ "unpaired_reference": {
+  "label": "full-cell ATAC shuffle (기존, 짝 안 맞음)",
+  "raw_median": 0.7316573858261108,
+  "centered_median": 0.8383702039718628,
+  "sign_agreement": 0.7888454575119155,
+  "sign_n": 6662362,
+  "sign_excluded": 1082450,
+  "n_gene": 354,
+  "n_cell": 21878
+ },
+ "verdict_counts": {
+  "n_paired": 3,
+  "n_within_or_overlap": 0,
+  "n_below_range": 3
+ },
+ "verdict": "REFUTE(현 주장 약화 필요)",
+ "delta_summary": {
+  "median": 0.06278204917907715,
+  "values": [
+   0.08082002401351929,
+   0.003831803798675537,
+   0.06278204917907715
+  ],
+  "B_values": [
+   0.7837377190589905,
+   0.8134980201721191,
+   0.8097572326660156
+  ]
+ }
+}
