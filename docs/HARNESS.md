@@ -57,7 +57,7 @@
 ```
 research-methodologist / literature-scout / novelty-strategist   (기획·근거: paper_analysis/ 14편)
         └─▶ hspc-velocity-analyst ──▶ results/FINDINGS.md + results/*             (분석·검증)
-        └─▶ manuscript-writer ──▶ manuscript/draft.md                            (집필)
+        └─▶ manuscript-writer ──▶ manuscript/draft_v2.md + draft_v2_ko.md        (집필, 영/한 동시)
                  ║  figures/figNN_*.py ──▶ figures/*.png                          (그림)
         └─▶ paper-critic ──▶ reviewer ──▶ manuscript/REVIEW-*.md                 (심사)
                  └─▶ (수정 반영) manuscript-writer

@@ -1,3 +1,5 @@
+> ⚠️ **역사 문서.** 이 계획으로 만든 `draft.md`는 재프레이밍 후 폐기됐고 **정본은 `draft_v2.md`·`draft_v2_ko.md`**다. 아래 `draft.md` 언급은 당시 기록으로만 읽는다.
+
 # WRITING_PLAN — HSPC velocity-lag benchmark 원고 골격 (집필 준비)
 
 > **성격: 집필 *골격*(scaffold)이지 draft가 아니다.** 새 분석 0건 — 검증된 FINDINGS 수치를 Genome Biology IMRaD로 재조직하는 지도.

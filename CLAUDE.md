@@ -84,7 +84,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 | 단계 | Writer | 산출물 | 다음이 읽음 |
 | --- | --- | --- | --- |
 | 분석·eval | `hspc-velocity-analyst` | `pipeline/hspc-velocity-benchmark/results/FINDINGS.md` + `results/*.csv` + `results/*.md` | 집필·검수 |
-| 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft.md`, `figures/*.png` | 검수·리뷰·발표 |
+| 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md` + `draft_v2_ko.md`(영/한 동시), `figures/*.png` | 검수·리뷰·발표 |
 | 검증 게이트 | (커밋/공개 전) | `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py` 재계산 → FINDINGS.md 대조 | 사람 |
 | 리뷰 | paper-critic / reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
 | 발표 | presenter | 슬라이드/발제 | 사람 |
