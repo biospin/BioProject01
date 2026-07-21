@@ -1,0 +1,27 @@
+{
+  "_case_meta": {
+    "kind": "out_of_scope",
+    "source": "git 48c1728('BIOP01-22 재현성 갭 2건 해소 — scv-preprocess.lock.yml 커밋 + Dockerfile velo-* 개명 반영') + 7f38b23('stale env 파일명(velo-*) 정정 + MoFlow/MultiVeloVAE 커밋 핀')",
+    "intent": "실제 재현성 실패지만 **concordance 지표 실패가 아니다** — 환경이 고정되지 않아 재현이 사람 기억에 의존한 사건이다. 이 eval은 산출된 지표 보고서를 채점하므로 섹션이 비어 있고 전 스코어러가 not_applicable이어야 한다.",
+    "caught": false,
+    "expected_is_a_miss": true,
+    "needs_scorer": "eval이 아니라 **파이프라인/인프라 스모크**의 대상이다(하네스 리뷰 §1.2가 긋는 바로 그 선: '1~3은 eval이 아니라 파이프라인 스모크 회귀로 잡아야 한다'). ClawBio 재현성 계약(commands.sh + environment.yml + checksums.sha256, 리뷰 §4.1.2)이 이 층의 후보다. → 범위 밖(README §5).",
+    "expected": {
+      "alpha_reproducibility": "not_applicable",
+      "lag_fragility": "not_applicable",
+      "alpha_lag_dissociation": "not_applicable",
+      "cross_dataset_replication": "not_applicable",
+      "prereg_adherence": "not_applicable"
+    }
+  },
+  "dataset": "hspc",
+  "description": "env 재현성 갭 — scv-preprocess.lock.yml 미커밋 + Dockerfile stale env명(velo-*)",
+  "prereg_source": null,
+  "prereg_deviation": null,
+  "method_set": [
+    "multivelo",
+    "multivelovae",
+    "moflow"
+  ],
+  "sections": {}
+}

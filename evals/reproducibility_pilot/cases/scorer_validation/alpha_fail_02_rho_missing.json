@@ -1,0 +1,102 @@
+{
+  "_case_meta": {
+    "kind": "fail_case",
+    "source": "synthetic — 수치 누락",
+    "intent": "α pair의 ρ가 누락 → 수치 없이 통과시키지 않는다(BIOP02 #2 '수치 누락 → reject'와 같은 규율).",
+    "expected": {
+      "alpha_reproducibility": "fail",
+      "lag_fragility": "pass",
+      "alpha_lag_dissociation": "pass",
+      "cross_dataset_replication": "pass",
+      "prereg_adherence": "pass"
+    }
+  },
+  "dataset": "gse205117",
+  "description": "mouse gastrulation — 5번째 cross-dataset 사전등록 재현 검정",
+  "prereg_source": "pipeline/hspc-velocity-benchmark/manuscript/PREREGISTRATION_gse205117.md",
+  "scored_by": "pipeline/hspc-velocity-benchmark/cross_dataset/p3_prereg_gse205117.py",
+  "scorecard": "pipeline/hspc-velocity-benchmark/results/prereg_gse205117_scorecard.csv",
+  "bootstrap": {
+    "B": 10000,
+    "seed": 20260707
+  },
+  "prereg_deviation": null,
+  "method_set": [
+    "rna_only_floor",
+    "multivelo",
+    "multivelovae",
+    "moflow"
+  ],
+  "sections": {
+    "within_alpha": [
+      {
+        "label": "floor×MV",
+        "n": 846,
+        "rho": 0.9112311980039997,
+        "lo": 0.8973243136757327,
+        "hi": 0.9227869301643904
+      },
+      {
+        "label": "floor×VAE",
+        "n": 1001,
+        "rho": null,
+        "lo": 0.9153552237335473,
+        "hi": 0.9365625094354536
+      },
+      {
+        "label": "MV×VAE",
+        "n": 969,
+        "rho": 0.9529479951601811,
+        "lo": 0.9455666734553594,
+        "hi": 0.9589169557117171
+      }
+    ],
+    "within_lag": [
+      {
+        "label": "MV×VAE",
+        "n": 969,
+        "rho": -0.025870583117979684,
+        "lo": -0.08867092320457663,
+        "hi": 0.03821619065064866,
+        "test": "magnitude_rank"
+      }
+    ],
+    "delta_rho": [
+      {
+        "label": "MV×VAE",
+        "n": 969,
+        "rho": 0.9788185782781609,
+        "lo": 0.9156511165189795,
+        "hi": 1.0414830125754637,
+        "paired": true
+      }
+    ],
+    "cross_alpha": [
+      {
+        "label": "HSPC×gastr",
+        "n": 111,
+        "rho": 0.4149701649701649,
+        "lo": 0.24379871724657895,
+        "hi": 0.5606713948575612
+      }
+    ],
+    "cross_lag": [
+      {
+        "label": "HSPC×gastr",
+        "n": 111,
+        "rho": 0.02842225342225342,
+        "lo": -0.16526369067500402,
+        "hi": 0.22371266445819063
+      }
+    ],
+    "per_gene_disagree": [
+      {
+        "label": "lag|alpha",
+        "n": 968,
+        "lag_disagree": 0.29390495867768596,
+        "alpha_disagree": 0.05159958720330238,
+        "lag_source": "MoFlow `cs_lag_median` (HSPC 원정의, 부호 유지)"
+      }
+    ]
+  }
+}

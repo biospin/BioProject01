@@ -1,0 +1,58 @@
+{
+  "_case_meta": {
+    "kind": "negative_control",
+    "source": "pipeline/hspc-velocity-benchmark/results/concordance.md §3/§3.5/§3.6 + results/identifiability_vs_snr.md",
+    "intent": "원 벤치마크 축. paired Δρ·cross-dataset leg는 HSPC 자신에 대해 산출되지 않는다 (HSPC가 cross의 기준축) → 해당 스코어러는 not_applicable이어야 한다. N/A를 pass로 뭉개지 않는지 확인하는 대조군.",
+    "expected": {
+      "alpha_reproducibility": "pass",
+      "lag_fragility": "pass",
+      "alpha_lag_dissociation": "not_applicable",
+      "cross_dataset_replication": "not_applicable",
+      "prereg_adherence": "pass"
+    }
+  },
+  "dataset": "hspc",
+  "description": "human HSPC (GSE209878) — 원 벤치마크 축. 다른 데이터셋의 cross-dataset 기준선.",
+  "prereg_source": null,
+  "scored_by": "pipeline/hspc-velocity-benchmark/scripts/p3_concordance.py + scripts/p3_identifiability_vs_snr.py",
+  "scorecard": "pipeline/hspc-velocity-benchmark/results/concordance.md",
+  "prereg_deviation": null,
+  "method_set": [
+    "rna_only_floor",
+    "multivelo",
+    "multivelovae",
+    "moflow",
+    "crakvelo"
+  ],
+  "sections": {
+    "within_alpha": [
+      {
+        "label": "floor×MV",
+        "n": 368,
+        "rho": 0.818
+      },
+      {
+        "label": "MV×VAE",
+        "n": 538,
+        "rho": 0.882
+      }
+    ],
+    "within_lag": [
+      {
+        "label": "MV×VAE",
+        "n": 538,
+        "rho": -0.01,
+        "test": "magnitude_rank"
+      }
+    ],
+    "per_gene_disagree": [
+      {
+        "label": "lag|alpha",
+        "n": 537,
+        "lag_disagree": 0.317,
+        "alpha_disagree": 0.078,
+        "lag_source": "MoFlow `cs_lag_median` (HSPC 원정의, 부호 유지)"
+      }
+    ]
+  }
+}
