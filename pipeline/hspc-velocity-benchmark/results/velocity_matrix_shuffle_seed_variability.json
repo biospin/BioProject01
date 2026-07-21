@@ -1,0 +1,476 @@
+{
+ "audit_genes": 354,
+ "design": "shuffle-draw variability: same S_b, same shuffle protocol, shuffle seed varied",
+ "metric": "centered cosine vs original MultiVelo velo_s; cell bootstrap B=1000 seed=20260719",
+ "per_seed": {
+  "0": [
+   {
+    "A_centered": [
+     0.887088418006897,
+     0.8852906674146652,
+     0.8889089107513428
+    ],
+    "A_raw": 0.5517986416816711,
+    "A_sign": 0.76912885509626,
+    "B_centered": [
+     0.7837377190589905,
+     0.7798830732703209,
+     0.787368954718113
+    ],
+    "B_raw": 0.4864142835140228,
+    "B_sign": 0.7375996686578469,
+    "delta": 0.08082002401351929,
+    "delta_ci": [
+     0.07919800281524658,
+     0.08248841613531113
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shuf_0.h5ad",
+    "n_cell": 15315,
+    "n_gene": 331,
+    "origin": "기존",
+    "shuf_seed": 0
+   },
+   {
+    "A_centered": [
+     0.887088418006897,
+     0.8852906674146652,
+     0.8889089107513428
+    ],
+    "A_raw": 0.5517986416816711,
+    "A_sign": 0.76912885509626,
+    "B_centered": [
+     0.7427409887313843,
+     0.739454448223114,
+     0.746036946773529
+    ],
+    "B_raw": 0.5714821219444275,
+    "B_sign": 0.7487942640556545,
+    "delta": 0.13132882118225098,
+    "delta_ci": [
+     0.12947771996259688,
+     0.13288056701421738
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b0_s101.h5ad",
+    "n_cell": 15315,
+    "n_gene": 331,
+    "origin": "신규",
+    "shuf_seed": 101
+   },
+   {
+    "A_centered": [
+     0.887088418006897,
+     0.8852906674146652,
+     0.8889089107513428
+    ],
+    "A_raw": 0.5517986416816711,
+    "A_sign": 0.76912885509626,
+    "B_centered": [
+     0.7758688926696777,
+     0.7724495530128479,
+     0.7789613381028175
+    ],
+    "B_raw": 0.4769018888473511,
+    "B_sign": 0.753196374808567,
+    "delta": 0.10010963678359985,
+    "delta_ci": [
+     0.0987938642501831,
+     0.10169046297669411
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b0_s202.h5ad",
+    "n_cell": 15315,
+    "n_gene": 331,
+    "origin": "신규",
+    "shuf_seed": 202
+   },
+   {
+    "A_centered": [
+     0.887088418006897,
+     0.8852906674146652,
+     0.8889089107513428
+    ],
+    "A_raw": 0.5517986416816711,
+    "A_sign": 0.76912885509626,
+    "B_centered": [
+     0.8130816221237183,
+     0.809789003431797,
+     0.8159109950065613
+    ],
+    "B_raw": 0.361939013004303,
+    "B_sign": 0.7306166014270369,
+    "delta": 0.05949336290359497,
+    "delta_ci": [
+     0.05828438997268677,
+     0.06090079993009567
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b0_s303.h5ad",
+    "n_cell": 15315,
+    "n_gene": 331,
+    "origin": "신규",
+    "shuf_seed": 303
+   }
+  ],
+  "1": [
+   {
+    "A_centered": [
+     0.825881838798523,
+     0.824475884437561,
+     0.8269956707954407
+    ],
+    "A_raw": 0.7587568163871765,
+    "A_sign": 0.7859238445745682,
+    "B_centered": [
+     0.8134980201721191,
+     0.809822478890419,
+     0.8170501992106438
+    ],
+    "B_raw": 0.38562488555908203,
+    "B_sign": 0.7658272256333087,
+    "delta": 0.003831803798675537,
+    "delta_ci": [
+     0.0017372831702232362,
+     0.00568871796131134
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shuf_1.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "기존",
+    "shuf_seed": 1
+   },
+   {
+    "A_centered": [
+     0.825881838798523,
+     0.824475884437561,
+     0.8269956707954407
+    ],
+    "A_raw": 0.7587568163871765,
+    "A_sign": 0.7859238445745682,
+    "B_centered": [
+     0.7891040444374084,
+     0.78547133654356,
+     0.7921820878982544
+    ],
+    "B_raw": 0.5865164995193481,
+    "B_sign": 0.7491648076621766,
+    "delta": 0.024571657180786133,
+    "delta_ci": [
+     0.02220851629972458,
+     0.02702018916606903
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b1_s102.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "신규",
+    "shuf_seed": 102
+   },
+   {
+    "A_centered": [
+     0.825881838798523,
+     0.824475884437561,
+     0.8269956707954407
+    ],
+    "A_raw": 0.7587568163871765,
+    "A_sign": 0.7859238445745682,
+    "B_centered": [
+     0.7772636413574219,
+     0.7747971415519714,
+     0.7802345424890518
+    ],
+    "B_raw": 0.4815845489501953,
+    "B_sign": 0.7338753827218377,
+    "delta": 0.03575468063354492,
+    "delta_ci": [
+     0.033476497232913974,
+     0.038352787494659424
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b1_s203.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "신규",
+    "shuf_seed": 203
+   },
+   {
+    "A_centered": [
+     0.825881838798523,
+     0.824475884437561,
+     0.8269956707954407
+    ],
+    "A_raw": 0.7587568163871765,
+    "A_sign": 0.7859238445745682,
+    "B_centered": [
+     0.8173727989196777,
+     0.8137440085411072,
+     0.8206571877002716
+    ],
+    "B_raw": 0.5565083026885986,
+    "B_sign": 0.7513768004291025,
+    "delta": 0.0026668906211853027,
+    "delta_ci": [
+     0.001200239360332489,
+     0.004827740788459776
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b1_s304.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "신규",
+    "shuf_seed": 304
+   }
+  ],
+  "2": [
+   {
+    "A_centered": [
+     0.8843486309051514,
+     0.8826535403728485,
+     0.8864649534225464
+    ],
+    "A_raw": 0.6172508597373962,
+    "A_sign": 0.7774896478884601,
+    "B_centered": [
+     0.8097572326660156,
+     0.8070075511932373,
+     0.8118804350495339
+    ],
+    "B_raw": 0.581304669380188,
+    "B_sign": 0.7449363102335863,
+    "delta": 0.06278204917907715,
+    "delta_ci": [
+     0.06080408990383148,
+     0.06481615155935287
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shuf_2.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "기존",
+    "shuf_seed": 2
+   },
+   {
+    "A_centered": [
+     0.8843486309051514,
+     0.8826535403728485,
+     0.8864649534225464
+    ],
+    "A_raw": 0.6172508597373962,
+    "A_sign": 0.7774896478884601,
+    "B_centered": [
+     0.8424571752548218,
+     0.83871561139822,
+     0.8466272816061974
+    ],
+    "B_raw": 0.5238471627235413,
+    "B_sign": 0.7598503090372425,
+    "delta": 0.019705355167388916,
+    "delta_ci": [
+     0.018004222214221953,
+     0.0216977596282959
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b2_s103.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "신규",
+    "shuf_seed": 103
+   },
+   {
+    "A_centered": [
+     0.8843486309051514,
+     0.8826535403728485,
+     0.8864649534225464
+    ],
+    "A_raw": 0.6172508597373962,
+    "A_sign": 0.7774896478884601,
+    "B_centered": [
+     0.8294224143028259,
+     0.8262264579534531,
+     0.8324740260839463
+    ],
+    "B_raw": 0.7182457447052002,
+    "B_sign": 0.7638089911092233,
+    "delta": 0.03939706087112427,
+    "delta_ci": [
+     0.03814386576414108,
+     0.040971264243125916
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b2_s204.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "신규",
+    "shuf_seed": 204
+   },
+   {
+    "A_centered": [
+     0.8843486309051514,
+     0.8826535403728485,
+     0.8864649534225464
+    ],
+    "A_raw": 0.6172508597373962,
+    "A_sign": 0.7774896478884601,
+    "B_centered": [
+     0.8427786827087402,
+     0.8389572381973267,
+     0.8457768067717553
+    ],
+    "B_raw": 0.5958912968635559,
+    "B_sign": 0.7536466166960786,
+    "delta": 0.02191746234893799,
+    "delta_ci": [
+     0.02046968936920166,
+     0.02406574189662933
+    ],
+    "delta_ci_excludes_zero": true,
+    "delta_n_cell": 15315,
+    "delta_positive_and_significant": true,
+    "file": "refit_shufseed_b2_s305.h5ad",
+    "n_cell": 15315,
+    "n_gene": 330,
+    "origin": "신규",
+    "shuf_seed": 305
+   }
+  ]
+ },
+ "pooled": {
+  "max": 0.13132882118225098,
+  "median": 0.037575870752334595,
+  "min": 0.0026668906211853027,
+  "n_fits": 12,
+  "n_positive_significant": 12
+ },
+ "reproduction": {
+  "0": {
+   "match": true,
+   "recomputed": 0.08082002401351929,
+   "sealed": 0.0808
+  },
+  "1": {
+   "match": true,
+   "recomputed": 0.003831803798675537,
+   "sealed": 0.0038
+  },
+  "2": {
+   "match": true,
+   "recomputed": 0.06278204917907715,
+   "sealed": 0.0628
+  }
+ },
+ "sealed_criteria": {
+  "note": "b=1 reported separately, not part of verdict",
+  "robust": "for b in {0,2}: all seeds delta>0 with CI excluding 0 AND range(delta) < median(delta)",
+  "weaken": "otherwise"
+ },
+ "seed_design": "per b: [b (existing draw), 101+b, 202+b, 303+b]",
+ "summary": {
+  "0": {
+   "all_delta_positive": true,
+   "all_positive_significant": true,
+   "existing_delta": 0.08082002401351929,
+   "existing_rank": 2,
+   "existing_seed": 0,
+   "max": 0.13132882118225098,
+   "median": 0.09046483039855957,
+   "min": 0.05949336290359497,
+   "n_seeds": 4,
+   "range": 0.071835458278656,
+   "range_lt_median": true,
+   "sd": 0.03049959900127974,
+   "seeds": [
+    0,
+    101,
+    202,
+    303
+   ],
+   "values": [
+    0.08082002401351929,
+    0.13132882118225098,
+    0.10010963678359985,
+    0.05949336290359497
+   ],
+   "var": 0.000930225539238864
+  },
+  "1": {
+   "all_delta_positive": true,
+   "all_positive_significant": true,
+   "existing_delta": 0.003831803798675537,
+   "existing_rank": 2,
+   "existing_seed": 1,
+   "max": 0.03575468063354492,
+   "median": 0.014201730489730835,
+   "min": 0.0026668906211853027,
+   "n_seeds": 4,
+   "range": 0.03308779001235962,
+   "range_lt_median": false,
+   "sd": 0.016202492776098632,
+   "seeds": [
+    1,
+    102,
+    203,
+    304
+   ],
+   "values": [
+    0.003831803798675537,
+    0.024571657180786133,
+    0.03575468063354492,
+    0.0026668906211853027
+   ],
+   "var": 0.00026252077215952835
+  },
+  "2": {
+   "all_delta_positive": true,
+   "all_positive_significant": true,
+   "existing_delta": 0.06278204917907715,
+   "existing_rank": 4,
+   "existing_seed": 2,
+   "max": 0.06278204917907715,
+   "median": 0.030657261610031128,
+   "min": 0.019705355167388916,
+   "n_seeds": 4,
+   "range": 0.04307669401168823,
+   "range_lt_median": false,
+   "sd": 0.01993858645553828,
+   "seeds": [
+    2,
+    103,
+    204,
+    305
+   ],
+   "values": [
+    0.06278204917907715,
+    0.019705355167388916,
+    0.03939706087112427,
+    0.02191746234893799
+   ],
+   "var": 0.0003975472298449745
+  }
+ },
+ "verdict": "WEAKEN(현 주장 약화 필요)",
+ "verdict_text": "봉인 조건이 b=2 에서 성립하지 않는다. 깨진 것은 산포 조건 (b)다. 단일 셔플 draw 가 크기의 대표값이 아니었다는 뜻이므로, Δ 의 크기를 특정 숫자로 못 박는 서술은 수위를 낮춰야 한다. 다만 조건 (a)는 b=0·b=1·b=2 의 12 개 draw 전부에서 성립한다. 즉 ATAC 을 셔플하면 velocity 행렬이 원본에서 멀어진다는 **방향**은 draw 를 바꿔도 흔들리지 않고, 흔들리는 것은 그 **크기**다."
+}
