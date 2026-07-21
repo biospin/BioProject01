@@ -1,124 +1,96 @@
-# CLAUDE.md
+# CLAUDE.md — kkkim-pipeline (HSPC 연구: 논문 근거 + 파이프라인)
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+> 이 브랜치(`kkkim-pipeline`)는 HSPC 연구의 **단일 작업 브랜치**다. 두 폴더로 분리한다:
+> - **`paper_analysis/`** — paper 분석 *산출물* 14편 (어떤 method·confound를 쓸지의 근거). 분석 *하네스* 자체는 여기 없다 — 외부 재사용 repo `kakyungkim/paper-analysis-harness`에 있다.
+> - **`pipeline/`** — 그 근거로 실제 데이터를 돌리는 코드.
+>
+> paper-agent 브랜치는 archive(보존만)했고, 새 paper 분석은 외부 하네스로 돌려 산출물만 `paper_analysis/`에 반입한다.
 
-## 이 repo는 무엇인가
+## 무엇을 하는가
+목표: gene별 **chromatin→transcription lag**(activation/shutdown) 정량 → baseline epigenomic feature로 epigenetic drug response timing 예측. 1차 데이터셋 = **Human HSPC 10x Multiome (GSE209878)**.
 
-두 개의 layer가 공존한다:
+## paper_analysis/ (근거 레이어)
+- 14편 dual-lens 분석(`core`+`lens-academic`+`lens-industry`+`methodology-brief`) + `_index/`. 파이프라인 method 선택(DESIGN.md)의 근거.
+- 분석 하네스(`AGENTS.md`/skills/web)는 외부 `kakyungkim/paper-analysis-harness`. 새 분석은 거기서 돌리고 산출 폴더만 `paper_analysis/<topic>/<paper-id>/`로 복사.
 
-1. **Paper analysis workspace (현재 활성)** — scientific paper / preprint / industry report / regulatory 문서 등을 dual-lens 구조(`core` + `lens-academic` + `lens-industry` + `methodology-brief`)로 분석해서 `analysis/<topic>/<paper-id>/` 아래에 누적한다. 이 layer의 운영 규칙은 **[AGENTS.md](AGENTS.md)** 가 router로 모두 정의한다. CLAUDE.md는 그것을 중복하지 않는다.
-2. **연구 프로젝트 컨텍스트 (계획)** — Epigenetic Therapy 기반 Response Time 예측. 코드 파이프라인은 아직 없고, 관련 paper들을 layer 1에서 수집/해석하는 단계.
+## 하네스 (OpenClaw 기반, Claude Code 호환)
+- **이 분석 하네스(`AGENTS.md` + `skills/`)는 박상준(@poqopo) `Harness_Baseline`에서 반입**해 우리 파이프라인에 맞춘 것. 원저작자 박상준 (원 repo LICENSE 미지정 — 공유·수정은 동의 전제).
+- 포맷: `AGENTS.md`(project frame) + `skills/ROUTES.md`(dataset→task 라우팅) + `skills/<dataset>/<task>/SKILL.md` + `agents/openai.yaml`. **이건 OpenClaw/Codex 네이티브 포맷**이라 OpenClaw로 바로 실행 가능하고, Claude Code에서도 동작한다.
+- **OpenClaw 연습 중**: 앞으로 분석을 OpenClaw 기반으로 돌리는 것을 기본 감안한다. skill/agent 포맷(`openai.yaml`)을 유지한다.
+- dataset 4종 × task 4단계(`download→preprocessing→model→visualization`). 우리는 **`human-hspc-10x-multiome`** 가 active.
 
-## Paper analysis 작업 시 — AGENTS.md 먼저 읽기
+## 실행 구현 — `pipeline/hspc-velocity-benchmark/`
+SKILL(지침)을 실제로 돌리는 코드:
+- `scripts/download_data.sh` — GSE209878 다운로드 (MV-1=day0, MV-2=day7). `download_manifest.tsv`(sha256), `P0_provenance.md`.
+- `scripts/p1_build.py` — 통일 전처리(공통 branch). `P1_README.md`, `scripts/check_data.py`.
+- `DESIGN.md` — velocity method head-to-head 벤치마크 = model 단계 method-selection. `REVIEW-methodologist-2026-06-13.md`.
+- `env/` — 프레임워크별 격리 conda env(`scv-preprocess`/`velo-mv`/`velo-torch`/`velo-tf`/`celldancer`) + 유틸 `seqtools`(STAR·sra-tools·velocyto) + `setup_envs.sh`, `README.md`. (2026-07-11 명명: velocity env는 `velo-*` 접두. velocity 5종 전부 팀공유 `/opt/envs`, 개인 `~/miniconda3/envs`엔 scv-preprocess만(협업서버) — `conda run -n <env>`로 해소. /opt 공유 마운트 여부는 팀원 확인 필요.)
+- `dataset/` — GSE209878 dataset card.
+- `BASELINE-ALIGNMENT.md` — Harness_Baseline 정합 기록.
 
-`AGENTS.md`가 단일 진입점이다. 거기에 정의된 것:
-- Quick Start (DOI / PDF / URL 한 줄로 분석 시작)
-- Dual-lens 출력 구조: `core` (객관적) + `lens-academic` (학계 시선) + `lens-industry` (산업 시선) + `methodology-brief` (재현용 압축본)
-- `paper-info.yaml` = single source of truth
-- `paper-id` naming: `<lastname>-<year>-<short-keyword>` (예: `li-2023-multivelo`)
-- `core.md` section 고정 순서 (Executive Summary → Identity → Background → Methods → Results → Figures → Tables → Supplementary Information → 분석 메모)
-- Skill routing 테이블 — 작업별로 어떤 `skills/<name>/SKILL.md`를 호출하는지
-- Slide 워크플로우는 명시 요청 시에만 (`design.md`를 visual reference로 사용)
+## 작업 기록
+- **`SESSION-LOG.md`**: 분석 단계에서 한 일을 세션별로 누적 기록.
+- **`HANDOFF.md`**: 현재 상태 + 한 일/할 일. **`TODO.md`**: 할 일 체크리스트.
 
-## 실제 호출 가능한 스크립트
+## Branch 모델 (중요)
+- `kkkim-pipeline` = **HSPC 연구 단일 작업 브랜치.** `paper_analysis/`(근거) + `pipeline/`(코드)를 한 브랜치에서 관리.
+- `kkkim-paper-agent` = **archive(보존만).** paper 하네스의 마지막 상태 보존용. 새 작업은 여기서 하지 않는다.
+- paper 분석 *하네스*는 외부 `kakyungkim/paper-analysis-harness`. 하네스 자체 개선은 거기서 한다.
+- `epigenomics`, `braveji-*`, `main` 등 다른 협업자 영역은 안 건드린다.
 
-전부 `python3` 실행. 의존성은 `skills/source-grounding/scripts/requirements.txt`.
+## 언어 / commit 규칙
+- 출력 기본 한국어. 분야 표준 영어 용어 유지(RNA/DNA/ATAC/chromatin/pseudotime/baseline 등).
+- Author: `kakyungkim <kakyung.kim@gmail.com>`. Claude attribution(footer/co-author) **금지**. Remote SSH `git@github.com:biospin/BioProject01.git`.
+- **커밋 메시지 표기(중요)**: 파이프라인 단계 커밋은 **내부 단계표기 `P0`~`P5`** 를 접두로 쓴다 (예: `P4 permutation FDR 4-way …`, `P5 bootstrap stability …`). `BIOP01-NN`(JIRA 키)은 **그 커밋이 실제로 해당 JIRA 이슈에 대응할 때만** 쓰고, 내부 단계 라벨 용도로는 쓰지 않는다 — 실제 JIRA 키와 충돌하기 때문(BIOP01-24=mouse brain 담당, BIOP01-25~28=BIOP01-23 child task). 과거 `BIOP01-24~28`로 표기된 확증 커밋은 실제로는 내부 P4/P5 작업이었음(추적 시 주의).
+- 원문 binary·대용량(.h5ad/.h5mu/.loom/PDF/data)은 `.gitignore`. tracked = `*.md`, `*.yaml`, `*.tsv`(요약), 코드.
 
-```bash
-# Paper source 자동 fetch (PDF / .bib / .url)
-python3 skills/source-grounding/scripts/fetch_sources.py <args>
+## 방법론 주의 (분석 시 반복)
+1. **Pseudotime ≠ wall-clock**: lag은 pseudotime 단위로 보고. (GSE209878 day0/day7은 batch 통합돼 wall-clock anchor로 직접 못 씀.)
+2. **Confound**: cell cycle·burst·ambient/doublet 통제. lineage별(within-lineage) 계산, rare lineage(MK/platelet) uncertainty 별도.
+3. **Multicollinearity**: promoter/enhancer ATAC 등 강상관 → regularized.
+4. **Multiple testing**: gene 단위 → permutation FDR.
+5. method 차이 ≠ preprocessing 차이: 공통 전처리 후 method 분기(C2), 공통 graph ablation.
 
-# analysis/_index/{papers.csv, <topic>.md} 자동 빌드
-python3 skills/source-grounding/scripts/build_index.py
+---
 
-# core.md → figure-embedded HTML report
-python3 skills/core-to-html/scripts/build_html.py <paper-dir>
+## Agent routing & artifact contract (논문 생산 하네스)
 
-# PDF figure를 panel별 PNG로 자동/수동 crop
-python3 skills/core-figure/scripts/extract_panels.py <pdf> --page N --figure "Figure 2" \
-  --figure-bbox x0,y0,x1,y1 --out analysis/<topic>/<paper-id>/figures
+> 논문 집필·발표 단계용. 재사용 스캐폴드(Designed by Ka-Kyung Kim, CC BY 4.0) 설치본. 전체 랩 지도·멤버 JD = **`docs/HARNESS.md`**. 도메인 분석 슬롯 = **`hspc-velocity-analyst`**(팀이 채운 유일한 슬롯). 이 브랜치(`kkkim-pipeline`)에 project-scope로 설치.
 
-# (외부 공유용) paper 분석 폴더 압축/공유
-python3 skills/source-grounding/scripts/share_paper.py <paper-dir>
-```
+### 자연어 라우팅
+요청에 agent 이름이 없어도 아래 표로 배정한다. 프로젝트 agent는 `.claude/agents/`. 그림 작업은 `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`를 실행해 소유.
 
-`paper-info.yaml`이 갱신될 때마다 `build_index.py`를 다시 돌려 `_index/`를 일치시킨다.
+**논문 하네스 단일 컨텍스트 = `pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md`.** 모든 논문 멤버(novelty·literature·methodologist·writer·critic·reviewer)는 작업 전 이 문서를 읽는다 — 현재 thesis·claim 등급표·loop 규율(**claim-defensibility 게이트**: headline claim은 반증기준+make-or-break 검정+advisor 통과 전 PROVISIONAL, 본문 미반영)·사전등록·진행상태가 여기 있다. 매번 재브리핑 불필요.
 
-## 언어 규칙
+**여러 단계를 엮는 요청 → 단일 agent가 아니라 오케스트레이터 Skill.** "풀 파이프라인 / 프리프린트 업데이트해 제출 준비 / 분석→집필→그림→검수까지 / 그림만 다시 / 리뷰만 다시 / critic 지적 반영"은 **`paper-production-orchestrator`** Skill(`.claude/skills/paper-production-orchestrator/SKILL.md`)로 — 메인 루프가 실행하며 §0에서 PAPER_DIRECTION 로드 후 아래 멤버를 순서대로 호출하고 claim-defensibility 게이트·부분 재실행·검증 게이트를 처리한다. 단일 단계 요청은 아래 agent로 직접 라우팅:
 
-- 출력 기본은 한국어.
-- 분야 표준 영어 용어는 그대로 유지: `RNA`, `DNA`, `TF`, `chromatin`, `transcription`, `single-cell`, `multi-omics`, `baseline`, `dataset`, `benchmark`, `BD`, `QA`, `RA`, `IND`, `IRB`, `Figure`, `panel` 등.
-- 영어 용어 첫 사용 시 한국어 보충은 1회만.
+| 요청 (자연어) | 첫 agent |
+| --- | --- |
+| "분석 돌려줘 / 재실행 / eval·통계 / 오류 분석 / cross-dataset 재현" | `hspc-velocity-analyst` |
+| "프리프린트/저널/블로그 초안·섹션 써줘" | `manuscript-writer` |
+| "그림 만들어줘 / 그림 번호 정리" | `manuscript-writer` (runs `figures/figNN_*.py`) |
+| "선행연구 / related work / 스쿱 확인" | `literature-scout` |
+| "차별화 각도 / 뭘 새로 해야 하나" | `novelty-strategist` |
+| "가설·실험설계·분석계획 점검·감사" | `research-methodologist` |
+| "제출 전 적대적 자체검토 / 그림 QA" | `paper-critic` |
+| "정식 venue 리뷰 시뮬레이션" | `reviewer` (전역, 선택) |
+| "발표자료/슬라이드/발제" | `presenter` |
+| "로고·아이콘·브랜드·그림 미감" | `design` |
+| "여러 단계를 어떤 순서로 엮을지 계획만" | `paper-orchestrator` (계획만; 실행은 메인 루프) |
 
-## Hallucination 방지
+### 산출물 계약
+멤버는 중간 결과를 대화에만 남기지 않고 파일로 넘긴다:
 
-분석은 `analysis/<topic>/<paper-id>/sources/`의 원문 PDF + supplementary만 근거로 한다. 외부 지식이 필요하면 `외부 맥락:` 또는 `해석:`으로 명시 분리. 세부 규칙은 `skills/source-grounding/SKILL.md` 한 곳에만 모여 있다 — 다른 skill은 이를 참조만 한다.
+| 단계 | Writer | 산출물 | 다음이 읽음 |
+| --- | --- | --- | --- |
+| 분석·eval | `hspc-velocity-analyst` | `pipeline/hspc-velocity-benchmark/results/FINDINGS.md` + `results/*.csv` + `results/*.md` | 집필·검수 |
+| 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft.md`, `figures/*.png` | 검수·리뷰·발표 |
+| 검증 게이트 | (커밋/공개 전) | `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py` 재계산 → FINDINGS.md 대조 | 사람 |
+| 리뷰 | paper-critic / reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
+| 발표 | presenter | 슬라이드/발제 | 사람 |
+| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
 
-## Branch 컨벤션
+**사람 승인 게이트:** 공개(프리프린트/blog)는 **저자·소속·IP·corresponding email 확정** 전까지 보류(manuscript-writer의 `<FILL>`). **커밋·push는 작업 완료 시 에이전트가 자동 수행**(2026-07-09 정책 변경 — 기존 '무인 git 금지' 철회, push까지 자동). 단 위 검증 게이트(커밋 전 재계산·FINDINGS 대조)는 유지하고, **프리프린트/blog 외부 공개와 main 병합만 사람 승인**(작업 브랜치 `kkkim-pipeline` push는 자동). 커밋 메시지는 P0~P5 접두 규칙 준수, Claude attribution 금지.
 
-팀 컨벤션은 **`<사람>-<workstream>`**. 본인 영역 안에서 workstream별로 branch를 따로 둔다.
-
-| Branch | 용도 |
-|---|---|
-| `kkkim-paper-agent` | **본인 paper analysis 작업 — 현재 활성 branch.** 새 paper 분석 추가는 여기서. |
-| `kkkim-<workstream>` | 다른 workstream 시작 시 새로 분기 (예: `kkkim-pipeline` = 코드, `kkkim-data` = dataset 전처리). 시작 시점에 만들면 됨. |
-| `epigenomics`, `braveji-paper-agent`, `main` | **건드리지 않는다.** 다른 협업자 영역. |
-
-**분기 base 결정:**
-- paper analysis framework를 그대로 깔고 코드 작성 → `kkkim-paper-agent`에서 분기
-- paper analysis와 독립 작업 → `main`에서 분기
-
-**Paper agent skill에 영향을 주는 변경(`AGENTS.md`, `skills/*`, `design.md`)** 은 반드시 `kkkim-paper-agent`에서 한다. 다른 workstream branch에서 skill 자체를 수정하지 않는다.
-
-## Git / commit 규칙
-
-- 원문 binary(PDF, xlsx, docx, pptx 등)는 `.gitignore`로 commit 차단. tracked 대상은 `*.md`, `paper-info.yaml`, `*.url`, `*.bib`, `*.json` (figure-map, manifest 등).
-- Author: `kakyungkim <kakyung.kim@gmail.com>` (이 PC의 SSH key가 등록된 GitHub 계정).
-- Commit message에 Claude attribution(`Co-Authored-By: Claude`, `🤖 Generated with Claude Code` 등)은 추가하지 않는다.
-- Remote는 SSH (`git@github.com:biospin/BioProject01.git`). HTTPS+password는 작동하지 않는다.
-
-## 외부 협업 도구
-
-- **Confluence**: Space `VC`, 경로: 프로젝트 진행-AI전용 > 프로젝트#01
-- **JIRA**: Space `BIOP01`
-- **Slack**: 멤버별 openclaw bot
-
-## 팀 & 데이터셋 담당
-
-| 담당 데이터셋 | 담당자 | GitHub ID |
-|---|---|---|
-| 10x embryonic mouse brain | 서정한 | JeonghanSeo |
-| SHARE-seq mouse skin | 박상준 | — |
-| Human brain multi-ome | 전연수 / sjpark | sezinie000 |
-| Human HSPC 10x Multiome | kkkim / jamie (jmryu) | kakyungkim / JamieLyu |
-| 하네스 | braveji (ykji) | braveji18 |
-
-## 주요 데이터셋
-
-| Dataset | Accession | Data type |
-|---|---|---|
-| 10x embryonic mouse brain | 10x Genomics dataset page | 10x multiome |
-| SHARE-seq mouse skin | GSE140203 | paired chromatin + RNA |
-| Human brain multi-ome | GSE162170 | human multiome |
-| Human HSPC 10x Multiome | GSE209878 | human multiome |
-
-## 연구 프로젝트 핵심 개념 (paper 선정·해석에 활용)
-
-목표: gene별 chromatin-transcription lag structure를 정량화 → baseline epigenomic feature로 epigenetic drug response timing을 예측.
-
-- `activation lag`: chromatin이 열린 뒤 transcription이 시작될 때까지의 시간.
-- `shutdown lag`: transcription이 꺼진 뒤 chromatin이 닫힐 때까지의 시간.
-
-관련 도구 (분석 대상 paper들이 쓰는 것): MultiVelo, MultiVeloVAE, MoFlow, `scanpy`, `anndata`, `muon`, `snapatac2`, `ArchR`. (이 repo의 stack은 아님 — 이건 paper들이 쓰는 라이브러리.)
-
-## 방법론적 주의사항 (paper 해석 시 반복 등장)
-
-1. **Pseudotime ≠ Wall-clock time**: lag estimate는 pseudotime 단위. 실제 시간 단위 검증은 별도 입증 필요.
-2. **Confound 통제**: burst kinetics (mean expression + variance scaling), cell cycle phase를 covariate로 통제하지 않으면 lag estimate가 artifact일 수 있음.
-3. **Multicollinearity**: promoter ATAC, enhancer ATAC, H3K27ac, H3K4me3, TF motif score는 강한 상관 → group lasso 등 regularized model 필요.
-4. **ChIP-seq mismatch**: bulk ChIP (예: GSE70677)을 baseline feature로 쓸 때 cell type 해상도 손실 주의. multiome ATAC peak을 primary로.
-5. **Multiple testing**: gene 단위 가설 (수만 개) → BH correction 또는 permutation 기반 FDR.
-
-## 리소스 요구사항
-
-- RAM 128GB, 저장 1–2TB (dataset당 raw + intermediate 200–500GB), GPU 1대 이상 (MultiVeloVAE 재현용 — 필수).
+## 글쓰기 규율 (팀 공통, 한국어 산출물)
+@.claude/rules/writing-style.md

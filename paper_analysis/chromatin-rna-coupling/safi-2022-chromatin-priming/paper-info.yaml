@@ -1,0 +1,116 @@
+# Safi, Fatemeh, 2022 — chromatin-priming — Cell Reports
+# DOI: 10.1016/j.celrep.2022.110798
+# Topics: chromatin-rna-coupling (primary), single-cell-genomics  |  Importance: 중
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Concurrent stem- and lineage-affiliated chromatin programs precede hematopoietic lineage restriction"
+authors:
+  - "Safi, Fatemeh"
+year: 2022
+venue: "Cell Reports"
+doi: "10.1016/j.celrep.2022.110798"
+pmid: "35545037"
+keywords:
+  - "hematopoietic stem cells"
+  - "chromatin accessibility"
+  - "lineage priming"
+  - "single-cell ATAC-seq"
+
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2022-05-10"
+
+topics:
+  - "chromatin-rna-coupling"    # primary
+  - "single-cell-genomics"
+
+citation:
+  key: "safi2022chromatinpriming"
+  short_id: "chromatin-priming"
+  bibtex_file: "sources/safi-2022-chromatin-priming.bib"
+  bibtex_type: "article"
+
+sources:
+  paper:
+    url: "https://www.cell.com/cell-reports/fulltext/S2211-1247(22)00565-4"
+    local: "sources/safi-2022-chromatin-priming.pdf"
+    status: "downloaded"
+    note: "Cell Reports open access. 자동 fetch가 Cell Press를 차단(403)하므로 위 링크에서 PDF 직접 download → sources/에 드롭. | primary: HTTP 403 | pmc: no PMC ID (not open-access via PMC) | scihub: Sci-Hub skipped"
+  supplementary:
+    - local: "sources/mmc1.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "Supplemental figures S1-S7 + legends"
+    - local: "sources/mmc2.xlsx"
+      type: "xlsx"
+      status: "downloaded"
+      note: "Table S1 (scATAC peak stats)"
+    - local: "sources/mmc3.xlsx"
+      type: "xlsx"
+      status: "downloaded"
+      note: "Table S2 (lympho-myeloid TF cluster motifs)"
+    - local: "sources/mmc4.xlsx"
+      type: "xlsx"
+      status: "downloaded"
+      note: "Table S3 (MegE TF cluster motifs)"
+    - local: "sources/mmc5.xlsx"
+      type: "xlsx"
+      status: "downloaded"
+      note: "Table S4 (scRNA cluster DE genes)"
+    - local: "sources/mmc6.xlsx"
+      type: "xlsx"
+      status: "downloaded"
+      note: "Table S5 (enhancer cluster TFBS enrichment, CD9high/low DE, enhancer-gene pairs)"
+    - local: "sources/mmc7.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "추가 supplementary — 내용 미확인 (검토필요)"
+  data:
+    # 검토필요: 본문 Data availability(GSE173075/GSE173076) vs STAR Methods Resource Availability(GSE148746) accession 불일치. 재현 전 GEO 확정 필요.
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE173075"
+      type: "geo-accession"
+      status: "url-only"
+      note: "Raw scATAC-seq (본문 Data availability)"
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE173076"
+      type: "geo-accession"
+      status: "url-only"
+      note: "Raw scRNA-seq (본문 Data availability)"
+    - url: "https://osf.io/y3faj/"
+      type: "osf"
+      status: "url-only"
+      note: "Raw sc-qPCR + processed data/code for figure reproduction"
+  abstract_text:
+    source: pubmed
+    local: sources/abstract.txt
+    status: downloaded
+
+categorization:
+  domain:
+    - "hematopoiesis"
+    - "single-cell-genomics"
+    - "epigenomics"
+    - "chromatin-rna-coupling"
+  use_case:
+    - "academic-citation"
+    - "methodology-reference"
+  importance:
+    level: "중"
+    perspective: "우리 activation lag 가설의 방향성(chromatin이 commitment·transcription에 선행)을 같은 HSPC system에서 지지하는 강한 academic citation. 단 paired multiome이 아니고 transition 축이 pseudotime이라 gene-level lag 정량의 직접 pipeline/제품화 근거는 아니다."
+
+workflow:
+  last_updated: '2026-06-12'
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
+
+# lit-search 발견 맥락
+# 역할: biology — HSPC에서 chromatin priming이 commitment에 선행. 우리 activation lag 가설의 직접 근거 (같은 cell type).

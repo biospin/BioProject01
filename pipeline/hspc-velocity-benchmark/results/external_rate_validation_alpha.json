@@ -1,0 +1,107 @@
+{
+  "rna_only": {
+    "all": {
+      "tag": "all",
+      "n": 205,
+      "rho_alpha_synth": 0.259,
+      "ci": [
+        0.124,
+        0.387
+      ],
+      "p": 0.0001801606997203278,
+      "validates": true
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 193,
+      "rho_alpha_synth": 0.236,
+      "ci": [
+        0.095,
+        0.368
+      ],
+      "p": 0.0009589946874936937,
+      "validates": true
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 12,
+      "rho_alpha_synth": 0.629,
+      "ci": [
+        -0.007,
+        0.942
+      ],
+      "p": 0.02831967129576002,
+      "validates": false
+    }
+  },
+  "multivelo": {
+    "all": {
+      "tag": "all",
+      "n": 254,
+      "rho_alpha_synth": 0.285,
+      "ci": [
+        0.16,
+        0.401
+      ],
+      "p": 4.03386518291488e-06,
+      "validates": true
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 235,
+      "rho_alpha_synth": 0.262,
+      "ci": [
+        0.133,
+        0.385
+      ],
+      "p": 4.858620750993903e-05,
+      "validates": true
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 19,
+      "rho_alpha_synth": 0.698,
+      "ci": [
+        0.343,
+        0.885
+      ],
+      "p": 0.0008846991322268252,
+      "validates": true
+    }
+  },
+  "multivelovae": {
+    "all": {
+      "tag": "all",
+      "n": 271,
+      "rho_alpha_synth": 0.315,
+      "ci": [
+        0.2,
+        0.424
+      ],
+      "p": 1.1490568460241505e-07,
+      "validates": true
+    },
+    "non_HK": {
+      "tag": "non_HK",
+      "n": 251,
+      "rho_alpha_synth": 0.285,
+      "ci": [
+        0.165,
+        0.398
+      ],
+      "p": 4.35519923647592e-06,
+      "validates": true
+    },
+    "HK": {
+      "tag": "HK",
+      "n": 20,
+      "rho_alpha_synth": 0.817,
+      "ci": [
+        0.586,
+        0.929
+      ],
+      "p": 1.1247209263971732e-05,
+      "validates": true
+    }
+  }
+}

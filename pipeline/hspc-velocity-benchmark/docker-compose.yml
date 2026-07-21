@@ -1,0 +1,57 @@
+# docker-compose.yml — BIOP01 HSPC velocity benchmark
+# GPU 서버에서: docker compose --profile gpu up
+# CPU 서버에서: docker compose up
+
+services:
+  # ── CPU 실행 (류재면 임시 서버 or 데이터 전처리) ──
+  bench-cpu:
+    build:
+      context: .
+      args:
+        GPU: "0"
+    image: autobiox-bio01:cpu
+    volumes:
+      - ../../..:/work                          # BioProject01 루트 마운트
+      - ${DATA_DIR:-~/data}:/data               # 데이터 디렉토리
+    environment:
+      - HDF5_USE_FILE_LOCKING=FALSE
+      - OMP_NUM_THREADS=1
+    working_dir: /work/pipeline/hspc-velocity-benchmark/scripts
+    stdin_open: true
+    tty: true
+
+  # ── GPU 실행 (DL arm: MultiVeloVAE / MoFlow / CRAK-Velo / bootstrap) ──
+  bench-gpu:
+    build:
+      context: .
+      args:
+        GPU: "1"
+    image: autobiox-bio01:gpu
+    volumes:
+      - ../../..:/work
+      - ${DATA_DIR:-~/data}:/data
+    environment:
+      - HDF5_USE_FILE_LOCKING=FALSE
+      - OMP_NUM_THREADS=1
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    working_dir: /work/pipeline/hspc-velocity-benchmark/scripts
+    stdin_open: true
+    tty: true
+    profiles: [gpu]
+
+# 사용법:
+#   docker compose build bench-cpu            # CPU 이미지 빌드
+#   docker compose run bench-cpu bash         # CPU 컨테이너 진입
+#   docker compose --profile gpu build bench-gpu   # GPU 이미지 빌드
+#   docker compose --profile gpu run bench-gpu bash
+#
+# cross-dataset 병렬 실행 (컨테이너 3개 동시):
+#   docker compose run -d bench-cpu bash -c "cd scripts && bash ../cross_dataset/run_all.sh skin"
+#   docker compose run -d bench-cpu bash -c "cd scripts && bash ../cross_dataset/run_all.sh human_brain"

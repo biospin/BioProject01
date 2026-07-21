@@ -1,0 +1,9 @@
+section,comparison,n_shared,rho,ci_lo,ci_hi,note
+A1_alpha_within,α: floor × MV,702,0.8262,0.7958,0.8536,
+A1_alpha_within,α: floor × VAE,709,0.8654,0.8395,0.8873,
+A1_alpha_within,α: MV × VAE,871,0.917,0.9021,0.9294,
+A2_lag_within,lag **크기** rank: MV × VAE,871,0.0743,0.0056,0.1432,EQUIVALENT
+A3_dissociation,Δρ = ρ_α − ρ_lag (MV×VAE),871,0.8427,0.7726,0.9118,dr_excludes_0
+B_cross,MV lag 크기 rank: HSPC × macrophage,274,0.1483,0.0271,0.2632,not-equivalent
+B_cross,MV α rank: HSPC × macrophage,274,0.6428,0.5537,0.7192,
+B_cross,floor α rank: HSPC × macrophage (sanity),230,0.6772,0.5859,0.7531,

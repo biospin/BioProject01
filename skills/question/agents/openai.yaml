@@ -1,4 +1,0 @@
-interface:
-  display_name: "Question"
-  short_description: "분석된 논문 full.md 기반으로 답합니다."
-  default_prompt: "사용자의 질문에 답해줘. 먼저 analysis 폴더의 full.md 내용을 근거로 삼고, 없으면 다른 논문의 full.md를 참고하며, 아무 곳에도 없으면 찾을 수 없다고 말해줘."

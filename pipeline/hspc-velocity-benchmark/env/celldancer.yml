@@ -1,0 +1,33 @@
+# cellDancer 전용 격리 env — RNA-only relay 계보 reference method.
+# ⚠️ TF 아님, PyTorch(lightning) 기반. celldancer 1.1.7이 19개 의존성을 옛 버전으로 하드핀:
+#   torch==1.10.0, pytorch-lightning==1.5.2, numpy==1.20.3, pandas==1.3.4, scipy==1.7.2,
+#   scikit-learn==1.0.1, scikit-image==0.19.2, statsmodels==0.13.1, matplotlib==3.5.3,
+#   datashader==0.14.0, bezier==2021.2.12, umap-learn==0.5.2 ...
+# → scanpy/tensorflow/unitvelo(tf env)와 공존 불가라 반드시 별도 env. tf.yml에서 분리(2026-07-11).
+#
+# ⚠️ 설치 함정(2026-07-11 실측):
+#  (1) 그냥 `pip install celldancer` → 신 resolver가 backtracking 지옥(20분+ 99%CPU, 실패).
+#      → **legacy resolver 필수**: `pip install ... --use-deprecated=legacy-resolver`.
+#  (2) legacy resolver는 datashader의 느슨한 핀 때문에 최신 dask/xarray/numba를 끌어옴
+#      → numpy 1.20.3와 충돌해 `import celldancer` 실패(dask.dataframe·"Numba needs NumPy>=1.22").
+#      → dask/xarray/numba/llvmlite/pynndescent를 celldancer 시대(2022)로 명시 고정해야 함.
+#  검증된 정확 버전 전체 = env/celldancer.lock.txt (pip freeze, 155 pkgs). 재현은 lock 우선.
+#
+# 설치(권장 = lock 재현):
+#   mamba create -y -p /opt/envs/celldancer -c conda-forge python=3.9 pip
+#   /opt/envs/celldancer/bin/pip install --use-deprecated=legacy-resolver -r env/celldancer.lock.txt
+# 또는 아래 spec으로(핀 명시 → resolver 헛돌지 않음):
+name: celldancer
+channels: [conda-forge]
+dependencies:
+  - python=3.9           # numpy 1.20.3 / pandas 1.3.4 호환 폭
+  - pip
+  - pip:
+      # transitive를 numpy1.20.3 시대로 명시 고정(celldancer보다 먼저 확정돼야 import 성공)
+      - "numba==0.55.1"
+      - "llvmlite==0.38.1"
+      - "pynndescent==0.5.7"
+      - "dask[dataframe]==2022.2.0"
+      - "xarray==0.20.2"
+      - celldancer       # 나머지(torch/pandas/scipy/sklearn/skimage/pl…)는 자기 핀대로
+# 검증: /opt/envs/celldancer/bin/python -c "from celldancer import velocity, compute_cell_velocity; print('OK')"

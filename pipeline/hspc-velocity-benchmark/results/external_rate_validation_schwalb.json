@@ -1,0 +1,214 @@
+{
+  "mapping": {
+    "schwalb_protein_coding_TUs_numeric_GENCODEtrue": 6913,
+    "gencode_v19_protein_coding_genes": 20345,
+    "TUs_assigned_frac_gate": 2965,
+    "frac_gate": 0.5,
+    "median_overlap_frac": 1.0,
+    "unique_genes_mapped": 2746
+  },
+  "qc": {
+    "QC1_schwalb_vs_todorovski_synth": {
+      "n": 1905,
+      "rho": 0.154,
+      "p": 1.2253652862245645e-11,
+      "expect": "POSITIVE",
+      "note": "validates coordinate join"
+    },
+    "QC2_schwalb_decay_vs_measured_thalf": {
+      "expect": "NEGATIVE",
+      "note": "Schwalb decay = derived/noisier TT-seq quantity; only synth used",
+      "panels": {
+        "todorovski_K562": {
+          "n": 1238,
+          "rho": -0.013,
+          "p": 0.6496617324611609
+        },
+        "rnadecaycafe_K562": {
+          "n": 1735,
+          "rho": -0.048,
+          "p": 0.04457257069681009
+        },
+        "molm13": {
+          "n": 1638,
+          "rho": -0.039,
+          "p": 0.11249915644005455
+        },
+        "thp1": {
+          "n": 1249,
+          "rho": -0.063,
+          "p": 0.025711695911081876
+        }
+      }
+    }
+  },
+  "methods": {
+    "rna_only": {
+      "all": {
+        "tag": "all",
+        "n": 89,
+        "rho_alpha_synth": -0.186,
+        "ci": [
+          -0.388,
+          0.028
+        ],
+        "p": 0.08015465017160411,
+        "validates": false
+      },
+      "non_HK": {
+        "tag": "non_HK",
+        "n": 88,
+        "rho_alpha_synth": -0.188,
+        "ci": [
+          -0.393,
+          0.031
+        ],
+        "p": 0.07927804911008367,
+        "validates": false
+      },
+      "HK": {
+        "tag": "HK",
+        "n": 1,
+        "rho_alpha_synth": null,
+        "ci": [
+          null,
+          null
+        ],
+        "p": null,
+        "validates": false
+      }
+    },
+    "multivelo": {
+      "all": {
+        "tag": "all",
+        "n": 99,
+        "rho_alpha_synth": -0.207,
+        "ci": [
+          -0.391,
+          -0.009
+        ],
+        "p": 0.03945238841930753,
+        "validates": false
+      },
+      "non_HK": {
+        "tag": "non_HK",
+        "n": 96,
+        "rho_alpha_synth": -0.21,
+        "ci": [
+          -0.391,
+          -0.011
+        ],
+        "p": 0.03971786956065866,
+        "validates": false
+      },
+      "HK": {
+        "tag": "HK",
+        "n": 3,
+        "rho_alpha_synth": null,
+        "ci": [
+          null,
+          null
+        ],
+        "p": null,
+        "validates": false
+      }
+    },
+    "multivelovae": {
+      "all": {
+        "tag": "all",
+        "n": 110,
+        "rho_alpha_synth": -0.245,
+        "ci": [
+          -0.419,
+          -0.063
+        ],
+        "p": 0.009813561842018006,
+        "validates": false
+      },
+      "non_HK": {
+        "tag": "non_HK",
+        "n": 107,
+        "rho_alpha_synth": -0.26,
+        "ci": [
+          -0.431,
+          -0.073
+        ],
+        "p": 0.006894812940488523,
+        "validates": false
+      },
+      "HK": {
+        "tag": "HK",
+        "n": 3,
+        "rho_alpha_synth": null,
+        "ci": [
+          null,
+          null
+        ],
+        "p": null,
+        "validates": false
+      }
+    }
+  },
+  "matched_gene_set_nonHK": {
+    "rna_only": {
+      "n_nonHK": 50,
+      "alpha_vs_schwalb": {
+        "rho": -0.046,
+        "ci": [
+          -0.345,
+          0.249
+        ],
+        "p": 0.7523294718542115
+      },
+      "alpha_vs_todorovski": {
+        "rho": 0.229,
+        "ci": [
+          -0.052,
+          0.485
+        ],
+        "p": 0.10921081124247113
+      },
+      "schwalb_vs_todorovski_rho": 0.138
+    },
+    "multivelo": {
+      "n_nonHK": 54,
+      "alpha_vs_schwalb": {
+        "rho": -0.009,
+        "ci": [
+          -0.284,
+          0.264
+        ],
+        "p": 0.9509217331165984
+      },
+      "alpha_vs_todorovski": {
+        "rho": 0.427,
+        "ci": [
+          0.142,
+          0.659
+        ],
+        "p": 0.0012892032867659684
+      },
+      "schwalb_vs_todorovski_rho": 0.212
+    },
+    "multivelovae": {
+      "n_nonHK": 56,
+      "alpha_vs_schwalb": {
+        "rho": -0.059,
+        "ci": [
+          -0.344,
+          0.22
+        ],
+        "p": 0.6647585515959376
+      },
+      "alpha_vs_todorovski": {
+        "rho": 0.326,
+        "ci": [
+          0.05,
+          0.569
+        ],
+        "p": 0.01423894586987794
+      },
+      "schwalb_vs_todorovski_rho": 0.195
+    }
+  }
+}

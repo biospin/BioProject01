@@ -1,0 +1,142 @@
+# Trevino, Alexandro E. et al., 2021 — cortex-multiome — Cell
+# DOI: 10.1016/j.cell.2021.07.039
+# Topics: single-cell-genomics (primary), chromatin-rna-coupling  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Chromatin and gene-regulatory dynamics of the developing human cerebral cortex at single-cell resolution"
+authors:
+  - "Trevino, Alexandro E."
+  - "Müller, Fabian"
+  - "Andersen, Jimena"
+  - "Sundaram, Laksshman"
+  - "Kathiria, Arwa"
+  - "Shcherbina, Anna"
+  - "Farh, Kyle"
+  - "Chang, Howard Y."
+  - "Pașca, Anca M."
+  - "Kundaje, Anshul"
+  - "Pașca, Sergiu P."
+  - "Greenleaf, William J."
+year: 2021
+venue: "Cell"
+doi: "10.1016/j.cell.2021.07.039"
+keywords:
+  - "10x Multiome"
+  - "fetal human cerebral cortex"
+  - "gene-regulatory dynamics"
+  - "chromatin accessibility"
+  - "single-cell multi-omics"
+  - "corticogenesis"
+
+# Version
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2021-09-16"
+    volume: "184"
+    issue: "19"
+    pages: "5053-5069.e23"
+
+# Topics
+topics:
+  - "single-cell-genomics"        # primary
+  - "chromatin-rna-coupling"
+
+# Citation
+citation:
+  key: "trevino2021cortex"
+  short_id: "cortex-multiome"
+  bibtex_file: "sources/trevino-2021-cortex.bib"
+  bibtex_type: "article"
+  share_filename: "Trevino 2021 - Developing Human Cortex Multiome.pdf"
+
+# Source files
+sources:
+  paper:
+    url: "https://www.cell.com/cell/pdf/S0092-8674(21)00942-9.pdf"
+    url_alt:
+      - "https://doi.org/10.1016/j.cell.2021.07.039"
+      - "https://www.cell.com/cell/fulltext/S0092-8674(21)00942-9"
+      - "https://static1.squarespace.com/static/61e14b3ce0a8b6050be3b8fb/t/61e8204a6d642d234730d5a0/1642602603623/Trevino%2Bet%2Bal%2B2021_main%2Bsmall.pdf"
+    local: "sources/trevino-2021-cortex.pdf"
+    status: "downloaded"
+    note: "2026-06-13: main-text PDF(Cell 184(19):5053-5069, Figure 1-7 + Discussion/Limitations) 확보. core/lens/methodology를 PDF 본문 기준으로 재작성(이전 source-limited scaffold 대체). STAR Methods 세부와 supplementary figure/table(S1-S8, Table S1-S6) 파일은 online supplemental에 있고 로컬에 없어 해당 부분은 '미제공:' 표기."
+  supplementary: []
+  data:
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE162170"
+      local: "sources/data_GSE162170.url"
+      type: "geo-accession"
+      status: "url-only"
+      note: "Fetal human cortex 10x Multiome — primary dataset. 본 프로젝트 Dataset 3."
+  code:
+    - url: "https://github.com/GreenleafLab/brain_comp"
+      local: "sources/code_brain_comp.url"
+      type: "github"
+      status: "url-only"
+      note: "Trevino 2021 related analysis code stub in sources/. 정확한 repository scope와 paper figure 재현 범위는 PDF/Data availability 확인 필요."
+    - url: "https://github.com/GreenleafLab/Brain_ASD"
+      local: "sources/code_Brain_ASD.url"
+      type: "github"
+      status: "url-only"
+      note: "ASD noncoding mutation 분석 보조 repo (동 lab, 같은 paper 관련 추정 — 본문 Methods에서 확인 필요)."
+  abstract_text:
+    source: "pubmed"
+    pmid: "34390642"
+    local: "sources/abstract.txt"
+    status: "downloaded"
+  publisher_excerpt:
+    url: "https://www.sciencedirect.com/science/article/pii/S0092867421009429"
+    local: "sources/publisher_fulltext_excerpt.txt"
+    type: "publisher-page-excerpt"
+    status: "downloaded"
+    note: "ScienceDirect page에서 highlights, summary, data/code availability만 excerpt로 보존. PDF 본문/STAR Methods 대체 자료 아님."
+
+# Categorization
+categorization:
+  domain:
+    - "single-cell-genomics"
+    - "developmental-neuroscience"
+    - "chromatin accessibility"
+    - "multi-omics"
+  use_case:
+    - "methodology-reference"
+    - "academic-citation"
+    - "pipeline-applicable"
+  importance:
+    level: "상"
+    perspective: "본 프로젝트의 human brain multiome reference dataset 원 논문이며, chromatin-RNA coupling과 noncoding variant interpretation을 한 자료 안에서 연결해 methodology-reference와 citation 가치가 모두 높다."
+
+# Stakeholder & priority
+audience:
+  primary: "self"
+  secondary: []
+  note:
+priority:
+  level: "normal"
+  deadline:
+  reason: "Dataset 3 (fetal human cortex 10x Multiome)의 원 출처. cell type 정의 + multiome 해석 framework이 후속 paper들의 baseline."
+
+# Cross-reference
+related:
+  - paper-id: "li-2023-multivelo"
+    relation: "dataset-reuse"
+    note: "MultiVelo가 Trevino 2021 GSE162170를 Dataset 4 (fetal human cortex)로 재사용."
+  - paper-id: "li-2025-multivelovae"
+    relation: "dataset-reuse"
+    note: "MultiVeloVAE도 human brain multi-ome을 dataset로 사용 (ref. 35)."
+
+# Workflow metadata
+workflow:
+  created: "2026-05-26"
+  last_updated: "2026-06-13"
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"

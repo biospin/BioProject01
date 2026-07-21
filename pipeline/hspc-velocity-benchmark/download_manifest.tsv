@@ -1,0 +1,16 @@
+# GSE209878 download manifest (Harness_Baseline download SKILL 규약)
+# accession: GSE209878 | genome_build: GRCh38 (10x cellranger-arc, 추정·검토필요) | access_date: 2026-06-13
+# sample = timepoint: MV-1=day0, MV-2=day7
+sample	file	size_bytes	sha256	source
+MV-1	matrix.mtx.gz	610277465	0a351160fc3204b42612f50b89065f87377d38b58e98d1d859a8d75ebbbd52a1	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-1_matrix.mtx.gz
+MV-1	features.tsv.gz	3551910	ba9d56e353de8fc1b30db97cef2e4b380ce34fbd208a94f2525c4f287550238d	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-1_features.tsv.gz
+MV-1	barcodes.tsv.gz	48912	051fa682a805713a4390d6d3482ca3f2b4bbc0d301c780c8aeb0b59150eddfc5	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-1_barcodes.tsv.gz
+MV-1	feature_linkage.bedpe.gz	991079	8b93be778c2a52c17bf99d65c61d0d463b0a4bf2fd8fb2c2ff3872185688406e	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-1_feature_linkage.bedpe.gz
+MV-1	peak_annotation.tsv.gz	2210266	a4e0f05a919f436168365fa9395485fcfbf7733b8ec1b8ce0321dab5a608b887	GSM6403409_3423-MV-1_atac_peak_annotation.tsv.gz
+MV-1	gex.loom.gz	163697703	b028ce0c3e8fead32b54454e5811d29eedff152c46b1a0a93c7b76b2cd2cf724	GSM6403408_3423-MV-1_gex_possorted_bam_0E7KE.loom.gz
+MV-2	matrix.mtx.gz	856665370	492d4c40b6fcc3458532020900f4597cf8034b19f2242ae309ba9b497f48406c	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-2_matrix.mtx.gz
+MV-2	features.tsv.gz	4120256	ff377eaf6ea04e5c709a5e4247f7e1e576fc9bfd7eefb1b04df136522d0c9c85	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-2_features.tsv.gz
+MV-2	barcodes.tsv.gz	72356	0a21f19e487070c289c99b81e792b389f8f8c3011641b09552d2c01249e7d10e	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-2_barcodes.tsv.gz
+MV-2	feature_linkage.bedpe.gz	8329211	6f8523f5856208da307abadea6d525fc91f94f3fe62f87a8199eb950c37dab42	https://ftp.ncbi.nlm.nih.gov/geo/series/GSE209nnn/GSE209878/suppl/GSE209878_3423-MV-2_feature_linkage.bedpe.gz
+MV-2	peak_annotation.tsv.gz	2636311	7d83c282d1eeed6f6e4a42ac505707948f6076e6b5e81f2b1fa69673906f2234	GSM6403411_3423-MV-2_atac_peak_annotation.tsv.gz
+MV-2	gex.loom.gz	274317235	a91fac100d07304d55af2000f9d3e9c06bec4f836a7a688fba0db723d1972750	GSM6403410_3423-MV-2_gex_possorted_bam_ICXFB.loom.gz

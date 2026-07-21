@@ -1,0 +1,38 @@
+1. Genome Biol. 2026 May 5. doi: 10.1186/s13059-026-04086-y. Online ahead of
+print.
+
+CRAK-Velo: chromatin accessibility kinetics integration improves RNA velocity 
+estimation.
+
+El Kazwini N(1), Gao M(2), Kouadri Boudjelthia I(1), Cai F(2), Huang Y(3)(4), 
+Sanguinetti G(5).
+
+Author information:
+(1)Theoretical and Scientific Data Science, Scuola Internazionale Superiore di 
+Studi Avanzati, Trieste, Italy.
+(2)School of Biomedical Sciences, The University of Hong Kong, Hong Kong, Hong 
+Kong, Special Administrative Region of China.
+(3)School of Biomedical Sciences, The University of Hong Kong, Hong Kong, Hong 
+Kong, Special Administrative Region of China. yuanhua@hku.hk.
+(4)Department of Statistics and Actuarial Science, The University of Hong Kong, 
+Hong Kong, Hong Kong, Special Administrative Region of China. yuanhua@hku.hk.
+(5)Theoretical and Scientific Data Science, Scuola Internazionale Superiore di 
+Studi Avanzati, Trieste, Italy. gsanguin@sissa.it.
+
+RNA velocity has recently emerged as a key tool in the analysis of single-cell 
+transcriptomic data, yet connecting RNA velocity analyses to underlying 
+regulatory processes has proved challenging. Here, we propose CRAK-Velo, a 
+semi-mechanistic model that integrates chromatin accessibility data in the 
+estimation of RNA velocities. CRAK-Velo provides biologically consistent 
+estimates of developmental flows and enables accurate cell-type deconvolution, 
+while additionally shining light on regulatory processes at the level of 
+interactions between genes and chromatin regions.
+
+© 2026. The Author(s).
+
+DOI: 10.1186/s13059-026-04086-y
+PMID: 42087173
+
+Conflict of interest statement: Declarations. Ethics approval and consent to 
+participate: Not applicable. Competing interests: The authors declare no 
+competing interests.

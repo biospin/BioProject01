@@ -1,0 +1,55 @@
+# Human HSPC 10x Multiome — GSE209878
+# 우리 팀 담당 dataset (김가경 primary / 류재면 secondary). MultiVelo 원논문 데이터.
+# 본 프로젝트 dataset 중 유일하게 wall-clock timepoint(day0/day7) 보유 — 단 batch 통합됨(주의).
+
+accession: GSE209878
+pmid: 36229609
+title: "Single-cell multi-omic velocity infers dynamic and decoupled gene regulation"
+platform: 10x Multiome (ATAC + Gene Expression, CellRanger ARC, paired/same-nuclei)
+organism: Homo sapiens
+tissue: HSPC (CD34+ hematopoietic stem/progenitor cells)
+
+design:
+  donor: single donor (Fred Hutch CD34+)
+  culture: Stemspan II in vitro expansion
+  timepoints: [day0, day7]        # day7 = 7-day differentiation/expansion
+  batch_note: "day0+day7 Seurat 통합(batch 제거). day label이 batch와 aliased → wall-clock anchor로 직접 사용 불가(DESIGN.md H2 참조)."
+
+dimensions:                        # repo 검증: li-2023-multivelo_core.md L194
+  cells: 11605
+  genes_joint_filtered: 1000
+  variable_genes_fit: 936
+  leiden_clusters: 11
+  peaks_approx: 3939               # CRAK-Velo가 동일 데이터에서 사용한 값(참고)
+
+lineages: [erythroid, myeloid, lymphoid, megakaryocyte_platelet]
+rare_lineage_caveat: "MK/platelet은 cell 수 적음 → lag estimate 불안정(within-lineage 분석 필수)."
+
+owners:
+  primary: 김가경            # kakyungkim
+  secondary: 류재면          # JamieLyu
+
+project_role: "gene별 chromatin→transcription lag 정량의 primary benchmark 데이터 (DESIGN: pipeline/hspc-velocity-benchmark/)."
+
+related_analysis:              # repo 내 이미 분석된 관련 paper
+  anchor: analysis/epigenomic-lag/li-2023-multivelo            # 원논문 + baseline method
+  methods:
+    - analysis/epigenomic-lag/li-2025-multivelovae            # BSD-3-Clause
+    - analysis/epigenomic-lag/hong-2026-moflow                # code MIT (논문 CC-BY-NC-ND)
+    - analysis/epigenomic-lag/el-kazwini-2026-crakvelo        # 동일 GSE209878, code BSD-3-Clause
+    - analysis/epigenomic-lag/nomura-2024-mmvelo              # 선택, license 미확인
+  biology_background:
+    - analysis/chromatin-rna-coupling/safi-2022-chromatin-priming
+    - analysis/chromatin-rna-coupling/martin-2023-hspc-chromatin
+
+method_code_licenses:          # P0 license gate (2026-06-13 확인)
+  MultiVelo: "welch-lab (BSD 계열)"
+  MultiVeloVAE: "BSD-3-Clause"        # github.com/welch-lab/MultiVeloVAE
+  MoFlow: "MIT"                       # github.com/AriHong/MoFlow (논문 license와 별개)
+  CRAK-Velo: "BSD-3-Clause"           # github.com/StatBiomed/CRAK-Velo
+  mmVelo: "미확인"                    # github.com/nomuhyooon/mmVelo — LICENSE가 tutorial 하위에만
+
+open_checks:                   # 실제 데이터/머신 필요 — P0 미완 항목
+  - "통합 객체에 per-cell timepoint(day0/day7) 라벨 보존 여부 (H2 약한 형태 가능성)"
+  - "joint peak calling 여부 + timepoint별 ATAC depth/FRiP"
+  - "CPU 1-fit(MultiVeloVAE/MoFlow) 시간/메모리 실측 (11k cells면 GPU 불필요 예상; bootstrap 반복이 길 때만 GPU 검토)"

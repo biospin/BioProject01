@@ -1,0 +1,22 @@
+# Topic: chromatin-rna-coupling
+
+마지막 갱신: 2026-06-13
+
+## Papers (primary topic으로 등록된 것)
+
+| Paper | Year | Venue | Importance | Use case | Status |
+|---|---|---|---|---|---|
+| [ma-2020-shareseq](../chromatin-rna-coupling/ma-2020-shareseq/) | 2020 | Cell | 상 | methodology-reference; academic-citation; pipeline-applicable | abs:done,core:done,la:done,li:done,mb:done,sl:sk |
+| [martin-2023-hspc-chromatin](../chromatin-rna-coupling/martin-2023-hspc-chromatin/) | 2023 | Stem Cells | 중 | academic-citation; methodology-reference | abs:done,core:done,la:done,li:done,mb:done,sl:sk |
+| [safi-2022-chromatin-priming](../chromatin-rna-coupling/safi-2022-chromatin-priming/) | 2022 | Cell Reports | 중 | academic-citation; methodology-reference | abs:done,core:done,la:done,li:done,mb:done,sl:sk |
+
+## Related (secondary topic으로만 등록된 것)
+
+| Paper | Primary topic | Year | Venue | Importance |
+|---|---|---|---|---|
+| [el-kazwini-2026-crakvelo](../epigenomic-lag/el-kazwini-2026-crakvelo/) | epigenomic-lag | 2026 | Genome Biology | 상 |
+| [hong-2026-moflow](../epigenomic-lag/hong-2026-moflow/) | epigenomic-lag | 2026 | Nature Communications | 상 |
+| [li-2023-multivelo](../epigenomic-lag/li-2023-multivelo/) | epigenomic-lag | 2023 | Nature Biotechnology | 상 |
+| [li-2025-multivelovae](../epigenomic-lag/li-2025-multivelovae/) | epigenomic-lag | 2025 | Nature Communications | 상 |
+| [nomura-2024-mmvelo](../epigenomic-lag/nomura-2024-mmvelo/) | epigenomic-lag | 2024 | bioRxiv | 상 |
+| [trevino-2021-cortex](../single-cell-genomics/trevino-2021-cortex/) | single-cell-genomics | 2021 | Cell | 상 |

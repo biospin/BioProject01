@@ -1,0 +1,10 @@
+method,cellline,stratum,n,rho_alpha_synth,ci_lo,ci_hi,p,validates
+rna_only,K562_TTseq,all,205,0.259,0.124,0.387,0.0001801606997203278,True
+rna_only,K562_TTseq,non_HK,193,0.236,0.095,0.368,0.0009589946874936937,True
+rna_only,K562_TTseq,HK,12,0.629,-0.007,0.942,0.02831967129576002,False
+multivelo,K562_TTseq,all,254,0.285,0.16,0.401,4.03386518291488e-06,True
+multivelo,K562_TTseq,non_HK,235,0.262,0.133,0.385,4.858620750993903e-05,True
+multivelo,K562_TTseq,HK,19,0.698,0.343,0.885,0.0008846991322268252,True
+multivelovae,K562_TTseq,all,271,0.315,0.2,0.424,1.1490568460241505e-07,True
+multivelovae,K562_TTseq,non_HK,251,0.285,0.165,0.398,4.35519923647592e-06,True
+multivelovae,K562_TTseq,HK,20,0.817,0.586,0.929,1.1247209263971732e-05,True

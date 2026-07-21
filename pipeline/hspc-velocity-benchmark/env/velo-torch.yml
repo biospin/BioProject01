@@ -1,0 +1,19 @@
+# PyTorch 계열: MultiVeloVAE + MoFlow. (TensorFlow 계열과 절대 한 env에 두지 말 것.)
+# CPU 기본. GPU는 README의 CUDA 빌드 노트 참고 (1 GPU면 충분).
+name: velo-torch
+channels: [conda-forge]
+dependencies:
+  - python=3.10
+  - numpy<2
+  - pandas
+  - scipy
+  - scanpy
+  - anndata
+  - pip
+  - pip:
+      - torch                 # CPU wheel. GPU: README 참고 (--index-url cu12x)
+      - pytorch-lightning     # MoFlow harness
+      - scvelo                # 공통 substrate 전처리(moments 등) 호환
+      # MultiVeloVAE: env 생성 후 별도 설치 — `pip install git+https://github.com/welch-lab/MultiVeloVAE.git` (BSD-3).
+      # MoFlow: setup.py/pyproject 없음 → pip 설치 불가. repo clone 후 사용:
+      #   `git clone https://github.com/AriHong/MoFlow.git` → PYTHONPATH/스크립트.

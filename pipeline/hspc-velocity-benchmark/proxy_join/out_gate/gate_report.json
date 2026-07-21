@@ -1,0 +1,129 @@
+{
+  "reference_n": 6579,
+  "sources": {
+    "thp1_todorovski": {
+      "n_overlap": 4750,
+      "spearman_rho": 0.743,
+      "spearman_p": 0.0,
+      "pearson_log": 0.74,
+      "ba_bias_log10": 0.08,
+      "ba_loa_log10": [
+        -0.327,
+        0.487
+      ],
+      "top_decile_jaccard": 0.457,
+      "bottom_decile_jaccard": 0.265,
+      "stratified": {
+        "housekeeping": {
+          "n_overlap": 2261,
+          "spearman_rho": 0.773,
+          "spearman_p": 0.0,
+          "pearson_log": 0.754,
+          "ba_bias_log10": 0.084,
+          "ba_loa_log10": [
+            -0.314,
+            0.483
+          ],
+          "top_decile_jaccard": 0.455,
+          "bottom_decile_jaccard": 0.293
+        },
+        "non_housekeeping": {
+          "n_overlap": 2489,
+          "spearman_rho": 0.7,
+          "spearman_p": 0.0,
+          "pearson_log": 0.717,
+          "ba_bias_log10": 0.076,
+          "ba_loa_log10": [
+            -0.339,
+            0.491
+          ],
+          "top_decile_jaccard": 0.443,
+          "bottom_decile_jaccard": 0.224
+        }
+      }
+    },
+    "molm13_rnadecaycafe": {
+      "n_overlap": 6061,
+      "spearman_rho": 0.695,
+      "spearman_p": 0.0,
+      "pearson_log": 0.678,
+      "ba_bias_log10": -0.116,
+      "ba_loa_log10": [
+        -0.727,
+        0.496
+      ],
+      "top_decile_jaccard": 0.287,
+      "bottom_decile_jaccard": 0.333,
+      "stratified": {
+        "housekeeping": {
+          "n_overlap": 2772,
+          "spearman_rho": 0.727,
+          "spearman_p": 0.0,
+          "pearson_log": 0.712,
+          "ba_bias_log10": -0.127,
+          "ba_loa_log10": [
+            -0.67,
+            0.415
+          ],
+          "top_decile_jaccard": 0.284,
+          "bottom_decile_jaccard": 0.397
+        },
+        "non_housekeeping": {
+          "n_overlap": 3289,
+          "spearman_rho": 0.659,
+          "spearman_p": 0.0,
+          "pearson_log": 0.645,
+          "ba_bias_log10": -0.105,
+          "ba_loa_log10": [
+            -0.771,
+            0.56
+          ],
+          "top_decile_jaccard": 0.303,
+          "bottom_decile_jaccard": 0.295
+        }
+      }
+    },
+    "hek293t_rnadecaycafe": {
+      "n_overlap": 6337,
+      "spearman_rho": 0.75,
+      "spearman_p": 0.0,
+      "pearson_log": 0.752,
+      "ba_bias_log10": 0.263,
+      "ba_loa_log10": [
+        -0.205,
+        0.73
+      ],
+      "top_decile_jaccard": 0.396,
+      "bottom_decile_jaccard": 0.365,
+      "stratified": {
+        "housekeeping": {
+          "n_overlap": 2791,
+          "spearman_rho": 0.771,
+          "spearman_p": 0.0,
+          "pearson_log": 0.772,
+          "ba_bias_log10": 0.258,
+          "ba_loa_log10": [
+            -0.177,
+            0.693
+          ],
+          "top_decile_jaccard": 0.386,
+          "bottom_decile_jaccard": 0.421
+        },
+        "non_housekeeping": {
+          "n_overlap": 3546,
+          "spearman_rho": 0.723,
+          "spearman_p": 0.0,
+          "pearson_log": 0.731,
+          "ba_bias_log10": 0.266,
+          "ba_loa_log10": [
+            -0.227,
+            0.759
+          ],
+          "top_decile_jaccard": 0.379,
+          "bottom_decile_jaccard": 0.332
+        }
+      }
+    }
+  },
+  "verdict": "PASS (median ρ=0.74) — t½ 차용 정당, 한계만 명시"
+}

@@ -2,14 +2,55 @@
 .playwright-cli/
 
 # Claude Code local state (per-machine, not for sharing)
-.claude/
+.claude/*
+# ...but DO share the ported Claude harness layer (skills + agents) for web/team use.
+# settings*.json and worktrees/ stay per-machine (ignored by .claude/* above).
+!.claude/skills/
+!.claude/agents/
+!.claude/rules/
 
 # Python virtual environment (per-machine, not for sharing)
 .venv/
 
+# Presentation slides — local-only, not committed to shared repo
+presentation/
+
+# humanize/윤문 에이전트 임시 작업폴더 (캐노니컬 산출은 manuscript/*.md)
+_workspace/
+
 # Python bytecode cache
 __pycache__/
 *.pyc
+
+# 논문 산출물 레이어 — 요약/스크립트만 tracked, 대용량·이미지·컴파일물은 ignore
+# results/: csv·md·json 요약만 commit (대용량 중간산출 제외)
+pipeline/**/results/**/*.h5ad
+pipeline/**/results/**/*.h5mu
+pipeline/**/results/**/*.npz
+pipeline/**/results/**/*.npy
+pipeline/**/results/**/*.parquet
+pipeline/**/results/**/*.pkl
+# bootstrap 재fit raw 중간산출(12×) — 요약은 bootstrap_refit_pergene.csv/.md만 track
+pipeline/**/results/bootstrap_refit/
+# scratchpad: 임시 작업파일
+pipeline/**/scratchpad/
+# proxy_join/out_gate/: gate 플롯(png)은 제외, gate_report.json(요약)만 commit
+pipeline/**/proxy_join/out_gate/*.png
+# figures/: 생성 스크립트(*.py)만 commit, 출력 이미지는 제외
+pipeline/**/figures/**/*.png
+pipeline/**/figures/**/*.pdf
+pipeline/**/figures/**/*.svg
+pipeline/**/figures/**/*.tif
+pipeline/**/figures/**/*.tiff
+# manuscript/: md·bib만 commit, 컴파일 산출물은 제외
+pipeline/**/manuscript/**/*.pdf
+pipeline/**/manuscript/**/*.docx
+pipeline/**/manuscript/**/*.aux
+pipeline/**/manuscript/**/*.log
+
+# cross-dataset 무인 드라이버 런타임 산출 — 로그·sentinel은 일시적, 추적 안 함
+pipeline/**/cross_dataset/*.log
+pipeline/**/cross_dataset/AUTOPIPE_*
 
 # Source binaries — copyrighted, never commit. Stubs (.url, .bib, abstract.txt)
 # under sources/ are NOT excluded by these patterns and may be committed.
@@ -33,3 +74,59 @@ analysis/**/*_core-with-figures.md
 # Legacy unprefixed names (pre-paper-id naming convention)
 analysis/**/core.html
 analysis/**/core-with-figures.md
+
+# paper_analysis/ — 외부 하네스 산출물 반입 위치 (analysis/와 동일 규칙)
+paper_analysis/**/sources/*.pdf
+paper_analysis/**/sources/*.PDF
+paper_analysis/**/sources/*.xlsx
+paper_analysis/**/sources/*.docx
+paper_analysis/**/sources/*.pptx
+paper_analysis/**/sources/*.zip
+paper_analysis/**/sources/*.tar.gz
+paper_analysis/**/sources/*.tgz
+paper_analysis/**/sources/.paper_text.txt
+paper_analysis/**/figures/*.png
+paper_analysis/**/figures/.table_cache.json
+paper_analysis/**/*_core.html
+paper_analysis/**/*_core-with-figures.md
+paper_analysis/**/core.html
+paper_analysis/**/core-with-figures.md
+
+# Web dashboard runtime artifacts (per-run, not for sharing).
+# Keep run records (request.json, prompt.md, <engine>-job.json); ignore raw logs + uploads.
+artifacts/web-runs/**/*.log
+artifacts/uploads/
+# Pipeline runtime data + large intermediates (per-machine, not for sharing)
+pipeline/**/data/
+pipeline/**/*.h5ad
+pipeline/**/*.h5mu
+pipeline/**/*.loom
+
+# stray runtime dump
+settings.txt
+
+# vendored 외부 repo (MoFlow 등) — clone, not tracked
+pipeline/**/vendor/
+
+# MoFlow 기본 출력 폴더(stray)
+pipeline/**/MoFlow_velocity_/
+
+# 개인 작업기록(연구 산출물 아님, 편의상 로컬 유지) — untrack 2026-07-01
+HANDOFF.md
+TODO.md
+SESSION-LOG.md
+
+# cross-dataset 복구 드라이버 런타임 sentinel/heartbeat(생성물, 커밋 대상 아님) — 2026-07-06
+pipeline/hspc-velocity-benchmark/cross_dataset/BMMC_PROGRESS
+pipeline/hspc-velocity-benchmark/cross_dataset/BMMC_DONE
+pipeline/hspc-velocity-benchmark/cross_dataset/BMMC_FAILED
+
+# 블로그 정리 초안(구글드라이브/JIRA용, 로컬 md 유지) — 2026-07-04
+blog_HSPC_velocity_lag.md
+# blog/ 폴더 전체(canonical=/workspace/blog + 구글드라이브, 생성물 00_*_blog_all.md·심링크 build_index.py 포함) — 로컬 유지
+blog/
+
+# 세션 잡동사니(백업·jupyter collab db·인증 qr) — 커밋 대상 아님
+.jupyter_ystore.db
+blog_backup_*/
+gdrive_auth_qr.png

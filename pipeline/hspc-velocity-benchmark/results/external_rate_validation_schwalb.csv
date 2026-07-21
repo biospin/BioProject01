@@ -1,0 +1,10 @@
+method,source,stratum,n,rho_alpha_synth,ci_lo,ci_hi,p,validates
+rna_only,Schwalb2016_GSE75792_K562,all,89,-0.186,-0.388,0.028,0.08015465017160411,False
+rna_only,Schwalb2016_GSE75792_K562,non_HK,88,-0.188,-0.393,0.031,0.07927804911008367,False
+rna_only,Schwalb2016_GSE75792_K562,HK,1,,,,,False
+multivelo,Schwalb2016_GSE75792_K562,all,99,-0.207,-0.391,-0.009,0.03945238841930753,False
+multivelo,Schwalb2016_GSE75792_K562,non_HK,96,-0.21,-0.391,-0.011,0.03971786956065866,False
+multivelo,Schwalb2016_GSE75792_K562,HK,3,,,,,False
+multivelovae,Schwalb2016_GSE75792_K562,all,110,-0.245,-0.419,-0.063,0.009813561842018006,False
+multivelovae,Schwalb2016_GSE75792_K562,non_HK,107,-0.26,-0.431,-0.073,0.006894812940488523,False
+multivelovae,Schwalb2016_GSE75792_K562,HK,3,,,,,False
