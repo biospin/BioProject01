@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Scientist 설계 — BioProject01 / kkkim-pipeline</title>
+<script>
+  // 테마 복원 (플래시 방지)
+  (function(){ try{ var t = localStorage.getItem('ais-theme'); if(t) document.documentElement.setAttribute('data-theme', t); }catch(e){} })();
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa; --surface:#ffffff; --surface-2:#f0f2f6; --text:#1c2230; --muted:#5a6577;
+    --border:#e2e6ee; --a:#0e7c86; --a-soft:#dff2f3; --b:#6d4bd0; --b-soft:#ece5fb;
+    --amber:#b26a00; --amber-soft:#fbeecf; --code-bg:#f2f4f8; --shadow:0 1px 2px rgba(20,30,50,.06),0 8px 24px rgba(20,30,50,.06);
+    --maxw:960px;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1117; --surface:#161b23; --surface-2:#1c222c; --text:#e6eaf2; --muted:#9aa6b8;
+    --border:#2a313d; --a:#3fd3c6; --a-soft:#12312f; --b:#b49bff; --b-soft:#241a3d;
+    --amber:#e2a53a; --amber-soft:#33280f; --code-bg:#11161e; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.4);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1117; --surface:#161b23; --surface-2:#1c222c; --text:#e6eaf2; --muted:#9aa6b8;
+      --border:#2a313d; --a:#3fd3c6; --a-soft:#12312f; --b:#b49bff; --b-soft:#241a3d;
+      --amber:#e2a53a; --amber-soft:#33280f; --code-bg:#11161e; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.4);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",Roboto,"Malgun Gothic",sans-serif;
+    line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:0;max-width:1280px;margin:0 auto;}
+  /* sidebar */
+  aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:26px 18px;border-right:1px solid var(--border);background:var(--surface);}
+  aside .brand{font-weight:800;font-size:15px;letter-spacing:.2px;margin-bottom:4px;}
+  aside .brand .dot{color:var(--a)}
+  aside .sub{color:var(--muted);font-size:12px;margin-bottom:20px}
+  nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;}
+  nav a:hover{background:var(--surface-2);color:var(--text)}
+  nav a.sec{margin-top:12px;color:var(--text);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;padding-left:10px;pointer-events:none}
+  nav a.La{border-left:3px solid var(--a)} nav a.Lb{border-left:3px solid var(--b)}
+  .toggle{margin-top:22px;width:100%;border:1px solid var(--border);background:var(--surface-2);color:var(--text);
+    padding:8px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+  .toggle:hover{border-color:var(--a)}
+  /* content */
+  main{padding:48px 40px 120px;min-width:0}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  .hero{margin-bottom:40px}
+  .eyebrow{color:var(--a);font-weight:700;font-size:13px;letter-spacing:.8px;text-transform:uppercase}
+  h1{font-size:34px;line-height:1.25;margin:8px 0 14px;letter-spacing:-.5px}
+  h2{font-size:24px;margin:52px 0 6px;letter-spacing:-.3px;scroll-margin-top:20px}
+  h2 .num{color:var(--muted);font-weight:600;font-size:17px;margin-right:8px}
+  h3{font-size:17px;margin:30px 0 6px}
+  .lead{font-size:18px;color:var(--muted);margin:0 0 12px}
+  p{margin:12px 0}
+  section{border-top:1px solid var(--border);padding-top:8px}
+  section:first-of-type{border-top:none}
+  code{background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:.08em .38em;font-size:.86em;
+    font-family:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace}
+  pre.code{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:13px;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;line-height:1.55}
+  pre.code code{background:none;border:none;padding:0}
+  ul{padding-left:22px;margin:12px 0}
+  li{margin:5px 0}
+  .table-wrap{overflow-x:auto;margin:16px 0;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;font-size:14px;background:var(--surface)}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--surface-2);font-weight:700;font-size:12.5px;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  td code,th code{white-space:nowrap}
+  /* mermaid */
+  .diagram{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin:22px 0;
+    overflow-x:auto;box-shadow:var(--shadow)}
+  .diagram .cap{color:var(--muted);font-size:12.5px;margin:0 0 10px;font-weight:600;letter-spacing:.3px}
+  pre.mermaid{margin:0;text-align:center;min-height:40px}
+  /* callouts / cards */
+  .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;vertical-align:middle}
+  .badge.A{background:var(--a-soft);color:var(--a)} .badge.B{background:var(--b-soft);color:var(--b)}
+  .note{border-left:3px solid var(--amber);background:var(--amber-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:18px 0;font-size:14.5px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:20px 0}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card .k{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:6px}
+  .card .k .n{flex:0 0 26px;height:26px;border-radius:8px;background:var(--a-soft);color:var(--a);display:grid;place-items:center;font-size:13px;font-weight:800}
+  .card p{margin:6px 0 0;font-size:13.5px;color:var(--muted)}
+  .card small{color:var(--muted);font-size:12px}
+  .footer{max-width:var(--maxw);margin:60px auto 0;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:18px}
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr}
+    aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+    main{padding:32px 20px 80px}
+    h1{font-size:27px}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="brand"><span class="dot">◆</span> AI Scientist</div>
+    <div class="sub">BioProject01 · kkkim-pipeline</div>
+    <nav>
+      <a href="#overview">개요</a>
+      <a href="#stages">연구 7단계</a>
+      <a class="sec">레이어 A</a>
+      <a class="La" href="#roster">멤버 명부</a>
+      <a class="La" href="#routing">라우팅 · 오케스트레이터</a>
+      <a class="La" href="#contract">산출물 계약</a>
+      <a class="La" href="#pipeline">파이프라인 P0–P5</a>
+      <a class="La" href="#gates">게이트</a>
+      <a class="sec">레이어 B</a>
+      <a class="Lb" href="#arch">4계층 아키텍처</a>
+      <a class="Lb" href="#handoff">인계 루프 · Handoff</a>
+      <a class="Lb" href="#openclaw">OpenClaw · 비용</a>
+      <a class="Lb" href="#roadmap">보안 · 로드맵</a>
+      <a class="sec">종합</a>
+      <a href="#principles">설계 원칙 7</a>
+      <a href="#map">컴포넌트 맵</a>
+    </nav>
+    <button class="toggle" id="themeToggle">◐ 라이트 / 다크</button>
+  </aside>
+
+  <main>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="eyebrow">설계 정리 · Design Overview</div>
+      <h1>AI Scientist — 연구 과정 전반의 자동화와 멀티 연구자 협업 구조</h1>
+      <p class="lead">인공지능이 연구 도구를 넘어, 논문 탐색·정리부터 가설 설정, 실험 수행, 논문 작성까지 연구 과정 전반을 자동화하고, 여러 연구자가 함께 쓰도록 만든 구조를 두 개의 레이어로 정리한다.</p>
+      <p>이 문서는 <code>ai_scientist/</code> 안의 마크다운 6편을 mermaid 다이어그램과 함께 시각화한 것이다. 새 설계가 아니라, <code>kkkim-pipeline</code> 브랜치에 이미 구현·기록된 구조를 하나의 지도로 묶었다.</p>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <h2><span class="num">◆</span>개요 — 두 개의 레이어</h2>
+      <p>목표는 두 가지였고, 각각 하나의 레이어로 설계했다. 레이어 A는 "AI 한 명이 논문 한 편을 어떻게 끝까지 끌고 가나"를, 레이어 B는 "그런 AI 여럿이 팀으로 어떻게 이어달리나"를 설계한다. A가 랩 안의 분업이라면 B는 랩과 랩, 사람과 사람 사이의 배턴 터치다.</p>
+
+      <div class="table-wrap"><table>
+        <tr><th>레이어</th><th>무엇인가</th><th>이 저장소의 구현·근거</th></tr>
+        <tr><td><span class="badge A">A</span> 단일 랩 자동화</td><td>한 연구자의 연구 과정 전체를 agent 멤버들이 나눠 맡아 자동으로 돌리는 "AI 연구 랩"</td><td><code>.claude/agents/</code> + <code>paper-production-orchestrator</code> Skill + 파이프라인 <code>scripts/</code>. 지도 = <code>docs/HARNESS.md</code></td></tr>
+        <tr><td><span class="badge B">B</span> 멀티 AI 협업 인계</td><td>여러 연구자·여러 AI가 JIRA 상태 신호로 작업을 자동 인계하는 체계</td><td><code>guide/ai-handoff-architecture-guide.md</code> + <code>guide/openclaw-claude-guide.md</code></td></tr>
+      </table></div>
+
+      <div class="diagram">
+        <p class="cap">그림 1. 전체 그림 — 사람(PI) 아래 두 레이어가 산출물 계약과 Handoff 규율로 맞물린다</p>
+        <pre class="mermaid">
+flowchart TB
+  PI["사람 = PI<br/>방향 설정 · 승인 · 공개 게이트"]
+  PI --> LA
+  PI --> LB
+  subgraph LA["레이어 A · 단일 랩 자동화"]
+    direction TB
+    A1["paper-production-orchestrator (Skill)"]
+    A2["기획 · 분석 · 집필/그림 · 검수 · 발표"]
+    A3["산출물 계약: results / manuscript / figures"]
+    A1 --> A2 --> A3
+  end
+  subgraph LB["레이어 B · 멀티 AI 협업 인계"]
+    direction TB
+    B1["JIRA 상태 전환 (Ready for AI)"]
+    B2["이벤트 허브 (n8n 또는 OpenClaw+큐)"]
+    B3["AI 워커: claude / codex / gemini"]
+    B4["공통 MCP (JIRA · GitHub)"]
+    B1 --> B2 --> B3 --> B4
+  end
+  A3 -->|"공유: 산출물 계약"| SH
+  B4 -->|"공유: Handoff 규율"| SH
+  SH["다음 주체가 산출물 하나만 읽어도 곧바로 착수"]
+  classDef pi fill:#0e7c86,stroke:#0e7c86,color:#fff;
+  classDef share fill:#b26a00,stroke:#b26a00,color:#fff;
+  class PI pi;
+  class SH share;
+        </pre>
+      </div>
+    </section>
+
+    <!-- STAGES -->
+    <section id="stages">
+      <h2><span class="num">01</span>연구 과정을 어떤 단계로 나눴나</h2>
+      <p>전통적인 연구 흐름을 AI가 맡을 수 있는 단계로 나누면 일곱 단계가 된다. 사람이 도구를 하나씩 손으로 돌리는 대신, AI 멤버들이 각 단계를 나눠 맡아 이어서 돌아가게 한다.</p>
+      <div class="table-wrap"><table>
+        <tr><th>#</th><th>단계</th><th>담당 주체</th></tr>
+        <tr><td>1</td><td>논문 탐색·정리 (정직한 포지셔닝)</td><td><code>literature-scout</code>, <code>paper_analysis/</code> dual-lens 14편</td></tr>
+        <tr><td>2</td><td>가설 설정·차별화 (가장 값싼 입증)</td><td><code>novelty-strategist</code>, <code>research-methodologist</code></td></tr>
+        <tr><td>3</td><td>실험 설계·감사 (누수·통계 위험 차단)</td><td><code>research-methodologist</code></td></tr>
+        <tr><td>4</td><td>실험 수행·분석 (eval·통계·cross-dataset)</td><td><code>hspc-velocity-analyst</code> + <code>scripts/</code> P0–P5</td></tr>
+        <tr><td>5</td><td>집필·그림</td><td><code>manuscript-writer</code> + <code>figures/figNN_*.py</code></td></tr>
+        <tr><td>6</td><td>검수·리뷰</td><td><code>paper-critic</code>, <code>reviewer</code></td></tr>
+        <tr><td>7</td><td>발표</td><td><code>presenter</code></td></tr>
+      </table></div>
+      <p>일곱 단계를 사람이 매번 순서대로 부르지 않도록, 자연어 요청을 멤버에 배정하는 라우팅표(<code>CLAUDE.md</code>)와 여러 단계를 엮어 실행하는 오케스트레이터 Skill을 두었다.</p>
+    </section>
+
+    <!-- ================= LAYER A ================= -->
+    <section id="roster">
+      <h2><span class="num">02</span><span class="badge A">레이어 A</span> 단일 랩 자동화</h2>
+      <p>agent는 직원이 아니라 랩의 <b>멤버(연구원)</b>이고, 사람과 메인 루프가 랩을 이끄는 <b>PI</b>다. PI는 무엇을 할지 정하고 승인·공개를 책임지되, 실제 작업은 멤버가 파일로 주고받으며 이어서 한다.</p>
+
+      <h3>멤버 명부</h3>
+      <p>하나(<code>hspc-velocity-analyst</code>)만 이 프로젝트 도메인 전용이고, 나머지는 다른 논문에도 재사용할 수 있게 만들었다.</p>
+      <div class="table-wrap"><table>
+        <tr><th>멤버</th><th>벤치</th><th>역할</th></tr>
+        <tr><td><code>hspc-velocity-analyst</code></td><td>분석실</td><td>도메인 슬롯. 파이프라인(P0–P5)·eval·통계·cross-dataset 실행, 결과 파일 유지</td></tr>
+        <tr><td><code>literature-scout</code></td><td>문헌·기획</td><td>선행연구 탐색, 정직한 포지셔닝, related work</td></tr>
+        <tr><td><code>novelty-strategist</code></td><td>문헌·기획</td><td>차별화 각도와 가장 값싼 입증 실험 제안</td></tr>
+        <tr><td><code>research-methodologist</code></td><td>문헌·기획</td><td>가설·기여문·실험설계, 누수·통계 감사</td></tr>
+        <tr><td><code>manuscript-writer</code></td><td>집필실</td><td>프리프린트·저널·블로그 본문 초안과 그림 연계</td></tr>
+        <tr><td><code>presenter</code></td><td>집필실</td><td>청중 맞춤 슬라이드·발제</td></tr>
+        <tr><td><code>paper-critic</code></td><td>심사·QA</td><td>제출 전 적대적 자체검토와 그림 시각 QA</td></tr>
+        <tr><td><code>reviewer</code></td><td>심사·QA</td><td>정식 venue 스타일 공식 리뷰 (선택)</td></tr>
+        <tr><td><code>paper-orchestrator</code></td><td>코디네이션</td><td>멀티 agent 작업의 <b>계획</b>만 수립 (실행은 PI)</td></tr>
+        <tr><td><code>design</code></td><td>엔지니어링</td><td>로고·아이콘·브랜드·그림 미감</td></tr>
+        <tr><td>그림 생성 스크립트</td><td>엔지니어링</td><td><code>figures/figNN_*.py</code> — 결과 파일에서 그림 생성·번호 정합</td></tr>
+      </table></div>
+      <div class="note">그림 생성을 agent가 아니라 <b>결정론적 스크립트</b>로 둔 것이 설계상의 선택이다. 숫자를 손으로 하드코딩하지 않고 결과 파일에서만 뽑게 해 재현성을 지킨다.</div>
+
+      <div class="diagram">
+        <p class="cap">그림 2. 랩 조직도 — PI 아래 다섯 벤치에 멤버가 배치된다</p>
+        <pre class="mermaid">
+flowchart TB
+  PI["PI = 사람 + 메인 루프"]
+  ORC["paper-orchestrator<br/>(계획만)"]
+  PI --> ORC
+  ORC --> G1 & G2 & G3 & G4 & G5
+  subgraph G1["문헌·기획"]
+    m1["literature-scout"]; m2["novelty-strategist"]; m3["research-methodologist"]
+  end
+  subgraph G2["분석실"]
+    m4["hspc-velocity-analyst"]
+  end
+  subgraph G3["집필실"]
+    m5["manuscript-writer"]; m6["presenter"]
+  end
+  subgraph G4["심사·QA"]
+    m7["paper-critic"]; m8["reviewer (선택)"]
+  end
+  subgraph G5["엔지니어링"]
+    m9["design"]; m10["figNN_*.py 스크립트"]
+  end
+  classDef pi fill:#0e7c86,stroke:#0e7c86,color:#fff;
+  class PI pi;
+        </pre>
+      </div>
+    </section>
+
+    <section id="routing">
+      <h3>자연어 라우팅과 오케스트레이터</h3>
+      <p>요청에 agent 이름이 없어도 <code>CLAUDE.md</code>의 라우팅표가 자연어 요청을 멤버에 배정한다. 여러 단계를 엮는 요청("분석→집필→그림→검수까지", "critic 지적 반영해")은 단일 멤버가 아니라 <code>paper-production-orchestrator</code> Skill로 보낸다. 메인 루프(PI)가 이 Skill을 실행하며 멤버를 순서대로 부른다. subagent는 subagent를 못 부르므로, "계획만 짜는" <code>paper-orchestrator</code> agent와 달리 실제 실행은 이 Skill이 맡는다.</p>
+
+      <div class="diagram">
+        <p class="cap">그림 3. 논문 생산 루프 — 검증 게이트를 통과해야 발표·공개로 넘어간다</p>
+        <pre class="mermaid">
+flowchart LR
+  P["기획·근거<br/>methodologist · scout · strategist"] --> AN["분석·eval<br/>hspc-velocity-analyst"]
+  AN --> WR["집필+그림<br/>manuscript-writer"]
+  WR --> CR["검수<br/>paper-critic"]
+  CR -->|"블로킹 지적"| WR
+  CR --> VG{"검증 게이트<br/>숫자 재계산"}
+  VG -->|"불일치"| STOP["멈춤 · 사람 보고"]
+  VG -->|"통과"| PR["발표<br/>presenter"]
+  classDef gate fill:#b26a00,stroke:#b26a00,color:#fff;
+  classDef stop fill:#b3261e,stroke:#b3261e,color:#fff;
+  class VG gate; class STOP stop;
+        </pre>
+      </div>
+      <p>핵심은 <b>부분 재실행</b>이다. 이미 만들어진 산출물이 있으면 요청한 단계만 다시 돌리고 나머지는 기존 파일을 재사용한다. "그림만 다시"면 집필+그림 단계만, "최신 결과로 본문 갱신"이면 변경 지점의 하류 단계만 돌린다.</p>
+    </section>
+
+    <section id="contract">
+      <h3>산출물 계약 — 대화가 아니라 파일로 넘긴다</h3>
+      <p>멤버는 중간 결과를 대화에만 남기지 않고 정해진 파일로 넘긴다. 다음 멤버는 그 파일을 읽고 이어서 일한다. 이 계약 덕분에 멤버가 교체되거나 세션이 끊겨도 작업이 이어진다.</p>
+      <div class="table-wrap"><table>
+        <tr><th>단계</th><th>Writer</th><th>산출물</th><th>다음이 읽음</th></tr>
+        <tr><td>분석·eval</td><td>hspc-velocity-analyst</td><td><code>results/FINDINGS.md</code> + <code>results/*.csv</code> + <code>results/*.md</code></td><td>집필·검수</td></tr>
+        <tr><td>집필·그림</td><td>manuscript-writer</td><td><code>manuscript/draft_v2.md</code> + <code>draft_v2_ko.md</code> (영/한 동시), <code>figures/*.png</code></td><td>검수·리뷰·발표</td></tr>
+        <tr><td>검수·리뷰</td><td>paper-critic / reviewer</td><td><code>manuscript/REVIEW-&lt;venue&gt;-&lt;date&gt;.md</code></td><td>집필(수정)</td></tr>
+        <tr><td>발표</td><td>presenter</td><td>슬라이드·발제</td><td>사람</td></tr>
+        <tr><td>상태 핸드오프</td><td>전원</td><td><code>HANDOFF.md</code>, <code>TODO.md</code>, <code>SESSION-LOG.md</code></td><td>다음 세션</td></tr>
+      </table></div>
+    </section>
+
+    <section id="pipeline">
+      <h3>실험 실행 엔진 — 파이프라인 P0–P5</h3>
+      <p>분석 단계의 실제 계산은 <code>pipeline/hspc-velocity-benchmark/scripts/</code>가 담당한다. <code>hspc-velocity-analyst</code>가 이 스크립트들을 돌려 결과 파일을 만든다.</p>
+      <div class="diagram">
+        <p class="cap">그림 4. 파이프라인 단계 — 공통 전처리(P1) 위에서 method를 분기해 재현성을 검증한다</p>
+        <pre class="mermaid">
+flowchart LR
+  P0["P0<br/>다운로드·provenance"] --> P1["P1<br/>통일 전처리"]
+  P1 --> P2["P2<br/>velocity method 실행"]
+  P2 --> P3["P3<br/>재현성 검증"]
+  P3 --> P4["P4<br/>permutation FDR"]
+  P4 --> P5["P5<br/>bootstrap 안정성"]
+        </pre>
+      </div>
+      <ul>
+        <li><b>P0</b> — <code>download_data.sh</code>로 GSE209878를 받고 <code>download_manifest.tsv</code>(sha256)와 <code>P0_provenance.md</code>를 남긴다.</li>
+        <li><b>P1</b> — <code>p1_build.py</code>가 공통 branch를 만든다. 여기서 preprocessing 차이와 method 차이를 분리한다.</li>
+        <li><b>P2</b> — <code>p2_multivelo.py</code>, <code>p2_moflow.py</code>, <code>p2_crakvelo_*</code>, <code>p2_multivelovae.py</code> 등으로 여러 method를 같은 전처리 위에서 돌린다.</li>
+        <li><b>P3</b> — <code>p3_concordance.py</code>, <code>p3_crossdataset_concordance.py</code>, <code>p3_scrambled_null.py</code>로 method 간·dataset 간 일치도와 null을 계산한다.</li>
+        <li><b>P4</b> — gene 단위 다중검정을 permutation FDR로 통제한다.</li>
+        <li><b>P5</b> — shuffle/seed 변이 audit(<code>p10*</code>)까지 포함해 결과의 흔들림을 잰다.</li>
+      </ul>
+    </section>
+
+    <section id="gates">
+      <h3>게이트 — 자동화가 넘지 못하는 선</h3>
+      <p>이 랩은 전부를 자동으로 밀지 않는다. 두 종류의 게이트가 있다.</p>
+      <p><b>검증 게이트 (커밋·공개 전).</b> 헤드라인 숫자를 결정론적으로 재계산해 결과 파일과 대조한다.</p>
+      <pre class="code"><code>cd pipeline/hspc-velocity-benchmark/scripts
+conda run --no-capture-output -n scv-preprocess python p3_concordance.py
+conda run --no-capture-output -n scv-preprocess python p3_crossdataset_concordance.py --dataset human_brain
+conda run --no-capture-output -n scv-preprocess python p3_scrambled_null.py
+# 출력 숫자를 results/FINDINGS.md 와 대조. 불일치면 멈추고 사람에게 보고.</code></pre>
+      <p><b>사람 승인 게이트.</b> 프리프린트·블로그 외부 공개와 main 병합은 사람이 승인한다. 저자·소속·IP·corresponding email이 확정되기 전에는 공개를 보류한다(<code>&lt;FILL&gt;</code>). claim 자체도 반증기준·make-or-break 검정·advisor 확인을 통과하기 전에는 <code>PROVISIONAL</code>로 두고 본문에 넣지 않는다.</p>
+    </section>
+
+    <!-- ================= LAYER B ================= -->
+    <section id="arch">
+      <h2><span class="num">03</span><span class="badge B">레이어 B</span> 멀티 AI 협업 인계</h2>
+      <p>팀원마다 다른 AI(Claude, Codex, Gemini)를 쓰고 결과물은 JIRA·Confluence·Git으로 공유한다. 문제는 한 작업이 끝나도 다음 담당자의 AI에 신호가 자동으로 가지 않아 인계가 지연된다는 점이다. 이 레이어는 그 인계를 자동화한다.</p>
+      <div class="table-wrap"><table>
+        <tr><th>원칙</th><th>내용</th></tr>
+        <tr><td>단일 신호원</td><td>인계 신호는 JIRA 상태 전환만 쓴다. Git 머지 등은 JIRA 상태로 수렴시킨다</td></tr>
+        <tr><td>사람 승인 우선</td><td>초기엔 Slack 원클릭 승인 후 실행. 신뢰가 쌓이면 단계적으로 자동화</td></tr>
+        <tr><td>최소 권한</td><td>AI별 서비스 계정 분리, 프로젝트 단위 권한, main 직접 push 금지</td></tr>
+        <tr><td>폭주 방지</td><td>티켓당 자동 인계 상한(기본 5회), 실패 시 즉시 사람 에스컬레이션</td></tr>
+      </table></div>
+
+      <div class="diagram">
+        <p class="cap">그림 5. 4계층 아키텍처 — 작업 완료가 다시 JIRA 상태 전환을 일으켜 체인이 반복된다</p>
+        <pre class="mermaid">
+flowchart TB
+  subgraph L1["① 이벤트 소스 (기존 스택)"]
+    S1["JIRA 상태 전환: Ready for AI"]
+    S2["Git PR 머지 → JIRA 상태 자동 전환"]
+  end
+  subgraph L2["② 이벤트 허브 (신규)"]
+    H1["Webhook 수신 · Next Agent 분기 · (선택) Slack 승인 · 워커 호출"]
+  end
+  subgraph L3["③ AI 워커 (신규)"]
+    W1["claude -p"]; W2["codex exec"]; W3["gemini -p"]
+  end
+  subgraph L4["④ MCP 공통"]
+    M1["Atlassian MCP: JIRA · Confluence"]
+    M2["GitHub MCP: 저장소 · PR"]
+  end
+  L1 -->|"Webhook (HTTP POST)"| L2
+  L2 -->|"Execute / SSH / HTTP"| L3
+  L3 -->|"공통 mcp.json"| L4
+  L4 -.->|"상태 전환 → 신호 재발생"| L1
+        </pre>
+      </div>
+    </section>
+
+    <section id="handoff">
+      <h3>인계 루프와 Handoff 코멘트</h3>
+      <div class="diagram">
+        <p class="cap">그림 6. 티켓 생애주기 — 후속 작업이 있으면 1번으로 돌아가 체인이 이어진다</p>
+        <pre class="mermaid">
+flowchart TB
+  T1["1. 작업 완료 + Handoff 코멘트"] --> T2["2. JIRA 상태 Ready for AI · Next Agent 지정"]
+  T2 --> T3["3. Automation 웹훅 발송"]
+  T3 --> T4["4. 허브가 Next Agent로 분기 (초기 Slack 승인)"]
+  T4 --> T5["5. AI 워커 실행: MCP로 맥락 로드 후 작업"]
+  T5 --> T6{"후속 작업?"}
+  T6 -->|"있음 → Ready for AI"| T1
+  T6 -->|"사람 검토 → In Review"| HU["사람"]
+        </pre>
+      </div>
+      <p>모든 AI의 규칙 파일(<code>CLAUDE.md</code> / <code>AGENTS.md</code> / <code>GEMINI.md</code>)에 같은 Handoff 템플릿을 강제한다. 기준은 하나다. <b>다음 워커가 이 코멘트 하나만 읽어도 착수할 수 있어야 한다.</b> 이것이 레이어 A의 산출물 계약과 같은 발상이다. A는 파일로, B는 JIRA 코멘트로 맥락을 넘긴다.</p>
+      <pre class="code"><code>## Handoff
+- 완료한 것: (요약 3줄 이내)
+- 산출물: (커밋 해시 / PR 링크 / Confluence 페이지 링크)
+- 다음 작업: (다음 AI가 해야 할 일, 구체적으로)
+- 제약/주의: (건드리면 안 되는 것, 실패했던 접근)
+- Next Agent: claude | codex | gemini | human</code></pre>
+    </section>
+
+    <section id="openclaw">
+      <h3>OpenClaw로 실현하기 — 허브와 워커를 대체</h3>
+      <p>인계 가이드는 이벤트 허브로 n8n을, 워커로 공용 서버의 <code>run_agent.sh</code>를 상정한다. OpenClaw 가이드는 그 ②+③(허브+워커)을 <b>OpenClaw와 메시지 큐로 대체</b>하는 경로를 제시한다. 별도 서버를 세우지 않고 같은 인계 루프를 돌린다.</p>
+      <div class="table-wrap"><table>
+        <tr><th>인계 가이드 계층</th><th>원 구성</th><th>OpenClaw로 실현</th></tr>
+        <tr><td>① 이벤트 소스</td><td>JIRA 상태 전환 / PR 머지</td><td>그대로 유지</td></tr>
+        <tr><td>② 이벤트 허브</td><td>n8n</td><td>메시지 큐 브리지 + OpenClaw Webhooks 플러그인</td></tr>
+        <tr><td>③ AI 워커</td><td>공용 서버 + <code>run_agent.sh</code> + <code>claude -p</code></td><td>OpenClaw 세션 (인증·모델선택·thinking 레벨 관장)</td></tr>
+        <tr><td>④ MCP 공통</td><td><code>mcp.json</code></td><td>동일. OpenClaw 세션에도 같은 MCP 서버를 물린다</td></tr>
+      </table></div>
+      <p>메시지 큐를 앞에 두는 이유는 안정성과 비용이다. 브리지 컨슈머는 네 가지를 지킨다. (1) ack는 Claude 처리 성공 이후에만, (2) 동시 처리 수 제한, (3) 멱등성·세션 키, (4) 같은 티켓 연속 이벤트 병합.</p>
+
+      <div class="note"><b>비용 — 인계 체인은 호출을 곱셈으로 늘린다.</b> 한 티켓이 여러 AI를 연쇄 호출하므로 단발 실행보다 토큰 지출이 배로 뛴다. 그래서 비용 레버가 인계 자동화에서 더 중요해진다: 이벤트 <b>병합</b>, <b>모델 티어링</b>(저위험은 Sonnet/Haiku, 핵심만 Opus), 티켓 단위 <b>프롬프트 캐싱</b>, <b>우선순위 큐</b>, poison 티켓의 <b>DLQ</b> 격리.</p></div>
+    </section>
+
+    <section id="roadmap">
+      <h3>보안·승인 게이트와 도입 로드맵</h3>
+      <ul>
+        <li><b>서명 검증 2구간</b> — JIRA Automation의 <code>X-Handoff-Token</code>과 OpenClaw webhook <code>secret</code>을 둘 다 건다.</li>
+        <li><b>최소 권한</b> — AI별 서비스 계정 분리, JIRA는 해당 프로젝트만, main 직접 push 금지(브랜치+PR).</li>
+        <li><b>토큰 비노출</b> — API 키·PAT는 환경변수·시크릿 매니저로만. <code>.mcp.json</code>에 토큰 직접 기입 금지.</li>
+      </ul>
+      <div class="table-wrap"><table>
+        <tr><th>주차</th><th>목표</th><th>산출물</th></tr>
+        <tr><td>1주차</td><td>JIRA 필드·워크플로·Automation + 허브 설치, Slack 알림까지만</td><td>인계 발생 즉시 알림 (자동 실행 없음)</td></tr>
+        <tr><td>2~3주차</td><td>AI CLI·MCP 공통 설정·워커 구축, Slack 승인 후 반자동</td><td>첫 AI-to-AI 인계 파일럿 1건</td></tr>
+        <tr><td>4주차~</td><td>저위험 작업부터 승인 생략, 인계 상한·모니터링 정착</td><td>제한적 완전 자동 체인 + 비용 레버 계측</td></tr>
+      </table></div>
+    </section>
+
+    <!-- ================= PRINCIPLES ================= -->
+    <section id="principles">
+      <h2><span class="num">04</span>설계 원칙 — 두 레이어를 관통하는 것</h2>
+      <p>레이어 A와 B는 다른 문제를 풀지만 같은 원리 위에 서 있다. 이 원리들이 AI Scientist 설계의 뼈대다.</p>
+      <div class="cards">
+        <div class="card"><div class="k"><span class="n">1</span>하나만 읽어도 착수</div><p>작업 맥락을 대화가 아니라 정형화된 산출물로 넘긴다. A는 결과 파일, B는 JIRA Handoff 코멘트. 세션이 끊겨도 이어진다.</p></div>
+        <div class="card"><div class="k"><span class="n">2</span>사람 게이트를 남긴다</div><p>되돌리기 어렵거나 외부로 나가는 지점에는 사람이 선다. 승인 게이트는 성숙도에 따라 옮긴다. 처음엔 촘촘하게, 검증되면 넓게.</p></div>
+        <div class="card"><div class="k"><span class="n">3</span>검증 게이트</div><p>커밋·공개 전에 숫자를 다시 계산해 대조한다. weak는 zero가 아니다. 통계가 뒷받침하지 않는 우월·재현 주장을 금지한다.</p></div>
+        <div class="card"><div class="k"><span class="n">4</span>폭주·비용을 구조로</div><p>사람의 주의가 아니라 구조로 막는다. Hop Count 상한, DLQ, 동시성 제한, 모델 티어링, 캐싱, 우선순위 큐.</p></div>
+        <div class="card"><div class="k"><span class="n">5</span>최소 권한과 격리</div><p>AI별 서비스 계정 분리, 프로젝트 단위 권한, main 직접 push 금지. 자동 승인 옵션은 격리 환경 전제. 토큰은 시크릿으로만.</p></div>
+        <div class="card"><div class="k"><span class="n">6</span>표준 포맷과 재사용</div><p>멤버·라우터를 특정 프로젝트에 묶지 않는다. 재사용 스캐폴드(CC BY 4.0), OpenClaw/Codex 네이티브 포맷, MCP 표준.</p></div>
+        <div class="card"><div class="k"><span class="n">7</span>근거와 코드 분리</div><p>method 선택의 <b>근거</b>(<code>paper_analysis/</code>)와 그 근거로 돌리는 <b>코드</b>(<code>pipeline/</code>)를 두 폴더로 나눈다. 판단이 바뀌면 근거만, 실행이 바뀌면 코드만 고친다.</p></div>
+      </div>
+    </section>
+
+    <!-- ================= MAP ================= -->
+    <section id="map">
+      <h2><span class="num">05</span>컴포넌트 맵 — 설계 요소가 저장소 어디에 있나</h2>
+      <p>이 폴더는 설계를 <b>설명</b>하고, 아래 파일들이 그 설계를 <b>구현</b>한다.</p>
+
+      <h3><span class="badge A">레이어 A</span> 단일 랩 자동화</h3>
+      <div class="table-wrap"><table>
+        <tr><th>설계 요소</th><th>저장소 위치</th></tr>
+        <tr><td>랩 구조 지도</td><td><code>docs/HARNESS.md</code></td></tr>
+        <tr><td>라우팅표 + 산출물 계약</td><td><code>CLAUDE.md</code> (Agent routing & artifact contract)</td></tr>
+        <tr><td>멤버 정의</td><td><code>.claude/agents/*.md</code></td></tr>
+        <tr><td>오케스트레이터 (실행 입구)</td><td><code>.claude/skills/paper-production-orchestrator/SKILL.md</code></td></tr>
+        <tr><td>단일 컨텍스트 (thesis·claim 등급표)</td><td><code>pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md</code></td></tr>
+        <tr><td>분석 실행 엔진 (P0–P5)</td><td><code>pipeline/hspc-velocity-benchmark/scripts/</code></td></tr>
+        <tr><td>method 선택 근거</td><td><code>DESIGN.md</code>, <code>paper_analysis/</code> (dual-lens 14편)</td></tr>
+        <tr><td>검증 게이트 스크립트</td><td><code>scripts/p3_concordance.py</code>, <code>p3_crossdataset_concordance.py</code>, <code>p3_scrambled_null.py</code></td></tr>
+        <tr><td>글쓰기 규율 (한국어 윤문)</td><td><code>.claude/rules/writing-style.md</code></td></tr>
+      </table></div>
+
+      <h3><span class="badge B">레이어 B</span> 멀티 AI 협업 인계</h3>
+      <div class="table-wrap"><table>
+        <tr><th>설계 요소</th><th>저장소 위치</th></tr>
+        <tr><td>인계 아키텍처 (4계층·설치 가이드)</td><td><code>guide/ai-handoff-architecture-guide.md</code></td></tr>
+        <tr><td>OpenClaw 실현 (허브+워커·큐·비용)</td><td><code>guide/openclaw-claude-guide.md</code></td></tr>
+        <tr><td>분석 하네스 project frame</td><td><code>AGENTS.md</code> (dataset 라우팅을 <code>skills/ROUTES.md</code>에 위임)</td></tr>
+        <tr><td>MCP 공통 설정</td><td><code>.mcp.json</code> (설계 목표는 <code>agent-config</code> 저장소)</td></tr>
+        <tr><td>팀·역할·AI 계정 매핑</td><td><code>Project-Info.md</code></td></tr>
+      </table></div>
+      <div class="note"><b>정확성 주의:</b> <code>AGENTS.md</code>가 위임하는 <code>skills/ROUTES.md</code>·<code>openai.yaml</code> 스킬 트리는 이 브랜치 체크아웃에는 없다. 포맷만 규정되어 있고, 실제 스킬 트리는 OpenClaw로 돌릴 때 채운다.</div>
+
+      <h3>두 레이어의 접점</h3>
+      <div class="table-wrap"><table>
+        <tr><th>공유 요소</th><th>레이어 A에서</th><th>레이어 B에서</th></tr>
+        <tr><td>인계 계약</td><td>결과 파일 (<code>results/FINDINGS.md</code>)</td><td>JIRA Handoff 코멘트</td></tr>
+        <tr><td>사람 게이트</td><td>공개·main 병합 승인</td><td>초기 Slack 승인</td></tr>
+        <tr><td>폭주·비용 방지</td><td>검증 게이트, claim 등급</td><td>Hop Count 상한, 큐·DLQ, 모델 티어링</td></tr>
+        <tr><td>실행 도구</td><td>Claude Code (agent·Skill)</td><td>OpenClaw 세션 또는 <code>run_agent.sh</code></td></tr>
+        <tr><td>라우터 포맷</td><td><code>CLAUDE.md</code> 라우팅표</td><td><code>Next Agent</code> 필드 → 브리지 분기</td></tr>
+      </table></div>
+    </section>
+
+    <div class="footer">
+      생성 문서 · <code>ai_scientist/output_v01/index.html</code> — <code>ai_scientist/</code>의 마크다운 6편(README, 01–05)을 mermaid·HTML로 시각화.<br>
+      원문 근거: <code>docs/HARNESS.md</code>, <code>.claude/skills/paper-production-orchestrator/SKILL.md</code>, <code>guide/ai-handoff-architecture-guide.md</code>, <code>guide/openclaw-claude-guide.md</code>.
+    </div>
+
+  </div>
+  </main>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  const nodes = [...document.querySelectorAll('pre.mermaid')];
+  const sources = nodes.map(n => n.textContent);
+  function currentTheme(){
+    const t = document.documentElement.getAttribute('data-theme');
+    if(t) return t;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  async function renderMermaid(){
+    const dark = currentTheme() === 'dark';
+    mermaid.initialize({ startOnLoad:false, securityLevel:'loose',
+      theme: dark ? 'dark' : 'neutral',
+      themeVariables: dark
+        ? { primaryColor:'#1c222c', primaryTextColor:'#e6eaf2', primaryBorderColor:'#3a4453', lineColor:'#6b7688', fontSize:'14px' }
+        : { primaryColor:'#ffffff', primaryTextColor:'#1c2230', primaryBorderColor:'#c7cede', lineColor:'#8a94a6', fontSize:'14px' },
+      flowchart:{ curve:'basis', htmlLabels:true, nodeSpacing:38, rankSpacing:46 } });
+    nodes.forEach((n,i)=>{ n.removeAttribute('data-processed'); n.innerHTML = sources[i]; });
+    try { await mermaid.run({ nodes }); } catch(e){ console.error(e); }
+  }
+  renderMermaid();
+  const btn = document.getElementById('themeToggle');
+  btn.addEventListener('click', ()=>{
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('ais-theme', next); }catch(e){}
+    renderMermaid();
+  });
+</script>
+</body>
+</html>
