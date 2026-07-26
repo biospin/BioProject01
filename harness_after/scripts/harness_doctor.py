@@ -9,7 +9,8 @@ harness.yaml(manifest)을 기준으로 실제 파일·문서 참조가 일치하
   2) artifacts 경로 존재
   3) 문서가 참조하는 agent 이름이 미구현이면 FAIL                    ← reviewer 팬텀
      - 강한 참조(백틱 인용 / 표 행)만 FAIL, 산문 언급은 WARN         ← kkkim 공동리뷰 2026-07-26 반영
-  4) 문서가 백틱으로 인용한 **경로**가 실재하는지                     ← skills/ROUTES.md·HANDOFF.md 팬텀
+  4) 문서가 백틱으로 인용한 **경로**가 실재하는지                     ← skills/ROUTES.md 팬텀
+     - local_only 로 선언된 경로는 부재해도 통과(개인 작업기록). 대신 .gitignore 등재를 확인
   5) execution.require_repo_root: repo 루트에서 실행됐는지
 사용:  python scripts/harness_doctor.py --repo . --manifest harness.yaml
 종료코드: 0=PASS, 1=FAIL, 2=실행오류
@@ -121,7 +122,22 @@ def main():
     n_paths = 0
     if prs.get("enabled"):
         ign = [re.compile(x) for x in (prs.get("ignore") or [])]
+        local_only = set(prs.get("local_only") or [])
         names, tops = repo_index(repo)
+
+        # local_only: 리포에 커밋하지 않는 개인 작업기록. 부재는 정상이지만,
+        # .gitignore 에 없으면 계약("필수 산출물")과 어긋나 실수로 커밋된다 → 그건 FAIL.
+        for lo in sorted(local_only):
+            try:
+                rc = subprocess.run(["git", "-C", repo, "check-ignore", "-q", lo]).returncode
+            except Exception:
+                rc = 1
+            if rc != 0:
+                fails.append("[local-only] %s는 로컬 전용으로 선언됐으나 .gitignore에 없음 "
+                             "→ 실수로 커밋될 수 있음" % lo)
+            elif not os.path.exists(p(lo)):
+                warns.append("[local-only] %s 없음 — 개인 작업기록이라 정상이나, "
+                             "계약상 세션 종료 시 갱신 대상" % lo)
         pat = re.compile(r"`([^`\n]+)`")
         hits = {}
         for f in (prs.get("files") or scan):
@@ -142,6 +158,8 @@ def main():
                     if "/" not in t and "." not in t:
                         continue
                     if any(rx.search(t) for rx in ign):
+                        continue
+                    if t in local_only:
                         continue
                     if os.path.exists(p(t)):
                         continue

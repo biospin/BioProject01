@@ -90,6 +90,13 @@ path_reference_scan:
     - CLAUDE.md
     - docs/HARNESS.md
     - .claude/skills/paper-production-orchestrator/SKILL.md
+  # 로컬 전용(gitignore) — 리포에 커밋하지 않는 개인 작업기록. 78a5a92(2026-07-01) untrack.
+  # doctor는 이들의 부재를 FAIL 처리하지 않는다. 대신 .gitignore 등재 여부를 확인한다
+  # (계약은 "필수 산출물"인데 ignore에서 빠지면 실수로 커밋된다).
+  local_only:
+    - HANDOFF.md
+    - TODO.md
+    - SESSION-LOG.md
   ignore:                          # 경로가 아닌 것(외부 repo·호스트/IP·모델 ID·버전 문자열)
     - "^https?://"
     - "^[0-9]+[.][0-9.]+$"

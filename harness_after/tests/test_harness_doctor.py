@@ -48,7 +48,7 @@ path_reference_scan:
   resolve_by_basename: true
   files:
 %(scan_files)s
-  ignore:
+%(local_only)s  ignore:
     - "^https?://"
     - "^upstream/"
 """
@@ -73,10 +73,14 @@ class DoctorCase(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.repo, ignore_errors=True)
 
-    def manifest(self, scan_files=("CLAUDE.md",), path_scan="true"):
+    def manifest(self, scan_files=("CLAUDE.md",), path_scan="true", local_only=()):
+        lo = ""
+        if local_only:
+            lo = "  local_only:\n" + "".join("    - %s\n" % f for f in local_only)
         body = BASE_MANIFEST % {
             "scan_files": "".join("    - %s\n" % f for f in scan_files),
             "path_scan": path_scan,
+            "local_only": lo,
         }
         write(os.path.join(self.repo, "harness.yaml"), body)
 
@@ -198,6 +202,30 @@ class DoctorCase(unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertNotIn("[phantom-path]", out)
 
+    # ---- 13. local_only: gitignore 돼 있으면 부재해도 통과 ----
+    #      개인 작업기록(HANDOFF/TODO/SESSION-LOG)은 78a5a92(2026-07-01)에서 의도적으로 untrack.
+    #      계약이 이들을 "필수 산출물"로 지시하지만 리포에는 없는 게 정상이다.
+    def test_local_only_absent_but_gitignored_passes(self):
+        subprocess.run(["git", "init", "-q", self.repo], check=True)
+        write(os.path.join(self.repo, ".gitignore"), "HANDOFF.md\n")
+        write(os.path.join(self.repo, "CLAUDE.md"),
+              "# test\n세션 종료 시 `HANDOFF.md` 를 갱신한다(로컬 전용).\n")
+        self.manifest(local_only=("HANDOFF.md",))
+        code, out = self.run_doctor()
+        self.assertEqual(code, 0, "gitignore된 로컬 전용 파일을 팬텀으로 오검\n" + out)
+        self.assertIn("[local-only]", out)
+
+    # ---- 14. local_only인데 .gitignore에 없으면 FAIL (실수로 커밋될 위험) ----
+    def test_local_only_not_gitignored_fails(self):
+        subprocess.run(["git", "init", "-q", self.repo], check=True)
+        write(os.path.join(self.repo, ".gitignore"), "nothing\n")
+        write(os.path.join(self.repo, "CLAUDE.md"),
+              "# test\n세션 종료 시 `HANDOFF.md` 를 갱신한다.\n")
+        self.manifest(local_only=("HANDOFF.md",))
+        code, out = self.run_doctor()
+        self.assertEqual(code, 1, out)
+        self.assertIn("[local-only]", out)
+
 
 class LiveRepoCase(unittest.TestCase):
     """실제 BIOP01 리포에 대한 회귀 확인 — 알려진 결함이 계속 잡히는가."""
@@ -218,7 +246,7 @@ class LiveRepoCase(unittest.TestCase):
             if "CLAUDE.md" not in out and r.returncode == 2:
                 self.skipTest("BIOP01 리포 컨텍스트 아님")
             # 2026-07-26 2차 조사에서 확인된 결함들이 계속 잡혀야 한다
-            for expected in ("[phantom-agent]", "skills/ROUTES.md", "HANDOFF.md"):
+            for expected in ("skills/ROUTES.md",):
                 self.assertIn(expected, out, "알려진 결함 미검출: %s\n%s" % (expected, out))
         finally:
             if tmp_placed:

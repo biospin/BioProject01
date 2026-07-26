@@ -73,7 +73,7 @@ conda run --no-capture-output -n scv-preprocess python p3_scrambled_null.py
 | 검수 | paper-critic | 적대 노트 + 그림 QA | 집필(수정) |
 | 리뷰 | venue-reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
 | 발표 | presenter | 슬라이드/발제 | 사람 |
-| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
+| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` — **로컬 전용(.gitignore)**. 없으면 새로 만든다 | 다음 세션 |
 
 ## 실패 처리 / 멈춤 조건
 - verify 게이트 실패 → **멈춤**, 무엇이 왜 실패했는지 보고.
