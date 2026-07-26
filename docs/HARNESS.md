@@ -25,7 +25,7 @@
 | 6 | `paper-critic` | 심사·QA | 제출 전 적대적 자체검토 + 그림 시각 QA | 재사용 |
 | 7 | `paper-orchestrator` | 코디네이션 | 멀티-agent 작업 **계획** 수립(실행은 PI) | 재사용 |
 | 8 | `design` | 엔지니어링 | 로고·아이콘·브랜드·그림 미감(SVG/PNG) | 재사용 |
-| 9 | `reviewer` (전역, 선택) | 심사·QA | 정식 venue 스타일 공식 리뷰 문서 | 선택 |
+| 9 | `venue-reviewer` (프로젝트 로컬, 선택) | 심사·QA | 정식 venue 스타일 공식 리뷰 문서 | 선택 |
 | S | 그림 생성 (스크립트) | 엔지니어링 | `figures/figNN_*.py` — 결과 파일에서 그림 생성·번호 정합 | ✅ (스크립트) |
 
 > ⚠️ 그림 생성은 스크립트로 둔다. `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`(예: `fig01_p2_concordance.py`)를 실행해 만든다. 단순 재생성은 메인 루프가 직접 돌려도 된다(결정론적).
@@ -46,7 +46,7 @@
  문헌·기획      분석실      집필실          심사·QA       엔지니어링
  ────────      ──────      ──────          ───────       ──────────
  literature-   hspc-       manuscript-     paper-critic  design
-   scout        velocity-   writer         reviewer(선택) [그림 생성=
+   scout        velocity-   writer         venue-reviewer(선택) [그림 생성=
  novelty-       analyst     presenter       (그림 QA는     figNN_*.py,
    strategist                               paper-critic)   run by writer]
  research-
@@ -59,7 +59,7 @@ research-methodologist / literature-scout / novelty-strategist   (기획·근거
         └─▶ hspc-velocity-analyst ──▶ results/FINDINGS.md + results/*             (분석·검증)
         └─▶ manuscript-writer ──▶ manuscript/draft_v2.md + draft_v2_ko.md        (집필, 영/한 동시)
                  ║  figures/figNN_*.py ──▶ figures/*.png                          (그림)
-        └─▶ paper-critic ──▶ reviewer ──▶ manuscript/REVIEW-*.md                 (심사)
+        └─▶ paper-critic ──▶ venue-reviewer ──▶ manuscript/REVIEW-*.md                 (심사)
                  └─▶ (수정 반영) manuscript-writer
         └─▶ verify-gate(p3_concordance + p3_crossdataset_concordance + p3_scrambled_null) ──▶ presenter
 ```
