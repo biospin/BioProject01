@@ -20,6 +20,7 @@ roles:
   presenter:          { type: agent, path: .claude/agents/presenter.md,            required: true,  implemented: true }
   paper_critic:       { type: agent, path: .claude/agents/paper-critic.md,         required: true,  implemented: true }
   design:             { type: agent, path: .claude/agents/design.md,               required: false, implemented: true }
+  manuscript_condenser: { type: agent, path: .claude/agents/manuscript-condenser.md, required: false, implemented: true }  # 투고 직전 분량 감축. 예시 프롬프트는 docs/CONDENSING-PROMPTS.md
   paper_planner:      { type: agent, path: .claude/agents/paper-orchestrator.md,   required: true,  implemented: true }   # 개명 예정: paper-planner (BIOP01-70)
   # --- 미구현 (문서에는 참조되나 실체 없음) — BIOP01-64 ---
   venue_reviewer:
