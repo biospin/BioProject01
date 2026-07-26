@@ -73,10 +73,12 @@ class DoctorCase(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.repo, ignore_errors=True)
 
-    def manifest(self, scan_files=("CLAUDE.md",), path_scan="true", local_only=()):
+    def manifest(self, scan_files=("CLAUDE.md",), path_scan="true", local_only=(), conventions=()):
         lo = ""
         if local_only:
             lo = "  local_only:\n" + "".join("    - %s\n" % f for f in local_only)
+        if conventions:
+            lo += "  conventions:\n" + "".join("    - %s\n" % f for f in conventions)
         body = BASE_MANIFEST % {
             "scan_files": "".join("    - %s\n" % f for f in scan_files),
             "path_scan": path_scan,
@@ -226,13 +228,38 @@ class DoctorCase(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("[local-only]", out)
 
+    # ---- 15. conventions: 규약 경로는 부재해도 통과 ----
+    #      "산출물을 여기에 두라"는 안내(AGENTS.md Repository Conventions)이지
+    #      사전에 존재해야 하는 경로가 아니다.
+    def test_convention_path_absent_passes(self):
+        write(os.path.join(self.repo, "CLAUDE.md"),
+              "# test\n중간 산출물은 `work/` 에 둔다.\n")
+        self.manifest(conventions=("work/",))
+        code, out = self.run_doctor()
+        self.assertEqual(code, 0, "규약 경로를 팬텀으로 오검\n" + out)
+        self.assertNotIn("phantom-path", out)
+
+    # ---- 16. 선언되지 않은 경로는 여전히 FAIL (conventions 가 만능 면죄부가 아님) ----
+    def test_undeclared_path_still_fails(self):
+        write(os.path.join(self.repo, "CLAUDE.md"),
+              "# test\n중간 산출물은 `work/` 에 두고 라우팅은 `skills/ROUTES.md` 를 본다.\n")
+        self.manifest(conventions=("work/",))
+        code, out = self.run_doctor()
+        self.assertEqual(code, 1, out)
+        self.assertIn("skills/ROUTES.md", out)
+
 
 class LiveRepoCase(unittest.TestCase):
-    """실제 BIOP01 리포에 대한 회귀 확인 — 알려진 결함이 계속 잡히는가."""
+    """실제 BIOP01 리포 회귀 — 한번 0으로 만든 팬텀이 다시 생기지 않는가.
+
+    2026-07-26 이전 버전은 "알려진 결함(skills/ROUTES.md 등)이 검출되는가"를 확인했다.
+    그 결함들이 해소돼(BIOP01-64/71) 이제는 **깨끗한 상태를 지키는** 방향으로 뒤집는다.
+    누군가 문서에 팬텀 역할·경로를 다시 넣으면 여기서 실패한다.
+    """
 
     REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 
-    def test_known_defects_detected(self):
+    def test_repo_stays_clean(self):
         manifest = os.path.join(self.REPO, "harness.yaml")
         tmp_placed = False
         if not os.path.exists(manifest):
@@ -243,11 +270,11 @@ class LiveRepoCase(unittest.TestCase):
                 [sys.executable, DOCTOR, "--repo", self.REPO, "--manifest", "harness.yaml"],
                 capture_output=True, text=True)
             out = r.stdout + r.stderr
-            if "CLAUDE.md" not in out and r.returncode == 2:
+            if r.returncode == 2:
                 self.skipTest("BIOP01 리포 컨텍스트 아님")
-            # 2026-07-26 2차 조사에서 확인된 결함들이 계속 잡혀야 한다
-            for expected in ("skills/ROUTES.md",):
-                self.assertIn(expected, out, "알려진 결함 미검출: %s\n%s" % (expected, out))
+            self.assertEqual(r.returncode, 0,
+                             "리포에 팬텀이 다시 생겼다 (역할 또는 경로):\n" + out)
+            self.assertIn("phantom_paths=0", out, out)
         finally:
             if tmp_placed:
                 os.remove(manifest)

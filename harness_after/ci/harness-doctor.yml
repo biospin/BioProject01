@@ -1,10 +1,9 @@
 # 하네스 구성 정합성 게이트 (BIOP01-66).
 #
-# 2단계 도입:
-#   1단계(현재) — doctor는 report-only(continue-on-error). 게이트 자체 테스트는 blocking.
-#     이유: 스왑 시점에 팬텀 14건이 남아 있어 바로 blocking으로 켜면 모든 PR이 빨간불이 된다.
-#     BIOP01-64/71/72가 닫혀 doctor가 green이 되면 2단계로 전환.
-#   2단계 — `continue-on-error: true` 를 제거해 blocking 게이트로 승격.
+# 2단계 승격 완료 (2026-07-26).
+#   1단계 — doctor는 report-only 였다. 팬텀 14건이 남아 전면 blocking이면 모든 PR이 빨간불이었다.
+#   2단계(현재) — BIOP01-64(팬텀 에이전트 0) + BIOP01-71(skills/ 복원)로 팬텀 0 달성 →
+#     구성 검사도 blocking. 문서가 실재하지 않는 역할·경로를 가리키면 PR이 막힌다.
 name: harness-doctor
 on:
   pull_request:
@@ -28,5 +27,4 @@ jobs:
 
       # 하네스 구성 검사 — 1단계에서는 report-only.
       - name: 하네스 구성 정합성 검사 (팬텀 역할·경로 drift)
-        continue-on-error: true          # ← BIOP01-64/71/72 종료 후 이 줄 삭제 = blocking 승격
         run: python scripts/harness_doctor.py --repo . --manifest harness.yaml

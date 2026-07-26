@@ -97,6 +97,13 @@ path_reference_scan:
     - HANDOFF.md
     - TODO.md
     - SESSION-LOG.md
+  # 규약 경로 — "산출물을 여기에 두라"는 안내이지 사전에 존재해야 하는 경로가 아니다.
+  # (AGENTS.md 'Repository Conventions'). 부재해도 FAIL 아님. 필요 시 생성된다.
+  conventions:
+    - data/
+    - metadata/
+    - work/
+    - outputs/
   ignore:                          # 경로가 아닌 것(외부 repo·호스트/IP·모델 ID·버전 문자열)
     - "^https?://"
     - "^[0-9]+[.][0-9.]+$"

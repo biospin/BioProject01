@@ -11,6 +11,7 @@ harness.yaml(manifest)을 기준으로 실제 파일·문서 참조가 일치하
      - 강한 참조(백틱 인용 / 표 행)만 FAIL, 산문 언급은 WARN         ← kkkim 공동리뷰 2026-07-26 반영
   4) 문서가 백틱으로 인용한 **경로**가 실재하는지                     ← skills/ROUTES.md 팬텀
      - local_only 로 선언된 경로는 부재해도 통과(개인 작업기록). 대신 .gitignore 등재를 확인
+     - conventions 로 선언된 경로는 부재해도 통과(산출물을 둘 위치 안내)
   5) execution.require_repo_root: repo 루트에서 실행됐는지
 사용:  python scripts/harness_doctor.py --repo . --manifest harness.yaml
 종료코드: 0=PASS, 1=FAIL, 2=실행오류
@@ -123,6 +124,7 @@ def main():
     if prs.get("enabled"):
         ign = [re.compile(x) for x in (prs.get("ignore") or [])]
         local_only = set(prs.get("local_only") or [])
+        conventions = set(x.rstrip("/") for x in (prs.get("conventions") or []))
         names, tops = repo_index(repo)
 
         # local_only: 리포에 커밋하지 않는 개인 작업기록. 부재는 정상이지만,
@@ -160,6 +162,9 @@ def main():
                     if any(rx.search(t) for rx in ign):
                         continue
                     if t in local_only:
+                        continue
+                    if t.rstrip("/") in conventions:
+                        # 규약 경로: "여기에 두라"는 안내. 사전 존재를 요구하지 않는다.
                         continue
                     if os.path.exists(p(t)):
                         continue

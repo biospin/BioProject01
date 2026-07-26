@@ -1,0 +1,4 @@
+interface:
+  display_name: "Human HSPC 10x Preprocessing"
+  short_description: "GSE209878 human HSPC 10x Multiome 전처리를 준비합니다."
+  default_prompt: "Human HSPC 10x Multiome GSE209878 데이터의 preprocessing plan을 한국어로 작성해줘. HSPC subpopulation, lineage, QC, annotation, output을 포함해줘."

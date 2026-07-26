@@ -6,11 +6,11 @@
 #
 # 두 종류의 실패를 구분한다:
 #   (a) 구성요소 부재  — 항상 하드 실패. 이게 침묵 폴백의 입구다.
-#   (b) 문서 drift(팬텀 참조) — 1단계에서는 경고. BIOP01-64/71/72가 닫히면
-#       HARNESS_DOCTOR_ENFORCE=1 을 기본값으로 올려 하드 실패로 승격한다.
+#   (b) 문서 drift(팬텀 참조) — 2026-07-26 팬텀 0 달성으로 **하드 실패가 기본값**.
+#       예외적으로 넘기려면 HARNESS_DOCTOR_ENFORCE=0 (비권장, 사유를 기록할 것).
 #
-# 사용:  ./scripts/start-paper-harness            # 1단계(기본): drift는 경고
-#        HARNESS_DOCTOR_ENFORCE=1 ./scripts/start-paper-harness   # 2단계: drift도 중단
+# 사용:  ./scripts/start-paper-harness                          # 기본: drift도 중단
+#        HARNESS_DOCTOR_ENFORCE=0 ./scripts/start-paper-harness  # 예외적 우회(비권장)
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
@@ -40,10 +40,10 @@ if [ -f scripts/harness_doctor.py ] && [ -f harness.yaml ]; then
   if "$PY" scripts/harness_doctor.py --repo . --manifest harness.yaml; then
     :
   else
-    if [ "${HARNESS_DOCTOR_ENFORCE:-0}" = "1" ]; then
-      echo "FATAL: harness_doctor FAIL → 하네스 진입 중단 (enforce 모드)."; exit 1
+    if [ "${HARNESS_DOCTOR_ENFORCE:-1}" = "1" ]; then
+      echo "FATAL: harness_doctor FAIL → 하네스 진입 중단. 구성 drift를 고치고 다시 실행하라."; exit 1
     fi
-    echo "WARN: harness_doctor FAIL — 1단계라 진입은 허용한다. BIOP01-64/71/72 종료 후 enforce 로 승격할 것."
+    echo "WARN: harness_doctor FAIL — HARNESS_DOCTOR_ENFORCE=0 으로 우회됨. 사유를 기록할 것."
   fi
 fi
 
