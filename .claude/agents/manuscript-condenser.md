@@ -27,7 +27,10 @@ paper-critic·venue-reviewer 지적을 반영해 내용이 확정된 뒤, 투고
 경우이며, 줄이기 판단은 대부분 이 모양이다.
 
 ## 순서 (지킬 것)
-1. **강등** — 표·그림·부수 수치를 Additional file로 내린다. 정보 손실 없이 본문만 짧아진다.
+1. **강등** — 표·그림·부수 수치를 Additional file로 내린다. 수치는 보존되고 본문만 짧아진다.
+   다만 **강등은 무손실이 아니다.** 반례·이질성·불리한 수치가 든 표를 내리고 본문에 결론만
+   남기면 결과가 실제보다 깨끗해 보인다. 그런 표를 내릴 때는 본문에 그 사실을 한 문장으로
+   남긴다("in three of five systems this held only for …"). 이 문장 없이 내리면 삭제와 같다.
 2. **병합** — 같은 말을 하는 인접 문장을 합친다.
 3. **압축** — 문장 안의 군더더기. `.claude/rules/writing-style.md`의 사족·상투구·이중 조사
    항목이 그대로 점검 목록이다.
@@ -44,15 +47,38 @@ paper-critic·venue-reviewer 지적을 반영해 내용이 확정된 뒤, 투고
 - **한계와 불리한 사실을 먼저 지킨다.** 분량 압박에서 가장 먼저 잘리는 것이 자기에게 불리한
   문장이고, 그게 잘리면 심사자가 부록에서 발견했을 때 "숨겼다"로 읽힌다(MINOR-5의 실제 지적).
   불리한 문장을 뺄 때는 대장에 별도로 표시하고 사람 승인을 받는다.
-- **`draft_v2.md`와 `draft_v2_ko.md`는 같은 턴에 함께 고친다.** 한쪽만 줄이면 EN/KO 파리티가
-  어긋난다(`SUBMISSION_PREP_PROGRESS.md` §2).
+- **한정어를 빼지 않는다.** 숫자를 지켜도 범위·집단·비교대상·시점 한정("only in HSPC-like
+  cells", "this design cannot separate", "at this n")이 압축 중에 빠지면 주장이 세진다.
+  숫자 검사는 이걸 못 잡는다. 아래 claim-evidence map이 이 검사를 맡는다.
+- **`draft_v2.md`와 `draft_v2_ko.md`는 같은 턴에 함께 고친다.** 파리티는 세는 값으로 확인한다 —
+  heading 개수, 수치 항목 전항, 참고문헌 개수가 양쪽에서 같아야 한다
+  (`SUBMISSION_PREP_PROGRESS.md`의 "heading 파리티 34/34", "영/한 수치 파리티 전항 일치",
+  "참고문헌 69/69" 방식). 문장 수나 단어 비율은 파리티 기준이 아니다.
 - **Abstract 감축은 사람 확인을 받고 한다.** `SUBMISSION_PREP_PROGRESS.md`의 "Abstract는 손대지
   않는다"는 **주장 승격 금지**이지 분량 동결이 아니다. 다만 헤드라인 문장이 모여 있는 자리라
   임의로 손대지 않는다.
 
-## 산출 (둘 다 있어야 완료)
-1. 줄인 원고 — `manuscript/draft_v2.md` + `manuscript/draft_v2_ko.md`
-2. **감축 대장** — `manuscript/CONDENSE-LEDGER-<date>.md`
+## 규칙이 부딪힐 때
+- **"headline은 줄이지 않는다" vs "Abstract를 줄인다".** Abstract는 headline 문장의 집합이므로
+  둘이 부딪힌다. 해소: Abstract에서는 **headline 문장 자체가 아니라 그 둘레**(도입구, 배경
+  재진술, 중복 서술)를 줄인다. headline 문장은 한정어까지 그대로 둔다. 그래도 목표에 못 미치면
+  사람에게 보고한다.
+- **"근거를 진 문장은 못 뺀다" vs "승격하지 않은 관찰은 한 문장".** MINOR-4가 정확히 이 경우다 —
+  다섯 숫자가 전부 근거인데 분량은 한 문장이어야 한다. 해소: **삭제가 아니라 강등**이다.
+  수치는 Additional file로 옮겨 살리고 본문에는 결론 한 문장과 상호참조만 둔다. 이 충돌에서
+  삭제를 고르면 규칙 위반이다.
+
+## 산출 (셋 다 있어야 완료)
+1. **claim-evidence map** — `manuscript/CLAIM-EVIDENCE-MAP-<date>.md`. **줄이기 전에 먼저 만든다.**
+
+   | claim | 등급 | 한정어(범위·집단·비교·시점) | 근거파일 | 본문 위치 | 감축 후 한정어 보존 |
+   |---|---|---|---|---|---|
+   | α는 재현되고 lag는 안 된다 | headline | cross-method, HSPC n=102 | `concordance.md` | Results §1 | O |
+
+   머릿속으로만 대응시키지 않는다. 파일로 남겨야 감축 뒤에 한정어가 살아 있는지 한 줄씩
+   대조할 수 있고, 심사자 응답 때 근거가 된다. 마지막 열이 하나라도 X면 감축은 실패다.
+2. 줄인 원고 — `manuscript/draft_v2.md` + `manuscript/draft_v2_ko.md`
+3. **감축 대장** — `manuscript/CONDENSE-LEDGER-<date>.md`
 
    | 위치 | 처리 | 단어 | 간 곳 | 이유 |
    |---|---|---|---|---|
