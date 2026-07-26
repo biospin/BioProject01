@@ -83,3 +83,101 @@
 - **FT2** (구조 판단): 프로젝트 에이전트 cwd 로딩 전제 문서화 + 전역 에이전트 배치 정리 (M1과 연동).
 - 문서 최신화(비구조): 검증 게이트 "사람 통과" 표현 정정, 도메인 이식 시 게이트 교체 명시 — `gglee` 브랜치 문서 정리에서 처리.
 - 공용 하네스 자산이므로 위 결정은 **BIOP02에도 동일 반영** 필요.
+
+---
+
+## 6. 2차 조사 — 원본·BIOP02까지 확대 (2026-07-26 추가)
+
+**배경.** §1–§5(1차)는 BIOP01만 봤다. 그런데 BIOP02-100의 원래 검토 대상은 **원본·BIOP01·BIOP02 3자**다. 이날 저녁 원본(`kakyungkim/paper-production-harness`)과 BIOP02(`docs/BIOP02-53-kkkim-critic-review`)를 추가로 클론해 대조했고, BIOP01 문서는 백틱 인용 경로까지 전수 재스캔했다. 아래는 전부 파일 직접 확인 결과이며, 1차 결론 중 **두 건(M1 범위·M2 등급)을 정정**한다.
+
+### M5 — `reviewer` 팬텀의 출처는 원본이다 (M1 범위 정정)
+
+- **사실**: 원본 `agents/`에 파일 8개(design · literature-scout · manuscript-writer.template · novelty-strategist · paper-critic · paper-orchestrator · presenter · research-methodologist) — **`reviewer.md` 없음**. 그런데 원본 `agents/paper-orchestrator.md:13`이 `**reviewer** (external referee, substance-only)`를 정식 멤버로 명시한다.
+- **영향**: BIOP01·BIOP02가 각각 실수한 게 아니라 **원본이 유령을 배포했고 두 인스턴스가 상속**했다. BIOP01만 고치면 원본에서 새로 인스턴스화하는 다음 프로젝트가 같은 팬텀을 다시 상속한다.
+- **재현**: `git clone --depth 1 https://github.com/kakyungkim/paper-production-harness` → `ls agents/` → `grep -n "reviewer" agents/paper-orchestrator.md`
+- **권고**: BIOP01-64의 반영 대상을 **2곳(BIOP01·BIOP02) → 3곳(+원본)** 으로 확대. 원본은 소유자(kkkim) 협의 필요.
+- **완료조건**: 세 리포 모두에서 `reviewer` 참조가 실체와 일치(구현 또는 제거)하고, 원본 README에 이 스캐폴드가 `reviewer`를 포함하는지 여부가 1줄로 명시된다.
+
+### M6 — 게이트 순서(M2)는 설계 관찰이 아니라 원본 규칙 위반이다 (등급 승격)
+
+- **사실**: 원본 `agents/paper-orchestrator.md:23`이 순서를 명문화한다 — *"the internal→external review order (**paper-critic + gate FIRST, then reviewer** — reviewer assumes pre-submission QA is done)"*. 그런데 **BIOP01 SKILL.md와 BIOP02 SKILL.md 둘 다** step 7(정식 리뷰) → step 8(검증 게이트) 순서다.
+- **영향**: 1차 보고는 이를 "설계 관찰(권고)"로 적었다. 실제로는 **원본이 스스로 정한 규칙을 두 인스턴스가 동일하게 뒤집은 인스턴스화 회귀**다. 취향 논쟁이 아니라 확정 불일치이므로 합의 없이 정정 가능한 항목으로 등급을 올린다.
+- **재현**: 원본 `agents/paper-orchestrator.md:23` vs `BioProject01/.claude/skills/.../SKILL.md:51-52`, `BioProject02/.claude/skills/.../SKILL.md:39-40`.
+- **권고**: 두 인스턴스의 step 7↔8 순서 교환. 검증 게이트는 §4 권고대로 **분석 직후 + 공개 직전 이중화**(kkkim 공동리뷰에서 동의됨 — `harness.yaml`의 result_validation/package_validation 분리로 해소).
+- **완료조건**: 양 SKILL.md에서 결정론 게이트가 외부 리뷰보다 앞에 오고, 원본 규칙 인용이 주석으로 남는다.
+
+### M7 — BIOP02에서는 팬텀이 문서가 아니라 **실행 설정에 배선**돼 있다 (신규·최고 위험)
+
+- **사실**: `BioProject02/agents/critic/auto_review_config.json:58` → `"agents": ["paper-critic", "reviewer"]`, `"independent_passes": 2`. 이 값은 `auto_review_orchestrator.py`의 `drain_queue()`가 `review_requests/*.req.json`으로 발행하고 세션/OpenClaw가 그대로 실행한다. 현재 `"enabled": false`(dry-run)라 아직 터지지 않았을 뿐이다.
+- **영향**: 활성화하는 순간 **적대적 리뷰 2패스 중 한 축이 존재하지 않는 에이전트를 호출**한다. 호출 실패가 예외로 뜨지 않고 범용 에이전트로 조용히 대체되면, 자동 리뷰는 "2패스 통과"로 기록되지만 실제로는 1패스만 돈 것이 된다. **P2(침묵 폴백)를 P0로 올린 판단이 코드로 확증됐다.**
+- **재현**: `grep -n '"agents"' BioProject02/agents/critic/auto_review_config.json`, `sed -n 95,120p BioProject02/agents/critic/auto_review_orchestrator.py`
+- **권고**: BIOP01-64 결정(구현 or 제거) 전까지 `enabled=true` 금지. 결정 후 config를 실체와 일치시키고, `forbid_generic_fallback`을 실행 래퍼가 강제한다(BIOP01-65).
+- **완료조건**: config의 `agents` 목록 전원이 `.claude/agents/`에 실재하고, harness_doctor의 스캔 대상에 이 config가 포함된다.
+
+### M8 — BIOP01 라우터·핸드오프 계약이 통째로 팬텀 (신규, `reviewer`보다 넓음)
+
+- **사실 (a) 라우터**: `skills/` 디렉터리는 `bc7f824`(2026-06-14, *"pipeline: restructure kkkim-pipeline as pipeline-only branch"*)에서 삭제됐다. 그런데 `AGENTS.md:52-56`은 여전히 *"Dataset 작업 요청이면 먼저 `skills/ROUTES.md`를 읽습니다 → `skills/<dataset>/<task>/SKILL.md`를 사용합니다"* 로 라우팅을 위임한다. `README.md:12,27` · `CLAUDE.md:17,18,19`도 같은 경로(`skills/ROUTES.md`, `agents/openai.yaml`)를 가리킨다. **OpenClaw/Codex 쪽 라우터 전체가 죽은 링크다.**
+- **사실 (b) 핸드오프 계약**: `CLAUDE.md:91` 산출물 계약의 마지막 행이 `| 상태 핸드오프 | (전원) | HANDOFF.md, TODO.md, SESSION-LOG.md | 다음 세션 |` 이고 `SKILL.md:75`도 동일하다. 이 브랜치에 **세 파일 모두 없다**(같은 재구조화 때 정리됨, 이력상 다른 브랜치에 존재). BIOP02도 동일 증상(`SESSION_LOG.md`/`TODO.md`/`HANDOFF.md`).
+- **사실 (c) 규약**: `AGENTS.md:61-67`의 `data/` · `metadata/` · `work/` · `outputs/` 규약 디렉터리도 이 브랜치에 없다.
+- **영향**: ① **BIOP01-45(OpenClaw로 P2–P5 runner 자동 실행)가 존재하지 않는 라우터 위에 설계되고 있다.** ② 모든 에이전트가 "필수 산출물"로 지시받는 핸드오프 파일이 없어, 매 실행이 새로 만들거나 조용히 건너뛴다 — 세션 간 상태 인계가 계약상으로만 존재한다. ③ **근본 원인이 `reviewer` 팬텀과 같다**: 파일을 지운 커밋이 문서를 안 고쳤고, 이를 잡을 게이트가 없었다. 즉 BIOP01-66(정합성 게이트)의 실증 사례가 1건에서 **3건**으로 늘었다.
+- **재현**: `git log --diff-filter=D --oneline -- skills` → `bc7f824`. 그리고 아래 M9의 doctor 실행.
+- **권고**: (1) `AGENTS.md` 라우팅 절을 실체에 맞게 정정하거나 `skills/`를 복원 — **BIOP01-45 착수 전 선결**. (2) 핸드오프 3파일을 만들거나 계약에서 제거(둘 중 하나, 방치 금지). 어느 쪽이든 `harness.yaml`에 등재.
+- **완료조건**: harness_doctor `phantom-path` 0건.
+
+### M9 — 1차 `harness_doctor.py`는 M8을 잡지 못했다 (자기 점검 + 이번 커밋의 보완)
+
+- **사실**: 1차 doctor의 `doc_reference_scan.files`가 3개(`CLAUDE.md` · `docs/HARNESS.md` · `SKILL.md`)뿐이라 **`README.md` · `AGENTS.md`가 스캔 밖**이었고, 검사 대상도 *역할 이름 토큰*뿐이라 **경로 실재는 보지 않았다**. M8은 doctor가 아니라 별도 임시 스캔으로 찾았다.
+- **조치 (이번 커밋)**:
+  1. `harness.yaml`에 `path_reference_scan` 추가 — 백틱 인용 경로의 실재 검사. `resolve_by_basename`으로 상대 인용(`p3_concordance.py`)을 허용하고, 외부 repo·IP·모델 ID는 `ignore` 정규식으로 제외.
+  2. 스캔 대상을 5개 문서로 확대(`README.md` · `AGENTS.md` 추가).
+  3. **팬텀 에이전트 검출에 맥락 필터** — 백틱 인용 또는 표 행만 `FAIL`, 산문 언급은 `WARN`. (kkkim 공동리뷰 지적 반영: 산문에 'reviewer'가 우연히 들어간 경우의 오검 방지.)
+- **실측 결과** (BIOP01 현재 상태, 보완 후):
+
+  ```
+  harness_doctor: repo=/home/gglee/project/BioProject01
+    roles=12  artifacts=5  scan_files=5  phantom_paths=11
+    WARN [phantom-agent?] 'reviewer' … CLAUDE.md:63 / HARNESS.md:49,62 / SKILL.md:3,28   (산문 — 사람 확인)
+    FAIL [phantom-agent]  'reviewer' … CLAUDE.md:76,89 / HARNESS.md:28 / SKILL.md:51,73  (라우팅·계약 = 강한 참조)
+    FAIL [phantom-path]   'skills/ROUTES.md'  ← README.md:27, AGENTS.md:52,54, CLAUDE.md:18
+    FAIL [phantom-path]   'HANDOFF.md' · 'TODO.md' · 'SESSION-LOG.md'                     (핸드오프 계약)
+    FAIL [phantom-path]   'agents/openai.yaml' · 'openai.yaml' · 'data/' · 'metadata/' · 'work/' · 'outputs/'
+                          · 'download/preprocessing/model/visualization'
+  RESULT: FAIL (14 문제, 3 경고)   exit 1
+  ```
+
+- **교훈**: 정합성 게이트도 **스코프가 곧 성능**이다. 게이트를 넣는 것으로 끝나지 않고, "무엇을 스캔 대상에 넣을지"가 manifest에 명시되고 리뷰돼야 한다.
+
+### 공동 리뷰 반영 (kkkim, 2026-07-26 18:53)
+
+self-review 방지를 위해 kkkim 님께 공동 리뷰를 요청했고 **3관점(① venue-reviewer 프로젝트 로컬 ② 정합성 게이트 최우선 ③ 검증 게이트 이중화) 모두 승인**을 받았다. kkkim 님은 gglee 브랜치를 worktree로 띄워 doctor를 직접 실행해 FAIL(exit 1) 재현까지 확인했다. 반영 요청 2건은 다음과 같이 처리한다.
+
+| 요청 | 처리 |
+| --- | --- |
+| 팬텀 토큰 스캔에 맥락 필터 한 겹 (오검 방지) | **이번 커밋 반영** — 강한 참조(백틱/표)만 FAIL, 산문은 WARN (M9-3) |
+| 스왑 시 `ci/harness-doctor.yml` → `.github/workflows/` 로 PR CI 활성화 | **스왑 승인 시 수행** (BIOP01-66). 활성화 전까지 doctor는 수동 실행이라 drift가 사람 손에 의존한다 |
+
+kkkim 님이 예고한 BIOP02용 `harness.yaml`(project_profile: biop02, 슬롯=`spatialpatho-analyst`, 게이트=BIOP02판)에는 위 M7(config의 `agents` 목록)도 스캔 대상으로 포함할 것을 권한다.
+
+### 2차 조사 후 우선순위 갱신
+
+| 순위 | 항목 | 티켓 | 변화 |
+| --- | --- | --- | --- |
+| P0 | 정합성 게이트(manifest + doctor + CI) — 스캔 범위 확대 포함 | BIOP01-66 | 실증 사례 1건 → **3건** |
+| P0 | 침묵 폴백 차단(실행 전제 · 래퍼 · self-check) | BIOP01-65 | BIOP02 config 배선(M7)으로 **근거 강화** |
+| P0 | 라우터 팬텀 해소 — `skills/ROUTES.md` | (신규) | **BIOP01-45 선결 조건** |
+| P1 | `reviewer` → `venue-reviewer` 실체화/제거 | BIOP01-64 | 대상 2곳 → **3곳(+원본)** |
+| P1 | 게이트 순서 정정(step 7↔8) | (신규) | 관찰 → **원본 규칙 위반** |
+| P1~P3 | 3계층 분리 / RUN_STATE / CLAIMS / 개명 | BIOP01-67 · 68 · 69 · 70 | 변화 없음 |
+
+---
+
+## 7. 산출물 인덱스 (branch `gglee`)
+
+| 산출물 | 내용 |
+| --- | --- |
+| `docs/HARNESS-RECONCILIATION-2026-07-26.md` | 이 문서 — 불일치 보고 (1차 §1–§5, 2차 §6) |
+| `harness_after/` | 교체용 after 버전 (manifest · doctor · 문서 · 래퍼 · 템플릿 · CI). **라이브 미적용** |
+| `harness_after/README.md` | 스왑 방법 (`cp` 목록 + `git revert` 되돌리기) |
+| `onboarding_gglee/` | 온보딩 1~3주차 회고 산출물 (BIOP01-1 · 15 · 8) |
+
+> 라이브 `README.md` · `CLAUDE.md` · `docs/HARNESS.md`에서 위 산출물로 가는 링크는 **아직 넣지 않았다** — 7/21 합의(구조 미수정)에 따라 스왑 승인 시 함께 반영한다.

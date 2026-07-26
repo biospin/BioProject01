@@ -35,3 +35,26 @@ python scripts/harness_doctor.py --repo . --manifest harness.yaml   # 통과 확
 
 ## 상태
 검토 대기(BIOP02-100 → 검토 중). 반영은 이건규 노트 v2(`~/HARNESS_REVIEW_AND_PROPOSAL_2026-07-26.md`) 재검토 및 팀 승인 후.
+
+---
+
+## 2026-07-26 갱신 (2차 조사 + kkkim 공동리뷰 반영)
+
+### 바뀐 것
+- `harness.yaml` — `path_reference_scan` 신설(백틱 인용 경로 실재 검사), `doc_reference_scan` 대상에 `README.md` · `AGENTS.md` 추가.
+- `scripts/harness_doctor.py` — 검사 4) 팬텀 **경로** 검출 추가. 팬텀 **에이전트** 검출에 맥락 필터(백틱/표 = FAIL, 산문 = WARN) 추가.
+
+### 왜
+1차 doctor는 `README.md` · `AGENTS.md`를 안 보고 역할 토큰만 검사해서, **`skills/ROUTES.md` 라우터 팬텀과 `HANDOFF/TODO/SESSION-LOG` 핸드오프 계약 팬텀을 놓쳤다**(보고서 §6 M8·M9). 맥락 필터는 kkkim 공동리뷰의 오검 방지 지적 반영.
+
+현재 리포 실행 결과: `RESULT: FAIL (14 문제, 3 경고)` — 팬텀 에이전트 3 + 팬텀 경로 11.
+
+### 스왑 시 반드시 함께 할 것 (kkkim 리뷰 권고)
+```bash
+mkdir -p .github/workflows
+cp harness_after/ci/harness-doctor.yml .github/workflows/harness-doctor.yml   # PR CI 활성화
+```
+이걸 빼면 doctor가 수동 실행에 머물러 drift 검출이 다시 사람 손에 의존한다.
+
+### 스왑 순서 (kkkim 권고)
+`BIOP01-66`(manifest + doctor + CI) → `BIOP01-65`(실행 전제·래퍼) → `BIOP01-64`(venue-reviewer) → 나머지.
