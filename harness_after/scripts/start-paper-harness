@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# start-paper-harness — 실행 전제 가드 (BIOP01-65).
+# repo 루트·필수 구성요소·정합성 게이트를 확인한 뒤에만 하네스 진입.
+# 전문 agent 실패를 범용 agent로 대체하지 않는다: 누락 시 즉시 중단.
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[ -n "$ROOT" ] || { echo "FATAL: git 저장소가 아님. repo 루트에서 실행하라."; exit 1; }
+cd "$ROOT"
+[ -f CLAUDE.md ] || { echo "FATAL: repo 루트가 아님(CLAUDE.md 없음). 상위 디렉터리 실행 금지."; exit 1; }
+
+req=(
+  ".claude/agents/hspc-velocity-analyst.md"
+  ".claude/skills/paper-production-orchestrator/SKILL.md"
+  "pipeline/hspc-velocity-benchmark/scripts/p3_concordance.py"
+)
+missing=0
+for p in "${req[@]}"; do [ -e "$p" ] || { echo "MISSING: $p"; missing=1; }; done
+[ "$missing" -eq 0 ] || { echo "FATAL: 필수 구성요소 누락 → production run 중단 (범용 폴백 금지)."; exit 1; }
+
+# 정합성 게이트 (manifest ↔ 실제/문서)
+if [ -f scripts/harness_doctor.py ] && [ -f harness.yaml ]; then
+  python scripts/harness_doctor.py --repo . --manifest harness.yaml \
+    || { echo "FATAL: harness_doctor FAIL → 하네스 진입 중단."; exit 1; }
+fi
+
+echo "OK: 실행 전제 통과 (cwd=$ROOT). 하네스 진입 허용."
