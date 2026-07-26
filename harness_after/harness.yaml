@@ -1,0 +1,76 @@
+# harness.yaml — 논문 생산 하네스 Single Source of Truth (manifest)
+# 문서(HARNESS.md/CLAUDE.md/SKILL.md)와 코드는 이 manifest를 따른다.
+# harness_doctor.py가 이 파일을 기준으로 실제 파일·문서 참조를 대조한다.
+harness_version: 1
+project_profile: biop01          # 도메인 특화분은 project profile로 분리 (BIOP01-67)
+
+roles:
+  # --- 도메인 슬롯 (project profile에서 교체) ---
+  domain_analyst:
+    aka: hspc-velocity-analyst
+    type: agent
+    path: .claude/agents/hspc-velocity-analyst.md
+    required: true
+    implemented: true
+  # --- 재사용 코어 멤버 ---
+  literature_scout:   { type: agent, path: .claude/agents/literature-scout.md,     required: true,  implemented: true }
+  novelty_strategist: { type: agent, path: .claude/agents/novelty-strategist.md,   required: true,  implemented: true }
+  research_methodologist: { type: agent, path: .claude/agents/research-methodologist.md, required: true, implemented: true }
+  manuscript_writer:  { type: agent, path: .claude/agents/manuscript-writer.md,    required: true,  implemented: true }
+  presenter:          { type: agent, path: .claude/agents/presenter.md,            required: true,  implemented: true }
+  paper_critic:       { type: agent, path: .claude/agents/paper-critic.md,         required: true,  implemented: true }
+  design:             { type: agent, path: .claude/agents/design.md,               required: false, implemented: true }
+  paper_planner:      { type: agent, path: .claude/agents/paper-orchestrator.md,   required: true,  implemented: true }   # 개명 예정: paper-planner (BIOP01-70)
+  # --- 미구현 (문서에는 참조되나 실체 없음) — BIOP01-64 ---
+  venue_reviewer:
+    aka: [reviewer, venue-reviewer, simulated-referee]
+    type: agent
+    path: .claude/agents/venue-reviewer.md
+    required: false
+    implemented: false          # ← doctor가 문서 참조 대비 미구현으로 FAIL 처리해야 함
+    note: "프로젝트 로컬 구현 예정. 전역 실체화 금지. 격리 규칙 필요."
+  # --- 비-에이전트 구성요소 ---
+  production_runner:  { type: skill,  path: .claude/skills/paper-production-orchestrator/SKILL.md, required: true, implemented: true }  # 개명 예정: paper-runner
+  figure_generation:  { type: script, path: pipeline/hspc-velocity-benchmark/figures, required: true, implemented: true }
+
+gates:
+  result_validation:               # 자동 무결성 — 분석 직후
+    type: automatic
+    when: after_analysis
+    commands:
+      - "cd pipeline/hspc-velocity-benchmark/scripts && python p3_concordance.py"
+      - "cd pipeline/hspc-velocity-benchmark/scripts && python p3_crossdataset_concordance.py --dataset human_brain"
+      - "cd pipeline/hspc-velocity-benchmark/scripts && python p3_scrambled_null.py"
+    on_fail: stop_and_report
+  package_validation:              # 자동 무결성 — 공개 직전
+    type: automatic
+    when: before_release
+    checks: [manuscript_numbers_match_results, figures_regenerated, commit_and_data_pinned, numbers_unchanged_through_review]
+    on_fail: stop_and_report
+  claim_defensibility:             # 과학적 판단 — 사람(advisor) 포함
+    type: scientific_judgement
+    on_fail: human_approval
+  release:                         # 공개·거버넌스 — 사람
+    type: governance
+    checks: [authors, affiliation, ip, corresponding_email, data_release]
+    on_fail: human_approval
+
+artifacts:
+  findings:       pipeline/hspc-velocity-benchmark/results/FINDINGS.md
+  manuscript:     pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md
+  manuscript_ko:  pipeline/hspc-velocity-benchmark/manuscript/draft_v2_ko.md
+  figures_dir:    pipeline/hspc-velocity-benchmark/figures
+  paper_direction: pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md
+
+execution:
+  require_repo_root: true          # 상위 디렉터리 실행 금지 (BIOP01-65)
+  forbid_generic_fallback: true    # 전문 agent 실패를 general-purpose로 대체 금지
+  run_state: RUN_STATE.yaml        # BIOP01-68 (예정)
+  claim_ledger: CLAIMS.yaml        # BIOP01-69 (예정)
+
+# 문서가 참조하지만 manifest에 없거나 implemented=false인 agent 이름은 doctor가 FAIL 처리한다.
+doc_reference_scan:
+  files:
+    - CLAUDE.md
+    - docs/HARNESS.md
+    - .claude/skills/paper-production-orchestrator/SKILL.md
