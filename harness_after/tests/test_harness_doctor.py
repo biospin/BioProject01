@@ -51,6 +51,7 @@ path_reference_scan:
 %(local_only)s  ignore:
     - "^https?://"
     - "^upstream/"
+    - "^/"
 """
 
 
@@ -247,6 +248,16 @@ class DoctorCase(unittest.TestCase):
         code, out = self.run_doctor()
         self.assertEqual(code, 1, out)
         self.assertIn("skills/ROUTES.md", out)
+
+    # ---- 17. 절대 호스트 경로는 리포 경로가 아니므로 팬텀이 아니다 ----
+    #      CI(GitHub runner)에는 /opt/envs 가 없고 우리 서버에는 있다.
+    #      환경마다 결과가 달라지면 게이트를 믿을 수 없으므로 ignore 로 고정한다.
+    def test_absolute_host_path_ignored(self):
+        write(os.path.join(self.repo, "CLAUDE.md"),
+              "# test\n팀 공유 env 는 `/opt/envs` 에 있다.\n")
+        self.manifest()
+        code, out = self.run_doctor()
+        self.assertEqual(code, 0, "절대 호스트 경로를 팬텀으로 오검\n" + out)
 
 
 class LiveRepoCase(unittest.TestCase):

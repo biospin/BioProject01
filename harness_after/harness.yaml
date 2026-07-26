@@ -107,7 +107,8 @@ path_reference_scan:
   ignore:                          # 경로가 아닌 것(외부 repo·호스트/IP·모델 ID·버전 문자열)
     - "^https?://"
     - "^[0-9]+[.][0-9.]+$"
-    - "^/dev/"
+    - "^/"                         # 절대 호스트 경로(/opt/envs, /dev/sda2 …) — 리포 경로가 아니다.
+                                   #   단, 이식성 위험이므로 문서에서 줄이는 편이 좋다(3a86f6f 참고).
     - "^kakyungkim/"
     - "^biospin/"
     - "^(MahmoodLab|paige-ai|LGAI-EXAONE|prov-gigapath)/"
