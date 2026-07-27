@@ -74,6 +74,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 | "가설·실험설계·분석계획 점검·감사" | `research-methodologist` |
 | "제출 전 적대적 자체검토 / 그림 QA" | `paper-critic` |
 | "정식 venue 리뷰 시뮬레이션" | `venue-reviewer` (프로젝트 로컬, 선택) |
+| "원고 분량 줄여줘 / 투고 word limit 맞춰줘" | `manuscript-condenser` (내용 확정 후, 선택) |
 | "발표자료/슬라이드/발제" | `presenter` |
 | "로고·아이콘·브랜드·그림 미감" | `design` |
 | "여러 단계를 어떤 순서로 엮을지 계획만" | `paper-orchestrator` (계획만; 실행은 메인 루프) |
@@ -87,6 +88,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 | 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md` + `draft_v2_ko.md`(영/한 동시), `figures/*.png` | 검수·리뷰·발표 |
 | 검증 게이트 | (커밋/공개 전) | `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py` 재계산 → FINDINGS.md 대조 | 사람 |
 | 리뷰 | paper-critic / venue-reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
+| 분량 감축 | manuscript-condenser | `manuscript/CLAIM-EVIDENCE-MAP-<date>.md` + `CONDENSE-LEDGER-<date>.md` (+ 줄인 `draft_v2.md`·`draft_v2_ko.md`) | 공개 게이트 |
 | 발표 | presenter | 슬라이드/발제 | 사람 |
 | 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` — **로컬 전용(.gitignore, 78a5a92)**. 커밋하지 않으며 새 clone에는 없다 | 다음 세션 |
 

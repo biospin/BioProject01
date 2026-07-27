@@ -26,6 +26,7 @@
 | 7 | `paper-orchestrator` | 코디네이션 | 멀티-agent 작업 **계획** 수립(실행은 PI) | 재사용 |
 | 8 | `design` | 엔지니어링 | 로고·아이콘·브랜드·그림 미감(SVG/PNG) | 재사용 |
 | 9 | `venue-reviewer` (프로젝트 로컬, 선택) | 심사·QA | 정식 venue 스타일 공식 리뷰 문서 | 선택 |
+| 10 | `manuscript-condenser` (선택) | 심사·QA | 확정 원고를 목표 분량으로 감축 + 감축 대장 | 선택 (BIOP01-74) |
 | S | 그림 생성 (스크립트) | 엔지니어링 | `figures/figNN_*.py` — 결과 파일에서 그림 생성·번호 정합 | ✅ (스크립트) |
 
 > ⚠️ 그림 생성은 스크립트로 둔다. `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`(예: `fig01_p2_concordance.py`)를 실행해 만든다. 단순 재생성은 메인 루프가 직접 돌려도 된다(결정론적).
