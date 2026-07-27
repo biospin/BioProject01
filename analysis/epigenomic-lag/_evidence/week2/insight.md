@@ -78,8 +78,8 @@ MultiVeloVAE는 MultiVelo가 priming을 **과잉 배정**한다고 보고(Wnt3 I
 | # | Gap | 선례 유무 | 비고 |
 |---|---|---|---|
 | G-1 | pseudotime → wall-clock 시간 단위 calibration | 부분적 (MultiVeloVAE capture time prior) | L-2에서 파생. lag를 시간 단위로 말하려면 선결 |
-| G-2 | **baseline epigenomic feature → lag 예측** | **선례 없음 (본 scope 내)** | ★ 프로젝트 핵심 novelty 후보. 아래 상술 |
-| G-3 | enhancer / peak-level lag resolution | 없음 | MultiVeloVAE open question 3번(peak-level ODE)으로만 제기됨 |
+| G-2 | **baseline epigenomic feature → lag 예측** | **선례 있음** (2차 조사에서 정정) | ★ novelty 후보이나 축소 필요. 아래 상술 |
+| G-3 | enhancer / peak-level lag resolution | **선례 있음** (2차 조사에서 정정) | Ma et al.이 `Wnt3` DORC에서 enhancer peak → promoter 순차 활성화를 이미 추적함 |
 | G-4 | negative lag의 mechanism 분해 (RNA export vs nuclear capture bias vs normalization artifact) | 없음 | MoFlow open question 3번. §2-② 분쟁의 해소 조건 |
 | G-5 | lag 추정의 multi-sample / multi-donor robustness | 없음 | MultiVeloVAE가 multi-sample velocity는 다루나 lag robustness는 미평가 |
 | G-6 | perturbation 기반 causal 검증 | 없음 | L-1에서 파생. 세 논문 모두 후속 과제로만 언급 |
@@ -96,7 +96,20 @@ MultiVeloVAE는 MultiVelo가 priming을 **과잉 배정**한다고 보고(Wnt3 I
 
 **단, 선결 조건이 있다.** §2-②에서 확인했듯 lag 부호 자체가 method에 따라 뒤집힌다. 예측 target이 method artifact라면 예측 성능은 무의미하다. 따라서 **G-4(lag mechanism 분해)가 G-2의 선결 과제**이며, 최소한 MultiVelo와 MoFlow 두 method에서 동시에 재현되는 lag만 target으로 삼는 등의 방어가 필요하다.
 
-**선례 없음의 범위:** 본 분석은 selected 3편 기준이다. scope 밖 literature에 선례가 있을 가능성은 배제하지 못한다. novelty 주장 전에 별도 문헌 조사가 필요하다.
+**선례 조사 결과 (2026-07-27 추가):** 별도 문헌 조사를 수행한 결과 **선례가 존재한다.** 원래 "선례 없음"으로 적었던 부분을 정정한다.
+
+| 연구 | 무엇을 했나 |
+|---|---|
+| Ma et al., SHARE-seq (Cell 2020) | `Wnt3` DORC에서 enhancer → promoter → nascent → mature RNA 순차 활성화를 추적하고 lag를 **0.20 / 0.13 pseudotime unit**으로 정량화. chromatin potential로 cell fate 예측 |
+| COPI (Cell Reports 2020) | promoter accessibility에서 transcription potential을 점수화해 poised gene 식별 |
+| SCARlink (Nat Genet 2024) | tile 단위 accessibility → expression 회귀 + chromatin potential vector field |
+| splicing kinetics 예측 (bioRxiv 2021) | sequence·RBP feature → kinetic rate 회귀 |
+
+따라서 "baseline chromatin에서 timing/potential을 예측한다"는 문제 설정 자체는 새롭지 않다. **살아남는 축소판**은 이것이다 — *signed per-gene lag의 크기와 부호를 회귀 target으로 직접 예측한 사례는 확인되지 않았다.* 기존 연구는 lag를 기술 통계로 정량화하거나(Ma), 활성화 여부를 점수화하거나(COPI), expression level을 예측한다(SCARlink).
+
+이 축소판도 체계적 문헌 조사로 재확인이 필요하다. 위 조사는 웹 검색 기반이다.
+
+**scope 설계 결함:** `scope.md`가 Ma et al.을 "velocity model 미제안"으로 제외했는데, 그 결과 gap 분석에서 가장 중요한 선례가 시야에서 빠졌다. 세 논문 모두 이 논문의 `Wnt3` 분석을 재현 대상으로 삼고 있었는데도 그렇다. **gap 판정은 scope 밖 문헌까지 확인한 뒤 내려야 한다.**
 
 ---
 
@@ -133,9 +146,9 @@ week3 `validation/epigenomic-lag/insight_validation_week3.md`의 I-01~I-06은 **
 
 | Status | 항목 |
 |---|---|
-| Valid | CI-04, CI-05, CI-06, CI-07, CI-08 |
+| Valid | CI-04, CI-05, CI-06, CI-08 |
 | Needs Evidence | CI-01 (논문 3편으로 field trend 주장은 표본 부족) |
-| Overstated | CI-03 (`Wnt3` 서술 차이를 모순으로 읽음) |
+| Overstated | CI-03 (`Wnt3` 서술 차이를 모순으로 읽음), CI-07 (2차 문헌 조사에서 선례 확인, Valid→하향) |
 | Rejected | CI-02 → CI-02R로 대체 |
 
 **교훈:** 탈락한 두 건(CI-02, CI-03) 모두 **논문 간 대비를 만들려는 압력**에서 나왔다. cross-paper insight 작성 시 "차이 찾기" 편향이 작동한다. 특히 CI-02는 Evidence 기준을 통과했는데도 Logic에서 걸렸다 — 근거 문장이 실재하는 것과 그 문장들이 주장한 관계를 지지하는 것은 별개다.
