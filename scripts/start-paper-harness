@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# start-paper-harness — 실행 전제 가드 (BIOP01-65).
+#
+# 원칙: 전문 agent 호출 실패를 범용 agent 실행으로 대체하지 않는다.
+#       구성요소가 없으면 "조용히 다른 걸로" 대신 즉시 중단하고 사람에게 보고한다.
+#
+# 두 종류의 실패를 구분한다:
+#   (a) 구성요소 부재  — 항상 하드 실패. 이게 침묵 폴백의 입구다.
+#   (b) 문서 drift(팬텀 참조) — 2026-07-26 팬텀 0 달성으로 **하드 실패가 기본값**.
+#       예외적으로 넘기려면 HARNESS_DOCTOR_ENFORCE=0 (비권장, 사유를 기록할 것).
+#
+# 사용:  ./scripts/start-paper-harness                          # 기본: drift도 중단
+#        HARNESS_DOCTOR_ENFORCE=0 ./scripts/start-paper-harness  # 예외적 우회(비권장)
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[ -n "$ROOT" ] || { echo "FATAL: git 저장소가 아님. repo 루트에서 실행하라."; exit 1; }
+cd "$ROOT"
+[ -f CLAUDE.md ] || { echo "FATAL: repo 루트가 아님(CLAUDE.md 없음). 상위 디렉터리 실행 금지."; exit 1; }
+
+# (a) 필수 구성요소 — 하나라도 없으면 진입 금지
+req=(
+  ".claude/agents/hspc-velocity-analyst.md"
+  ".claude/skills/paper-production-orchestrator/SKILL.md"
+  "pipeline/hspc-velocity-benchmark/scripts/p3_concordance.py"
+)
+missing=0
+for p in "${req[@]}"; do [ -e "$p" ] || { echo "MISSING: $p"; missing=1; }; done
+[ "$missing" -eq 0 ] || { echo "FATAL: 필수 구성요소 누락 → production run 중단 (범용 폴백 금지)."; exit 1; }
+
+# python 인터프리터 해석 — `python` 이 없는 환경이 실제로 있다(conda env 등).
+PY="${HARNESS_PYTHON:-}"
+if [ -z "$PY" ]; then
+  for c in python3 python; do command -v "$c" >/dev/null 2>&1 && { PY="$c"; break; }; done
+fi
+[ -n "$PY" ] || { echo "FATAL: python 인터프리터를 찾지 못함. HARNESS_PYTHON 을 지정하라."; exit 1; }
+
+# (b) 정합성 게이트 (manifest ↔ 실제/문서)
+if [ -f scripts/harness_doctor.py ] && [ -f harness.yaml ]; then
+  if "$PY" scripts/harness_doctor.py --repo . --manifest harness.yaml; then
+    :
+  else
+    if [ "${HARNESS_DOCTOR_ENFORCE:-1}" = "1" ]; then
+      echo "FATAL: harness_doctor FAIL → 하네스 진입 중단. 구성 drift를 고치고 다시 실행하라."; exit 1
+    fi
+    echo "WARN: harness_doctor FAIL — HARNESS_DOCTOR_ENFORCE=0 으로 우회됨. 사유를 기록할 것."
+  fi
+fi
+
+echo "OK: 실행 전제 통과 (cwd=$ROOT, python=$PY). 하네스 진입 허용."

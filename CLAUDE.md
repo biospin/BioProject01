@@ -29,7 +29,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 - `BASELINE-ALIGNMENT.md` — Harness_Baseline 정합 기록.
 
 ## 작업 기록
-- **`SESSION-LOG.md`**: 분석 단계에서 한 일을 세션별로 누적 기록.
+- **`SESSION-LOG.md`**: 분석 단계에서 한 일을 세션별로 누적 기록. *(아래 3개는 모두 **로컬 전용** — `.gitignore` 등재, 리포에 커밋하지 않는 개인 작업기록)*
 - **`HANDOFF.md`**: 현재 상태 + 한 일/할 일. **`TODO.md`**: 할 일 체크리스트.
 
 ## 인프라 · 접속 · 환경 (포인터)
@@ -68,7 +68,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 ### 자연어 라우팅
 요청에 agent 이름이 없어도 아래 표로 배정한다. 프로젝트 agent는 `.claude/agents/`. 그림 작업은 `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`를 실행해 소유.
 
-**논문 하네스 단일 컨텍스트 = `pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md`.** 모든 논문 멤버(novelty·literature·methodologist·writer·critic·reviewer)는 작업 전 이 문서를 읽는다 — 현재 thesis·claim 등급표·loop 규율(**claim-defensibility 게이트**: headline claim은 반증기준+make-or-break 검정+advisor 통과 전 PROVISIONAL, 본문 미반영)·사전등록·진행상태가 여기 있다. 매번 재브리핑 불필요.
+**논문 하네스 단일 컨텍스트 = `pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md`.** 모든 논문 멤버(novelty·literature·methodologist·writer·critic·venue-reviewer)는 작업 전 이 문서를 읽는다 — 현재 thesis·claim 등급표·loop 규율(**claim-defensibility 게이트**: headline claim은 반증기준+make-or-break 검정+advisor 통과 전 PROVISIONAL, 본문 미반영)·사전등록·진행상태가 여기 있다. 매번 재브리핑 불필요.
 
 **여러 단계를 엮는 요청 → 단일 agent가 아니라 오케스트레이터 Skill.** "풀 파이프라인 / 프리프린트 업데이트해 제출 준비 / 분석→집필→그림→검수까지 / 그림만 다시 / 리뷰만 다시 / critic 지적 반영"은 **`paper-production-orchestrator`** Skill(`.claude/skills/paper-production-orchestrator/SKILL.md`)로 — 메인 루프가 실행하며 §0에서 PAPER_DIRECTION 로드 후 아래 멤버를 순서대로 호출하고 claim-defensibility 게이트·부분 재실행·검증 게이트를 처리한다. 단일 단계 요청은 아래 agent로 직접 라우팅:
 
@@ -81,7 +81,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 | "차별화 각도 / 뭘 새로 해야 하나" | `novelty-strategist` |
 | "가설·실험설계·분석계획 점검·감사" | `research-methodologist` |
 | "제출 전 적대적 자체검토 / 그림 QA" | `paper-critic` |
-| "정식 venue 리뷰 시뮬레이션" | `reviewer` (전역, 선택) |
+| "정식 venue 리뷰 시뮬레이션" | `venue-reviewer` (프로젝트 로컬, 선택) |
 | "발표자료/슬라이드/발제" | `presenter` |
 | "로고·아이콘·브랜드·그림 미감" | `design` |
 | "여러 단계를 어떤 순서로 엮을지 계획만" | `paper-orchestrator` (계획만; 실행은 메인 루프) |
@@ -94,9 +94,9 @@ SKILL(지침)을 실제로 돌리는 코드:
 | 분석·eval | `hspc-velocity-analyst` | `pipeline/hspc-velocity-benchmark/results/FINDINGS.md` + `results/*.csv` + `results/*.md` | 집필·검수 |
 | 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md` + `draft_v2_ko.md`(영/한 동시), `figures/*.png` | 검수·리뷰·발표 |
 | 검증 게이트 | (커밋/공개 전) | `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py` 재계산 → FINDINGS.md 대조 | 사람 |
-| 리뷰 | paper-critic / reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
+| 리뷰 | paper-critic / venue-reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
 | 발표 | presenter | 슬라이드/발제 | 사람 |
-| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
+| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` — **로컬 전용(.gitignore, 78a5a92)**. 커밋하지 않으며 새 clone에는 없다 | 다음 세션 |
 
 **사람 승인 게이트:** 공개(프리프린트/blog)는 **저자·소속·IP·corresponding email 확정** 전까지 보류(manuscript-writer의 `<FILL>`). **커밋·push는 작업 완료 시 에이전트가 자동 수행**(2026-07-09 정책 변경 — 기존 '무인 git 금지' 철회, push까지 자동). 단 위 검증 게이트(커밋 전 재계산·FINDINGS 대조)는 유지하고, **프리프린트/blog 외부 공개와 main 병합만 사람 승인**(작업 브랜치 `kkkim-pipeline` push는 자동). 커밋 메시지는 P0~P5 접두 규칙 준수, Claude attribution 금지.
 

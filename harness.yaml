@@ -1,0 +1,114 @@
+# harness.yaml — 논문 생산 하네스 Single Source of Truth (manifest)
+# 문서(HARNESS.md/CLAUDE.md/SKILL.md)와 코드는 이 manifest를 따른다.
+# harness_doctor.py가 이 파일을 기준으로 실제 파일·문서 참조를 대조한다.
+harness_version: 1
+project_profile: biop01          # 도메인 특화분은 project profile로 분리 (BIOP01-67)
+
+roles:
+  # --- 도메인 슬롯 (project profile에서 교체) ---
+  domain_analyst:
+    aka: hspc-velocity-analyst
+    type: agent
+    path: .claude/agents/hspc-velocity-analyst.md
+    required: true
+    implemented: true
+  # --- 재사용 코어 멤버 ---
+  literature_scout:   { type: agent, path: .claude/agents/literature-scout.md,     required: true,  implemented: true }
+  novelty_strategist: { type: agent, path: .claude/agents/novelty-strategist.md,   required: true,  implemented: true }
+  research_methodologist: { type: agent, path: .claude/agents/research-methodologist.md, required: true, implemented: true }
+  manuscript_writer:  { type: agent, path: .claude/agents/manuscript-writer.md,    required: true,  implemented: true }
+  presenter:          { type: agent, path: .claude/agents/presenter.md,            required: true,  implemented: true }
+  paper_critic:       { type: agent, path: .claude/agents/paper-critic.md,         required: true,  implemented: true }
+  design:             { type: agent, path: .claude/agents/design.md,               required: false, implemented: true }
+  paper_planner:      { type: agent, path: .claude/agents/paper-orchestrator.md,   required: true,  implemented: true }   # 개명 예정: paper-planner (BIOP01-70)
+  # --- 미구현 (문서에는 참조되나 실체 없음) — BIOP01-64 ---
+  venue_reviewer:
+    aka: [reviewer, simulated-referee]        # 구명 `reviewer` 는 폐기 — 문서에 남아 있으면 팬텀
+    type: agent
+    path: .claude/agents/venue-reviewer.md
+    required: false
+    implemented: true                        # BIOP01-64 반영 (2026-07-26, 프로젝트 로컬)
+    note: "프로젝트 로컬. 전역 설치 금지. 격리 규칙은 agent 본문 참조."
+  # --- 비-에이전트 구성요소 ---
+  production_runner:  { type: skill,  path: .claude/skills/paper-production-orchestrator/SKILL.md, required: true, implemented: true }  # 개명 예정: paper-runner
+  figure_generation:  { type: script, path: pipeline/hspc-velocity-benchmark/figures, required: true, implemented: true }
+
+gates:
+  result_validation:               # 자동 무결성 — 분석 직후
+    type: automatic
+    when: after_analysis
+    commands:
+      - "cd pipeline/hspc-velocity-benchmark/scripts && python p3_concordance.py"
+      - "cd pipeline/hspc-velocity-benchmark/scripts && python p3_crossdataset_concordance.py --dataset human_brain"
+      - "cd pipeline/hspc-velocity-benchmark/scripts && python p3_scrambled_null.py"
+    on_fail: stop_and_report
+  package_validation:              # 자동 무결성 — 공개 직전
+    type: automatic
+    when: before_release
+    checks: [manuscript_numbers_match_results, figures_regenerated, commit_and_data_pinned, numbers_unchanged_through_review]
+    on_fail: stop_and_report
+  claim_defensibility:             # 과학적 판단 — 사람(advisor) 포함
+    type: scientific_judgement
+    on_fail: human_approval
+  release:                         # 공개·거버넌스 — 사람
+    type: governance
+    checks: [authors, affiliation, ip, corresponding_email, data_release]
+    on_fail: human_approval
+
+artifacts:
+  findings:       pipeline/hspc-velocity-benchmark/results/FINDINGS.md
+  manuscript:     pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md
+  manuscript_ko:  pipeline/hspc-velocity-benchmark/manuscript/draft_v2_ko.md
+  figures_dir:    pipeline/hspc-velocity-benchmark/figures
+  paper_direction: pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md
+
+execution:
+  require_repo_root: true          # 상위 디렉터리 실행 금지 (BIOP01-65)
+  forbid_generic_fallback: true    # 전문 agent 실패를 general-purpose로 대체 금지
+  run_state: RUN_STATE.yaml        # BIOP01-68 (예정)
+  claim_ledger: CLAIMS.yaml        # BIOP01-69 (예정)
+
+# 문서가 참조하지만 manifest에 없거나 implemented=false인 agent 이름은 doctor가 FAIL 처리한다.
+# 2026-07-26 2차 조사: README.md·AGENTS.md 가 스캔 대상에서 빠져 skills/ROUTES.md 팬텀을 놓쳤다 → 확대.
+doc_reference_scan:
+  files:
+    - README.md
+    - AGENTS.md
+    - CLAUDE.md
+    - docs/HARNESS.md
+    - .claude/skills/paper-production-orchestrator/SKILL.md
+
+# 문서가 백틱으로 인용한 '경로'가 실재하는지 검사한다 (팬텀 경로).
+# 근거: bc7f824(2026-06-14, pipeline-only 재구조화)가 skills/ 와 핸드오프 파일을 지웠으나
+#       README/AGENTS/CLAUDE/SKILL 의 라우팅·산출물 계약은 그대로 남아 죽은 링크가 됐다.
+path_reference_scan:
+  enabled: true
+  resolve_by_basename: true        # `p3_concordance.py` 같은 상대 인용은 리포 내 동명 파일로 해석
+  files:
+    - README.md
+    - AGENTS.md
+    - CLAUDE.md
+    - docs/HARNESS.md
+    - .claude/skills/paper-production-orchestrator/SKILL.md
+  # 로컬 전용(gitignore) — 리포에 커밋하지 않는 개인 작업기록. 78a5a92(2026-07-01) untrack.
+  # doctor는 이들의 부재를 FAIL 처리하지 않는다. 대신 .gitignore 등재 여부를 확인한다
+  # (계약은 "필수 산출물"인데 ignore에서 빠지면 실수로 커밋된다).
+  local_only:
+    - HANDOFF.md
+    - TODO.md
+    - SESSION-LOG.md
+  # 규약 경로 — "산출물을 여기에 두라"는 안내이지 사전에 존재해야 하는 경로가 아니다.
+  # (AGENTS.md 'Repository Conventions'). 부재해도 FAIL 아님. 필요 시 생성된다.
+  conventions:
+    - data/
+    - metadata/
+    - work/
+    - outputs/
+  ignore:                          # 경로가 아닌 것(외부 repo·호스트/IP·모델 ID·버전 문자열)
+    - "^https?://"
+    - "^[0-9]+[.][0-9.]+$"
+    - "^/"                         # 절대 호스트 경로(/opt/envs, /dev/sda2 …) — 리포 경로가 아니다.
+                                   #   단, 이식성 위험이므로 문서에서 줄이는 편이 좋다(3a86f6f 참고).
+    - "^kakyungkim/"
+    - "^biospin/"
+    - "^(MahmoodLab|paige-ai|LGAI-EXAONE|prov-gigapath)/"
