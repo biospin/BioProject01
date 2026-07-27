@@ -39,15 +39,19 @@
 - MultiVeloVAE: MultiVelo가 **IRS lineage 전체를 priming으로 잘못 해석**했다고 지적. 진짜 priming lineage와 IRS lineage를 분리해야 한다.
 - MoFlow: `Wnt3`는 **MoFlow와 MultiVelo가 모두 잘 잡았다**고 평가. 문제 gene은 오히려 `Padi3`, `Myo10`, `Notch1`이며 여기서 MultiVelo가 실패한다.
 
-즉 MultiVelo의 `Wnt3` 처리에 대해 후속 두 논문의 평가가 정반대다. 평가 기준이 각각 정량 DTW lag / lineage 분리 정확도 / gene-wise velocity 방향으로 달라서, 동일 기준 재평가 없이는 결정할 수 없다.
+즉 MultiVelo의 `Wnt3` 처리에 대한 후속 두 논문의 **서술이 갈린다**. 다만 이를 모순으로 읽으면 안 된다 — 평가 대상이 서로 다르기 때문이다. MoFlow는 gene-wise velocity **방향**을, MultiVeloVAE는 priming의 **lineage 배정**을 평가한다. 방향은 맞히면서 lineage 배정을 틀리는 것이 가능하므로 논리적 충돌은 아니다. 동일 기준 재평가 없이는 어느 쪽도 결정할 수 없다.
+
+> 최초 작성 시 "평가가 정반대"로 기술했으나 검증에서 `Overstated`로 판정되어 표현을 조정했다.
 
 **② latent time fitting이 lag 부호를 뒤집는다** [E-08]
 MoFlow pseudotime과 MultiVelo **global** latent time에서는 `PDGFRA`/`MAP3K1`의 negative `c-s` lag가 보이는데, MultiVelo **gene-specific** latent time에서는 그 lag가 사라지고 canonical order로 정렬된다. 400개 초과 gene이 최소 25% time bin에서, 129개 gene이 75% 초과 bin에서 sign reversal을 보였다.
 
 MoFlow는 이를 "biological order에 맞추려는 over-correction"으로 해석한다. 그러나 반대 방향, 즉 MoFlow의 local relay가 noise를 lag로 포착했을 가능성은 배제되지 않았다. **양쪽 모두 ground truth가 없다.** 이것이 이 field에서 가장 크게 열려 있는 방법론적 분쟁이다.
 
-**③ 두 후속 논문이 MultiVelo를 비판하는 방향이 서로 반대다**
-MultiVeloVAE는 MultiVelo가 priming을 **과잉 배정**한다고 보고(Wnt3 IRS lineage), MoFlow는 MultiVelo가 non-canonical lag를 **과잉 교정**한다고 본다. 둘 다 gene-specific latent time fitting의 부작용을 지적하지만 증상이 정반대다. 이는 latent time fitting이 단일 방향 bias가 아니라 **데이터 조건에 따라 양방향으로 왜곡**될 수 있음을 시사한다.
+**③ 두 후속 논문이 같은 편향을 서로 다른 증상으로 지적한다** *(검증 후 정정)*
+MultiVeloVAE는 MultiVelo가 priming을 **과잉 배정**한다고 보고(Wnt3 IRS lineage), MoFlow는 MultiVelo가 non-canonical lag를 **과잉 교정**해 canonical order로 정렬시킨다고 본다. canonical order(`c → u → s`)는 chromatin이 RNA를 선행하는 방향, 즉 priming 방향이다. 따라서 **두 지적은 같은 방향**이다 — MultiVelo의 gene-specific latent time fitting이 priming/canonical 신호를 과다 생성한다는 동일한 편향을, 저자가 겹치지 않는 두 그룹이 각각 다른 증상으로 관찰했다.
+
+> 최초 작성 시 이를 "방향이 정반대"로 기술했으나 `validation/epigenomic-lag/insight_validation_crosspaper.md` 검증에서 근거 오독으로 판정되어 `Rejected` 처리하고 위 내용으로 대체했다. 정정판이 원 주장보다 근거가 강하다 — 독립된 두 그룹의 결론이 **일치**하는 쪽이 갈리는 것보다 증거력이 높기 때문이다.
 
 ---
 
@@ -103,7 +107,8 @@ MultiVeloVAE는 MultiVelo가 priming을 **과잉 배정**한다고 보고(Wnt3 I
 | ID | Insight | 관련 논문 | 근거 ID |
 |---|---|---|---|
 | CI-01 | chromatin-RNA timing 연구는 discrete ordering → continuous factor → 시간축 제거된 signed lag 순으로, 모델이 부과하는 시간 구조를 걷어내는 방향으로 확장됐다 | 3편 | E-01, E-02, E-03 |
-| CI-02 | MultiVeloVAE와 MoFlow는 모두 gene-specific latent time fitting을 문제 삼지만 지적 방향이 정반대다(priming 과잉 배정 vs lag 부호 과잉 교정). latent time 왜곡은 단일 방향 bias가 아니다 | 3편 | E-07, E-08 |
+| ~~CI-02~~ | ~~지적 방향이 정반대다~~ → **Rejected** (근거 오독). CI-02R로 대체 | — | — |
+| CI-02R | MultiVeloVAE와 MoFlow는 저자가 겹치지 않는 독립 관찰에서, MultiVelo의 gene-specific latent time fitting이 priming/canonical 방향 신호를 과다 생성한다는 **동일한 편향**을 서로 다른 증상(priming lineage 과잉 배정 / non-canonical lag 소거)으로 지적한다 | 3편 | E-07, E-08, CI-08 |
 | CI-03 | 동일 dataset의 동일 gene(`Wnt3`)에 대해 세 논문의 판정이 갈리며, 평가 기준이 서로 달라 현재 근거로는 결정 불가하다 | 3편 | E-07 |
 | CI-04 | negative `c-s` lag가 biological signal인지 method artifact인지 분리되지 않았고, 양쪽 모두 ground truth가 없다 | MoFlow, MultiVelo | E-08, E-09 |
 | CI-05 | perturbation validation 부재·wall-clock 부재·gene-level aggregation·benchmark 불일치는 3편 전부에서 관찰되는 field의 구조적 한계다 | 3편 | E-10, E-11, E-12, E-14 |
@@ -119,6 +124,18 @@ week3 `validation/epigenomic-lag/insight_validation_week3.md`의 I-01~I-06은 **
 - I-01(MultiVelo chromatin 통합), I-03(MoFlow local relay), I-05(MultiVeloVAE continuous rate)는 CI-01의 Field Flow 세 마디에 각각 대응한다. 모순 없음.
 - I-02·I-04·I-06이 공통으로 지목한 "perturbation 없이는 causal로 확장 불가"는 CI-05의 L-1과 동일한 관찰이다. 독립 도출 후 일치.
 - I-04(negative `c-s` lag는 biological signal일 수 있음, Status `Needs Evidence`)는 CI-04로 확장된다. week3는 근거 부족만 지적했으나, CI-04는 **method artifact 가능성**이라는 구체적 대안 가설을 추가한다.
-- **week3에 없던 항목:** CI-02, CI-03, CI-08. 특히 `Wnt3` 3자 불일치(CI-03)와 latent time 양방향 왜곡(CI-02)은 단일 논문 분석에서는 보이지 않는 지점이다.
+- **week3에 없던 항목:** CI-02R, CI-03, CI-08. 특히 `Wnt3` 서술 차이(CI-03)와 latent time fitting의 공통 편향(CI-02R)은 단일 논문 분석에서는 보이지 않는 지점이다.
 
-CI-01~CI-08은 아직 검증 전이다. Validation Agent 입력으로 넘긴다.
+## 검증 결과 (2026-07-27)
+
+`claim-verify`로 8건을 6기준·5 Status 검증했다. 결과: **Valid 5 / Overstated 1 / Needs Evidence 1 / Rejected 1.**
+상세는 `validation/epigenomic-lag/insight_validation_crosspaper.md`.
+
+| Status | 항목 |
+|---|---|
+| Valid | CI-04, CI-05, CI-06, CI-07, CI-08 |
+| Needs Evidence | CI-01 (논문 3편으로 field trend 주장은 표본 부족) |
+| Overstated | CI-03 (`Wnt3` 서술 차이를 모순으로 읽음) |
+| Rejected | CI-02 → CI-02R로 대체 |
+
+**교훈:** 탈락한 두 건(CI-02, CI-03) 모두 **논문 간 대비를 만들려는 압력**에서 나왔다. cross-paper insight 작성 시 "차이 찾기" 편향이 작동한다. 특히 CI-02는 Evidence 기준을 통과했는데도 Logic에서 걸렸다 — 근거 문장이 실재하는 것과 그 문장들이 주장한 관계를 지지하는 것은 별개다.
