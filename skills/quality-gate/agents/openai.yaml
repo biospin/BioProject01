@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quality Gate"
+  short_description: "저널 수준, 저자 기관, 근거 품질, paper mill 위험을 종합해 읽기 우선순위를 판정합니다."
+  default_prompt: "이 논문의 저널 수준, 저자와 기관, 펀딩과 이해충돌, 근거 품질, 재현 가능성을 평가하고 읽기 우선순위를 판정해줘. Paper mill 위험 지표도 체크해줘."

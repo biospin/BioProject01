@@ -1,0 +1,4 @@
+interface:
+  display_name: "Method Reference"
+  short_description: "필요할 때만 실행하는 계산적 방법 참조 에이전트. 실험 내용을 계산적 의미로 번역."
+  default_prompt: "이 논문에서 사용한 방법의 작동 원리를 설명해줘. 어떤 계산적 문제를 푸는지, 통계 구조가 무엇인지, 기존 방법과 어떻게 다른지, 재현에 필요한 정보가 무엇인지 정리해줘."

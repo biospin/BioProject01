@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apply Map"
+  short_description: "이 논문을 내 연구에 쓸 수 있는가를 평가합니다. 데이터 호환성, 방법 적용 가능성, 결과 참조 방식."
+  default_prompt: "이 논문을 내 연구에 어떻게 활용할 수 있는지 평가해줘. 데이터 호환성, 방법 재현 가능성, 결과를 baseline으로 쓸 수 있는지, 다른 연구자들이 같은 대상을 어떻게 분석했는지 정리해줘."

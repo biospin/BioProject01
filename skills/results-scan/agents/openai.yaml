@@ -1,0 +1,4 @@
+interface:
+  display_name: "Results Scan"
+  short_description: "데이터셋, 수치 결과, Figure 증거를 빠르게 정리합니다. 실험 내용은 계산적 의미로 번역."
+  default_prompt: "이 논문의 Results를 스캔해서 사용한 데이터셋, baseline, 주요 수치 결과, 각 Figure가 뒷받침하는 주장을 정리해줘. wet lab 실험 내용은 계산적 의미로 번역해줘."

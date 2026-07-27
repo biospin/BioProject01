@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Digest"
+  short_description: "논문 단락 순서를 따라 각 단락을 한 문장으로 압축한 반 페이지–한 페이지 분량의 digest를 만듭니다."
+  default_prompt: "이 논문의 digest를 만들어줘. 논문의 실제 섹션과 단락 순서를 유지하면서, 각 단락을 한 문장으로 압축해. 전체 분량은 반 페이지에서 한 페이지 정도로 맞춰줘."

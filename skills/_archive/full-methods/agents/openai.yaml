@@ -1,0 +1,4 @@
+interface:
+  display_name: "Full Methods"
+  short_description: "논문의 확률/통계적 방법과 핵심 insight를 분석합니다."
+  default_prompt: "이 논문의 Methods를 한국어로 분석해줘. 어떤 computational/statistical 문제를 풀려는지, 핵심 수학적 구조가 무엇인지, 이전 방법과 어떻게 다른지, 그 차이가 Results에서 어떻게 나타났는지 정리해줘."

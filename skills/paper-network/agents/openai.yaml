@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Network"
+  short_description: "여러 논문 간 저자 겹침, 기관 클러스터, 기업 연관, research lineage를 분석합니다."
+  default_prompt: "분석된 논문들 사이의 저자 겹침, 기관 연관, 기업 펀딩 연결, research lineage를 분석해줘. 같은 연구 그룹에서 나온 논문들인지, 이해충돌이 집중된 패턴이 있는지 확인해줘."

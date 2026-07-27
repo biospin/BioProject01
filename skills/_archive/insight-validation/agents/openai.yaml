@@ -1,0 +1,4 @@
+interface:
+  display_name: "Insight Validation"
+  short_description: "분석된 논문의 insight와 takeaway가 근거로 뒷받침되는지 검증합니다."
+  default_prompt: "이 insight 또는 takeaway가 full.md의 Results, Figure, Methods 근거로 얼마나 잘 뒷받침되는지 검증해줘. 근거 강도를 평가하고, 과해석 여부를 판단하고, 다른 분석된 논문과 모순이 없는지 교차 확인해줘."

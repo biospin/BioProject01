@@ -1,0 +1,4 @@
+interface:
+  display_name: "Takeaway"
+  short_description: "논문이 열어놓은 질문, 설명 gap, 다음 연구 아이디어를 정리합니다."
+  default_prompt: "이 논문의 Discussion을 읽고 저자가 인정한 한계, 설명이 매끄럽지 않은 부분, 이 논문이 열어놓은 질문, 다음 연구 아이디어를 정리해줘. 한 줄 평도 써줘."

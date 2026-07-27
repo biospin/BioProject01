@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claim Verify"
+  short_description: "특정 insight나 해석이 논문 근거로 뒷받침되는지 검증합니다."
+  default_prompt: "이 insight가 full.md의 근거로 얼마나 잘 뒷받침되는지 검증해줘. 근거 강도를 평가하고, 과해석 여부를 판단하고, 다른 분석된 논문과 교차 검증해줘."

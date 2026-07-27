@@ -1,0 +1,4 @@
+interface:
+  display_name: "Figure 1 Decode"
+  short_description: "Figure 1로 논문의 핵심 접근법을 파악합니다. 첫 번째로 실행하는 에이전트."
+  default_prompt: "이 논문의 Figure 1을 보고 논문이 무엇을 하는 논문인지 파악해줘. Figure 1이 overview인지 아닌지 먼저 분류하고, overview가 아니면 Introduction 마지막 단락과 Discussion 첫 단락으로 대체 전략을 써줘."

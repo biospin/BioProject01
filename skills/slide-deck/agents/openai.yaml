@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slide Deck"
+  short_description: "full.md 기반의 저널 미팅용 슬라이드를 만듭니다."
+  default_prompt: "이 논문의 full.md를 기반으로 저널 미팅용 슬라이드를 만들어줘. design.md 스타일을 따르고, PDF에서 Figure 이미지를 캡처해 넣어줘."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claim Extract"
+  short_description: "Abstract와 Introduction 발췌독으로 핵심 주장과 gap만 추출합니다."
+  default_prompt: "이 논문의 Abstract와 Introduction을 발췌독해서 논문이 풀려는 문제, 기존 방법의 한계, 저자가 주장하는 기여만 뽑아줘. 배경 설명이나 수사는 제외하고 핵심 문장만."

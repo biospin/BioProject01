@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper QA"
+  short_description: "분석된 논문의 full.md를 근거로 질문에 답합니다."
+  default_prompt: "분석된 논문에 대한 질문에 답해줘. full.md에 있는 내용만 근거로 삼고, 없으면 없다고 말해줘."
