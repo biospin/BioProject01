@@ -62,5 +62,8 @@
 - ✅ 4-vs-4 확증 + §8(SNR-bounded) + 방어가능선 전략 봉인(커밋 d52416c).
 - ✅ 5번째 GSE205117(gastrulation) 완주 — 사전등록 6/0 PASS(MoFlow arm 원정의 재채점, 커밋 9eb0b76). 본문·Table1 반영.
 
+### 2026-07-27 — 스쿱 점검·인용 반영 (Wu 2026 GB)
+- 오늘 GB 게재된 세 번째 벤치마크(Wu et al. 27:242, 우리 데이터 GSE209878·GSE284047을 임베딩 수준으로 사용)를 스쿱 점검 후 인용 편입. PLOS Ancheta 2026(유전자별 driver 순위 방법 의존, 우리와 방향 일치)도 corroboration으로 인용. **스쿱 아님**(임베딩 순위 vs 우리 행렬 재현성·ATAC-shuffle 인과·외부 rate 앵커). refs 69→71([27] Wu·[28] Ancheta). advisor 지적 반영: Background·Positioning의 "causal negative control 없음" 문장이 Wu의 negative-control task와 충돌하지 않게 "정적 세포 출력 타당성이지 chromatin 인과가 아니다"로 문장 안에서 구분. 분석 상세=paper_analysis/epigenomic-lag/wu-2026-velocity-benchmark/.
+
 ## 6. 정직한 한계 (본문 명시)
 식별가능성-SNR 분리 불가 / freed-nuisance 조건부(α 곡률도 0.19× 붕괴) / skin DEFER / drug-timing은 design principle(wet-lab 미검증) / cross-dataset α gradient는 n=3 confounded라 headline 금지(categorical 대비만).
