@@ -38,6 +38,11 @@
 
 ## 5. 진행 상태
 
+### 2026-07-27 결정 (kkkim) — 저널·주저자 확정
+- **타깃 저널 = Genome Biology 확정** (base-case CRM 폐기). draft_v2는 이미 GB IMRaD 포맷이라 구조 변경 없음. 단 오늘 GB 27:242(Wu 종합 벤치마크)가 게재됐으므로 desk-reject 위험이 상향 — **Positioning 문단이 "같은 데이터·다른 질문(행렬 재현성·ATAC-shuffle 인과·외부 rate 앵커)"을 명확히 방어**해야 함. critic의 최우선 렌즈로 지정.
+- **주저자(first author) = Ka-Kyung Kim(kkkim) 확정.** 전체 저자 목록·순서·corresponding·박상준 Acknowledgements 처리는 오늘 밤 회의에서 확정 → 그 전까지 원고 `<FILL: author list/corresponding>` 유지(반쯤 채우지 않음). 박상준=비저자+Acknowledgements+서면동의(ICMJE ②③④ 미충족).
+- **critic 착수 승인**: 과학적 내용(층② 감사·외부재현 4/4·스쿱 반영·refs 71) critic-ready. `<FILL>` 메타데이터는 critic 대상 아님(회의 pending 명시).
+
 ### 2026-07-18 결정 (novelty 적대적 판정 후)
 - **적대적 심사(GB) 판정**: 현 draft는 **~75~85% reject 위험** — "음성/부분재현 감사 + 얇은 양성"으로 읽힘. 정직한 base-case venue = **Cell Reports Methods**, GB는 stretch. (kkkim 결정: **A 결과로 재프레이밍 후 GB 도전**, 재검토.)
 - ✅ **make-or-break A 통과(양성 헤드라인 확보)**: profile-likelihood를 α_c·β·γ로 확장(`p5_stiffness_all_params.py`) → **곡률이 외부 측정검증을 예측**(α≫α_c>β>γ, p<1e-11; α 회복·γ 역방향). 커밋 69861b8. → §1 thesis·§2 표 갱신.
