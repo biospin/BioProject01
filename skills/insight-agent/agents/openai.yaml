@@ -1,0 +1,4 @@
+interface:
+  display_name: "Insight Agent"
+  short_description: "papers.jsonl과 evidence_bundle.md에서 Field Flow / Differentiation Map / Repeated Limitations / Unresolved Gaps 4관점의 cross-paper insight를 생성합니다."
+  default_prompt: "paper-scrapper가 만든 evidence_bundle.md와 papers.jsonl을 읽고 insight.md를 만들어줘. 단순 요약이 아니라 논문 간 관계에서 나오는 insight만 쓰고, 같은 dataset에서 다른 결론이 나온 지점을 반드시 찾아줘."

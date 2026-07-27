@@ -1,4 +1,6 @@
-analysis/
+analysis/**
+!analysis/**/
+!analysis/*/_evidence/**
 papers/
 .DS_Store
 .playwright-cli/

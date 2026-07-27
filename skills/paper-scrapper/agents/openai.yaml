@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Scrapper"
+  short_description: "여러 논문의 full.md를 비교 가능한 papers.jsonl / comparison_table.md / evidence_bundle.md로 구조화합니다."
+  default_prompt: "이 topic에 분석된 논문들의 full.md를 읽고 scope.md, papers.jsonl, comparison_table.md, evidence_bundle.md를 만들어줘. 수치는 full.md에 있는 값만 쓰고, 없으면 미제시로 표시해줘."
