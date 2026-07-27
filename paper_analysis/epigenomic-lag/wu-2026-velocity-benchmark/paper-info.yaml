@@ -1,0 +1,126 @@
+# Wu, Yida, 2026 — velocity-benchmark — Genome Biology
+# DOI: 10.1186/s13059-026-04182-z
+# Topics: epigenomic-lag (primary), RNA-velocity, single-cell-genomics  |  Importance: 상
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Comprehensive benchmarking of RNA velocity methods across single-cell datasets"
+authors:
+  - "Wu, Yida"
+  - "Kong, Chuihan"
+  - "Liao, Xu"
+  - "Lin, Zhixiang"
+  - "Sun, Xiaobo"
+  - "Liu, Jin"
+year: 2026
+venue: "Genome Biology"
+doi: "10.1186/s13059-026-04182-z"
+keywords:
+  - "RNA velocity"
+  - "benchmark"
+  - "single-cell"
+  - "multimodal"
+
+version:
+  type: "published"
+  peer_reviewed: true
+  published:
+    date: "2026-07-27"
+    citation: "Genome Biology 27:242"
+  preprint:
+    server: "Research Square"
+    doi: "10.21203/rs.3.rs-8708834/v1"
+
+topics:
+  - "epigenomic-lag"            # primary
+  - "RNA-velocity"
+  - "single-cell-genomics"
+
+citation:
+  key: "wu2026velocitybenchmark"
+  short_id: "velocity-benchmark-wu"
+  bibtex_file: "sources/wu-2026-velocity-benchmark.bib"
+  bibtex_type: "article"
+
+sources:
+  paper:
+    url: "https://genomebiology.biomedcentral.com/articles/10.1186/s13059-026-04182-z"
+    url_alt:
+      - "https://link.springer.com/article/10.1186/s13059-026-04182-z"
+    local: "sources/wu-2026-velocity-benchmark.pdf"
+    status: "downloaded"
+    note: "GB open access. 본문 36p. 자동 fetch는 idp.springer.com 쿠키·인증 리다이렉트로 차단 → kkkim이 collab_workspace/references/papers에 업로드한 PDF를 sources/로 반입. fulltext_extracted.txt는 pypdf 추출본(grep용)."
+  supplementary:
+    - local: "sources/Additional_file_2.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "MOESM2 — supplementary figures(Fig. S1–S17 등). 6.4MB."
+    - local: "sources/Additional_file_3.pdf"
+      type: "pdf"
+      status: "downloaded"
+      note: "MOESM3 — supplementary tables 추정. 0.2MB."
+  code:
+    - url: "<검토필요: 본문 Availability에서 확인>"
+      type: "github"
+      status: "url-only"
+      note: "분석 코드 repo — 전문 Availability of data and materials 절에서 확정 필요."
+  data:
+    - url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE209878"
+      type: "geo-accession"
+      status: "url-only"
+      note: "★ 이들 Data 6 = GSE209878 + GSE284047 = 우리 HSPC 1차 데이터와 동일 accession. (Luo 2026이 Dataset12로 쓴 것과 같은 데이터.)"
+  abstract_text:
+    source: "publisher-metadata"
+    local: "sources/abstract.txt"
+    status: "downloaded"
+
+categorization:
+  domain:
+    - "RNA velocity"
+    - "single-cell-genomics"
+    - "benchmark"
+  use_case:
+    - "methodology-reference"
+    - "competitive-landscape"      # 우리 원고의 직접 선행 벤치마크(스쿱 점검 대상)
+  importance:
+    level: "상"
+    perspective: "우리 원고(HSPC multiome velocity 출력 신뢰성 감사)의 타깃 저널(Genome Biology)에 2026-07-27 게재된 세 번째 종합 velocity 벤치마크. 우리 1차 데이터(GSE209878)를 Data 6으로 사용. 반드시 인용 + '무엇이 다른가' 문단 필수 + GB desk-reject 위험 상향 → BIOP01-75 저널 결정에 직접 영향. 단 축이 명확히 갈려(임베딩 순위 vs 우리 행렬 재현성·ATAC-shuffle 인과·외부 rate 앵커) 스쿱은 아님."
+
+related:
+  - key: "luo2026velocitybenchmark"
+    relation: "sibling-benchmark"
+    note: "같은 계열 벤치마크(CRM 2026). 둘 다 CBDir/ICVCoh 임베딩 지표. 우리 원고 refs [12]."
+  - key: "li2023multivelo"
+    relation: "cited"
+    note: "MultiVelo 원본. Wu가 multimodal task에서 평가(GraphVelo(ATAC)에 뒤짐)."
+
+# 스쿱 판정 (전문 근거)
+scoop_check:
+  verdict: "not-a-scoop"
+  our_manuscript: "HSPC 10x multiome velocity 출력 신뢰성 감사 (BIOP01)"
+  differentiators_verified_in_fulltext:
+    - "cell×gene velocity 행렬의 method 간 재현성(층②) — Wu는 임베딩(CBDir/ICVCoh)만"
+    - "ATAC-shuffle 인과 대조 — Wu의 negative control은 self-transition/entropy(출력 robustness), 인과 아님. shuffle 0·permutation 0"
+    - "chromatin→transcription lag 신뢰성·부호 편향 — Wu 주제 아님(lag 1회, 무관)"
+    - "외부 측정 rate 앵커(TT-seq·half-life) — Wu 없음(metabolic labeling은 method 입력으로만)"
+    - "사전등록·permutation null·자기철회 방법론 — Wu 없음"
+    - "MoFlow·CRAK-Velo 포함 — Wu 0회(우리 4 arm 중 둘 미포함)"
+  strategic:
+    - "반드시 인용(타깃 저널 게재 + 우리 데이터 사용)"
+    - "'이전 벤치마크와 무엇이 다른가' 문단 사활"
+    - "GB desk-reject 위험 상향 → BIOP01-75 저널 결정에 반영"
+
+workflow:
+  last_updated: '2026-07-27'
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
+
+# lit-search 발견 맥락
+# 역할: competitive-benchmark — 우리 원고 타깃 저널에 게재된 직접 선행 벤치마크. 스쿱 점검 + 인용·차별화 근거.
