@@ -1,20 +1,19 @@
----
-name: full-figure
-description: Analyze figures in a full scientific paper review and, when useful, extract one image per figure panel using the bundled scripts. Use when Codex needs to explain why each figure was included, infer which claim the figure supports, describe each panel such as a, b, c, and d using captions/main text, or crop panels from PDF figures.
----
+# Figure 분석 참고 문서 + Panel 추출 스크립트
 
-# Full Figure
+> **이 디렉토리는 routed agent가 아니다.** 섹션 기반 skill 구조에서 작업 기반 구조로 재편할 때(`skills/_archive/` 참조) `full-figure`는 아카이브하지 않고 `scripts/extract_panels.py`의 보관 위치로 남겼다.
+>
+> - Figure 분석 자체는 `results-scan`이 담당한다. 아래 "Figure 해석 원칙"은 `results-scan`이 Figure 증거를 정리할 때 참고하는 기준이다.
+> - `results-scan`은 `scripts/extract_panels.py`를 직접 호출한다.
+> - `AGENTS.md`의 Agent 목록에 등록하지 않는다. 등록하면 작업 기반 라우팅 원칙과 어긋난다.
 
-## 목표
+## Figure 해석 원칙
 각 Figure를 단순히 “무엇을 보여준다”로 끝내지 않고, 먼저 “논문 저자가 왜 이 Figure를 넣었는가”를 분석한다. Figure가 논문 주장의 어떤 부분을 증명하거나 설득하기 위해 배치되었는지 추론한 뒤, 각 panel(a, b, c, d...)을 본문에서 비교한 내용 중심으로 설명한다.
 
 ## 언어 규칙
-- 기본 출력은 한국어로 작성한다.
-- `RNA`, `DNA`, `TF`, `SNP`, `chromatin`, `transcription`, `translation`, `single-cell`, `multi-omics`, `RNA velocity`, `ATAC-seq`, `baseline`, `dataset`, `benchmark`, `Figure`, `panel`처럼 분야에서 그대로 쓰는 용어는 영어를 유지할 수 있다.
-- 영어 용어를 유지할 때는 처음 한 번 한국어 설명을 덧붙인다.
-- 불필요하게 문장 전체를 영어로 쓰지 않는다.
+AGENTS.md의 언어 규칙을 따른다.
 
 ## 작업 절차
+0. `full.md`의 Overview 섹션이 이미 작성되어 있으면 먼저 읽는다. Figure 1이 Overview에 포함되었다고 표시된 경우, Figure 1 분석에서 중복 설명을 줄이고 논문 주장과의 연결만 압축한다.
 1. Figure 번호, 제목, caption 전체를 확인한다.
 2. 본문에서 해당 Figure를 언급하는 문단을 찾는다.
 3. Figure가 뒷받침하는 논문 주장을 먼저 추론한다.
