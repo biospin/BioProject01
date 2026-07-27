@@ -1,6 +1,6 @@
 ---
 name: paper-production-orchestrator
-description: 논문 생산 루프의 입구(진행표/팀장). "논문 풀 파이프라인 돌려줘", "프리프린트 업데이트해서 제출 준비", "분석→집필→그림→검수까지 한 번에", "그림만 다시", "리뷰만 다시", "critic 지적 반영해", "최신 결과로 본문 갱신" 같이 분석·집필·그림·검수·검증·발표를 엮는 요청에서 사용한다. 기존 멤버(hspc-velocity-analyst, manuscript-writer, 그림 스크립트, paper-critic, reviewer, presenter)를 정해진 순서로 호출하고 부분 재실행을 처리한다. 새 agent는 만들지 않는다.
+description: 논문 생산 루프의 입구(진행표/팀장). "논문 풀 파이프라인 돌려줘", "프리프린트 업데이트해서 제출 준비", "분석→집필→그림→검수까지 한 번에", "그림만 다시", "리뷰만 다시", "critic 지적 반영해", "최신 결과로 본문 갱신" 같이 분석·집필·그림·검수·검증·발표를 엮는 요청에서 사용한다. 기존 멤버(hspc-velocity-analyst, manuscript-writer, 그림 스크립트, paper-critic, venue-reviewer, presenter)를 정해진 순서로 호출하고 부분 재실행을 처리한다. 새 agent는 만들지 않는다.
 ---
 
 # paper-production-orchestrator (논문 생산 루프 진행표 / 팀장) — HSPC velocity-lag benchmark
@@ -17,7 +17,7 @@ description: 논문 생산 루프의 입구(진행표/팀장). "논문 풀 파�
 ## 실행 모드 분기 (먼저 확인)
 1. 산출물 존재·최신 여부 확인:
    - result files: `pipeline/hspc-velocity-benchmark/results/FINDINGS.md` + `results/*.csv` + `results/*.md`
-   - manuscript files: `pipeline/hspc-velocity-benchmark/manuscript/draft.md` (+ `refs.bib`, `supplementary.md`), figures: `pipeline/hspc-velocity-benchmark/figures/`
+   - manuscript files: `pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md` + `draft_v2_ko.md` (+ `refs.bib`, `SUPPLEMENTARY.md`), figures: `pipeline/hspc-velocity-benchmark/figures/`
 2. 분기:
    - **없음 / "풀 파이프라인" / "제출 준비"** → 초기·전체(전 단계).
    - **있음 + 특정 부분 요청** → 부분 재실행(해당 단계만, 나머지 기존 파일 재사용).
@@ -25,7 +25,7 @@ description: 논문 생산 루프의 입구(진행표/팀장). "논문 풀 파�
 3. `hspc-velocity-analyst`가 LLM 기반 sub-분석을 쓰는 경우, **offline mock 경로**(API 키 미설정 등)로 돌았는지 확인한다. mock이면 "실 결과 아님 / 데모"를 보고에 명시한다.
 
 ## 멤버 구성 (전원 기존 재사용)
-`hspc-velocity-analyst`(도메인 분석 슬롯), manuscript-writer(그림 포함 — `figures/figNN_*.py` 스크립트 실행), paper-critic, reviewer, presenter. (기획 단계 선택: research-methodologist, literature-scout, novelty-strategist.)
+`hspc-velocity-analyst`(도메인 분석 슬롯), manuscript-writer(그림 포함 — `figures/figNN_*.py` 스크립트 실행), paper-critic, venue-reviewer, presenter. (기획 단계 선택: research-methodologist, literature-scout, novelty-strategist.)
 
 > 참고: 그림 생성은 **agent가 아니라 스크립트**로 둔다. `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`(예: `fig01_p2_concordance.py`)를 실행해 결과 파일에서 그림을 만든다. 단순 재생성이면 메인 루프가 직접 그 스크립트를 돌려도 된다(결정론적).
 
@@ -45,11 +45,12 @@ description: 논문 생산 루프의 입구(진행표/팀장). "논문 풀 파�
    - 확증용 신규 데이터 예측은 **결과 전 commit 봉인**(`PREREGISTRATION_*.md`), 임계값 사후조정 금지.
    - **2층 융합 금지**: within-method fit 품질을 cross-method 재현성으로 승격 금지.
 3. **분석·eval** — `hspc-velocity-analyst` → `results/FINDINGS.md` + result 파일 갱신. mock 경고 확인.
-4. **집필 + 그림** — `manuscript-writer` → `manuscript/draft.md`. 그림은 `figures/figNN_*.py` 실행 → `figures/`. 그림만 재실행이면 이 단계만(결정론적, 결과 파일에서 생성).
+4. **집필 + 그림** — `manuscript-writer` → `manuscript/draft_v2.md` + `draft_v2_ko.md`(영/한 동시). 그림은 `figures/figNN_*.py` 실행 → `figures/`. 그림만 재실행이면 이 단계만(결정론적, 결과 파일에서 생성).
 5. **검수** — `paper-critic`(적대적 + 그림 시각 QA) → 지적 노트. 블로킹이면 6으로, 경미하면 메모만.
 6. **수정** — `manuscript-writer`가 critic 지적 반영 → 본문 갱신.
-7. **(선택) 정식 리뷰** — 요청 시 `reviewer` → `manuscript/REVIEW-<venue>-<date>.md`.
-8. **검증 게이트** — 아래 verify-gate 실행. **실패하면 멈추고 사람에게 보고**, 커밋·발행하지 않는다.
+7. **검증 게이트 ①(결과 검증)** — 아래 verify-gate 실행. **실패하면 멈추고 사람에게 보고**, 커밋·발행하지 않는다. 원본 하네스 규칙: *"paper-critic + gate FIRST, then reviewer — reviewer assumes pre-submission QA is done"*(`paper-production-harness/agents/paper-orchestrator.md:23`). 숫자가 검증되지 않은 원고를 리뷰에 보내지 않는다. (BIOP01-72)
+8. **(선택) 정식 리뷰** — 요청 시 `venue-reviewer` → `manuscript/REVIEW-<venue>-<date>.md`. **7을 통과한 원고만** 입력한다.
+8.5 **검증 게이트 ②(패키지 검증, 공개 직전)** — 원고 본문 숫자 ↔ 결과 파일 재대조 + 그림·표·supplementary 동봉 확인. 리뷰 반영으로 본문이 바뀌었을 수 있으므로 **공개 전 한 번 더** 돌린다.
 9. **(선택) 발표** — 요청 시 `presenter` → 덱·발제.
 
 각 단계 산출물은 **파일로 남긴다**. 다음 단계는 그 파일을 읽는다.
@@ -67,12 +68,12 @@ conda run --no-capture-output -n scv-preprocess python p3_scrambled_null.py
 | 단계 | 멤버 | 산출 파일 | 다음이 읽음 |
 | --- | --- | --- | --- |
 | 분석·eval | hspc-velocity-analyst | `results/FINDINGS.md`, `results/*.csv`, `results/*.md` | 집필·검수 |
-| 집필 | manuscript-writer | `manuscript/draft.md`, `refs.bib`, `supplementary.md` | 검수·리뷰·발표 |
+| 집필 | manuscript-writer | `manuscript/draft_v2.md` + `draft_v2_ko.md`, `refs.bib`, `SUPPLEMENTARY.md` | 검수·리뷰·발표 |
 | 그림 | manuscript-writer (`figures/figNN_*.py`) | `figures/*.png` | 집필·검수 |
 | 검수 | paper-critic | 적대 노트 + 그림 QA | 집필(수정) |
-| 리뷰 | reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
+| 리뷰 | venue-reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
 | 발표 | presenter | 슬라이드/발제 | 사람 |
-| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
+| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` — **로컬 전용(.gitignore)**. 없으면 새로 만든다 | 다음 세션 |
 
 ## 실패 처리 / 멈춤 조건
 - verify 게이트 실패 → **멈춤**, 무엇이 왜 실패했는지 보고.

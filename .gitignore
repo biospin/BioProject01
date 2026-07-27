@@ -130,3 +130,14 @@ blog/
 .jupyter_ystore.db
 blog_backup_*/
 gdrive_auth_qr.png
+docs/PROGRAM-PRESENTATION-ROADMAP.md
+
+# 실행 부산물 — 로그·진행 마커·락·smoke 산출 (2026-07-22)
+pipeline/hspc-velocity-benchmark/results/logs/
+pipeline/hspc-velocity-benchmark/results/sim_pc_logs/
+pipeline/hspc-velocity-benchmark/results/*.log
+*.smoke.csv
+pipeline/hspc-velocity-benchmark/cross_dataset/*_DONE
+pipeline/hspc-velocity-benchmark/cross_dataset/*_PROGRESS
+*.lock
+evals/**/logs/

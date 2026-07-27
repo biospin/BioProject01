@@ -29,8 +29,11 @@ SKILL(지침)을 실제로 돌리는 코드:
 - `BASELINE-ALIGNMENT.md` — Harness_Baseline 정합 기록.
 
 ## 작업 기록
-- **`SESSION-LOG.md`**: 분석 단계에서 한 일을 세션별로 누적 기록.
+- **`SESSION-LOG.md`**: 분석 단계에서 한 일을 세션별로 누적 기록. *(아래 3개는 모두 **로컬 전용** — `.gitignore` 등재, 리포에 커밋하지 않는 개인 작업기록)*
 - **`HANDOFF.md`**: 현재 상태 + 한 일/할 일. **`TODO.md`**: 할 일 체크리스트.
+
+## 인프라 · 접속 · 환경 (포인터)
+서버 접속·GPU 예절·velocity conda env 5종 위치 등 인프라 정보는 CLAUDE.md에 중복하지 않는다. 정본 = **`docs/SHARED-INFRA-GUIDE.md`**(협업 서버 접속법 정본: bastion 폐기·직접접속 `@121.126.38.195`, GPU 예약, `velo-*`·`seqtools`·`scv-preprocess` env 위치, BIOP02 `spatialpatho` env 포함). 서버·GPU·env를 물으면 여기부터 읽는다. (BIOP01 velocity env와 BIOP02 embedding env는 **격리 유지** — 병합하지 않는다.)
 
 ## Branch 모델 (중요)
 - `kkkim-pipeline` = **HSPC 연구 단일 작업 브랜치.** `paper_analysis/`(근거) + `pipeline/`(코드)를 한 브랜치에서 관리.
@@ -50,6 +53,11 @@ SKILL(지침)을 실제로 돌리는 코드:
 3. **Multicollinearity**: promoter/enhancer ATAC 등 강상관 → regularized.
 4. **Multiple testing**: gene 단위 → permutation FDR.
 5. method 차이 ≠ preprocessing 차이: 공통 전처리 후 method 분기(C2), 공통 graph ablation.
+6. ⚠️ **합격 기준의 근거는 봉인 문서뿐 — 발표자료의 숫자를 임계로 쓰지 않는다** (2026-07-17 실사고).
+   - 슬라이드 12의 **`α 0.88`은 관측값**이다. **봉인된 사전등록의 기준은 `Spearman ρ ≥ 0.50`**(`manuscript/PREREGISTRATION_gse205117.md` **L15**; "HSPC 0.88"은 같은 표의 **비고란 관측치**). 하네스 점검 메모(§5.2 L131)가 0.88을 eval 임계로 옮겨 적었다 — **데이터를 본 뒤 골대를 올리는 것**이고, 그 문서 **L26**이 금지한 "사후 임계 조정"의 반대 방향이다.
+   - **발표자료엔 관측값이 실리지 기준값이 안 실린다.** 임계를 인용할 땐 **봉인 문서의 `파일:줄`을 명시**한다.
+   - 같은 사고: 배정표의 *"앞으로 할 일"*(`ref/compact/reset diff 자동화`)이 §6에서 *"이미 있는 씨앗"*으로 승격됐으나 **실물이 없다**(git엔 `/compact + /clear` 문헌 재분석 커밋만). **계획을 자산으로 쓰지 않는다.**
+   - 관련 산출: `evals/reproducibility_pilot/`(사전등록 채점 재현 eval, 0.50 사용).
 
 ---
 
@@ -60,7 +68,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 ### 자연어 라우팅
 요청에 agent 이름이 없어도 아래 표로 배정한다. 프로젝트 agent는 `.claude/agents/`. 그림 작업은 `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`를 실행해 소유.
 
-**논문 하네스 단일 컨텍스트 = `pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md`.** 모든 논문 멤버(novelty·literature·methodologist·writer·critic·reviewer)는 작업 전 이 문서를 읽는다 — 현재 thesis·claim 등급표·loop 규율(**claim-defensibility 게이트**: headline claim은 반증기준+make-or-break 검정+advisor 통과 전 PROVISIONAL, 본문 미반영)·사전등록·진행상태가 여기 있다. 매번 재브리핑 불필요.
+**논문 하네스 단일 컨텍스트 = `pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md`.** 모든 논문 멤버(novelty·literature·methodologist·writer·critic·venue-reviewer)는 작업 전 이 문서를 읽는다 — 현재 thesis·claim 등급표·loop 규율(**claim-defensibility 게이트**: headline claim은 반증기준+make-or-break 검정+advisor 통과 전 PROVISIONAL, 본문 미반영)·사전등록·진행상태가 여기 있다. 매번 재브리핑 불필요.
 
 **여러 단계를 엮는 요청 → 단일 agent가 아니라 오케스트레이터 Skill.** "풀 파이프라인 / 프리프린트 업데이트해 제출 준비 / 분석→집필→그림→검수까지 / 그림만 다시 / 리뷰만 다시 / critic 지적 반영"은 **`paper-production-orchestrator`** Skill(`.claude/skills/paper-production-orchestrator/SKILL.md`)로 — 메인 루프가 실행하며 §0에서 PAPER_DIRECTION 로드 후 아래 멤버를 순서대로 호출하고 claim-defensibility 게이트·부분 재실행·검증 게이트를 처리한다. 단일 단계 요청은 아래 agent로 직접 라우팅:
 
@@ -73,7 +81,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 | "차별화 각도 / 뭘 새로 해야 하나" | `novelty-strategist` |
 | "가설·실험설계·분석계획 점검·감사" | `research-methodologist` |
 | "제출 전 적대적 자체검토 / 그림 QA" | `paper-critic` |
-| "정식 venue 리뷰 시뮬레이션" | `reviewer` (전역, 선택) |
+| "정식 venue 리뷰 시뮬레이션" | `venue-reviewer` (프로젝트 로컬, 선택) |
 | "발표자료/슬라이드/발제" | `presenter` |
 | "로고·아이콘·브랜드·그림 미감" | `design` |
 | "여러 단계를 어떤 순서로 엮을지 계획만" | `paper-orchestrator` (계획만; 실행은 메인 루프) |
@@ -84,13 +92,26 @@ SKILL(지침)을 실제로 돌리는 코드:
 | 단계 | Writer | 산출물 | 다음이 읽음 |
 | --- | --- | --- | --- |
 | 분석·eval | `hspc-velocity-analyst` | `pipeline/hspc-velocity-benchmark/results/FINDINGS.md` + `results/*.csv` + `results/*.md` | 집필·검수 |
-| 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft.md`, `figures/*.png` | 검수·리뷰·발표 |
+| 집필+그림 | manuscript-writer (그림=`figures/figNN_*.py`) | `pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md` + `draft_v2_ko.md`(영/한 동시), `figures/*.png` | 검수·리뷰·발표 |
 | 검증 게이트 | (커밋/공개 전) | `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py` 재계산 → FINDINGS.md 대조 | 사람 |
-| 리뷰 | paper-critic / reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
+| 리뷰 | paper-critic / venue-reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
 | 발표 | presenter | 슬라이드/발제 | 사람 |
-| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
+| 상태 핸드오프 | (전원) | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` — **로컬 전용(.gitignore, 78a5a92)**. 커밋하지 않으며 새 clone에는 없다 | 다음 세션 |
 
 **사람 승인 게이트:** 공개(프리프린트/blog)는 **저자·소속·IP·corresponding email 확정** 전까지 보류(manuscript-writer의 `<FILL>`). **커밋·push는 작업 완료 시 에이전트가 자동 수행**(2026-07-09 정책 변경 — 기존 '무인 git 금지' 철회, push까지 자동). 단 위 검증 게이트(커밋 전 재계산·FINDINGS 대조)는 유지하고, **프리프린트/blog 외부 공개와 main 병합만 사람 승인**(작업 브랜치 `kkkim-pipeline` push는 자동). 커밋 메시지는 P0~P5 접두 규칙 준수, Claude attribution 금지.
 
 ## 글쓰기 규율 (팀 공통, 한국어 산출물)
 @.claude/rules/writing-style.md
+
+---
+
+## 완료의 정의 (Definition of Done) — 커밋/공개 전 체크리스트
+
+**"done"은 코드를 다 짰을 때가 아니라 end-to-end로 검증했을 때만이다.** (2026-07-12: 다운로드 false-DONE 사건 이후 명문화 — 완결성 게이트 없이 "완료" 표시 금지.) 커밋·push·공개 전에 아래를 통과한다:
+
+1. **결정론적 재계산 통과.** 헤드라인 숫자는 `pipeline/hspc-velocity-benchmark/`의 `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py`를 **다시 돌려** `results/FINDINGS.md`와 대조해 일치해야 한다. 캐시된 값·이전 세션 출력을 그대로 믿지 않는다.
+2. **claim-defensibility 게이트(headline claim).** headline claim은 **반증기준 + make-or-break 검정 통과 + advisor 통과** 전까지 `PROVISIONAL`이며 본문(draft)에 반영하지 않는다. 상세 규율 = `manuscript/PAPER_DIRECTION.md`(모든 논문 멤버가 작업 전 읽는 단일 컨텍스트).
+3. **장기 작업(다운로드·전처리·학습) 완결성.** "전부 complete여야 DONE" — 부분 완료를 완료로 표시하지 않는다. 실패 시 재시도 로직이 실제로 돌았는지 확인.
+4. **숫자·경로를 지어내지 않았는가.** 근거 없는 수치·파일명·저자 정보 금지. 애매하면 `<FILL>`로 남기고 kkkim에게 묻는다.
+5. **상태 기록.** 그 턴에 `HANDOFF.md`·`TODO.md`·`SESSION-LOG.md` 갱신. 인프라·도구 문제를 풀었으면 memory 기록(전역 규칙).
+6. **정직 보고.** 검증한 것/미검증인 것을 명시. 테스트가 깨졌으면 출력과 함께 그대로 보고 — 성공한 척하지 않는다.

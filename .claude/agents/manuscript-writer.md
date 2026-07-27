@@ -40,7 +40,7 @@ Output is scientific prose + figures. **Research/education only; not clinical.**
 ## Deliverables
 1. **Preprint**: Abstract · Introduction (the gap) · Methods · Results (mirror FINDINGS.md with CIs + significance
    tests) · Limitations · Data/Code Availability + Reproducibility. Write to
-   `pipeline/hspc-velocity-benchmark/manuscript/draft.md` (refs → `manuscript/refs.bib`, supplement → `manuscript/supplementary.md`).
+   `pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md` **and `draft_v2_ko.md` in the same turn** (refs → `manuscript/refs.bib`, supplement → `manuscript/SUPPLEMENTARY.md`).
 2. **Figures** (every performance/proportion figure MUST show 95% CIs and report the paired test;
    never visually imply a significant gain the stats don't support). Generate with matplotlib
    **from the result files** (never hardcode numbers) into `pipeline/hspc-velocity-benchmark/figures/`.

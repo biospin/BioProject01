@@ -1,0 +1,61 @@
+{
+  "_case_meta": {
+    "kind": "real_failure",
+    "source": "git a34c10d — 'abs() 제거(HSPC 원정의는 부호 유지) … HSPC 커밋값 0.317/0.078 정확 재현 검증(abs 버전은 0.295로 어긋남)'",
+    "intent": "실제 사건: lag 정의에 abs()를 씌우자 HSPC per-gene 불일치가 0.317 → 0.295로 드리프트했다. 정의가 조용히 바뀌었는데 lag > α 순서는 그대로라 예측5는 여전히 PASS다.",
+    "caught": false,
+    "expected_is_a_miss": true,
+    "needs_scorer": "임계 비교(lag > α)는 정의 드리프트에 둔감하다 — 0.295도 0.078보다 크므로 PASS. 필요한 것은 **커밋된 기준값과의 정확 재현 대조**(0.317 ± 허용오차)이며, 이는 lag_source 문자열이 아니라 정본 수치를 아는 회귀 baseline이 있어야 한다. → 다음 단계(README §6-2): 데이터셋별 canonical 수치 baseline 도입.",
+    "expected": {
+      "alpha_reproducibility": "pass",
+      "lag_fragility": "pass",
+      "alpha_lag_dissociation": "not_applicable",
+      "cross_dataset_replication": "not_applicable",
+      "prereg_adherence": "pass"
+    }
+  },
+  "dataset": "hspc",
+  "description": "human HSPC (GSE209878) — 원 벤치마크 축. 다른 데이터셋의 cross-dataset 기준선.",
+  "prereg_source": null,
+  "scored_by": "pipeline/hspc-velocity-benchmark/scripts/p3_concordance.py + scripts/p3_identifiability_vs_snr.py",
+  "scorecard": "pipeline/hspc-velocity-benchmark/results/concordance.md",
+  "prereg_deviation": null,
+  "method_set": [
+    "rna_only_floor",
+    "multivelo",
+    "multivelovae",
+    "moflow",
+    "crakvelo"
+  ],
+  "sections": {
+    "within_alpha": [
+      {
+        "label": "floor×MV",
+        "n": 368,
+        "rho": 0.818
+      },
+      {
+        "label": "MV×VAE",
+        "n": 538,
+        "rho": 0.882
+      }
+    ],
+    "within_lag": [
+      {
+        "label": "MV×VAE",
+        "n": 538,
+        "rho": -0.01,
+        "test": "magnitude_rank"
+      }
+    ],
+    "per_gene_disagree": [
+      {
+        "label": "lag|alpha",
+        "n": 537,
+        "lag_disagree": 0.295,
+        "alpha_disagree": 0.078,
+        "lag_source": "MoFlow `cs_lag_median` (abs 적용 — 원정의는 부호 유지)"
+      }
+    ]
+  }
+}

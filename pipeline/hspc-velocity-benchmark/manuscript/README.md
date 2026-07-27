@@ -5,7 +5,7 @@
 ## 파일 (생기는 대로)
 | 파일 | 내용 |
 |---|---|
-| `draft.md` | 본문 (Abstract/Intro/Methods/Results/Discussion) |
+| `draft_v2.md` | **본문 정본**(영어). 한국어 검토본 = `draft_v2_ko.md`. 내용 수정은 항상 두 파일 동시 |
 | `refs.bib` | 인용 — `paper_analysis/*/<paper-id>/*.bib`에서 모음 |
 | `supplementary.md` | 보충 (추가 표·방법 상세) |
 | `figure-legends.md` | `../figures/figNN`과 1:1 대응하는 legend |
@@ -17,6 +17,6 @@
 
 ## 빌드 (선택)
 ```bash
-pandoc manuscript/draft.md --citeproc --bibliography=manuscript/refs.bib -o /tmp/draft.pdf
+pandoc manuscript/draft_v2.md --citeproc --bibliography=manuscript/refs.bib -o /tmp/draft.pdf
 ```
 컴파일 산출물(pdf/docx)은 commit하지 않는다 (`.gitignore`).

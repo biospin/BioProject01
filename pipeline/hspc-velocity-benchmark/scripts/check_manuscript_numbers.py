@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""check_manuscript_numbers.py — 원고(draft.md)의 수치가 근거 문서(FINDINGS/results)에 실재하는지 대조.
+"""check_manuscript_numbers.py — 원고(draft_v2.md)의 수치가 근거 문서(FINDINGS/results)에 실재하는지 대조.
 
 투고 전 사고 방지: 원고에만 있고 결과 문서엔 없는 수치(드리프트·오타·구버전 잔존·지어낸 값)를 잡는다.
 WRITING_PLAN이 경고한 "FINDINGS 영문 절반 stale로 sealed 결과 누락" 류를 자동 탐지.
 BIOP02 인용검증기와 같은 결의 QA — 단, 통과 판정은 사람이(자동 PASS 신뢰 금지).
 
 사용:
-  python3 scripts/check_manuscript_numbers.py                 # draft.md vs results/*.md
-  python3 scripts/check_manuscript_numbers.py --doc manuscript/draft.md --json /tmp/n.json
+  python3 scripts/check_manuscript_numbers.py                 # draft_v2.md vs results/*.md
+  python3 scripts/check_manuscript_numbers.py --doc manuscript/draft_v2.md --json /tmp/n.json
 종료코드: 0 = 미검출, 1 = 근거없는 수치 있음(리뷰 필요).
 """
 from __future__ import annotations
@@ -42,7 +42,7 @@ def claim_like(line, start, end):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--doc", default="manuscript/draft.md")
+    ap.add_argument("--doc", default="manuscript/draft_v2.md")
     ap.add_argument("--src", nargs="*", default=["results/FINDINGS.md", "results/*.md"])
     ap.add_argument("--json", default=None)
     a = ap.parse_args()

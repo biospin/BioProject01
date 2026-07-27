@@ -1,0 +1,17 @@
+# CLAIMS.template.yaml — claim provenance ledger (BIOP01-69). 템플릿.
+# claim-defensibility 게이트와 실제 원고를 연결한다. 결과 변경 시 여기부터 갱신.
+claims:
+  C001:
+    text: "<headline claim 한 문장>"
+    status: <supported|caution|provisional|refuted>
+    evidence:                       # 결과 파일/그림 (숫자는 여기서만)
+      - pipeline/hspc-velocity-benchmark/results/<file>.csv
+      - pipeline/hspc-velocity-benchmark/figures/<fig>.png
+    validation:                     # 재계산 스크립트
+      - p3_crossdataset_concordance
+    limitations:
+      - "<한계/반례>"
+    manuscript_locations:           # 이 claim이 등장하는 위치 (결과 바뀌면 전부 점검)
+      - abstract
+      - results.3
+      - discussion.2

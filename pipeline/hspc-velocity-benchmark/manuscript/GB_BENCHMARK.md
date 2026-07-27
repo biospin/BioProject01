@@ -1,3 +1,5 @@
+> ⚠️ **역사 문서.** 여기서 견주는 `draft.md`는 v1이며 폐기됐다. **정본은 `draft_v2.md`·`draft_v2_ko.md`**다.
+
 # GB_BENCHMARK.md — Genome Biology format/structure benchmark for our velocity-lag audit paper
 
 > **Purpose.** A *format/structure* benchmark (not a content review) to target our manuscript

@@ -1,0 +1,101 @@
+{
+  "_case_meta": {
+    "kind": "negative_control",
+    "source": "pipeline/hspc-velocity-benchmark/results/concordance_macrophage.md + FINDINGS.md §7-D",
+    "intent": "실제 macrophage 재현(4번째 축) — α/lag/Δρ/cross 전부 통과. 단 per-gene 격차는 scorecard가 스스로 '치환 정의'라 명기한 자로 쟀다 → prereg_adherence가 caution으로 표면화하는 것이 정답(수치 0.280>0.061은 좋아 보여도 HSPC 원정의로 잰 값이 아니다).",
+    "expected": {
+      "alpha_reproducibility": "pass",
+      "lag_fragility": "pass",
+      "alpha_lag_dissociation": "pass",
+      "cross_dataset_replication": "pass",
+      "prereg_adherence": "caution"
+    }
+  },
+  "dataset": "macrophage",
+  "description": "human macrophage — 4번째 cross-dataset (HSPC 직계 조혈축)",
+  "prereg_source": null,
+  "scored_by": "pipeline/hspc-velocity-benchmark/cross_dataset/p3_concordance_macrophage.py",
+  "scorecard": "pipeline/hspc-velocity-benchmark/results/concordance_macrophage.md",
+  "bootstrap": {
+    "B": 10000,
+    "seed": 20260707
+  },
+  "prereg_deviation": null,
+  "method_set": [
+    "rna_only_floor",
+    "multivelo",
+    "multivelovae"
+  ],
+  "sections": {
+    "within_alpha": [
+      {
+        "label": "floor×MV",
+        "n": 702,
+        "rho": 0.826,
+        "lo": 0.796,
+        "hi": 0.854
+      },
+      {
+        "label": "floor×VAE",
+        "n": 709,
+        "rho": 0.865,
+        "lo": 0.839,
+        "hi": 0.887
+      },
+      {
+        "label": "MV×VAE",
+        "n": 871,
+        "rho": 0.917,
+        "lo": 0.902,
+        "hi": 0.929
+      }
+    ],
+    "within_lag": [
+      {
+        "label": "MV×VAE",
+        "n": 871,
+        "rho": 0.074,
+        "lo": 0.006,
+        "hi": 0.143,
+        "test": "magnitude_rank"
+      }
+    ],
+    "delta_rho": [
+      {
+        "label": "MV×VAE",
+        "n": 871,
+        "rho": 0.843,
+        "lo": 0.773,
+        "hi": 0.912,
+        "paired": true
+      }
+    ],
+    "cross_alpha": [
+      {
+        "label": "HSPC×macrophage",
+        "n": 274,
+        "rho": 0.643,
+        "lo": 0.554,
+        "hi": 0.719
+      }
+    ],
+    "cross_lag": [
+      {
+        "label": "HSPC×macrophage",
+        "n": 274,
+        "rho": 0.148,
+        "lo": 0.027,
+        "hi": 0.263
+      }
+    ],
+    "per_gene_disagree": [
+      {
+        "label": "lag|alpha",
+        "n": 871,
+        "lag_disagree": 0.28,
+        "alpha_disagree": 0.061,
+        "lag_source": "MultiVeloVAE 치환 정의"
+      }
+    ]
+  }
+}

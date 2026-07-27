@@ -58,3 +58,15 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-07-20T10:28:38+00:00,multivelo_runtorun,runtorun_refit:b2:nj16,15315,499,1468.6,9712.3,1b42831,ATAC intact re-fit on identical S_b; subsample seed=20260703; njobs=16
 2026-07-20T10:59:17+00:00,multivelo_runtorun,runtorun_refit:b0:nj12,15315,498,1824.8,8244.9,1b42831,ATAC intact re-fit on identical S_b; subsample seed=20260701; njobs=12
 2026-07-20T11:29:34+00:00,multivelo_runtorun,runtorun_refit:b2:nj12,15315,499,1813.1,9714.7,1b42831,ATAC intact re-fit on identical S_b; subsample seed=20260703; njobs=12
+2026-07-21T08:21:44+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b0_s101_SMOKE,15315,6,76.8,8246.6,2e9076a,SMOKE shuffle-draw variability; subsample seed=20260701 shuf_seed=101; njobs=6
+2026-07-21T08:22:38+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b0_s202_SMOKE,15315,6,51.6,8393.9,2e9076a,SMOKE shuffle-draw variability; subsample seed=20260701 shuf_seed=202; njobs=6
+2026-07-21T08:23:32+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b0_s303_SMOKE,15315,6,50.8,8442.1,c8d5bdf,SMOKE shuffle-draw variability; subsample seed=20260701 shuf_seed=303; njobs=6
+2026-07-21T09:10:02+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b0_s101,15315,498,2762.8,8246.8,c8d5bdf,shuffle-draw variability; subsample seed=20260701 shuf_seed=101; njobs=8
+2026-07-21T09:11:18+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b2_s103,15315,499,2838.5,8242.2,c8d5bdf,shuffle-draw variability; subsample seed=20260703 shuf_seed=103; njobs=8
+2026-07-21T09:12:22+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b1_s102,15315,499,2903.1,8235.4,c8d5bdf,shuffle-draw variability; subsample seed=20260702 shuf_seed=102; njobs=8
+2026-07-21T09:56:09+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b0_s202,15315,498,2763.7,9673.5,c8d5bdf,shuffle-draw variability; subsample seed=20260701 shuf_seed=202; njobs=8
+2026-07-21T09:58:09+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b2_s204,15315,499,2807.6,9670.7,c8d5bdf,shuffle-draw variability; subsample seed=20260703 shuf_seed=204; njobs=8
+2026-07-21T10:00:06+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b1_s203,15315,499,2859.9,9670.2,c8d5bdf,shuffle-draw variability; subsample seed=20260702 shuf_seed=203; njobs=8
+2026-07-21T10:41:22+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b0_s303,15315,498,2709.1,11088.0,c8d5bdf,shuffle-draw variability; subsample seed=20260701 shuf_seed=303; njobs=8
+2026-07-21T10:43:45+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b2_s305,15315,499,2731.7,11089.0,c8d5bdf,shuffle-draw variability; subsample seed=20260703 shuf_seed=305; njobs=8
+2026-07-21T10:46:05+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b1_s304,15315,499,2755.9,11075.9,c8d5bdf,shuffle-draw variability; subsample seed=20260702 shuf_seed=304; njobs=8

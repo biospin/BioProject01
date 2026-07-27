@@ -1,0 +1,17 @@
+# RUN_STATE.template.yaml — 논문 생산 실행 상태 (BIOP01-68). 템플릿 — 실제 run에서 채움.
+# orchestrator(paper-runner)가 이 파일을 읽고 다음 단계만 실행한다. 대화 기록에 상태를 두지 않는다.
+run_id: <project>-paper-<YYYYMMDD>        # 예: biop01-paper-20260726
+source_commit: <git-sha>
+stage: <planning|analysis|writing|critic|review|result_validation|package_validation|presentation|release>
+
+completed:
+  claim_defensibility: { status: <passed|failed|na>, commit: <sha>, approved_by: <advisor> }
+  result_validation:   { status: <passed|failed|na>, commit: <sha> }   # 분석 직후
+  package_validation:  { status: <passed|failed|na>, commit: <sha> }   # 공개 직전
+
+artifacts:
+  findings:   { path: pipeline/hspc-velocity-benchmark/results/FINDINGS.md,     sha256: <> }
+  manuscript: { path: pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md,  sha256: <> }
+
+failures: []          # [{stage, reason, commit}]
+notes: ""             # 수정 후 다시 통과해야 하는 게이트 등
