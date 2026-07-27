@@ -1,0 +1,1546 @@
+Open Access
+© The Author(s) 2026. Open Access This article is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 Inter-
+national License, which permits any non-commercial use, sharing, distribution and reproduction in any medium or format, as long as you 
+give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if you modified 
+the licensed material. You do not have permission under this licence to share adapted material derived from this article or parts of it. The 
+images or other third party material in this article are included in the article’s Creative Commons licence, unless indicated otherwise in a 
+credit line to the material. If material is not included in the article’s Creative Commons licence and your intended use is not permitted by 
+statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of 
+this licence, visit http://creativecommons.org/licenses/by-nc-nd/4.0/.
+RESEARCH
+Wu et al. Genome Biology          (2026) 27:242  
+https://doi.org/10.1186/s13059-026-04182-z
+Genome Biology
+Comprehensive benchmarking of RNA 
+velocity methods across single-cell datasets
+Yida Wu1†, Chuihan Kong1†, Xu Liao1, Zhixiang Lin2,3,4, Xiaobo Sun5* and Jin Liu1* 
+Abstract 
+Background: RNA velocity provides a powerful framework for inferring cellular 
+dynamics from single-cell RNA sequencing data. The rapid proliferation of compu-
+tational methods within this field has prompted a need for systematic evaluation. 
+However, existing comparisons often suffer from limited scope or incomplete task 
+design, leaving users without clear guidance. Consequently, there is a lack of a compre-
+hensive and standardized benchmark that evaluates methods across diverse biological 
+and technical scenarios using appropriate, context-specific metrics.
+Results: In this study, we present a comprehensive benchmark of 19 computa-
+tional RNA velocity tools covering 30 distinct methods. We systematically evaluate 
+25 RNA-only methods across eight evaluation tasks, designating directional con-
+sistency, temporal precision, negative control robustness, and sequencing depth 
+stability as core tasks, while assessing five multimodal-enhanced methods specifi-
+cally on the multimodal integration task. These assessments utilize 34 datasets span-
+ning 26 real-world and eight simulated scenarios. Our results reveal a clear trade-off 
+between directional consistency and negative control robustness, distinct group-wise 
+behaviors across temporal modeling strategies, and variability driven by sequencing 
+depth and quantification choices. This study also identifies several methodological 
+gaps, including the need for improved modeling of gene dependence, more accurate 
+temporal inference strategies, and better-designed multimodal architectures.
+Conclusions: This benchmark establishes a unified framework for evaluating RNA 
+velocity methods. Crucially, we provide task-aware guidance to facilitate method selec-
+tion based on specific biological contexts and technical constraints, rather than relying 
+on a single overall ranking.
+Keywords: Benchmarking, RNA velocity, Single-cell RNA sequencing, Splicing 
+dynamics, Multimodal
+Background
+The advent of single-cell RNA sequencing (scRNA-seq) has revolutionized the study 
+of cellular differentiation and development at single-cell resolution [1 , 2]. Despite the 
+fact that scRNA-seq yields only static snapshots of cellular states  [3 , 4], trajectory 
+†Yida Wu and Chuihan Kong 
+contributed equally to this work.
+*Correspondence:   
+xiaobo.sun@emory.edu; 
+liujinlab@cuhk.edu.cn
+1 School of Data Science, The 
+Chinese University of Hong 
+Kong, Shenzhen, Shenzhen, 
+China
+2 Department of Statistics 
+and Data Science, The Chinese 
+University of Hong Kong, Shatin, 
+Hong Kong SAR, China
+3 Shenzhen Loop Area Institute, 
+Shenzhen, Guangdong, China
+4 CUHK Shenzhen Research 
+Institute, Shenzhen, Guangdong, 
+China
+5 Department of Human 
+Genetics, School of Medicine, 
+Emory University, Atlanta, GA, 
+USA
+Page 2 of 36Wu et al. Genome Biology          (2026) 27:242 
+inference (TI) methods were developed to reconstruct the temporal ordering of cells 
+based on these gene expression profiles  [5 –7]. However, TI methods are subject to 
+two primary limitations. First, they rely on dense sampling of all intermediate states 
+to reconstruct continuous trajectories, limiting their applicability when data cover -
+age is incomplete [8 ]. Second, the dependence on prior information, such as defined 
+starting cells, introduces subjectivity that can lead to multiple equally plausible solu -
+tions  [9]. In contrast to traditional TI methods that infer global ordering between 
+cells, RNA velocity represents a breakthrough in predicting the future state of indi -
+vidual cells [10]. By modeling the kinetics of unspliced and spliced mRNAs, it cap -
+tures intrinsic cellular dynamics without relying on external prior knowledge [11].
+Practically, a standard RNA velocity computation pipeline consists of three distinct 
+stages: pre-processing, velocity estimation, and post-processing (Fig.  1a, left panel). 
+In the pre-processing stage, unspliced and spliced mRNA abundances are quanti -
+fied from sequencing reads using established tools such as velocyto [ 10], dropEst [ 12], 
+and alevin [13]. Following quality control, selection of highly variable genes (HVGs), 
+and optional normalization and smoothing, the final spliced and unspliced expres -
+sion matrices are generated. Next, RNA velocity is inferred by modeling the dynam -
+ics between unspliced and spliced mRNAs. Specifically, these methods capture the 
+kinetics of the mRNA lifecycle, encompassing transcription, splicing, and even -
+tual degradation. This innovation has triggered a surge in methodological develop -
+ment, leading to the emergence of 17 RNA-only tools since the pioneering work of 
+La Manno et  al.  [10] (Fig.  1a, right panel). In addition, nine multimodal-enhanced 
+tools have been developed that incorporate auxiliary information, such as chromatin 
+accessibility [14] and metabolic labeling [15]. In the post-processing stage, a cell-to-
+cell transition matrix is computed from the velocity matrix using a cosine similarity 
+kernel [10, 16]. Finally, velocities in the original gene space are projected into lower-
+dimensional embeddings, such as principal component analysis (PCA) or uniform 
+Fig. 1 Overview of RNA velocity pipeline, benchmarking tasks and datasets. a Left: The standard RNA velocity 
+computation pipeline consists of three stages: pre-processing, velocity estimation, and post-processing. 
+During pre-processing, unspliced and spliced mRNA abundances are quantified from raw FASTQ files. 
+Following filtering, highly variable gene (HVG) selection, and optional normalization and smoothing, 
+unspliced and spliced count matrices ( n × p ) are generated, where n denotes the number of cells and p the 
+number of genes. Steps shown in parentheses indicate optional operations. Velocity estimation is based 
+on a continuous model of transcription, splicing, and degradation with rates α , β , and γ , respectively, from 
+which an n × p velocity matrix ( ds /dt ) is derived. Post-processing converts velocities into an n × n cell-to-cell 
+transition matrix and projects them onto low-dimensional embeddings for visualization or evaluation. Right: 
+Timeline of 17 RNA-only and nine multimodal-enhanced RNA velocity tools developed between 2018 
+and 2025. b Eight benchmarking tasks are defined, comprising four core tasks: (I) directional consistency, 
+evaluated by cross-boundary directional correctness (CBDir) and in-cluster coherence (ICVCoh); (II) temporal 
+precision, quantified by cluster temporal ordering accuracy (CTO) and temporal Spearman correlation (TSC); 
+(III) negative control robustness, measured by self-transition score (STS) and effective entropy score (EES); and 
+(IV) sequencing depth stability, assessed by the stability score for direction ( SCBDir ) and cell-specific latent 
+time ( STSC ). Four additional tasks are also included: (V) quantification stability; (VI) simulation experiments; 
+(VII) multimodal integration; and (VIII) computational scalability. c Summary of the 26 real-world and eight 
+simulated datasets, including dataset identifiers, names, species, associated benchmarking tasks, and cell/
+gene counts. Bar plots show the numbers of cells and genes for each dataset. Gene counts for Data 31 and 
+Data 32 are averages across random-seed replicates (217–221 and 231–235 genes, respectively)
+(See figure on next page.)
+Page 3 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+manifold approximation and projection (UMAP) [17, 18], for visualization and down -
+stream evaluation.
+The rapid development of RNA velocity methods has prompted numerous compara -
+tive studies; however, existing reviews are largely confined to theoretical discussions, 
+focusing primarily on model assumptions and limitations [19, 20]. Workflow-level stud-
+ies supported by empirical data analyses have further revealed failure modes in RNA 
+velocity inference, including false-positive velocity fields, technical variation, hyper -
+parameter sensitivity, k-nearest-neighbor (kNN) smoothing, and low-dimensional 
+Fig. 1 (See legend on previous page.)
+Page 4 of 36Wu et al. Genome Biology          (2026) 27:242 
+mapping [21–23]. Nevertheless, these discussions have mainly focused on classical RNA 
+velocity methods, namely Velocyto  [10] and scVelo  [11]. Benchmarking studies have 
+expanded this perspective by systematically comparing a broader range of RNA velocity 
+methods across practical application scenarios. Although Ancheta et  al.  [24] assessed 
+RNA velocity methods across four tasks, including local consistency and driver-gene 
+identification, their study was limited in scale, evaluating only five methods across 
+three datasets. More recent comprehensive benchmarks by Luo et  al.  [25] and Huang 
+et  al.  [26] evaluated 15 and 29 RNA velocity methods, respectively, but did not sepa -
+rately assess method variants, such as those of UniTVelo  [27] and Pyro-Velocity  [28]. 
+Since such variants rely on different model assumptions and show distinct task-specific 
+performance, using a single default variant to represent an entire method may obscure 
+practical differences and mislead method selection. In addition, these benchmarks pri -
+marily assessed accuracy through directional correctness and velocity coherence, while 
+overlooking robustness in negative-control settings and key technical factors such as 
+variation in sequencing depth and pipelines for spliced/unspliced mRNA quantification, 
+all of which can substantially influence velocity estimates [21, 22, 24, 29].
+To address this gap, we established a comprehensive benchmark of 19 computational 
+RNA velocity tools covering 30 methods. Specifically, we systematically evaluated 25 
+RNA-only methods across eight benchmarking tasks, categorized into four core (Fig.  1b, 
+top panels) and four additional assessments (Fig.  1b, bottom panels), while conducting a 
+targeted assessment of five multimodal-enhanced methods in the multimodal integra -
+tion task. These evaluations utilized 34 datasets encompassing 26 real-world and eight 
+simulated scenarios (Methods ; Fig.  1c; Additional file 1: Tables S1–S2). Because meth -
+ods exhibit heterogeneous performance across core tasks, selecting methods based 
+solely on global rankings can be misleading. We therefore offer task-aware guidance to 
+support informed method choices tailored to specific biological contexts and technical 
+constraints.
+Results
+Overall benchmarking of 25 RNA‑only methods
+Before benchmarking, we systematically summarized the 25 RNA-only methods, which 
+included the 22 splicing dynamics–based methods and three scTour [30] variants that 
+uniquely leverage gene expression instead of spliced/unspliced transcript counts. First, 
+with respect to model architecture (Fig.  2, Col.  2), we categorized the methods into 
+11 deep learning (DL) and 14 non-DL approaches. The DL category is dominated by 
+variational autoencoder (VAE)-based generative frameworks, including veloVI  [31], 
+scTour (MSE/NB/ZINB), SvelvetVAE [32], LatentVelo (std) [33], and VeloVAE (std/Full 
+VB) [34]. By contrast, VeloAE [35], DeepVelo [36], and cellDancer [37] utilize non-gen -
+erative architectures. The remaining non-DL approaches include Velocyto, scVelo (dyn/
+stc), UniTVelo (uni/ind), κ-velo  [38], Dynamo (m1)  [15], SDEvelo  [39], Pyro-Velocity 
+(m1/m2), cell2fate [40], TIVelo (std/simple) [41], and GraphVelo (std) [42]. Second, we 
+categorized output capabilities (Fig. 2, Col. 3), distinguishing 16 methods that infer both 
+velocity and cell-specific latent time (CLT) from nine methods that output only veloc -
+ity vectors. In terms of implementation (Fig.  2, Col.  4), all methods are Python-based, 
+although Velocyto also provides an R package. Within this Python ecosystem, PyT orch 
+Page 5 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+predominates, with 14 direct implementations and three additional methods using its 
+Pyro extension. The remaining methods are implemented using either TensorFlow or 
+standard Python. Lastly, we stratified the methods into five tiers based on their scalabil -
+ity with respect to cell and gene counts, where stronger signal intensity denotes superior 
+scalability (Fig. 2, Cols. 5–6). Detailed descriptions and implementations of each method 
+are provided in Methods.
+Following this methodological overview, we defined four core benchmarking tasks. 
+(I) Directional consistency evaluates biological plausibility using cross-boundary direc -
+tional correctness (CBDir) and in-cluster coherence (ICVCoh). (II) Temporal precision 
+assesses the accuracy of inferred CLT using cluster temporal ordering accuracy (CTO) 
+Fig. 2 Comprehensive benchmarking of 25 RNA-only methods. Method: The first column lists method 
+names. The second and third columns indicate the use of deep learning (DL) and support for cell-specific 
+latent time (CLT) output, respectively; for both columns, a black star denotes presence and a white star 
+denotes absence. The fourth column displays icons identifying the implementation platform (PyTorch, 
+TensorFlow, Pyro, Python, or R). Scalability: Cell scalability and gene scalability were measured on two 
+large-scale simulated datasets with up to 1,000,000 cells and 20,000 genes. For cell scalability, the five tiers 
+of signal intensity indicate successful completion by each method on datasets with 10,000, 50,000, 100,000, 
+500,000, and 1,000,000 cells, with the gene count fixed at p = 1, 000  . For gene scalability, the five tiers of 
+signal intensity indicate the methods completed at 2,000, 5,000, 10,000, 15,000, and 20,000 genes with 
+fixed cell counts ( n = 10, 000  ). Directionality: Performance in the directional consistency task (Task I), CBDir 
+and ICVCoh. Temporality: Performance in the temporal precision task (Task II), evaluated using CTO and 
+TSC. Neg. Ctrl.: Performance in the negative control robustness task (Task III), evaluated using STS and EES. 
+Stability: Performance in the sequencing depth stability task (Task IV), evaluated using SCBDir and STSC . For 
+each task, bars represent mean metric values across datasets, and error bars indicate standard deviations. Rk 
+( k ∈{ 1,... ,4} ) denotes the rank for Tasks I to IV, respectively (Methods). Rcore denotes the overall rank of the 
+four core tasks (Methods). Methods are listed in ascending order of Rcore
+Page 6 of 36Wu et al. Genome Biology          (2026) 27:242 
+and temporal Spearman correlation (TSC). (III) Negative control robustness evaluates 
+the ability to avoid spurious dynamics in mature cell populations using the self-transi -
+tion score (STS) and the effective entropy score (EES). (IV) Sequencing depth stability 
+quantifies performance robustness under binomial subsampling noise using stability 
+scores for CBDir ( SCBDir ) and TSC ( STSC ). Detailed definitions of all metrics are pro -
+vided in Methods . T o aggregate performance across tasks, we averaged the two metric-
+level ranks to obtain a single rank per task and defined the final ranking for each method 
+as the average of these four task-level ranks (Methods).
+We applied this evaluation framework to the 25 RNA-only methods to obtain com -
+prehensive, task-specific performance rankings (Fig.  2, Cols. 7–18). We found clear dif -
+ferences in performance profiles among the top-ranked methods. Specifically, SDEvelo 
+(2nd) and Velocyto (3rd) performed well on Tasks II–IV but showed comparatively 
+weaker performance on Task I. By contrast, UniTVelo (uni) (1st) exhibited more bal -
+anced performance, ranking within the top 15 across all core tasks. Regarding task-
+specific strengths, LatentVelo (std), UniTVelo (uni), SDEvelo, and Pyro-Velocity (m2) 
+ranked first in Task I–Task IV , respectively. We further examined correlations between 
+method rankings across tasks (Additional file 2: Fig. S1) and found that a significant cor -
+relation exists only between directional consistency and negative control robustness 
+(Spearman’s ρ =− 0.572 , P = 0.003  ). This negative correlation suggests that approaches 
+optimized for strong directional signals may compromise the ability to suppress false 
+positives. LatentVelo (std) exemplifies this trade-off: although it ranked first in direc -
+tional consistency, it dropped to 23rd in negative control robustness. This pattern sug -
+gests that an emphasis on dynamic inference can, in some cases, lead to the generation 
+of spurious velocity signals.
+The overall rankings provide a high-level summary but do not capture the full com -
+plexity of method performance. T o address this, we examine each evaluation task indi -
+vidually in the following sections, clarifying the benchmarking metrics, identifying 
+patterns that recur across datasets, and linking specific modeling choices to their cor -
+responding strengths and weaknesses.
+Directional consistency performance comparison
+A primary goal of RNA velocity methods is to reconstruct biologically meaningful tran -
+sitions between cell types or developmental stages  [10]. To achieve this, ideal velocity 
+vectors are expected to satisfy two key criteria. First, they should point in the correct 
+biological direction, particularly at the boundaries between adjacent cell states. Second, 
+they should exhibit consistent behavior among phenotypically similar cells. To capture 
+these complementary aspects of velocity quality, we focused on directional correctness 
+at cell-type boundaries and velocity coherence within clusters [35], quantified using the 
+widely adopted CBDir and ICVCoh metrics, respectively. In this task, both metrics were 
+computed using UMAP-projected velocity vectors according to the rationale detailed in 
+Additional file 3: Note S1 and Additional file 2: Fig. S2. Our evaluation included ten data-
+sets (Data 1–10) across different species, including human and mouse, as well as diverse 
+tissues, developmental settings, sequencing technologies, and batch-effect scenarios, all 
+with well-established developmental trajectories (Fig. 3a; Additional file 1: Table S3).
+Page 7 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+Fig. 3 Directional consistency performance comparison. a Performance evaluation using CBDir and ICVCoh 
+on Data 1–10. Methods are ordered by mean metric values across datasets, such that stronger performers 
+appear in the top rows for each metric. GD denotes modeling of gene dependence, and a black star indicates 
+that the method incorporates gene dependence. Bars and the color scale represent the mean metric values 
+across cross-validation folds for each dataset, with darker colors indicating larger values. Error bars indicate 
+standard deviations across cross-validation folds. b Streamline visualizations for UniTVelo (ind), veloVI, VeloAE 
+and UniTVelo (uni) on Data 1 and Data 3. The leftmost column shows the reference cell-state transitions. 
+Each of the remaining four columns corresponds to one method. c Streamline visualizations of Velocyto and 
+scVelo (stc) on Data 7 (scRNA-seq), with the reference cell-state transitions shown below. Cell types include 
+cycling progenitors (Cyc. Prog.), early radial glia (Early RG), late radial glia (Late RG), neurogenic intermediate 
+progenitor cells (nIPC), and glutamatergic neurons (GluN). d Streamline visualizations of Velocyto and scVelo 
+(stc) on Data 8 (snRNA-seq), with the reference cell-state transitions shown below. For panels (b)–(d), average 
+values across cross-validation folds for CBDir (left) and ICVCoh (right) are shown below each streamline plot
+Page 8 of 36Wu et al. Genome Biology          (2026) 27:242 
+Modeling gene dependence is crucial for RNA velocity inference, as it aims to cap -
+ture cell-state transitions together with their underlying regulatory interactions  [21]. 
+Accordingly, many methods model genes jointly using either low-dimensional embed -
+dings or a unified latent time (Fig.  3a, left panel, Col. 2). However, our analysis shows 
+that extending models to the multivariate setting does not necessarily result in improved 
+directional accuracy (Additional file 2: Fig. S3a, left panel). Consistent with this observa -
+tion, enrichment analysis indicates that methods incorporating gene dependence are not 
+significantly overrepresented among the top 10 (Additional file  3: Note  S2; Additional 
+file 2: Fig. S3a, right panel). By contrast, results based on velocity coherence measured by 
+ICVCoh reveal a clear advantage for gene-dependent approaches (Fig.  3a, right panel). 
+Methods incorporating gene dependence significantly outperformed gene-independent 
+methods (Additional file 2: Fig. S3b, left panel) and were enriched among the top 10 per-
+formers in ICVCoh, whereas gene-independent methods were overrepresented in the 
+bottom 10 (Additional file  2: Fig.  S3b, right panel). This trend was further supported 
+by pairwise comparisons between related methods. For example, UniTVelo (uni) (3rd) 
+clearly outperformed its independent counterpart (10th), and veloVI (8th) surpassed the 
+gene-independent scVelo (dyn) (14th), despite sharing the same underlying dynamical 
+model. Collectively, these results indicate that while gene dependence does not guaran -
+tee superior directional accuracy, it confers a substantial advantage in generating coher -
+ent RNA velocity fields.
+In addition to assessing mean performance, we evaluated variation in method perfor -
+mance across datasets. When analyzing CBDir, each method failed on at least one data -
+set, and instability was evident even among top-performing approaches, as illustrated 
+by streamline visualizations of selected methods (Fig.  3b). For example, UniTVelo (ind), 
+veloVI, and VeloAE predicted reversed dynamics between hematopoietic stem cells and 
+erythroids on Data 1 (Fig.  3b, top panel), whereas they correctly inferred erythroid tra -
+jectories on Data 3 (Fig.  3b, bottom panel). Conversely, UniTVelo (uni) captured the 
+correct transitions on Data 1 but performed poorly on Data 3. Cross-dataset variation 
+was more pronounced in technically challenging settings, including batch effects (Data 
+5 and 6; Additional file 2: Fig. S4a) and altered spliced-to-unspliced transcript ratios in 
+single-nucleus RNA sequencing (snRNA-seq; Data 8). LatentVelo (std) and all scTour 
+variants were the only methods whose original studies claimed batch-effect mitigation 
+during dynamic inference [30, 33, 43, 44] (Additional file 3: Note S3; Additional file 2: 
+Fig. S4b). To assess how batch effects influence velocity inference, we split Data 5 and 
+Data 6 into six single-batch subsets and compared the resulting method rankings with 
+those obtained from the original batch-confounded datasets (Additional file 2: Fig. S5, 
+left panel). LatentVelo (std), which explicitly accounts for batch effects, remained con -
+sistently strong across both settings. Among methods without explicit batch-effect 
+modeling, cellDancer and TIVelo (simple) showed clear rank declines under batch-con -
+founded settings, whereas cell2fate and SDEvelo showed substantial rank improvements 
+(Additional file 2: Fig. S5, right panel). Beyond batch effects, Data 8, the only snRNA-
+seq dataset in Task  I, presented an additional technical challenge in which unspliced 
+counts exceeded spliced counts; the opposite pattern was observed in all non-snRNA-
+seq datasets (Additional file 2: Fig. S6). This difference was particularly evident between 
+Data 7 and Data 8, two human brain datasets from the same species and tissue type but 
+Page 9 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+generated using different sequencing strategies. Compared with performance on Data 7, 
+Velocyto and scVelo (stc) showed markedly lower directional-consistency ranks on Data 
+8 (Additional file 2: Fig. S7a) and produced largely incorrect or reversed flows (Fig.  3c 
+and d), likely because the higher fraction of unspliced counts in nuclei affects gene-spe -
+cific steady-state relationships (Additional file 2: Fig. S7b). Although scTour variants do 
+not use spliced or unspliced counts, their inferred trajectories can still be completely 
+reversed in practice, an issue also noted in the original study [30]. Together, these results 
+indicate that directional consistency is strongly influenced by dataset-specific technical 
+factors, including batch effects and sequencing modality.
+Evaluation for temporal precision
+Cell-specific latent time (CLT) is a critical output of RNA velocity methods, providing 
+the temporal ordering essential for downstream biological interpretation  [11]. Mean -
+while, biologically measured ground-truth temporal labels across diverse settings, 
+including cell development (Data 3, 13, and 14), metabolic labeling (Data 10), the cell 
+cycle (Data 11), lineage tracing (Data 12), and cellular reprogramming (Data 15 and 
+16), enable direct comparison of CLT with ground-truth time and strengthen evalua -
+tion reliability. In this section, we categorized the 25 RNA velocity methods into four 
+groups based on their temporal modeling strategies (Fig.  4a). Specifically, the first two 
+groups perform simultaneous inference, estimating velocity alongside either a unified 
+CLT (Group 1) or gene-specific latent times (Group 2). The remaining groups rely on 
+post-hoc reconstruction, utilizing either velocity graph–based (Group 3) or dynamical 
+model–based (Group 4) approaches. Details of CLT implementation for each group are 
+provided in Additional file 3: Note S4, including how outputs from Group 2 were stand -
+ardized to a unified CLT to enable fair comparison. Performance was quantified using 
+CTO and TSC metrics to assess temporal accuracy at both cluster and single-cell levels 
+(Fig. 4b; Additional file 1: Table S4).
+We first evaluated the precision of inferred temporal ordering at the cluster level using 
+CTO across all eight datasets. Based on this analysis, UniTVelo (uni) emerged as the top 
+method on average, ranking first in Data 13 and Data 14 (Fig.  4c, top panel; Additional 
+(See figure on next page.)
+Fig. 4 Evaluation for temporal precision. a Classification of 25 RNA velocity methods into four groups 
+based on their temporal modeling strategies: (1) simultaneous modeling of velocity and a unified CLT; (2) 
+simultaneous modeling of velocity and per-gene, per-cell latent time; (3) velocity graph–based inference 
+following velocity estimation; and (4) model-based inference following velocity estimation. Methods 
+enclosed in the dashed box (Group 3) do not natively output CLT; therefore, a standardized post-hoc strategy 
+was applied (Additional file 3: Note S4). b Schematic illustrating temporal precision evaluation by comparing 
+inferred continuous CLT with discrete ground-truth temporal labels (e.g., reprogramming days) using CTO 
+and TSC. c Performance evaluation using CTO (top) and TSC (bottom) across eight real-world datasets (Data 3 
+and Data 10–16). Boxplots are colored according to the groups defined in (a) and ordered by the average 
+rank across datasets (y-axis). Individual points represent scores for specific cross-validation folds in each 
+dataset. The x-axes indicate metric scores, ranging from 0 to 1 for CTO and −1 to 1 for TSC. d Correlation 
+between the average CTO rank and TSC rank for all 25 velocity methods. e Comparison of directional 
+consistency rank versus temporal precision rank. For panels (d) and (e), Spearman’s ρ and the associated 
+P-value between the two rankings are shown above each panel. f Method rank differences between Task I 
+and II. Positive rank differences indicate that a method achieved a better rank in temporal precision than in 
+directional consistency, whereas negative values indicated the opposite. For panels (d)–(f), method colors are 
+the same as in c 
+Page 10 of 36Wu et al. Genome Biology          (2026) 27:242 
+file 2: Fig. S8). To complement the cluster-level metric, we assessed CLT accuracy at the 
+single-cell level using TSC (Fig.  4c, bottom panel; Additional file 2: Fig. S9). Although 
+rankings differed between the two metrics across individual datasets, the average rank -
+ings of the methods were highly consistent (Spearman’s ρ = 0.925 , P = 3.603 × 10 −11 ; 
+Fig.  4d, left panel). Several methods, including UniTVelo (uni), DeepVelo, SDEvelo, 
+Velocyto, Dynamo (m1), and SvelvetVAE, showed strong performance across both CTO 
+and TSC (Fig.  4d, right panel). By contrast, methods with joint temporal modeling did 
+not consistently achieve strong temporal precision. Among the eight Group 1 methods 
+that jointly infer both velocity and a unified CLT, only UniTVelo (uni) ranked within the 
+Fig. 4 (See legend on previous page.)
+Page 11 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+top 10 for either CTO or TSC. None of the Group 2 methods, which jointly infer velocity 
+and gene-specific latent times, ranked within the top 10 for either metric.
+We next integrated CTO and TSC into a unified temporal precision rank and com -
+pared it with the directional consistency rank obtained in Task  I (Fig.  4e). UniTVelo 
+(uni) was the only method that ranked within the top five for both directional consist -
+ency and temporal precision. Temporal precision showed no significant correlation with 
+directional consistency, suggesting that high directional-consistency performance in 
+Task I does not necessarily imply high temporal-precision performance in Task II. This 
+decoupling was particularly evident among five of the Group 3 methods that infer CLT 
+using post-hoc reconstruction based on velocity graphs (Fig.  4e). Although these meth -
+ods showed similar directional consistency ranks (10th–15th), their temporal precision 
+ranks varied widely, ranging from 2nd to 25th. We further compared method rank differ-
+ences between Task I and Task II (Fig.  4f). Notably, the seven methods with the largest 
+positive rank differences, indicating better ranks in temporal precision than in direc -
+tional consistency, were all post-hoc methods from Groups 3 and 4. By contrast, several 
+of the Group 1 methods that jointly infer velocity and CLT showed negative rank differ -
+ences, thus indicating the opposite pattern. These results suggest that, in terms of rela -
+tive method rankings, several post-hoc methods can achieve higher temporal precision 
+than directional-consistency ranks after CLT reconstruction. We further examined this 
+pattern using Data 10, a dataset included in both Task I and Task II, to avoid potential 
+dataset-level confounding (Additional file 2: Fig. S10). Similarly, several Group 3 meth -
+ods achieved substantially better temporal-precision ranks than directional-consistency 
+ranks, whereas several Group 1 methods showed the opposite trend.
+Assessment of negative control robustness
+In contrast to developing tissues, mature cell populations predominantly consist of 
+genes in a steady state and therefore provide little to no information about ongoing cel -
+lular dynamics [21]. In such stable systems, an ideal RNA velocity method should avoid 
+inferring spurious directional flow and instead produce weak or near-random velocity 
+Fig. 5 Assessment of negative control robustness and sequencing depth stability. a Illustration of negative 
+control robustness. Fully mature cells are predominantly in a steady state and should not exhibit meaningful 
+velocity signals. The streamline plot in the green square shows the behavior of a robust RNA velocity method, 
+where no clear velocity pattern is present. The plot in the red square shows an example of erroneous velocity 
+estimation. b Streamline visualizations of cell2fate and Pyro-Velocity (m1) on Data 17 (negative control) 
+and Data 4 (positive control). The average EES values across cross-validation folds are shown below each 
+streamline plot. c Scatter plot of each method’s EES rank versus STS rank. Each point represents one RNA 
+velocity method listed in the legend. Spearman’s ρ and the associated P-value for the two rankings are 
+shown above the panel. d Low-dimensional embeddings colored by uncertainty score for VeloVAE (std) 
+and cell2fate. Each row corresponds to one method. Uncertainty scores are min-max scaled independently 
+for each method across six datasets (Data 4 and Data 17–21). PBMC datasets are marked with green or red 
+rectangles, where green indicates robust uncertainty estimation and red indicates problematic estimation. 
+The superscript asterisk (*) indicates that only one fold was used for the dataset. e Illustration of sequencing 
+depth simulation. For both spliced and unspliced abundance matrices, each count is subsampled using 
+a binomial distribution with sampling rates of 1.0, 0.8, 0.6, 0.4, and 0.2. Smaller sampling rates represent 
+shallower sequencing depth. f Scatter plot of average SCBDir versus STSC for each method across datasets to 
+assess sequencing depth stability. Spearman’s ρ and the associated P-value for the two stability scores are 
+shown above the panel. The legend is shared with panel (c)
+(See figure on next page.)
+Page 12 of 36Wu et al. Genome Biology          (2026) 27:242 
+patterns (Fig.  5a). However, existing methods are often prone to generating false-posi -
+tive signals under these conditions [21, 22]. To benchmark this limitation, we evaluated 
+the negative control robustness of 25 methods using five datasets of peripheral blood 
+mononuclear cells (PBMCs; Data 17–21), as these fully differentiated cells lack meaning-
+ful dynamic information. For this task, we used two complementary metrics (Additional 
+file 1: Table S5). First, we used STS to quantify the average probability of a cell transi -
+tioning to itself. Because static cells should theoretically not transition to neighboring 
+states, a high STS indicates that a method correctly identifies steady-state behavior. Sec -
+ond, in the absence of true biological dynamics, a robust method should yield diffuse, 
+near-uniform transition probabilities rather than confident but spurious trajectories. We 
+Fig. 5 (See legend on previous page.)
+Page 13 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+therefore introduced EES to quantify the sparsity and uniformity of transition probabili -
+ties, with higher values indicating stronger robustness under negative control conditions 
+(Additional file 2: Fig. S11). We validated EES using Data 4 as a positive-control data -
+set and five datasets of PBMCs as negative controls. Most methods showed higher EES 
+scores on the negative controls than on Data 4, as expected (Additional file 2: Fig. S12). 
+For example, on Data 17, cell2fate produced nearly random transitions with a high EES 
+score (334.54), while Pyro-Velocity (m1) showed stronger but potentially spurious direc-
+tional patterns with a lower EES score (9.51; Fig.  5b, top panel). By contrast, both meth -
+ods showed low EES scores on Data 4, consistent with clear differentiation directions 
+(Fig. 5b, bottom panel).
+We then integrated EES and STS to identify methods with strong performance across 
+both metrics (Fig. 5c). SDEvelo, cell2fate, κ-velo, and DeepVelo ranked within the top 10 
+for both metrics, whereas LatentVelo (std), SvelvetVAE, GraphVelo (std), and the three 
+scT our variants consistently underperformed. Notably, four of these six low-ranking 
+methods utilize neural ordinary differential equations (ODEs) [45] to enforce temporal 
+ordering. This pattern suggests that imposing rigid temporal constraints during infer -
+ence, without adequately accounting for stochastic variability, may undermine robust -
+ness in steady-state settings. By contrast, methods that infer CLT only after estimating 
+kinetic parameters, such as SDEvelo, or that avoid explicit time parameterization alto -
+gether, such as κ-velo, appear better equipped to mitigate spurious dynamics.
+In addition to the metrics introduced here, several Bayesian methods use uncertainty 
+scores as a form of quality control, interpreting high uncertainty as indicative of weak or 
+inconsistent transcriptional activity [31]. These scores are quantified either by the coef -
+ficient of variation of posterior cell times [34, 40], as implemented in cell2fate and Velo-
+VAE (std/Full VB), or by variability in predicted future states [31], as in veloVI. T o assess 
+the reliability of these uncertainty measures, we compared a dynamic reference data -
+set (Data 4) with steady-state PBMC datasets (Data 17–21) (Additional file 2: Fig. S13). 
+Although all methods assigned higher uncertainty to Data 17 relative to Data 4, each 
+failed to do so for at least one other PBMC dataset. For example, VeloVAE (std) failed on 
+Data 18, while cell2fate failed on Data 21 (Fig.  5d). T ogether, these results highlight the 
+limited reliability of current uncertainty-based measures in static tissue contexts.
+Sequencing depth stability
+An optimal RNA velocity method should be robust to technical and experimental noise 
+that is unrelated to true biological dynamics [40]. Because variation in sequencing depth 
+represents a major source of such noise [46], robustness to reduced sequencing depth 
+serves as a key benchmark of method reliability [24]. To evaluate this, we simulated pro -
+gressively shallower datasets by subsampling spliced and unspliced mRNA counts using 
+a binomial distribution, with sampling rates ranging from 1.0 (original data) to 0.2 (shal -
+lowest depth) (Fig. 5e) [47]. We then quantified the stability of directional accuracy using 
+SCBDir , and temporal precision using STSC . A high stability score suggests that a method 
+maintains consistently high performance with low variance on CBDir or TSC across 
+sequencing depths. In this section, we assessed directional stability using Data 2, 3, and 
+9, and temporal stability using Data 3, 11, and 13 (Additional file 1: Table S6).
+Page 14 of 36Wu et al. Genome Biology          (2026) 27:242 
+As shown in Fig.  5f, a subset of methods exhibited strong robustness to sequencing-
+depth variation. Specifically, Pyro-Velocity (m2), scVelo (stc), SDEvelo, and cellDancer 
+maintained high stability in both directional accuracy and temporal precision regard -
+less of the sampling rates. Conversely, scTour (MSE) and GraphVelo (std) emerged as 
+clear outliers, showing highly unstable and weak performance in both dimensions. To 
+further examine the impact of sequencing depth on method performance, we analyzed 
+how CBDir and TSC varied across sampling rates for all methods. Unexpectedly, we did 
+not observe a monotonic decline in performance for either CBDir (Additional file  2: 
+Fig. S14a) or TSC (Additional file 2: Fig. S14b) as sequencing depth decreased. This find -
+ing suggests that sequencing depth influences RNA velocity performance in more com -
+plex ways than simple linear degradation.
+Quantification stability
+In addition to the core tasks, we extended our benchmarking framework to four com -
+plex scenarios. (V) Quantification stability evaluates the robustness of RNA velocity 
+methods to variation in spliced and unspliced abundances arising from different quanti -
+fication algorithms. (VI) Simulation experiments benchmark methods using diverse syn-
+thetic datasets generated from dynamic models. (VII) Multimodal integration assesses 
+methods that incorporate additional biological modalities beyond spliced and unspliced 
+mRNA. (VIII) Computational scalability is evaluated by monitoring running time and 
+peak memory usage across varying numbers of genes and cells. Although these tasks 
+were excluded from the overall ranking (rationale detailed in Additional file 3: Note S5), 
+we conducted a comprehensive evaluation for each. In this section, we focus specifically 
+on quantification stability by examining five representative quantification algorithms, 
+namely alevin, dropEst, kallisto|bustools [48], STARsolo [49], and velocyto, which gener -
+ate the initial spliced and unspliced abundance matrices [21, 29] (Fig. 6a).
+Because quantification algorithms specifically affect spliced and unspliced matrices, 
+we evaluated the 22 splicing dynamics–based methods on Data 4 using outputs from 
+the five quantification algorithms [29]. Although these pipelines produced different pro -
+portions of unspliced and spliced counts (Fig.  6b) and led to minor embedding shifts 
+among terminal cell types (alpha, beta, delta, and epsilon), the relative positioning of 
+pre-endocrine progenitors with respect to these endpoints was preserved (Fig.  6c). This 
+observation confirms that the underlying biological structure remains largely consistent 
+across quantification methods. A robust RNA velocity method should therefore toler -
+ate quantification-induced noise and recover comparable trajectories irrespective of the 
+upstream quantification pipeline.
+Using stability scores for CBDir ( SCBDir ) and ICVCoh ( SICVCoh  ) (Fig. 6d; Additional 
+file 1: Table S7), we identified UniTVelo (ind), veloVI, and Pyro-Velocity (m2) as three 
+methods that demonstrated high stability across both metrics. T o contextualize these 
+results, we examined velocity streamline visualizations across quantification outputs 
+(Fig. 6e; Additional file 2: Fig. S15). Despite the noise introduced by different quantifica -
+tion algorithms, UniTVelo (ind) consistently recovered differentiation trajectories from 
+pre-endocrine progenitors to terminal cell types. By contrast, many methods showed 
+robustness in either CBDir or ICVCoh alone, while cell2fate and cellDancer exhibited 
+Page 15 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+poor stability across both metrics. Collectively, these results indicate that robustness to 
+quantification-level variability remains an ongoing challenge for current RNA velocity 
+methods.
+Fig. 6 Evaluation of quantification stability. a Illustration of abundance quantification from FASTQ files to 
+spliced and unspliced counts. b Proportions of unspliced and spliced counts for 100 common genes sampled 
+from Data 4 using different quantification algorithms: alevin, dropEst, kallisto|bustools, STARsolo, and velocyto. 
+Using velocyto as the baseline, genes are sorted in descending order of their unspliced proportions. c UMAPs 
+of spliced abundances quantified by the five algorithms. d Scatter plot of SICVCoh versus SCBDir across five 
+quantification algorithms for Data 4. Each point represents one RNA velocity method listed in the legend. 
+Spearman’s ρ and the associated P-value for the two stability scores are shown above the panel. e Streamline 
+visualizations of UniTVelo (ind) across five quantification algorithms for Data 4. The legend is shared with (c), 
+and the top-left panel shows the reference cell-state transitions. CBDir and ICVCoh values are provided below 
+each streamline plot on the left and right, respectively
+Page 16 of 36Wu et al. Genome Biology          (2026) 27:242 
+Benchmarking analysis on simulation experiments
+To complement real-world datasets, we evaluated 25 RNA velocity methods using six 
+simulated datasets generated from ODE and stochastic differential equation (SDE) mod-
+els, as well as the multimodal simulator dyngen  [50] (Methods ). Because both RNA 
+velocity in the original gene space and CLT are known for these simulations, we could 
+directly compare estimated values with ground truth. Velocity estimation accuracy was 
+assessed using distance correlation [51, 52], which is well suited for measuring associa -
+tions between vectors of unequal dimensionality and therefore accommodates methods 
+that predict low-dimensional velocity representations. Latent time estimation accuracy 
+was evaluated using Pearson’s correlation. Details of both metrics are described in Addi-
+tional file 3: Note S6.
+Analysis of overall performance on simulated datasets showed that the top five meth -
+ods were exclusively non-DL approaches based on ODEs (scVelo (dyn/stc), Velocyto, 
+and κ-velo) or SDEs (SDEvelo) (Additional file 2: Fig. S16a; Additional file 1: Table S8). 
+Their strong performance is likely due to their close alignment between their modeling 
+assumptions and the generative processes underlying the simulations. By contrast, sev -
+eral DL-based methods, including cellDancer, scT our (MSE), and VeloVAE (std/Full VB), 
+ranked near the bottom. Consistent with this observation, non-DL methods significantly 
+outperformed DL methods overall (Additional file  2: Fig.  S16b, left panel), with non-
+DL methods enriched among the top 10 and DL methods over-represented among the 
+bottom 10 (Additional file  2: Fig.  S16b, middle panel). Importantly, no significant per -
+formance difference between DL and non-DL methods was observed for the core tasks 
+based on real-world datasets (Additional file 2: Fig. S16b, right panel). This discrepancy 
+indicates a gap between simulated and biological settings, suggesting that current simu -
+lation frameworks favor non-DL approaches.
+T o explore this discrepancy, we compared method rankings derived from simulated 
+and real-world datasets. We observed that only four methods exhibited a substantial 
+rank divergence between the two settings: scVelo (dyn), GraphVelo (std), cellDancer, and 
+κ-velo (Additional file 2: Fig. S16c). After excluding these outliers, we identified a strong 
+positive correlation between rankings on simulated and real-world data (Spearman’s 
+ρ = 0.888  , P = 7.910 × 10−8 ; Additional file  2: Fig.  S16d). This concordance, observed 
+despite the differences between simulation and real-world datasets, indirectly validates 
+the robustness and reliability of our core task results.
+Multimodal‑enhanced RNA velocity methods
+Advanced RNA velocity methods extend beyond RNA-only approaches by incorporating 
+additional biological information (Fig. 7a). Several methods integrate single-cell assay for 
+transposase-accessible chromatin with sequencing (scATAC-seq) data, including Mul -
+tiVelo [14], LatentVelo (ATAC) [33], and GraphVelo (ATAC) [42], while others, such as 
+Dynamo (m2) [15] and VelvetVAE [32] utilize single-cell metabolic labeling data (Meth -
+ods). Moreover, velocity estimation has been extended to incorporate inputs such as 
+protein abundance [53], transcription factor activity [54], phylogenetic information [55], 
+gene regulatory networks  [56], and spatial transcriptomics  [57–59]. In this study, our 
+benchmarking focuses specifically on the contributions of chromatin accessibility and 
+metabolic labeling.
+Page 17 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+We first benchmarked three chromatin accessibility–enhanced methods against 25 
+RNA-only methods using paired scRNA-seq and scATAC-seq datasets (Data 22–24). 
+Performance was evaluated using CBDir and ICVCoh (Additional file 2: Fig. S17a; Addi -
+tional file  1: Table  S9). Among the three enhanced methods, GraphVelo (ATAC) sub -
+stantially outperformed MultiVelo and LatentVelo (ATAC) in CBDir, whereas MultiVelo 
+Fig. 7 Analysis of multimodal-enhanced RNA velocity methods. a Schematic overview of RNA velocity 
+methods incorporating multimodal information. Beyond using RNA-only, advanced frameworks leverage 
+data from chromatin accessibility (MultiVelo, LatentVelo (ATAC), GraphVelo (ATAC)) and metabolic labeling 
+(Dynamo (m2), VelvetVAE). Furthermore, velocity estimation can incorporate additional inputs such as protein 
+abundance, transcription factors, phylogenetic trees, gene regulatory networks, and spatial transcriptomics. 
+b Performance of chromatin accessibility–enhanced methods on Data 22–24, evaluated by CBDir (top) 
+and ICVCoh (bottom). Bar plots compare three multimodal methods against their corresponding RNA-only 
+counterparts. Ranks in parentheses denote the method’s position among all 28 evaluated methods (3 
+multimodal and 25 RNA-only). Individual points represent scores for specific cross-validation folds in each 
+dataset. c Evaluation of metabolic labeling–enhanced methods. Top: CBDir scores on Data 9 and 26. Bottom: 
+TSC scores on Data 10 and 25. Comparisons include the corresponding RNA-only counterparts. Ranks 
+in parentheses denote the position among all 27 evaluated methods (2 multimodal and 25 RNA-only). 
+Individual points represent scores for specific cross-validation folds in each dataset
+Page 18 of 36Wu et al. Genome Biology          (2026) 27:242 
+and LatentVelo (ATAC) performed relatively better in ICVCoh. Interestingly, none of 
+the enhanced methods achieved the top average rank for either metric, suggesting a 
+potential trade-off between the benefits of multimodal integration and increased model 
+complexity. To more directly assess the contribution of scATAC-seq data, we performed 
+pairwise comparisons between each enhanced method and its RNA-only baseline: Mul -
+tiVelo versus scVelo (dyn), LatentVelo (ATAC) versus LatentVelo (std), and GraphVelo 
+(ATAC) versus GraphVelo (std) (Fig. 7b; Additional file 2: Fig. S17b). In these compari -
+sons, GraphVelo (ATAC) was the only method that generally achieved performance 
+comparable to or better than its corresponding baselines across both metrics.
+We next benchmarked two metabolic labeling–enhanced methods against 25 RNA-
+only methods using four datasets containing both spliced/unspliced and newly synthe -
+sized/total RNA counts. We evaluated performance using CBDir on Data 9 and 26 and 
+TSC on Data 10 and 25 (Additional file 2: Fig. S18a; Additional file 1: Table S10). Com -
+paring the two enhanced methods, the results showed that Dynamo (m2) outperformed 
+VelvetVAE in both metrics. However, as observed for chromatin accessibility-based 
+methods, no metabolic labeling-enhanced method achieved the top rank for either 
+metric. We then prioritized comparing each enhanced method against its RNA-only 
+baselines, specifically Dynamo (m2) versus Dynamo (m1) and VelvetVAE versus Svel -
+vetVAE (Fig. 7c; Additional file 2: Figs. S18b, c). These analyses showed that incorporat -
+ing metabolic labeling data did not consistently improve performance over RNA-only 
+approaches. Both Dynamo (m2) and VelvetVAE failed to outperform their baselines in at 
+least one metric. For example, Dynamo (m2) ranked lower than Dynamo (m1) for TSC, 
+while VelvetVAE performed worse than SvelvetVAE for CBDir.
+Computational scalability analysis
+We assessed computational scalability by monitoring running time and peak memory 
+usage across synthetic datasets with varying cell counts (Data 33) and gene counts (Data 
+34). To evaluate scalability with respect to the number of cells, we fixed the gene count 
+( p = 1, 000  ) and generated seven datasets with cell counts ranging from n = 1, 000  to 
+1,  000,  000. Conversely, to assess scalability with respect to the number of genes, we 
+fixed the cell count ( n = 10, 000  ) and generated six datasets with gene counts ranging 
+from p = 1, 000  to 20, 000. T o quantify performance, we introduced an efficiency score 
+that integrates both running time and peak memory usage, and a scalability score that 
+considers both the maximum dataset size successfully processed at the cell or gene level 
+and efficiency (Methods ). Details of the computational environment are provided in 
+Additional file 3: Note S7.
+We first evaluated scalability using the efficiency score with respect to gene counts and 
+found that seventeen methods successfully processed datasets with up to 20,000 genes 
+(Fig. 8a, top panel). Among these, the three scT our variants secured the top three rank -
+ings, followed closely by veloVI, UniTVelo (uni), and SDEvelo. Conversely, cell2fate failed 
+even on the 5,000-gene datasets, while four others (Pyro-Velocity (m1/m2), GraphVelo 
+(std), cellDancer) could not handle the 10,000-gene datasets. Even among methods 
+that completed datasets at the same gene count, running time and peak memory usage 
+varied dramatically. For example, at the 20,000-gene level, running times ranged from 
+31.075 seconds (Velocyto) to 9.657 hours (VeloVAE (Full VB)), and peak memory usage 
+Page 19 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+Fig. 8 Computational scalability analysis for 25 RNA-only methods. a Top: Dot plot of scalability with 
+respect to gene number on simulated datasets, ranging from 1,000 to 20,000 genes with a fixed cell count 
+( n = 10, 000  ). In each row (corresponding to a gene count), methods are ranked by the efficiency score for 
+the corresponding data size in descending order (Methods). Methods are ordered along the x-axis based 
+on the scalability score Scalabilitygene  in descending order (Methods). Bottom: Dot plot of scalability with 
+respect to cell number on simulated datasets, ranging from 1,000 to 1,000,000 cells with a fixed gene count 
+( p = 1, 000  ). In each row (corresponding to a cell count), methods are ranked by the efficiency score for 
+the corresponding data size in descending order (Methods). Methods are ordered along the x-axis based 
+on the scalability score Scalabilitycell in descending order (Methods). The top 10 methods for Scalabilitycell 
+are highlighted. b Line plot of accuracy versus downsampling rates for the top 10 methods in terms of 
+Scalabilitycell using two real-world datasets. The purple line indicates CBDir using Data 7, while the pink line 
+indicates TSC using Data 16. Sampling rates range from 0.2 to 1.0 (the original data). The dashed line at y = 0 
+serves as a baseline
+Page 20 of 36Wu et al. Genome Biology          (2026) 27:242 
+spanned from 0.848 GB (scTour (MSE)) to 61.790 GB (Dynamo (m1)) (Additional file 2: 
+Fig. S19a, top panel; Additional file 1: Table S11).
+Next, we evaluated scalability with respect to cell counts (Fig.  8a, bottom panel). We 
+observed that all methods completed the task at 10,000 cells, and more than half handled 
+100,000 cells. However, only five methods (scTour (MSE/NB/ZINB), Velocyto, scVelo 
+(stc)) completed the task at 500,000 cells, with only the three variants of scTour complet-
+ing it at 1,000,000 cells. Such scalability is largely attributable to scTour’s built-in sub -
+sampling strategy, which by default uses 20% of cells for training when the total number 
+of cells exceeds 10,000 [30]. Notably, while scTour (MSE) demonstrated superior scal -
+ability across both cell and gene dimensions, it ranked lowest in the core tasks. Regard -
+ing resource efficiency, running time and peak memory usage also varied dramatically at 
+the same cell count. Among methods that successfully processed the 100,000-cell data -
+set, running times ranged from 16.799 seconds (Velocyto) to 8.196 hours ( κ-velo), while 
+peak memory usage ranged from 0.181 GB (veloVI) to 60.232 GB (Dynamo (m1)) (Addi -
+tional file 2: Fig. S19a, bottom panel; Additional file 1: Table S12).
+Extending simulated analysis to real-world datasets, we selected the top ten meth -
+ods according to the cell scalability score of (Methods ), including 7 DL methods and 3 
+non-DL methods, and explored the relationship between accuracy and scalability. We 
+evaluated directional consistency using Data 7 ( n = 54, 542 cells) and assessed tempo -
+ral precision using Data 16 ( n = 165, 522 cells), each with downsampling rates ranging 
+from 0.2 to 1.0 (original data). The results show that most methods, such as scT our (NB), 
+veloVI, and SDEvelo, displayed near-stable performance across varying sampling rates, 
+and were minimally affected by the difference between the smallest and full data sizes 
+(Fig. 8b; Additional file 2: Fig. S19b; Additional file 1: Table S13). This finding suggests 
+that downsampling serves as a viable strategy to enable RNA velocity estimation on 
+large-scale datasets by largely saving computational resources, provided that the chosen 
+method demonstrates robustness to varying sampling rates.
+Guideline for method selection
+RNA velocity methods are generally user-friendly, as they all provide Python packages 
+that operate directly on AnnData, a widely adopted data structure for single-cell analy -
+sis. In this section, we offer practical recommendations based on directional consistency, 
+temporal precision, multimodal integration, computational scalability, and hyperparam -
+eter tuning.
+When exploring cell fate transitions, users should prioritize directional consistency 
+while carefully guarding against false positives. Although LatentVelo (std) ranked first 
+in Task I (Fig. 2, Col. 9), its tendency to infer spurious results in Task III (Fig.  2, Col. 15) 
+suggests that it is best suited for exploratory analyses and should be validated using com-
+plementary approaches. For a more balanced trade-off between directional consistency 
+and negative control robustness, we recommend UniTVelo (uni), Pyro-Velocity (m2), 
+and veloVI.
+For temporal analyses, UniTVelo (uni) and SDEvelo are recommended due to their 
+high temporal precision (Fig.  2, Col. 12). We also recommend four Group 3 methods, 
+DeepVelo, Velocyto, Dynamo (m1), and SvelvetVAE, although CLT must be derived 
+Page 21 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+through post-hoc processing (Additional file 3: Note S4). As a best practice, directional 
+and temporal results should be interpreted jointly, since inferred transition directions 
+and cell-state times are expected to be coherent. Users may compare direction-inference 
+and temporal-inference results across recommended methods, particularly prioritizing 
+UniTVelo (uni), which performs well in both analyses and estimates transition direction 
+and cell-state time. In cases where spliced/unspliced matrices are unavailable, scTour 
+(ZINB) can serve as a practical alternative, but its results may benefit from post-infer -
+ence adjustments as suggested in the original study [30].
+When multimodal data are available, we recommend GraphVelo (ATAC) for analyses 
+incorporating chromatin accessibility (Fig.  7b), and Dynamo (m2) for metabolic labe -
+ling data (Fig. 7c). However, given current architectural limitations of multimodal frame-
+works, we advise users to prioritize RNA-only methods as the primary analysis strategy, 
+even when additional modalities are available.
+From a practical perspective, computational scalability is often a key factor in method 
+adoption. Among the recommended methods, some showed limited scalability with 
+respect to cell number. Specifically, UniTVelo (uni) and SvelvetVAE could process only 
+up to 10,000 cells, whereas Pyro-Velocity (m2) could process only up to 50,000 cells 
+(Fig. 2, Col. 5). For these methods, we suggest users downsample the data to perform 
+estimation on large-scale datasets. For a balance between core task performance and 
+scalability, we recommend SDEvelo, Velocyto, scVelo (stc), DeepVelo, and veloVI as opti-
+mal choices. Another practical consideration is the choice of method-specific hyperpa -
+rameters. We performed a sensitivity analysis for the recommended methods by varying 
+key parameters discussed in the original papers or tutorials (Additional file 3: Note S8). 
+Although most methods showed relatively robust performance across different param -
+eter settings, the default settings were not always optimal (Additional file  2: Fig.  S20). 
+We therefore suggest that users begin with the default settings and subsequently tune 
+method-specific hyperparameters according to their analysis goals.
+Discussion
+In this study, we established a comprehensive benchmarking framework for RNA veloc -
+ity analysis using 34 datasets. We systematically evaluated 25 RNA-only methods across 
+eight evaluation tasks and assessed five multimodal-enhanced methods specifically for 
+multimodal integration. Compared with prior benchmarks [24–26], our study provides 
+a more comprehensive assessment of RNA velocity accuracy and robustness by match -
+ing datasets to task-specific biological and technical questions, with a focus on the direct 
+outputs of RNA velocity methods (velocity vectors and latent time). We used cell differ -
+entiation datasets to assess directional consistency, datasets with ground-truth temporal 
+labels to evaluate temporal precision, and mature cell population datasets as negative 
+controls for false-positive dynamic signals. By linking performance across different tasks, 
+our benchmarking framework revealed cross-task trade-offs and methodological gaps 
+that are difficult to capture using a single aggregate ranking. We were also able to directly 
+examine robustness under negative controls [21, 22], the role of gene dependence [21], 
+and stability across spliced/unspliced mRNA quantification pipelines  [20, 22, 29], key 
+issues raised in previous studies but rarely incorporated into existing benchmarks. Fur -
+ther discussion of shared and disparate findings, as well as the complementary scopes 
+Page 22 of 36Wu et al. Genome Biology          (2026) 27:242 
+of existing benchmarks, is provided in Additional file 3: Note S9. Together, these design 
+choices enabled a systematic comparison and ranking of existing methods, offering clear, 
+evidence-based guidance for the community.
+An ideal RNA velocity method should both recover biologically meaningful cell fate 
+transitions without introducing false positives and infer a CLT that accurately reflects 
+the underlying biological clock. However, our results show that no single method con -
+sistently performs well across all core tasks. This limitation likely reflects several under -
+lying factors. First, we observed a significant negative correlation between directional 
+consistency and negative control robustness. One contributing factor to this trade-off  
+is the use of constraints that enforce temporal progression in the velocity field; although 
+such constraints can improve directional inference, they limit the ability to correctly 
+characterize the absence of velocity in terminally differentiated states  [30]. Conse -
+quently, existing methods often lack mechanisms to represent steady-state splicing 
+dynamics without over-inference, highlighting the need for more advanced modeling 
+strategies or the incorporation of appropriate prior information to suppress spurious 
+signals. Beyond controlling false positives in velocity vectors, existing RNA velocity 
+methods also struggle to accurately infer CLT simultaneously with velocity. Although 
+one simultaneous modeling method ranked within the top five for both directional and 
+temporal tasks, it exhibited suboptimal performance on the negative control task. These 
+findings suggest that future development should focus either on refining simultaneous 
+modeling architectures to mitigate spurious signals, or on improving CLT inference in 
+post-hoc strategies that already demonstrate robust directional consistency.
+Complementing the core tasks, our analysis of additional tasks uncovers insights that 
+can guide the future development of RNA velocity methods. Quantification is a manda -
+tory upstream step, yet it introduces technical noise that is independent of biological 
+context  [29]. Notably, our results show that only three methods remain robust across 
+different quantification outputs. This stability may be attributed to spliced RNA–ori -
+ented designs  [27], which compute velocity using predicted counts, or to the use of 
+low-dimensional embeddings to mitigate technical noise [31]. In addition, model-based 
+simulation experiments show that non-DL methods, particularly ODE- and SDE-based 
+approaches, inherently outperform DL methods. Consequently, such simulations should 
+be used judiciously when evaluating newly developed methods to avoid potential bias. 
+Another challenge lies in integrating biological modalities beyond unspliced and spliced 
+RNA. In the multimodal integration task, neither chromatin accessibility–enhanced nor 
+metabolic labeling–enhanced methods achieved top rankings. This outcome suggests 
+that future efforts should prioritize advanced integration strategies and more refined 
+model architectures. Finally, this work assessed scalability on the large-scale datasets, 
+showing that existing top methods in core tasks have limited scalability with respect 
+to the number of cells. Although our experiments show that this can be handled by a 
+downsampling strategy when analyzing large datasets, future method development 
+should focus on more flexible and scalable frameworks.
+Page 23 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+This benchmark offers key insights into RNA velocity methods, yet several impor -
+tant directions warrant further investigation. With respect to gene selection, we fol -
+lowed standard practice by using 2,000 HVGs; however, HVGs are not always the most 
+informative features for velocity inference [15]. Systematic evaluation of alternative gene 
+selection on velocity estimation represents a promising avenue for future work. Regard -
+ing method implementation, while we applied default parameters to ensure a stand -
+ardized and fair comparison, method-specific hyperparameter optimization remains a 
+critical factor that could further enhance performance in practical applications. Finally, 
+most existing RNA velocity methods rely on short-read sequencing, which may lack the 
+resolution needed to fully capture complex splicing dynamics. Emerging technologies 
+such as long-read sequencing [60, 61] offer the potential for more detailed RNA velocity 
+estimation.
+Conclusions
+In summary, we established a comprehensive benchmarking framework for RNA veloc -
+ity, encompassing a systematic evaluation of 25 RNA-only methods across eight tasks, 
+together with a targeted assessment of five multimodal-enhanced methods. Our results 
+demonstrate that no single method performs consistently well across all tasks. Accord -
+ingly, we provide practical guidelines to assist users in choosing tools that best align with 
+their specific biological questions and technical constraints. This study also identifies 
+several methodological gaps, including the need for improved modeling of gene depend-
+ence, more accurate temporal inference strategies, and better-designed multimodal 
+architectures. We anticipate that this framework, together with our curated datasets and 
+evaluation metrics, will serve both as a practical guide for users and as a reference stand-
+ard for method developers. Ultimately, these resources aim to facilitate more robust 
+modeling of transcriptional dynamics and improve the reliability of RNA velocity analy -
+ses in single-cell studies.
+Methods
+Benchmarking datasets
+This study comprises 26 real-world datasets and eight simulated datasets. The real-world 
+datasets span diverse biological contexts across mouse and human species and vary 
+widely in scale, with cell counts ranging from 753 to 165,522 and gene features from 936 
+to 53,801. Complementing these are six full model-generated simulated datasets, includ-
+ing two based on ODEs, two based on SDEs, and two generated using dyngen  [50]. 
+Finally, two additional ODE-based simulations were generated to systematically evalu -
+ate method scalability across varying gene and cell counts, including large-scale settings 
+with up to 1,000,000 cells and 20,000 genes. Descriptions of each dataset are provided in 
+Additional file 3: Note S10.
+Page 24 of 36Wu et al. Genome Biology          (2026) 27:242 
+Benchmarking methods
+In this study, we present a comprehensive benchmark of 19 RNA velocity tools covering 
+30 distinct methods, including 25 RNA-only and five multimodal-enhanced approaches. 
+All methods were executed using their default parameter settings to ensure a fair base -
+line comparison. For cases requiring dataset-specific configurations, we applied special -
+ized model settings as detailed in Additional file 1: Table S14.
+Velocyto
+Velocyto [10] is a steady-state model based on an ODE assumption that estimates RNA 
+velocity via extreme quantile linear regression. Velocyto was applied using the Python 
+package scvelo (v0.3.3) through the function scvelo.tl.velocity() with the 
+parameter mode=‘deterministic’.
+scVelo
+scVelo  [11] provides three modes for RNA velocity estimation: deterministic (cor -
+responding to Velocyto), dynamical, and stochastic. scVelo (dyn) solves a dynami -
+cal ODE model using an expectation–maximization algorithm to infer kinetic rates. 
+scVelo (stc) generalizes the steady-state model by accounting for transcriptional sto -
+chasticity via second-order moments, solving the steady-state ratio using general -
+ized least squares. These modes were implemented in the Python package scvelo  
+(v0.3.3) using scvelo.tl.velocity() with parameters mode=‘dynamical’  
+and mode=‘stochastic’, respectively.
+VeloAE
+VeloAE [35] estimates RNA velocity by using an autoencoder to project spliced and 
+unspliced expression into a shared low-dimensional latent space. The method was 
+applied using the Python module veloproj (v0.2.0). Analyses were run with the 
+function main_AE() using default parameters. VeloAE outputs velocity vectors only 
+in a latent space, which were used for velocity evaluation.
+Dynamo
+Dynamo  [15] is a computational framework for constructing transcriptomic vec -
+tor fields by automatically detecting the modality of input data and selecting an 
+appropriate model. We benchmarked two modes implemented in the Python pack -
+age dynamo-release (v1.4.2rc1) using the function dyn.tl.dynamics(). 
+Dynamo (m1) estimates splicing dynamics–based velocity using a negative bino -
+mial (NB) distribution and the generalized method of moments, with parameters 
+model=‘stochastic’ and est_method= ‘negbin’. Dynamo (m2) models 
+labeled and total RNA using an ODE system with default settings.
+Page 25 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+Pyro‑Velocity
+Pyro-Velocity [28] is a probabilistic generative model for RNA dynamics that adapts 
+the Velocyto ODE framework by introducing a CLT shared across genes  [28]. We 
+benchmarked two methods implemented in the Python module pyrovelocity  
+(v0.3.0b2) using the function train_model(). Pyro-Velocity (m1) constrains the 
+CLT to be greater than the initial switching time by setting guide_type= ‘auto_
+t0_constraint’, whereas Pyro-Velocity (m2) removes this constraint to allow 
+gene-specific time lags using the parameter guide_type= ‘auto’.
+UniTVelo
+UniTVelo [27] is a computational framework that models gene-specific kinetics start -
+ing from spliced RNA in a top-down manner. UniTVelo (uni) aggregates gene-spe -
+cific temporal information into a single shared time per cell, whereas UniTVelo (ind) 
+retains a gene-specific time matrix during optimization. These modes were imple -
+mented in the Python package unitvelo (v0.2.5) using unitvelo.run_model()  
+with parameters velo.FIT_OPTION= ‘1’ and velo.FIT_OPTION= ‘2’, 
+respectively.
+VeloVAE
+VeloVAE [34] is a Bayesian model for RNA velocity inference. We applied two methods 
+implemented in the Python package velovae (v0.1.3b0) using the function velovae.
+VAE(). VeloVAE (std) estimates posterior distributions of latent time, cell states, and 
+kinetic rates using default settings. VeloVAE (Full VB) extends this framework by mod -
+eling kinetic rate parameters as random variables, enabled by setting full_vb=True.
+κ‑velo
+κ-velo [38] is an ODE-based RNA velocity method that explicitly incorporates a time-
+scale parameter. It was implemented in the Python package velocity-package 
+(v0.2) using the function velocity.tl.fit.get_velocity().
+MultiVelo
+MultiVelo [14] extends scVelo (dyn) by incorporating paired scATAC-seq data. It intro -
+duces an additional ODE to link transcription rates with promoter and enhancer accessi-
+bility. MultiVelo was implemented in the Python module multivelo (v0.1.5) using the 
+function mv.recover_dynamics_chrom().
+cellDancer
+cellDancer [37] is a deep neural network (DNN) model for RNA velocity estimation that 
+learns cell-specific kinetic parameters for each gene. It was implemented in the Python 
+package celldancer (v1.1.7) using the function cd.velocity().
+Page 26 of 36Wu et al. Genome Biology          (2026) 27:242 
+veloVI
+veloVI [31] is a deep generative framework that reformulates scVelo’s dynamical model 
+using a VAE. We applied it using the Python package velovi (v0.3.1) via the function 
+VELOVI().
+LatentVelo
+LatentVelo  [33] is a generative approach for inferring RNA velocity in a latent space. 
+Two methods were applied using the Python package latentvelo (v0.1). LatentVelo 
+(std) embeds cells using a VAE and models differentiation dynamics via a neural ODE, 
+implemented with ltv.models.VAE(). LatentVelo (ATAC) integrates scATAC-
+seq data into the framework and was implemented using ltv.models.ATACReg -
+Model(). For both methods, velocity evaluation was performed using the latent-space 
+velocity vectors.
+scTour
+scTour  [30] is a DNN-based method for estimating RNA velocity and CLT from gene 
+expression data rather than explicit spliced/unspliced counts. Three modes were 
+implemented in the Python package scTour (v1.0.0) via the function sct.train.
+Trainer(). Specifically, scTour (MSE) uses mean squared error (MSE) with the 
+parameter loss_mode=‘mse’; scTour (NB) uses an NB-conditioned likelihood by 
+setting loss_mode=‘nb’; and scTour (ZINB) uses a zero-inflated negative binomial 
+(ZINB)-conditioned likelihood by setting loss_mode=‘zinb’. All three methods 
+output only latent-space velocity vectors, which were used for velocity evaluation.
+DeepVelo
+DeepVelo [36] is a DNN model that infers RNA velocity by learning kinetic parameters 
+for each cell and gene. It was implemented in the Python package deepvelo (v0.2.8) 
+using the function dv.train().
+SDEvelo
+SDEvelo [39] is an adversarial learning approach that infers RNA velocity using multi -
+variate SDEs. The method was applied using the Python module sdevelo (v0.2.12) via 
+the function sv.SDENN().
+VelvetVAE
+VelvetVAE [32] introduces a VAE framework for RNA velocity inference based on meta-
+bolic labeling data. SvelvetVAE  [32] is a variant designed for velocity estimation from 
+unspliced and spliced mRNA data. Both were applied using the Python package vel -
+vetvae (v0.1.dev0) via vt.md.Velvet() and vt.md.Svelvet(), respectively.
+cell2fate
+cell2fate  [40] is a fully Bayesian RNA velocity method based on a linearized velocity 
+ODE. It was applied using the Python module cell2fate (v0.1a0) via the function 
+mod.compute_and_plot_total_velocity().
+Page 27 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+TIVelo
+TIVelo  [41] is a model-free RNA velocity method that infers trajectory directions on 
+a cluster-level graph to supervise cell-level velocity. Two modes implemented in the 
+Python package tivelo (v0.1.4) were applied using tivelo(). TIVelo (std) includes 
+a cosine similarity regularization term in the objective function with the parameter 
+constrain=True, while TIVelo (simple) solves the objective function without this 
+regularization by setting constrain=False.
+GraphVelo
+GraphVelo [42] is a graph-based method that corrects RNA velocities by optimizing a 
+tangent space projection loss on the cell-state manifold. Because it requires an initial 
+velocity estimate, we benchmarked two variants implemented in the Python pack -
+age graphvelo (v0.1.9) using GraphVelo(). GraphVelo (std) was initialized with 
+scVelo (dyn) output, whereas GraphVelo (ATAC) was initialized using MultiVelo output, 
+thereby incorporating scATAC-seq information.
+Benchmarking metrics
+To evaluate and rank the RNA velocity methods, we employed a suite of benchmarking 
+metrics implemented in our developed Python package VeloEV (v1.0) [62].
+CBDir
+Cross-boundary directional correctness (CBDir) [ 35] quantifies the directional accu -
+racy of inferred RNA velocities between predefined pairs of cell clusters. For consist -
+ency with the original study, CBDir was computed using velocity vectors projected 
+into the UMAP space. Let T  denote the set of predefined ground-truth transitions. 
+The metric is defined as:
+Here, for each transition (A, B), CA and CB denote the source and target cell sets, respec -
+tively; BA,B ={ c ∈ CA : CB ∩ N (c) �= ∅} denotes the subset of source cells with at least 
+one target-cell neighbor; N (c) denotes the expression neighborhood of cell c; x′
+c is the 
+UMAP coordinate of cell c; and v′
+c is the velocity vector projected into the same UMAP 
+space. CBDir ranges from −1 to 1, with higher values indicating stronger directional 
+agreement across cluster boundaries.
+ICVCoh
+In-cluster coherence (ICVCoh)  [ 35] measures the coherence of inferred velocity 
+directions by averaging cosine similarities between each cell’s velocity vector and 
+those of its expression neighbors. Like CBDir, ICVCoh was computed using UMAP-
+projected velocities. Let G denote the set of cell types or clusters. ICVCoh is defined 
+as:
+(1)CBDir = 1
+|T | (A,B)∈T
+1
+|BA,B| c∈BA,B
+1
+|CB ∩ N (c)| c′∈CB ∩N (c)
+v′
+c · (x′
+c′ − x′
+c)
+�v′c�� x′
+c′ − x′c� .
+Page 28 of 36Wu et al. Genome Biology          (2026) 27:242 
+where CA is the set of cells in cluster A ; BA ={ c ∈ CA : CA ∩ N (c) �= ∅} denotes cells 
+with at least one same-cluster neighbor; N (c) is the expression neighborhood of cell c ; 
+and v′
+c is the velocity vector of cell c projected into the UMAP space. ICVCoh ranges 
+from −1 to 1, with higher values indicating greater local velocity coherence.
+CTO
+Cluster temporal ordering accuracy (CTO) is a metric designed to assess how well 
+inferred CLT preserves the correct temporal ordering between ground-truth develop -
+mental time clusters (e.g., reprogramming days). CTO is defined as:
+where {T1 ,T2 ,... ,TK } denotes the set of ground-truth time clusters in ascending order 
+and ti denotes the inferred CLT. CTO ranges from 0 to 1, with higher values indicating 
+more accurate temporal ordering.
+TSC
+Temporal Spearman correlation (TSC) measures the accuracy of inferred CLT by 
+comparing the rank-transformed inferred times with the true developmental times. 
+In contrast to CTO, which evaluates the ordering of discrete time clusters, TSC pro -
+vides a continuous assessment of temporal concordance along the trajectory. TSC is 
+defined as follows:
+where R t and R t∗ denote the ranks of inferred CLT and labeled developmental time, 
+respectively, and σ denotes the standard deviation. TSC ranges from −1 to 1, with higher 
+values indicating stronger agreement between the inferred CLT and labeled develop -
+mental time.
+STS
+Self-transition score (STS) [11] serves as a partial indicator of negative control robust -
+ness by quantifying the probability of a cell transitioning to itself. STS is computed based 
+on a velocity graph and defined as:
+(2)ICVCoh = 1
+|G|
+∑
+A∈G
+1
+|BA |
+∑
+c∈BA
+1
+|CA ∩ N (c)|
+∑
+c′∈CA ∩N (c)
+v′
+c · v′
+c′
+�v′c�� v′
+c′ � ,
+(3)CTO = 1
+K
+∑
+k
+1
+|T k |
+∑
+i∈T k
+1
+|T k +1|
+∑
+j∈T k +1
+1{ti<tj},
+(4)TSC = cov(Rt,R t∗ )
+σR t σR t∗
+,
+Page 29 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+where vi is the velocity vector output by each method, and xi is the gene-expression vec-
+tor of cell i . For latent-space methods, xi instead denotes the low-dimensional represen -
+tation output by the method; N (i) denotes the expression neighborhood of cell i; C is 
+the set of cells and N =| C| is the total number of cells; Q0.98 denotes the 98th percentile. 
+STS ranges from 0 to 1, with higher STS values indicating lower transition probabilities 
+and greater robustness under negative control conditions.
+EES
+Effective entropy score (EES) quantifies the effective dispersion of inferred transition 
+probabilities and is mathematically equivalent to the limiting case of the Hill number, 
+which is a well-established diversity measure in ecological studies [63]. EES is computed 
+from the cell transition probability matrix as:
+where P is the transition probability matrix; P c(i) denotes the i-th largest transition prob-
+ability from cell c ; m (0.95)
+c = min {m : ∑m
+i=1 Pc(i) ≥ 0.95} is the smallest number of top 
+transitions whose cumulative probability reaches 0.95; and ˜pc,i= Pc(i)/ ∑m (0.95)
+c
+ℓ=1 Pc(ℓ) 
+is the corresponding renormalized probability. The theoretical interpretation of EES 
+as jointly reflecting transition sparsity and uniformity is provided in Additional file  3: 
+Note S11 [64]. EES is bounded between 1 and m (0.95)
+c  at the cell level, and the overall EES 
+is bounded between 1 and max c m (0.95)
+c  . Higher values indicate more effective nonzero 
+transitions and greater transition uniformity, corresponding to stronger robustness 
+under negative control conditions.
+Stability score
+To quantify metric stability across replicates, a stability score SM  was defined as:
+where mean and std represent the empirical mean and standard deviation of M across 
+replicates for each method, and the superscript asterisk ( ∗ ) denotes rescaling to the 
+interval [0,  1]. SM  is bounded between 0 and 1, with a value approaching 1 reflecting 
+high performance and minimal variance.
+(5)
+ˆπi = max
+j∈N (i)
+(xj − xi)⊤vi
+�xj − xi�� vi� ,
+ˆπ∗ = Q 0.98
+(
+{ˆπ1,... ,ˆπN }
+)
+,
+STS = 1
+N
+∑
+c∈C
+min
+{
+max {ˆπ∗ −ˆπc,0 },1
+}
+,
+(6)EES = 1
+|C |
+�
+c∈C
+exp
+
+−
+m (0.95)
+c�
+i=1
+˜pc,ilog ˜pc,i
+
+,
+(7)SM = (mean ∗M )2 + (1 − std∗M )2
+2 ,
+Page 30 of 36Wu et al. Genome Biology          (2026) 27:242 
+Overall rank of core tasks
+For each core task k ∈{ 1,... ,4} , we computed two evaluation scores, Ek1 and Ek2 . With 
+the exception of EES, the metric values were first averaged across datasets, and methods 
+were then ranked in descending order so that the highest score received rank 1. For EES, 
+because its scale can be affected by dataset-specific transition-graph structure, methods 
+were first ranked within each dataset according to their EES values, and the dataset-level 
+ranks were then averaged across datasets, with smaller average ranks indicating better 
+performance. The rank for task k was defined by re-ranking the average of the two met -
+ric ranks in ascending order, where lower values indicate better performance:
+Here, Rank(E kj) denotes the descending rank of the dataset-averaged raw scores for all 
+metrics except EES. For EES, Rank(E kj) denotes the ascending rank of dataset-averaged 
+ranks. The overall rank was then calculated by averaging the four task-level ranks and 
+ranking the result in ascending order:
+Computational efficiency
+To evaluate computational efficiency for each method, we generated synthetic datasets 
+using scvelo (v0.3.3), varying dimensions from 1, 000 to 1, 000, 000 cells and 1, 000 to 
+20, 000 genes. We monitored wall-clock runtime and peak memory usage with a strict 
+24-hour time limit. Runs that crashed, exceeded available hardware resources, or sur -
+passed the time limit were marked as failures. To quantify performance at each data size, 
+we calculated an efficiency score by averaging the inverted min-max normalized values 
+of runtime and peak memory usage as follows:
+This metric ranges from 0 to 1, where a score closer to 1 indicates superior computa -
+tional efficiency.
+Scalability score
+To assess the scalability of each method across gene and cell scales, we defined a scal -
+ability score:
+Here, the first term Capacityk ∈{ 0, 1, 2, 3, 4} reflects the maximum dataset size success -
+fully processed. For Scalabilitycell , scores are assigned based on thresholds of 10,000, 
+50,000, 100,000, 500,000, and 1,000,000 cells. Similarly, for Scalabilitygene  , integer scores 
+from 0 to 4 correspond to successful execution at thresholds of 2,000, 5,000, 10,000, 
+15,000, and 20,000 genes, respectively. The second term Eﬃciency k ∈[ 0, 1] represents 
+(8)Rk = Rank asc
+( Rank (Ek1 ) + Rank (Ek2 )
+2
+)
+.
+(9)Rcore = Rank asc
+(
+1
+4
+4∑
+k=1
+Rk
+)
+.
+(10)Eﬃciency= Timenorm + Memory norm
+2 .
+(11)Scalabilityk = Capacityk + Eﬃciency k , where k ∈{ cell, gene}.
+Page 31 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+the efficiency score achieved at that maximum successful threshold. The resulting scal -
+ability scores range from 0 to 5, with higher values indicating superior scalability.
+Data preprocessing
+All datasets used in this study were publicly available. For datasets that did not provide 
+separate spliced and unspliced count matrices, raw sequencing reads in FASTQ format 
+were processed with cellranger (v8.0.0), followed by velocyto (v0.17.17), to gen -
+erate loom files containing these quantifications. An AnnData object was then created 
+for each dataset using the Python packages scanpy (v1.11.0) and scvelo (v0.3.3). For 
+each dataset, raw count matrices were processed with scv.pp.filter_and_nor -
+malize() to retain genes with at least 20 shared counts and to select the top 2,000 
+HVGs (or all genes if < 2, 000  ). Finally, first- and second-order moments were estimated 
+using a kNN graph ( k = 30 ) constructed from the top 30 principal components.
+Sequencing depth simulation
+To evaluate method stability under varying sequencing depths, gene counts were sub -
+sampled across all cells from the following datasets: Data 2, 3, 9, 11, and 13. Unspliced 
+and spliced counts were subsampled simultaneously using a binomial distribution with a 
+shared sampling rate. Formally, the thinning procedure is defined as:
+where xij denotes the observed gene count, α is the sampling rate, and x′
+ij represents 
+the downsampled count. Sampling rates α of 0.2, 0.4, 0.6, 0.8, and 1.0 were used, where 
+α = 0.2 corresponds to the lowest sequencing depth with the weakest expression signal 
+and α = 1.0 corresponds to the original, unaltered dataset.
+Quantification algorithms
+To assess method robustness to variation introduced by different quantification pipe -
+lines, all methods were evaluated on Data 4. Based on previous quantification bench -
+marking results [29], the best-performing configuration from each of five representative 
+quantification tools was selected: alevin  [13], dropEst [12], kallisto|bustools [48], STAR-
+solo [ 49], and velocyto [ 10]. These correspond to the method IDs in  [29]: alevin_
+sep_gtr, dropest, kallisto|bus_sep_excl, starsolo, and velocyto, 
+respectively. Each quantification pipeline produced a distinct pair of unspliced and 
+spliced abundance estimates from the same raw sequencing data.
+Supplementary Information
+The online version contains supplementary material available at https:// doi. org/ 10. 1186/ s13059- 026- 04182-z.
+Additional file 1: Supplementary Tables. This file contains Tables S1–S14 related to the datasets, evaluation metrics, 
+benchmarking results, and method settings.
+Additional file 2: Supplementary Figures. This file contains Figs. S1–S20 providing additional visualizations and valida-
+tion analyses.
+Additional file 3: Supplementary Notes. This file contains Notes S1–S11 with additional methodological details, 
+extended analyses, dataset descriptions, and theoretical details.
+(12)x′
+ij ∼ Binomial (xij,α),
+Page 32 of 36Wu et al. Genome Biology          (2026) 27:242 
+Acknowledgements
+We sincerely thank the editors and the two anonymous reviewers for their constructive comments, which helped 
+improve the manuscript.
+Peer review information
+Xin Maizie Zhou and Claudia Feng were the primary editors of this article and managed its editorial process and peer 
+review in collaboration with the rest of the editorial team. The peer-review history is available in the online version of this 
+article.
+Authors’ contributions
+J.L. conceived and designed the study. Y.W. conducted the method collection and implementation with assistance from 
+C.K.; Y.W. and C.K. performed the benchmark evaluations and analyzed the results. J.L., Y.W., and C.K. wrote the manu-
+script, and Y.W., C.K., X.L., Z.L., X.S., and J.L. edited and revised the manuscript. All authors approved the final version.
+Funding
+This work was supported by the National Natural Science Foundation of China (Grant No. 12371283 and 32561160132), 
+Shenzhen Fundamental Research Program (Grant No. JCYJ20240813113518024), the Program for Guangdong Introduc-
+ing Innovative and Entrepreneurial Teams (Grant No. 2023ZT10X044), Shenzhen Science and Technology Program (Shen-
+zhen Key Laboratory Grant No. ZDSYS20230626091302006), the Guangdong Provincial Key Laboratory of Mathematical 
+Foundations for Artificial Intelligence (Grant No. 2023B1212010001), 1+1+1 CUHK-CUHK(SZ)-GDSTC Joint Collaboration 
+Fund (Grant No. 2025A0505000057), Shenzhen Stability Science Program, and Research Grants Council, University Grants 
+Committee (GRF 14300923).
+Data availability
+All datasets used in this study are publicly available, and their details are comprehensively described in Additional file 3: 
+Note S10. Data 1 [7] is available via scvelo.datasets.bonemarrow(). Data 2 [65] can be accessed through 
+scvelo.datasets.dentategyrus(). Data 3 [66] is provided by scvelo.datasets.gastrulation_
+erythroid(). Data 4 [67] is accessible via scvelo.datasets.pancreas(). Processed data derived from 
+different quantification algorithms are available at (https:// www. fmi. ch/ groups/ gbioi nfo/ RNAVe loQua nt/ RNAVe loQua 
+nt. html) [29]. Data 5 [67] is available from the Gene Expression Omnibus (GEO) under accession number GSE132188 
+(https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE13 2188) [68]. Data 6 [14, 69] is publicly accessible through 
+GEO under accession numbers GSE209878 (https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE20 9878) [70] and 
+GSE284047 (https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE28 4047) [71]. Data 7 [72] is available from GEO 
+under accession number GSE162170 (https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE16 2170) [73]. Data 
+8 [40] is hosted at (https:// cell2 fate. cog. sanger. ac. uk/ brows er. html). Data 9 [74] can be loaded using dynamo.sample_
+data.scEU_seq_organoid(). Data 10 [75] is available through dynamo.scNT_seq_neuron_splicing() 
+and dynamo.scNT_seq_neuron_labeling(). Data 11 [76] is hosted on Figshare at (https:// figsh are. com/ artic 
+les/ datas et/ FUCCI_ U2OS_ cells/ 22773 761? file= 40461 716) [77]. Data 12 [78] is available from the European Nucleotide 
+Archive (ENA) under accession number PRJNA803321 (https:// www. ebi. ac. uk/ ena/ brows er/ view/ PRJNA 803321) [79]. 
+Processed data are hosted on Zenodo at (https:// zenodo. org/ recor ds/ 58474 62) [80]. Data 13 [81] is publicly accessible 
+through GEO under accession number GSE142425 (https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE14 
+2425) [82]. Data 14 [83] is available from GEO under accession number GSE190940 (https:// www. ncbi. nlm. nih. gov/ geo/ 
+query/ acc. cgi? acc= GSE19 0940) [84]. Data 15 [85] is included in cellrank.datasets.reprogramming_mor-
+ris(). Data 16 [86] is available from GEO under accession number GSE122662 (https:// www. ncbi. nlm. nih. gov/ geo/ 
+query/ acc. cgi? acc= GSE12 2662) [87]. Data 17 [88] is accessible via scvelo.datasets.pbmc68k(). Data 18 is avail-
+able from 10x Genomics at (https:// www. 10xge nomics. com/ datas ets/ pbm- cs- from-a- healt hy- donor- whole- trans cript 
+ome- analy sis-3- 1- stand ard-4- 0-0) [89]. Data 19 can be downloaded from (https:// www. 10xge nomics. com/ datas ets/8- 
+k- pbm- cs- from-a- healt hy- donor-2- stand ard-2- 1-0) [90]. Data 20 is provided at (https:// www. 10xge nomics. com/ datas 
+ets/ pbm- cs- from-a- healt hy- donor- targe ted- immun ology- panel-3- 1- stand ard-4- 0-0) [91]. Data 21 is available at (https:// 
+www. 10xge nomics. com/ datas ets/ 10-k- pbm- cs- from-a- healt hy- donor-v- 3- chemi stry-3- stand ard-3- 0-0) [92]. Data 22 [93] 
+is available at (https:// doi. org/ 10. 6084/ m9. figsh are. 22575 358. v1) [94] and (https:// doi. org/ 10. 6084/ m9. figsh are. 22575 
+343. v1) [95]. The raw data for Data 22 are available from GEO under accession number GSE70677 (https:// www. ncbi. 
+nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE70 677) [96]. Data 23 [72] is available on GitHub at (https:// github. com/ Green 
+leafL ab/ brain chrom atin/ blob/ main/ links. txt). The raw data for Data 23 are available from GEO under accession number 
+GSE162170 (https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE16 2170) [73]. Data 24 [97] is hosted at (https:// 
+www. 10xge nomics. com/ datas ets/ fresh- embry onic-e- 18- mouse- brain-5- k-1- stand ard-1- 0-0), with processed files avail-
+able from (https:// github. com/ welch- lab/ Multi Velo/ tree/ main/ Examp les). Data 25 [74] is available on Figshare at (https:// 
+figsh are. com/ artic les/ datas et/ FUCCI_ RPE1_ cells/ 22773 776/1? file= 40461 722) [98]. Data 26 [15] can be retrieved using 
+dyn.sample_data.hematopoiesis_raw(). All processed AnnData objects are archived on Zenodo at (https:// 
+doi. org/ 10. 5281/ zenodo. 18051 944) [99]. The VeloEV package is freely available on GitHub at (https:// github. com/ edawu 
+11/ VeloEV) [100] and archived on Zenodo at (https:// doi. org/ 10. 5281/ zenodo. 20183 828) [62] under the MIT license, with 
+documentation and tutorials available at (https:// veloev. readt hedocs. io/ en/ latest/). Code to reproduce all analyses in this 
+study is available on GitHub at (https:// github. com/ edawu 11/ Bench mark- RNA- Veloc ity) [101] and archived on Zenodo at 
+(https:// doi. org/ 10. 5281/ zenodo. 20183 808) [102] under the MIT license.
+Declarations
+Ethics approval and consent to participate
+No ethical approval was required for this study. All utilized public datasets were generated by other organizations that 
+obtained ethical approval.
+Page 33 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+Consent for publication
+Not applicable.
+Competing interests
+X.L. and J.L. are co-authors of SDEvelo, and Z.L. is a co-author of TIVelo, both of which are benchmarked in this study. All 
+other authors have no competing interests to declare.
+Received: 27 January 2026   Accepted: 29 June 2026
+References
+ 1. Wagner A, Regev A, Yosef N. Revealing the vectors of cellular identity with single-cell genomics. Nat Biotechnol. 
+2016;34(11):1145–60. https:// doi. org/ 10. 1038/ nbt. 3711.
+ 2. Griffiths JA, Scialdone A, Marioni JC. Using single-cell genomics to understand developmental processes and cell 
+fate decisions. Mol Syst Biol. 2018;14(4):e8046. https:// doi. org/ 10. 15252/ msb. 20178 046.
+ 3. Weinreb C, Wolock S, Tusi BK, Socolovsky M, Klein AM. Fundamental limits on dynamic inference from single-cell 
+snapshots. Proc Natl Acad Sci U S A. 2018;115(10). https:// doi. org/ 10. 1073/ pnas. 17147 23115.
+ 4. Kharchenko PV. The triumphs and limitations of computational methods for scRNA-seq. Nat Methods. 
+2021;18(7):723–32. https:// doi. org/ 10. 1038/ s41592- 021- 01171-x.
+ 5. Qiu X, Mao Q, Tang Y, Wang L, Chawla R, Pliner HA, et al. Reversed graph embedding resolves complex single-cell 
+trajectories. Nat Methods. 2017;14(10):979–82. https:// doi. org/ 10. 1038/ nmeth. 4402.
+ 6. Street K, Risso D, Fletcher RB, Das D, Ngai J, Yosef N, et al. Slingshot: cell lineage and pseudotime inference for 
+single-cell transcriptomics. BMC Genomics. 2018;19(1):477. https:// doi. org/ 10. 1186/ s12864- 018- 4772-0.
+ 7. Setty M, Kiseliovas V, Levine J, Gayoso A, Mazutis L, Pe’er D. Characterization of cell fate probabilities in single-cell 
+data with Palantir. Nat Biotechnol. 2019;37(4):451–60. https:// doi. org/ 10. 1038/ s41587- 019- 0068-4.
+ 8. Ding J, Sharon N, Bar-Joseph Z. Temporal modelling using single-cell transcriptomics. Nat Rev Genet. 
+2022;23(6):355–68. https:// doi. org/ 10. 1038/ s41576- 021- 00444-7.
+ 9. Saelens W, Cannoodt R, Todorov H, Saeys Y. A comparison of single-cell trajectory inference methods. Nat Biotech-
+nol. 2019;37(5):547–54. https:// doi. org/ 10. 1038/ s41587- 019- 0071-9.
+ 10. La Manno G, Soldatov R, Zeisel A, Braun E, Hochgerner H, Petukhov V, et al. RNA velocity of single cells. Nature. 
+2018;560(7719):494–8. https:// doi. org/ 10. 1038/ s41586- 018- 0414-6.
+ 11. Bergen V, Lange M, Peidli S, Wolf FA, Theis FJ. Generalizing RNA velocity to transient cell states through dynamical 
+modeling. Nat Biotechnol. 2020;38(12):1408–14. https:// doi. org/ 10. 1038/ s41587- 020- 0591-3.
+ 12. Petukhov V, Guo J, Baryawno N, Severe N, Scadden DT, Samsonova MG, et al. DropEst: pipeline for accurate estima-
+tion of molecular counts in droplet-based single-cell RNA-seq experiments. Genome Biol. 2018;19(1):78. https:// 
+doi. org/ 10. 1186/ s13059- 018- 1449-6.
+ 13. Srivastava A, Malik L, Smith T, Sudbery I, Patro R. Alevin efficiently estimates accurate gene abundances from 
+dscRNA-seq data. Genome Biol. 2019;20(1):65. https:// doi. org/ 10. 1186/ s13059- 019- 1670-y.
+ 14. Li C, Virgilio MC, Collins KL, Welch JD. Multi-omic single-cell velocity models epigenome–transcriptome 
+interactions and improves cell fate prediction. Nat Biotechnol. 2023;41(3):387–98. https:// doi. org/ 10. 1038/ 
+s41587- 022- 01476-y.
+ 15. Qiu X, Zhang Y, Martin-Rufino JD, Weng C, Hosseinzadeh S, Yang D, et al. Mapping transcriptomic vector fields of 
+single cells. Cell. 2022;185(4):690–711. https:// doi. org/ 10. 1016/j. cell. 2021. 12. 045.
+ 16. Li T, Wang Y, Yang G, Zhou P . On the mathematics of RNA velocity II: algorithmic aspects. CSIAM Trans Appl Math. 
+2024;5(1):182–220. https:// doi. org/ 10. 4208/ csiam- am. SO- 2023- 0026.
+ 17. Becht E, McInnes L, Healy J, Dutertre CA, Kwok IWH, Ng LG, et al. Dimensionality reduction for visualizing single-
+cell data using UMAP . Nat Biotechnol. 2019;37(1):38–44. https:// doi. org/ 10. 1038/ nbt. 4314.
+ 18. McInnes L, Healy J, Melville J. UMAP: Uniform manifold approximation and projection for dimension reduc-
+tion. arXiv. 2020. https:// doi. org/ 10. 48550/ arXiv. 1802. 03426.
+ 19. Shimamura T. RNA velocity and beyond: current advances in modeling single-cell transcriptional dynamics. Aller-
+gol Int. 2025;74(4):525–33. https:// doi. org/ 10. 1016/j. alit. 2025. 08. 005.
+ 20. Wang Y, Li J, Zha H, Liu S, Huang D, Fu L, et al. Paradigms, innovations, and biological applications of RNA velocity: 
+a comprehensive review. Brief Bioinform. 2025;26(4). https:// doi. org/ 10. 1093/ bib/ bbaf3 39.
+ 21. Bergen V, Soldatov RA, Kharchenko PV, Theis FJ. RNA velocity–current challenges and future perspectives. Mol Syst 
+Biol. 2021;17(8):e10282. https:// doi. org/ 10. 15252/ msb. 20211 0282.
+ 22. Gorin G, Fang M, Chari T, Pachter L. RNA velocity unraveled. PLoS Comput Biol. 2022;18(9):e1010492. https:// doi. 
+org/ 10. 1371/ journ al. pcbi. 10104 92.
+ 23. Zheng SC, Stein-O’Brien G, Boukas L, Goff LA, Hansen KD. Pumping the brakes on RNA velocity by under-
+standing and interpreting RNA velocity estimates. Genome Biol. 2023;24(1):246. https:// doi. org/ 10. 1186/ 
+s13059- 023- 03065-x.
+ 24. Ancheta S, Dorman L, Treut L, Gurung G, Royer A, Granados LA, et al. Challenges and progress in RNA veloc-
+ity: comparative analysis across multiple biological contexts. bioRxiv. 2024. https:// doi. org/ 10. 1101/ 2024. 06. 25. 
+600667.
+ 25. Luo Y, Ren J, Yang Q, You Z, Zhou Y, Qin Q, et al. Benchmarking RNA velocity methods across 17 independent stud-
+ies. Cell Rep Methods. 2026;6(4):101367. https:// doi. org/ 10. 1016/j. crmeth. 2026. 101367.
+ 26. Huang K, Zhou Y, Wang T, Li X, Zhao X, Liu X, et al. Benchmarking algorithms for RNA velocity inference. bioRxiv. 
+2026. https:// doi. org/ 10. 64898/ 2026. 01. 03. 697314.
+ 27. Gao M, Qiao C, Huang Y. UniTVelo: temporally unified RNA velocity reinforces single-cell trajectory inference. Nat 
+Commun. 2022;13(1):6586. https:// doi. org/ 10. 1038/ s41467- 022- 34188-7.
+Page 34 of 36Wu et al. Genome Biology          (2026) 27:242 
+ 28. Qin Q, Bingham E, La Manno G, Langenau DM, Pinello L. Pyro-Velocity: probabilistic RNA velocity inference from 
+single-cell data. bioRxiv. 2022. BioRxiv preprint. https:// doi. org/ 10. 1101/ 2022. 09. 12. 507691.
+ 29. Soneson C, Srivastava A, Patro R, Stadler MB. Preprocessing choices affect RNA velocity results for droplet scRNA-
+seq data. PLoS Comput Biol. 2021;17(1):e1008585. https:// doi. org/ 10. 1371/ journ al. pcbi. 10085 85.
+ 30. Li Q. scTour: a deep learning architecture for robust inference and accurate prediction of cellular dynamics. 
+Genome Biol. 2023;24(1):149. https:// doi. org/ 10. 1186/ s13059- 023- 02988-9.
+ 31. Gayoso A, Weiler P , Lotfollahi M, Klein D, Hong J, Streets A, et al. Deep generative modeling of transcriptional 
+dynamics for RNA velocity analysis in single cells. Nat Methods. 2024;21(1):50–9. https:// doi. org/ 10. 1038/ 
+s41592- 023- 01994-w.
+ 32. Maizels RJ, Snell DM, Briscoe J. Reconstructing developmental trajectories using latent dynamical systems and 
+time-resolved transcriptomics. Cell Syst. 2024;15(5):411–24. https:// doi. org/ 10. 1016/j. cels. 2024. 04. 004.
+ 33. Farrell S, Mani M, Goyal S. Inferring single-cell transcriptomic dynamics with structured latent gene expression 
+dynamics. Cell Rep Methods. 2023;3(9):100581. https:// doi. org/ 10. 1016/j. crmeth. 2023. 100581.
+ 34. Gu Y, Blaauw D, Welch J. Variational mixtures of ODEs for inferring cellular gene expression dynamics. In: Proceed-
+ings of the 39th International Conference on Machine Learning. vol. 162 of Proc Mach Learn Res. PMLR; 2022. p. 
+7888–902. https:// doi. org/ 10. 48550/ arXiv. 2207. 04166.
+ 35. Qiao C, Huang Y. Representation learning of RNA velocity reveals robust cell transitions. Proc Natl Acad Sci. 
+2021;118(49):e2105859118. https:// doi. org/ 10. 1073/ pnas. 21058 59118.
+ 36. Cui H, Maan H, Vladoiu MC, Zhang J, Taylor MD, Wang B. DeepVelo: deep learning extends RNA veloc-
+ity to multi-lineage systems with cell-specific kinetics. Genome Biol. 2024;25(1):27. https:// doi. org/ 10. 1186/ 
+s13059- 023- 03148-9.
+ 37. Li S, Zhang P , Chen W, Ye L, Brannan KW, Le NT, et al. A relay velocity model infers cell-dependent RNA velocity. Nat 
+Biotechnol. 2023;1–10. https:// doi. org/ 10. 1038/ s41587- 023- 01728-5.
+ 38. Marot-Lassauzaie V, Bouman BJ, Donaghy FD, Demerdash Y, Essers MAG, Haghverdi L. Towards reliable quantifica-
+tion of cell state velocities. PLoS Comput Biol. 2022;18(9):e1010031. https:// doi. org/ 10. 1371/ journ al. pcbi. 10100 31.
+ 39. Liao X, Kang L, Peng Y, Chai X, Xie P , Lin C, et al. Multivariate stochastic modeling for transcriptional dynam-
+ics with cell-specific latent time using SDEvelo. Nat Commun. 2024;15(1):10849. https:// doi. org/ 10. 1038/ 
+s41467- 024- 55146-5.
+ 40. Aivazidis A, Memi F, Kleshchevnikov V, Er S, Clarke B, Stegle O, et al. Cell2fate infers RNA velocity modules to 
+improve cell fate prediction. Nat Methods. 2025;22:698–707. https:// doi. org/ 10. 1038/ s41592- 025- 02608-3.
+ 41. Ge M, Miao J, Qi J, Zhou X, Lin Z. Tivelo: RNA velocity estimation leveraging cluster-level trajectory inference. Nat 
+Commun. 2025;16:6258. https:// doi. org/ 10. 1038/ s41467- 025- 61628-x.
+ 42. Chen Y, Zhang Y, Gan J, Ni K, Chen M, Bahar I, et al. Graphvelo allows for accurate inference of multimodal 
+velocities and molecular mechanisms for single cells. Nat Commun. 2025;16:7831. https:// doi. org/ 10. 1038/ 
+s41467- 025- 62784-w.
+ 43. Luecken MD, Büttner M, Chaichoompu K, Danese A, Interlandi M, Mueller MF, et al. Benchmarking atlas-level data 
+integration in single-cell genomics. Nat Methods. 2022;19(1):41–50. https:// doi. org/ 10. 1038/ s41592- 021- 01336-8.
+ 44. Korsunsky I, Millard N, Fan J, Slowikowski K, Zhang F, Wei K, et al. Fast, sensitive and accurate integration of single-
+cell data with Harmony. Nat Methods. 2019;16(12):1289–96. https:// doi. org/ 10. 1038/ s41592- 019- 0619-0.
+ 45. Chen RTQ, Rubanova Y, Bettencourt J, Duvenaud DK. Neural ordinary differential equations. In: Bengio S, Wal-
+lach H, Larochelle H, Grauman K, Cesa-Bianchi N, Garnett R, editors. Advances in Neural Information Processing 
+Systems. vol. 31. Curran Associates, Inc.; 2018. https:// proce edings. neuri ps. cc/ paper_ files/ paper/ 2018/ file/ 69386 
+f6bb1 dfed6 8692a 24c86 86939 b9- Paper. pdf.
+ 46. Arya A, Tripathi P , Dubey N, et al. Navigating single-cell RNA-sequencing: protocols, tools, databases, and applications. 
+Genomics Inform. 2025;23:13. https:// doi. org/ 10. 1186/ s44342- 025- 00044-5.
+ 47. Gerard D. Data-based RNA-seq simulations by binomial thinning. BMC Bioinformatics. 2020;21(1):206. https:// doi. org/ 10. 
+1186/ s12859- 020- 3450-9.
+ 48. Melsted P , Ntranos V, Pachter L. The barcode, UMI, set format and BUStools. Bioinformatics. 2019;35(21):4472–3. https:// 
+doi. org/ 10. 1093/ bioin forma tics/ btz279.
+ 49. Dobin A, Davis CA, Schlesinger F, Drenkow J, Zaleski C, Jha S, et al. STAR: ultrafast universal RNA-seq aligner. Bioinformat-
+ics. 2013;29(1):15–21. https:// doi. org/ 10. 1093/ bioin forma tics/ bts635.
+ 50. Cannoodt R, Saelens W, Deconinck L, Saeys Y. Spearheading future omics analyses using dyngen, a multi-modal simula-
+tor of single cells. Nat Commun. 2021;12(1):3942. https:// doi. org/ 10. 1038/ s41467- 021- 24152-2.
+ 51. Székely GJ, Rizzo ML, Bakirov NK. Measuring and testing independence by correlation of distances. Ann Stat. 
+2007;35(6):2769–94. https:// doi. org/ 10. 1214/ 00905 36070 00000 505.
+ 52. Székely GJ, Rizzo ML. Brownian distance covariance. Ann Appl Stat. 2009;3(4):1236–65. https:// doi. org/ 10. 1214/ 09- AOAS3 
+12.
+ 53. Gorin G, Svensson V, Pachter L. Protein velocity and acceleration from single-cell multiomics experiments. Genome Biol. 
+2020;21(1):39. https:// doi. org/ 10. 1186/ s13059- 020- 1945-3.
+ 54. Li J, Pan X, Yuan Y, Shen HB. TFvelo: gene regulation inspired RNA velocity estimation. Nat Commun. 2024;15(1):1387. 
+https:// doi. org/ 10. 1038/ s41467- 024- 45661-w.
+ 55. Wang K, Hou L, Wang X, Zhai X, Lu Z, Zi Z, et al. PhyloVelo enhances transcriptomic velocity field mapping using mono-
+tonically expressed genes. Nat Biotechnol. 2024;42(5):778–89. https:// doi. org/ 10. 1038/ s41587- 023- 01887-5.
+ 56. Wang W, Hu Z, Weiler P , Mayes S, Lange M, Fountain DM, et al. RegVelo: gene-regulatory-informed dynamics of single 
+cells. Cell. 2026. https:// doi. org/ 10. 1016/j. cell. 2026. 04. 022.
+ 57. Zhou P , Bocci F, Li T, Nie Q. Spatial transition tensor of single cells. Nat Methods. 2024;21(6):1053–62. https:// doi. org/ 10. 
+1038/ s41592- 024- 02266-x.
+Page 35 of 36
+Wu et al. Genome Biology          (2026) 27:242 
+ 
+ 58. Gu Y, Liu J, Lee KH, Li C, Lu L, Moline J, et al. Topological velocity inference from spatial transcriptomic data. Nat Biotech-
+nol. 2025. https:// doi. org/ 10. 1038/ s41587- 025- 02688-8.
+ 59. Long W, Liu T, Xue L, Zhao H. spVelo: RNA velocity inference for multi-batch spatial transcriptomics data. Genome Biol. 
+2025. https:// doi. org/ 10. 1186/ s13059- 025- 03701-8.
+ 60. Logsdon GA, Vollger MR, Eichler EE. Long-read human genome sequencing and its applications. Nat Rev Genet. 
+2020;21(10):597–614. https:// doi. org/ 10. 1038/ s41576- 020- 0236-x.
+ 61. Wu S, Schmitz U. Single-cell and long-read sequencing to enhance modelling of splicing and cell-fate determination. 
+Comput Struct Biotechnol J. 2023;21:2373–80. https:// doi. org/ 10. 1016/j. csbj. 2023. 03. 023.
+ 62. Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. VeloEV: evaluation and visualization for benchmarking RNA velocity methods. 
+2026. Zenodo. https:// doi. org/ 10. 5281/ zenodo. 20183 828.
+ 63. Jost L. Entropy and diversity. Oikos. 2006;113(2):363–75. https:// doi. org/ 10. 1111/j. 2006. 0030- 1299. 14714.x.
+ 64. Shannon CE. A mathematical theory of communication. Bell Syst Tech J. 1948;27(3):379–423. https:// doi. org/ 10. 1002/j. 
+1538- 7305. 1948. tb013 38.x.
+ 65. Hochgerner H, Zeisel A, Lönnerberg P , Linnarsson S. Conserved properties of dentate gyrus neurogenesis across post-
+natal development revealed by single-cell RNA sequencing. Nat Neurosci. 2018;21(2):290–9. https:// doi. org/ 10. 1038/ 
+s41593- 017- 0056-2.
+ 66. Pijuan-Sala B, Griffiths JA, Guibentif C, Hiscock TW, Jawaid W, Calero-Nieto FJ, et al. A single-cell molecular map of mouse 
+gastrulation and early organogenesis. Nature. 2019;566(7745):490–5. https:// doi. org/ 10. 1038/ s41586- 019- 0933-9.
+ 67. Bastidas-Ponce A, Tritschler S, Dony L, Scheibner K, Tarquis-Medina M, Salinno C, et al. Comprehensive single cell mRNA 
+profiling reveals a detailed roadmap for pancreatic endocrinogenesis. Development. 2019. https:// doi. org/ 10. 1242/ 
+dev. 173849.
+ 68. Bastidas-Ponce A, Tritschler S, Dony L, Scheibner K, Tarquis-Medina M, Salinno C, et al. Comprehensive single cell mRNA 
+profiling reveals a detailed roadmap for pancreatic endocrinogenesis. 2019. Gene Expression Omnibus. https:// www. 
+ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE13 2188.
+ 69. Li C, Gu Y, Virgilio MC, Lee KH, Collins KL, Welch JD. Inferring differential dynamics from multi-lineage, multi-omic, 
+and multi-sample single-cell data with MultiVeloVAE. Nat Commun. 2025;16(1):11505. https:// doi. org/ 10. 1038/ 
+s41467- 025- 66287-6.
+ 70. Li C, Virgilio MC, Collins KL, Welch JD. Multi-omic single-cell velocity models epigenome–transcriptome interactions and 
+improves cell fate prediction. 2023. Gene Expression Omnibus. https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? 
+acc= GSE20 9878.
+ 71. Li C, Gu Y, Virgilio MC, Lee KH, Collins KL, Welch JD. Inferring differential dynamics from multi-lineage, multi-omic, and 
+multi-sample single-cell data with MultiVeloVAE. 2025. Gene Expression Omnibus. https:// www. ncbi. nlm. nih. gov/ geo/ 
+query/ acc. cgi? acc= GSE28 4047.
+ 72. Trevino AE, Müller F, Andersen J, Sundaram L, Kathiria A, Shcherbina A, et al. Chromatin and gene-regulatory dynamics of 
+the developing human cerebral cortex at single-cell resolution. Cell. 2021;184(19):5053-5069.e23. https:// doi. org/ 10. 
+1016/j. cell. 2021. 07. 039.
+ 73. Trevino AE, Müller F, Andersen J, Sundaram L, Kathiria A, Shcherbina A, et al. Chromatin and gene-regulatory dynamics of 
+the developing human cerebral cortex at single-cell resolution. 2021. Gene Expression Omnibus. https:// www. ncbi. 
+nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE16 2170.
+ 74. Battich N, Beumer J, De Barbanson B, Krenning L, Baron CS, Tanenbaum ME, et al. Sequencing metabolically labeled 
+transcripts in single cells reveals mRNA turnover strategies. Science. 2020;367(6482):1151–6. https:// doi. org/ 10. 1126/ 
+scien ce. aax30 72.
+ 75. Qiu Q, Hu P , Qiu X, Govek KW, Cámara PG, Wu H. Massively parallel and time-resolved RNA sequencing in single cells with 
+scNT-seq. Nat Methods. 2020;17(10):991–1001. https:// doi. org/ 10. 1038/ s41592- 020- 0935-4.
+ 76. Mahdessian D, Cesnik AJ, Gnann C, Danielsson F, Stenström L, Arif M, et al. Spatiotemporal dissection of the cell cycle 
+with single-cell proteogenomics. Nature. 2021;590(7847):649–54. https:// doi. org/ 10. 1038/ s41586- 021- 03232-9.
+ 77. Weiler P , Gayoso A. FUCCI U2OS cells. 2023. Figshare. https:// figsh are. com/ artic les/ datas et/ FUCCI_ U2OS_ cells/ 22773 761? 
+file= 40461 716.
+ 78. Yang D, Jones MG, Naranjo S, Rideout WM, Min KH, Ho R, et al. Lineage tracing reveals the phylodynamics, plasticity, and 
+paths of tumor evolution. Cell. 2022;185(11):1905-1923.e25. https:// doi. org/ 10. 1016/j. cell. 2022. 04. 015.
+ 79. Yang D, Jones MG, Naranjo S, Rideout WM, Min KH, Ho R, et al. Raw sequencing data for “Lineage tracing reveals the 
+phylodynamics, plasticity, and paths of tumor evolution” . European Nucleotide Archive. 2022. https:// www. ebi. ac. uk/ 
+ena/ brows er/ view/ PRJNA 803321.
+ 80. Yang D, Jones MG, Naranjo S, Rideout WM, Min KH, Ho R, et al. Processed data for KP-Tracer tumors from study “Lineage 
+Recording Reveals the Phylodynamics, Plasticity and Paths of Tumor Evolution” . Zenodo. 2021. https:// doi. org/ 10. 5281/ 
+zenodo. 58474 62.
+ 81. Kelly NH, Huynh NPT, Guilak F. Single cell RNA-sequencing reveals cellular heterogeneity and trajectories of lineage 
+specification during murine embryonic limb development. Matrix Biol. 2020;89:1–10. https:// doi. org/ 10. 1016/j. matbio. 
+2019. 12. 004.
+ 82. Kelly NH, Huynh NPT, Guilak F. Single cell RNA-sequencing reveals cellular heterogeneity and trajectories of lineage 
+specification during murine embryonic limb development. 2020. Gene Expression Omnibus. https:// www. ncbi. nlm. 
+nih. gov/ geo/ query/ acc. cgi? acc= GSE14 2425.
+ 83. Cheng S, Butrus S, Tan L, Xu R, Sagireddy S, Trachtenberg JT, et al. Vision-dependent specification of cell types and func-
+tion in the developing cortex. Cell. 2022;185(2):311-327.e24. https:// doi. org/ 10. 1016/j. cell. 2021. 12. 022.
+ 84. Cheng S, Butrus S, Tan L, Xu R, Sagireddy S, Trachtenberg JT, et al. Vision-dependent specification of cell types and func-
+tion in the developing cortex. 2022. Gene Expression Omnibus. https:// www. ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? 
+acc= GSE19 0940.
+ 85. Biddy BA, Kong W, Kamimoto K, Guo C, Waye SE, Sun T, et al. Single-cell mapping of lineage and identity in direct repro-
+gramming. Nature. 2018;564(7735):219–24. https:// doi. org/ 10. 1038/ s41586- 018- 0744-4.
+Page 36 of 36Wu et al. Genome Biology          (2026) 27:242 
+ 86. Schiebinger G, Shu J, Tabaka M, Cleary B, Subramanian V, Solomon A, et al. Optimal-transport analysis of single-cell gene 
+expression identifies developmental trajectories in reprogramming. Cell. 2019;176(4):928-943.e22. https:// doi. org/ 10. 
+1016/j. cell. 2019. 01. 006.
+ 87. Schiebinger G, Shu J, Tabaka M, Cleary B, Subramanian V, Solomon A, et al. Optimal-transport analysis of single-cell gene 
+expression identifies developmental trajectories in reprogramming. 2019. Gene Expression Omnibus. https:// www. 
+ncbi. nlm. nih. gov/ geo/ query/ acc. cgi? acc= GSE12 2662.
+ 88. Zheng GXY, Terry JM, Belgrader P , Ryvkin P , Bent ZW, Wilson R, et al. Massively parallel digital transcriptional profiling of 
+single cells. Nat Commun. 2017;8(1):14049. https:// doi. org/ 10. 1038/ ncomm s14049.
+ 89. 10x Genomics. PBMCs from a healthy donor: whole transcriptome analysis; 2020. Human PBMCs (female donor, age 25) 
+obtained from AllCells. Whole transcriptome libraries prepared with Chromium Next GEM Single Cell 3’ Reagent Kits 
+v3.1 (Dual Index) and analyzed using Cell Ranger 4.0.0. Sequenced on Illumina NovaSeq 6000 at 69,859 read pairs per 
+cell (paired-end 28 × 91 bp, dual indexing). Final dataset includes 10,194 cells. https:// www. 10xge nomics. com/ datas 
+ets/ pbm- cs- from-a- healt hy- donor- whole- trans cript ome- analy sis-3- 1- stand ard-4- 0-0.
+ 90. 10x Genomics. 8k PBMCs from a healthy donor; 2017. Human PBMCs from a healthy donor. Universal 3’  libraries 
+processed with cellranger count using Cell Ranger 2.1.0. Generated on a Chromium Controller. Final dataset 
+contains 8,381 cells. https:// www. 10xge nomics. com/ datas ets/8- k- pbm- cs- from-a- healt hy- donor-2- stand ard-2- 1-0.
+ 91. 10x Genomics. PBMCs from a healthy donor: targeted immunology panel; 2020. Human PBMCs from a healthy donor. 
+Universal 3’ targeted immunology panel libraries processed with cellranger count using Cell Ranger 4.0.0. 
+Generated on a Chromium Controller. Final dataset contains 10,497 cells. https:// www. 10xge nomics. com/ datas ets/ 
+pbm- cs- from-a- healt hy- donor- targe ted- immun ology- panel-3- 1- stand ard-4- 0-0.
+ 92. 10x Genomics. 10k PBMCs from a healthy donor; 2018. Human PBMCs from a healthy donor. Generated with Chro-
+mium Single Cell 3’ v3 chemistry and processed using cellranger count in Cell Ranger 3.0.0. Produced on a 
+Chromium Controller. Final dataset contains 11,769 cells. https:// www. 10xge nomics. com/ datas ets/ 10-k- pbm- cs- from-
+a- healt hy- donor-v- 3- chemi stry-3- stand ard-3- 0-0.
+ 93. Romano O, Peano C, Tagliazucchi GM, Petiti L, Poletti V, Cocchiarella F, et al. Transcriptional, epigenetic and retroviral 
+signatures identify regulatory regions involved in hematopoietic lineage commitment. Sci Rep. 2016;6:24724. https:// 
+doi. org/ 10. 1038/ srep2 4724.
+ 94. Repucci J. Human HSPC RNA data. 2023. Figshare. https:// doi. org/ 10. 6084/ m9. figsh are. 22575 358. v1.
+ 95. Repucci J. Human HSPC ATAC data. 2023. Figshare. https:// doi. org/ 10. 6084/ m9. figsh are. 22575 343. v1.
+ 96. Romano O, Peano C, Tagliazucchi GM, Petiti L, Poletti V, Cocchiarella F, et al. Genome-wide definition of regulatory ele-
+ments in hematopoietic stem cell differentiation. 2016. Gene Expression Omnibus. https:// www. ncbi. nlm. nih. gov/ 
+geo/ query/ acc. cgi? acc= GSE70 677.
+ 97. 10x Genomics. Fresh embryonic E18 mouse brain (5k); 2020. Fresh E18 mouse brain nuclei (cortex, hippocampus, 
+ventricular zone) processed with Chromium Single Cell Multiome ATAC + Gene Expression chemistry and analyzed 
+using cellranger-arc count in Cell Ranger ARC 1.0.0. Final dataset contains 4,881 nuclei. https:// www. 10xge 
+nomics. com/ datas ets/ fresh- embry onic-e- 18- mouse- brain-5- k-1- stand ard-1- 0-0.
+ 98. Weiler P , Gayoso A. FUCCI RPE1 cells; 2023. Figshare. https:// doi. org/ 10. 6084/ m9. figsh are. 22773 776.
+ 99. Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. Processed AnnData objects for “Comprehensive benchmarking of RNA velocity 
+methods across single-cell datasets” . 2026. Zenodo. https:// doi. org/ 10. 5281/ zenodo. 18051 944.
+ 100. Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. VeloEV: evaluation and visualization for benchmarking RNA velocity methods. 
+2026. GitHub. https:// github. com/ edawu 11/ VeloEV.
+ 101. Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. Comprehensive benchmarking of RNA velocity methods across single-cell data-
+sets. 2026. GitHub. https:// github. com/ edawu 11/ Bench mark- RNA- Veloc ity.
+ 102. Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. Comprehensive benchmarking of RNA velocity methods across single-cell 
+datasets. 2026. Zenodo. https:// doi. org/ 10. 5281/ zenodo. 20183 808.
+Publisher’s Note
+Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
