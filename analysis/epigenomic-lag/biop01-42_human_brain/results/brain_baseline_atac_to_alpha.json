@@ -1,0 +1,16 @@
+{
+  "n_alpha_genes": 553,
+  "n_matched": 553,
+  "simple_spearman_atac_mean_vs_logalpha": 0.2122,
+  "p_value": 4.727935558907992e-07,
+  "simple_spearman_detrate": 0.2343,
+  "cv_spearman_ridge": 0.1882,
+  "cv_spearman_rf": 0.2487,
+  "target": "log10(alpha)",
+  "features": [
+    "atac_mean",
+    "atac_detrate",
+    "atac_var"
+  ],
+  "note": "held-out gene-level 5-fold CV. baseline 크로마틴(ATAC gene activity)이 전사속도 α를 예측하는지. HSPC baseline→α ρ≈+0.31과 대조."
+}

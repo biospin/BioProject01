@@ -1,0 +1,19 @@
+{
+  "hspc_vae_vs_brain_vae": {
+    "shared": 142,
+    "spearman": 0.406,
+    "p": 5.366512752187431e-07
+  },
+  "brain_vae_vs_brain_scvelo": {
+    "shared": 553,
+    "spearman": 0.6619,
+    "p": 5.491561714809895e-71
+  },
+  "hspc_mv_vs_brain_vae": {
+    "shared": 129,
+    "spearman": 0.3002,
+    "p": 0.0005469163600335404
+  },
+  "criterion": "|Spearman|>0.3",
+  "note": "MultiVeloVAE 정제. same-method(VAE) cross-dataset이 §7 최약축 직결."
+}

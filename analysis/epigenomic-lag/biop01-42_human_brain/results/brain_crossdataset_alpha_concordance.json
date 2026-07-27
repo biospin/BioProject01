@@ -1,0 +1,19 @@
+{
+  "hspc_vs_existing_brain": {
+    "shared": 102,
+    "spearman": 0.4752,
+    "p": 4.485575024379425e-07
+  },
+  "hspc_vs_my_fresh_brain": {
+    "shared": 61,
+    "spearman": 0.5152,
+    "p": 2.15368559309917e-05
+  },
+  "existing_vs_my_brain": {
+    "shared": 259,
+    "spearman": 0.6658,
+    "p": 1.5140065671916126e-34
+  },
+  "criterion": "|Spearman|>0.3 재현",
+  "note": "a rank cross-dataset. 기존 파이프라인 concordance_human_brain.md +0.475 대조."
+}

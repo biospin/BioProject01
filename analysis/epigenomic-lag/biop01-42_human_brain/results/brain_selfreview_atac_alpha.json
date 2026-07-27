@@ -1,0 +1,12 @@
+{
+  "n_genes": 553,
+  "simple_spearman_atac_alpha": 0.2122,
+  "atac_vs_expression": 0.4182,
+  "expression_vs_alpha": 0.5039,
+  "partial_spearman_controlling_expression": 0.0133,
+  "partial_p": 0.7542437682102867,
+  "shuffle_null_mean": 0.0006,
+  "shuffle_null_thr_2sd": 0.0869,
+  "real_above_null": true,
+  "verdict": "발현 통제 후 partial + shuffle-null 위면 진짜 chromatin→α 신호"
+}
