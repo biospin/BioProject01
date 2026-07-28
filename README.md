@@ -35,7 +35,6 @@ lag은 method 간 크기·방향 모두 재현되지 않고, ATAC 셔플 음성�
 | `docs/` | 랩 지도 `HARNESS.md` · 인프라 정본 `SHARED-INFRA-GUIDE.md` · 로드맵/정합성 보고 |
 | `guide/` | 과제·가이드 원문(주차별 과제, 프로젝트 기획서) |
 | `onboarding_gglee/` | 온보딩 1~3주차 산출물·회고 |
-| `ai_scientist/` | "AI scientist" 구성 개념 문서(하네스 설계 배경) |
 | `artifacts/` | 파이프라인 run 로그·리포트 요약 보관 규칙 |
 | `CLAUDE.md` | 에이전트 운영 규칙 — 라우팅표·산출물 계약·**완료의 정의(DoD)**·commit 규칙 |
 | `BIOP02_LINK.md` | BIOP02(SpatialPathoAgent)와의 cross-reference. **요약본, 정본 아님** |
