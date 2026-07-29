@@ -5,7 +5,7 @@ draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md
 저자·소속·교신·IP·accession·repository는 <FILL> 유지.
 -->
 
-# single-cell kinetics에서 multiome RNA velocity 출력의 신뢰도 지도
+# single-cell kinetics에서 유전자별 multiome RNA velocity 모수의 신뢰도 지도
 
 **저자:** <FILL: author list>
 
@@ -21,11 +21,11 @@ draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md
 
 **배경.** Chromatin 정보를 결합한("multiome") RNA velocity 방법들은 유전자별로 여러 값을 산출한다. 전사 속도(transcription rate), 분해 속도(degradation rate), 그리고 chromatin에서 transcription으로 이어지는 *시간차(lag)*, 곧 locus가 열리거나 닫히는 시점과 그 유전자의 transcription이 전환되는 시점 사이의 오프셋이 그것이다. 이 값들은 저마다 생물학적 판독값으로 제안되어 왔고, 특히 시간차(lag)는 epigenetic 약물 반응의 timing을 예측하는 데 쓸 수 있다고 여겨져 왔다. 그러나 파생된 값을 하류에서 쓰려면 그것이 먼저 *신뢰할 수 있어야* 한다. 곧 합리적인 알고리즘들에 걸쳐 재현되어야 하고, 가능하다면 독립적인 측정값과도 부합해야 한다. 우리는 인간 조혈모·전구세포(hematopoietic stem and progenitor cells, HSPC; 10x Multiome으로 프로파일링)에서 어떤 velocity 출력이 이 기준을 충족하는지를 물었다.
 
-**접근.** 최대 다섯 개의 velocity arm(갈래)(RNA 전용 scVelo floor에 MultiVelo, MultiVeloVAE, MoFlow, CRAK-Velo를 더한 것)에 걸쳐 각 출력을 네 축에서 검정했다. 방법 간 재현성(순열 FDR), lineage 내 ATAC-shuffle 인과 대조군, 다섯 개 외부 multiome(그중 하나는 사전등록)에서의 cross-dataset 재현, 그리고 fitting된 속도가 측정된 합성(K562 TT-seq)·분해(mRNA 반감기) 속도에 외부 anchoring되는지가 그것이다.
+**접근.** 최대 다섯 개의 velocity arm(갈래)(RNA 전용 scVelo floor에 MultiVelo, MultiVeloVAE, MoFlow, CRAK-Velo를 더한 것)에 걸쳐 각 출력을 네 축에서 검정했다. 방법 간 재현성(순열 FDR), lineage 내 ATAC-shuffle 인과 대조군, 다섯 개 외부 multiome(그중 하나는 사전등록)에서의 cross-dataset 재현, 그리고 fitting된 속도가 측정된 합성(K562 TT-seq)·분해(mRNA 반감기) 속도에 외부 anchoring되는지가 그것이다. 우리는 유전자별 kinetic parameter와, 한 단계 위인 세포×유전자 velocity 행렬을 감사 대상으로 삼았다. velocity가 주로 쓰이는 저차원 임베딩(embedding) arrow나 궤적(trajectory)은 감사 대상에 포함하지 않았다.
 
 **결과.** 출력들은 뚜렷이 갈라졌다. 전사 속도 α만 방법 간에 재현되었고(Spearman ρ=0.88, 관측값), chromatin에서 transcription으로 이어지는 시간차(lag)와 분해 속도 γ는 그렇지 않았다. 시간차(lag)는 크기에서 잘해야 약하게 재현되었고(가장 강한 쌍 ρ=+0.163, 대부분의 쌍 |ρ|≤0.08) 부호에서는 우연 수준에 그쳤으며(54.6%), ATAC를 뒤섞어도 통계적으로 변하지 않아 시간차(lag)가 chromatin에서 비롯된 것이 아니라 모델 구조에서 비롯됨을 드러냈다. 분해 속도 γ도 마찬가지로 방법에 취약했고(방법 간 ρ≈−0.1), ground truth가 있는 곳에서도 복원되지 않았다(K562 반감기 3/3 귀무; 교과서적 scVelo γ는 반대로 나와 −0.224, CI가 0 배제). 외부 보강 증거로서, fitting된 α는 세 방법 모두에서 측정된 K562 TT-seq 합성 속도와도 상관했다(비-housekeeping ρ +0.24 ~ +0.29, 모든 CI가 0 배제). 다만 steady-state transcript abundance가 같은 측정값을 최소한 그만큼 잘 예측하므로(Spearman(abundance, 합성)=+0.410 대 Spearman(α, 합성)=+0.262), 이를 α가 유일하게 측정에 기반한 출력이라는 근거가 아니라 일관성 증거로 읽는다. α가 시간차(lag)보다 앞선다는 순서는 여섯 개 시스템 모두에서 유지되었고, 어떤 fitting보다 먼저 봉인한 사전등록 6-of-6 채점표(scorecard)를 통과했다. 프로파일 우도(profile-likelihood) 분석은 그 기제를 주었다. α는 stiff(식별 가능)한 반면 시간차(lag)는 sloppy하고 경계에 제약되며, 이 식별가능성은 외부 검증과 부분적으로 정렬하나 확증적으로 정렬하지는 않는다.
 
-**결론.** 우리는 이 결과를 velocity 출력 신뢰도 지도로 정리한다. α와 속도에서 파생된 신호는 신뢰한다(방법 간에 재현되고 외부 측정으로 보강되므로 직접 사용 가능). 시간차(lag), 그 부호, 절대 timing, 그리고 γ는 신뢰할 수 없는 것으로 다루며 직교(orthogonal) 검증을 요구한다. 하류의 어떤 timing 예측 모델이든 단일 방법의 시간차(lag)가 아니라 강건한 baseline-ATAC-to-α 경로를 거쳐야 한다.
+**결론.** 우리는 이 결과를 velocity 출력 신뢰도 지도로 정리한다. α와 속도에서 파생된 신호는 신뢰할 수 있다. 다만 α는 방법 간에 재현되면서도 대체로 발현량을 반영하는 값이어서, steady-state abundance가 같은 외부 측정값을 α만큼, 또는 그 이상으로 예측하므로 α가 abundance를 넘어서는 합성률 정보를 더한다고는 입증되지 않는다. 시간차(lag), 그 부호, 절대 timing, 그리고 γ는 신뢰할 수 없는 것으로 다루며 직교(orthogonal) 검증을 요구한다. 하류의 어떤 timing 예측 모델이든 단일 방법의 시간차(lag)가 아니라 강건한 baseline-ATAC-to-α 경로를 거쳐야 한다.
 
 **키워드:** RNA velocity, single-cell multiome, chromatin accessibility, transcriptional kinetics, parameter identifiability, external validation, benchmarking, hematopoiesis
 
