@@ -307,7 +307,7 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 [9] Gayoso A, Weiler P, Lotfollahi M, et al. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. *Nature Methods* 21, 50–59 (2024). doi:10.1038/s41592-023-01994-w.
 
-[10] Gu Y, et al. Bayesian inference of RNA velocity incorporating timepoints, lineage bifurcations, and count data (veloVAE). *PLOS Computational Biology* 22(3), e1014060 (2026). doi:10.1371/journal.pcbi.1014060. [Distinct from MultiVeloVAE [2].]
+[10] Gu Y, et al. Bayesian inference of RNA velocity incorporating timepoints, lineage bifurcations, and count data (veloVAE). *PLOS Computational Biology* 22(3), e1014060 (2026). doi:10.1371/journal.pcbi.1014060. [Distinct from MultiVeloVAE [4].]
 
 [11] Qiao C, Huang Y. Representation learning of RNA velocity reveals robust cell transitions. *Proceedings of the National Academy of Sciences* 118(49), e2105859118 (2021). doi:10.1073/pnas.2105859118.
 
