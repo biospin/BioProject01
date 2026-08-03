@@ -414,7 +414,7 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 [54] Lederer AR, Leonardi M, Talamanca L, et al. Statistical inference with a manifold-constrained RNA velocity model uncovers cell cycle speed modulations. *Nature Methods* 21(12), 2271–2286 (2024). doi:10.1038/s41592-024-02471-8.
 
-[55] Gu et al. Profile-likelihood identifiability analysis of single-cell transcription (telegraph) kinetics. *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/btaf581. [Distinct from [8].]
+[55] Gu et al. Profile-likelihood identifiability analysis of single-cell transcription (telegraph) kinetics. *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/btaf581.
 
 [56] Wang. Sloppiness and Action Constraint in Cell State Transitions: Are Single Cells Sloppy? bioRxiv 2025.12.31.697145 (v2, 2025). [Methodological analog on cell-state Gaussian coordinates.]
 
