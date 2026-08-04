@@ -47,7 +47,7 @@ description: 논문 생산 루프의 입구(진행표/팀장). "논문 풀 파�
 3. **분석·eval** — `hspc-velocity-analyst` → `results/FINDINGS.md` + result 파일 갱신. mock 경고 확인.
 4. **집필 + 그림** — `manuscript-writer` → `manuscript/draft_v2.md` + `draft_v2_ko.md`(영/한 동시). 그림은 `figures/figNN_*.py` 실행 → `figures/`. 그림만 재실행이면 이 단계만(결정론적, 결과 파일에서 생성).
 5. **검수** — `paper-critic`(적대적 + 그림 시각 QA) → 지적 노트. 블로킹이면 6으로, 경미하면 메모만.
-6. **수정** — `manuscript-writer`가 critic 지적 반영 → 본문 갱신.
+6. **수정** — `manuscript-writer`가 critic 지적 반영 → 본문 갱신. **수정 락(BIOP01-81 항목1)**: 초안 재작성이 아니라 지적받은 부분만 `Edit`로 국소 수정한다(`Write` 통째 덮어쓰기 금지). 검증된 헤드라인 숫자·인용 `[n]`은 건드리지 않는다. 수정 후 `python3 pipeline/hspc-velocity-benchmark/scripts/check_revision_preserved.py`로 사라지거나 바뀐 헤드라인 토큰이 없는지 확인하고, exit 1이면 멈추고 사람에게 보고한다.
 7. **검증 게이트 ①(결과 검증)** — 아래 verify-gate 실행. **실패하면 멈추고 사람에게 보고**, 커밋·발행하지 않는다. 원본 하네스 규칙: *"paper-critic + gate FIRST, then reviewer — reviewer assumes pre-submission QA is done"*(`paper-production-harness/agents/paper-orchestrator.md:23`). 숫자가 검증되지 않은 원고를 리뷰에 보내지 않는다. (BIOP01-72)
 8. **(선택) 정식 리뷰** — 요청 시 `venue-reviewer` → `manuscript/REVIEW-<venue>-<date>.md`. **7을 통과한 원고만** 입력한다.
 8.5 **검증 게이트 ②(패키지 검증, 공개 직전)** — 원고 본문 숫자 ↔ 결과 파일 재대조 + 그림·표·supplementary 동봉 확인. 리뷰 반영으로 본문이 바뀌었을 수 있으므로 **공개 전 한 번 더** 돌린다.

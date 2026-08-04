@@ -53,3 +53,14 @@ Output is scientific prose + figures. **Research/education only; not clinical.**
   disclaimer. Ask before choosing a target journal / paying any APC (prefer No-APC / Diamond-OA). Pure
   writing/plotting — do not run the analysis pipeline. Commit messages: Author `kakyungkim <kakyung.kim@gmail.com>`,
   no Claude attribution (project rule).
+
+## 수정 단계 규율 — 고치되 다시 쓰지 마라 (revision lock, BIOP01-81)
+critic/reviewer **지적을 반영하는 수정**은 초안 집필과 다르게 다룬다. 검증이 끝난 헤드라인 숫자·인용이 재작성 과정에서 조용히 바뀌는 것을 막기 위한 규율이다.
+- **`Write`(통째 덮어쓰기) 금지, `Edit`(외과적 패치)만.** `draft_v2.md`·`draft_v2_ko.md`를 처음부터 다시 쓰지 말고, 지적받은 부분만 국소 수정한다. 큰 재구성이 필요하면 사람에게 먼저 알린다.
+- **검증된 값은 건드리지 않는다.** FINDINGS/result 파일로 검증된 헤드라인 숫자(예: lag ρ=0.185, α ρ=0.475, p<1e-6, n)와 인용 마커 `[n]`은 그대로 둔다. 그 값 자체를 바꿔야 하면, 바꾸기 전에 결과 파일로 재검증하고 근거를 남긴다.
+- **수정 후 보존 가드 실행(필수).** 수정을 커밋하기 전에 아래를 돌려 사라지거나 바뀐 헤드라인 토큰이 없는지 확인한다. exit 1이면 멈추고 사람에게 보고한다.
+  ```bash
+  cd pipeline/hspc-velocity-benchmark
+  python3 scripts/check_revision_preserved.py   # git HEAD 판본 대비 draft_v2{,_ko}.md 숫자·인용 보존 확인
+  ```
+- 이 규율은 도구 권한과 결정론적 가드로 강제하는 것이 목표다. 프롬프트 준수에만 기대지 않는다(§6.1 설계, `ai_scientist/`).
