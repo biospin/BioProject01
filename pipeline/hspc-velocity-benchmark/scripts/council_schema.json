@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Scientist 다중 모델 적대적 검토 — 세션 출력 스키마 (BIOP01-81 항목3)",
+  "description": "한 모델·한 세션의 구조적 검토 출력. council_synthesize.py가 이 형식의 파일 여러 개를 읽어 메타리뷰 골격을 만든다. 근거: docs/adversarial_multi_llm_council_harness.md, ai_scientist/02 §6.1.",
+  "type": "object",
+  "required": ["model", "session", "target"],
+  "properties": {
+    "model": {"type": "string", "enum": ["claude", "gpt", "gemini"], "description": "검토를 수행한 모델"},
+    "session": {"type": "string", "description": "독립 세션 식별자 (예: S1-original, on-claude, on-gpt, on-gemini)"},
+    "target": {"type": "string", "enum": ["original", "claude-critique", "gpt-critique", "gemini-critique"],
+               "description": "이 세션의 주 심사 대상 (원본 아이디어 또는 특정 모델의 원본 비판)"},
+    "claims": {
+      "type": "array",
+      "description": "원본 아이디어에서 식별한 주장과 그 판정",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "verdict"],
+        "properties": {
+          "id": {"type": "string"},
+          "text": {"type": "string"},
+          "verdict": {"type": "string",
+            "enum": ["Proven", "Plausible", "Speculative", "Unsupported", "Incorrect"],
+            "description": "claim 분류 taxonomy"},
+          "evidence": {"type": "string", "description": "판정 근거(문헌·데이터). 없으면 빈 문자열"},
+          "citations": {"type": "array", "items": {"type": "string"}, "description": "refs.bib 키 또는 DOI"}
+        }
+      }
+    },
+    "critiques": {
+      "type": "array",
+      "description": "제기한 비판(원본 대상) 또는 재비판(다른 리뷰 대상)의 판정",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "verdict"],
+        "properties": {
+          "id": {"type": "string"},
+          "text": {"type": "string"},
+          "verdict": {"type": "string",
+            "enum": ["Valid-and-Fatal", "Valid-but-Fixable", "Partially-Valid", "Weak", "Incorrect", "Hallucinated"],
+            "description": "비판 분류 taxonomy"},
+          "targets_claim": {"type": "string", "description": "이 비판이 겨냥한 claim id(있으면)"},
+          "evidence": {"type": "string"},
+          "citations": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}
