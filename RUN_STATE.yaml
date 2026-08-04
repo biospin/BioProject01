@@ -1,0 +1,74 @@
+# RUN_STATE.yaml — 논문 생산 하네스 실행 상태 (BIOP01-68)
+# ---------------------------------------------------------------------------
+# 목적: orchestrator(→ runner)를 "프롬프트 묶음"이 아니라 "상태를 가진 생산
+#       시스템"으로 만든다. 세션이 끊기거나 사람이 개입해도 다음에 무엇을
+#       해야 하는지를 대화 기록이 아니라 이 파일에서 판단한다.
+#
+# 계층: 이 파일은 harness 3계층(BIOP01-67) 중 "run instance" 계층이다.
+#       core harness / project profile 는 코드·문서로 고정, run instance 만
+#       실행마다 바뀐다. → docs/HARNESS-LAYERS.md
+#
+# 읽는 주체: paper_planner(계획) 는 읽기만, paper_runner(실행) 만 갱신한다
+#            (BIOP01-70 권한 분리). runner 는 매 단계 시작 전 이 파일을 읽어
+#            이미 통과한 게이트를 건너뛰고, 실패·재시작 이력을 남긴다.
+#
+# 갱신 규칙:
+#   - 한 stage 를 끝내면 stages[].status 와 관련 gate 를 함께 갱신한다.
+#   - artifact 를 새로 쓰면 sha256 을 다시 계산해 넣는다(내용 변경 감지용).
+#   - source_commit 이 바뀌면(코드/데이터 수정) 어떤 게이트를 다시 통과해야
+#     하는지는 gates[].source_commit 과 현재 커밋을 비교해 판단한다:
+#     현재 커밋 != 통과 당시 커밋이면 그 게이트는 stale → 재실행 대상.
+# ===========================================================================
+
+schema_version: 1
+
+# --- 실행 식별 ---
+run_id: null                 # 예: "20260804-hspc-v2" — runner 가 새 실행 시작 시 채운다
+source_commit: null          # 이 실행이 근거한 리포 커밋(HEAD). 게이트 stale 판정 기준
+source_data_pin: null        # 데이터셋 버전/체크섬 핀(있으면). 재현성 기준
+started_at: null             # ISO8601. runner 가 채운다
+updated_at: null             # ISO8601. 갱신마다 runner 가 채운다
+
+# --- 현재 위치 ---
+# stage 는 아래 stages[] 의 name 중 하나. runner 는 이 값 다음 단계만 진행한다.
+stage: not_started
+
+# --- 파이프라인 단계 ---
+# status: pending | running | done | failed | skipped
+# gate: 이 단계 완료가 통과시켜야 하는 게이트(gates[] 의 key). 없으면 null.
+stages:
+  - { name: analysis,            status: pending, gate: null }
+  - { name: result_validation,   status: pending, gate: result_validation }   # 자동 무결성(분석 직후)
+  - { name: writing,             status: pending, gate: null }
+  - { name: figures,             status: pending, gate: null }
+  - { name: review,              status: pending, gate: null }                 # (선택) venue-reviewer. 게이트 앞에 온다
+  - { name: package_validation,  status: pending, gate: package_validation }   # 자동 무결성(공개 직전)
+  - { name: claim_defensibility, status: pending, gate: claim_defensibility }  # 과학 판단(사람)
+  - { name: release,             status: pending, gate: release }              # 거버넌스(사람)
+
+# --- 게이트 통과 기록 ---
+# harness.yaml 의 gates 와 key 가 일치해야 한다(doctor 대조 대상).
+# status: not_run | pass | fail | approved | rejected
+# commit: 이 게이트를 통과시킨 시점의 source_commit. 현재 커밋과 다르면 stale.
+# approved_by: 사람 승인 게이트(claim_defensibility/release)만. 자동 게이트는 null.
+gates:
+  result_validation:   { status: not_run, commit: null, approved_by: null }
+  package_validation:  { status: not_run, commit: null, approved_by: null }
+  claim_defensibility: { status: not_run, commit: null, approved_by: null }   # advisor 판단 필요
+  release:             { status: not_run, commit: null, approved_by: null }   # 저자·소속·IP·corresponding·data_release
+
+# --- 산출물 상태 ---
+# path 는 harness.yaml 의 artifacts 와 일치. sha256 은 내용 변경 감지용.
+# runner 가 산출물을 쓸 때마다 sha256 을 재계산해 넣는다. null = 아직 없음.
+artifacts:
+  findings:        { path: pipeline/hspc-velocity-benchmark/results/FINDINGS.md,          sha256: null }
+  manuscript:      { path: pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md,        sha256: null }
+  manuscript_ko:   { path: pipeline/hspc-velocity-benchmark/manuscript/draft_v2_ko.md,     sha256: null }
+  paper_direction: { path: pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md, sha256: null }
+  claims_ledger:   { path: CLAIMS.yaml,                                                    sha256: null }  # BIOP01-69
+
+# --- 실패·재시작 이력 (append-only) ---
+# runner 가 게이트 실패나 세션 재개마다 한 줄씩 append 한다. 지우지 않는다.
+# 예: { at: "2026-08-04T10:00:00+09:00", event: gate_fail, gate: result_validation,
+#       detail: "p3_concordance diff !=0", commit: abc1234 }
+history: []

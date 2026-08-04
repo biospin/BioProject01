@@ -1,0 +1,131 @@
+# CLAIMS.yaml — claim provenance ledger (BIOP01-69)
+# ---------------------------------------------------------------------------
+# 왜: "숫자는 결과 파일에서만" 규칙(package_validation)만으로는 다음 4가지를
+#     못 막는다.
+#       (1) headline claim ↔ 근거 파일의 연결이 문서화되지 않음
+#       (2) 본문이 근거보다 세게 주장(과장)
+#       (3) 결과가 바뀐 뒤에도 남아 있는 낡은 문장
+#       (4) reviewer 반영으로 claim 강도가 바뀌는 것
+#
+# 무엇: 각 headline claim 을 원문 근거·검증 스크립트·한계·원고 위치와 함께
+#       한 곳에 등록한다. claim_defensibility 게이트와 package_validation 이
+#       이 ledger 를 참조해, 등록된 claim 만 원고에 남고 강도가 근거를 넘지
+#       않는지 대조한다.
+#
+# 계층: project profile 계층의 산출물이다(도메인 claim). core harness 는
+#       이 파일의 "스키마"만 안다. → docs/HARNESS-LAYERS.md
+#
+# 필드:
+#   id                    : C1, C2 … 안정 식별자(원고·리뷰에서 참조)
+#   text                  : claim 한 문장. 원고 표현과 같은 강도로 적는다
+#   status               : supported | provisional | withdrawn | hypothesis_only
+#   claim_level           : 주장 강도. 원고 claim_level 정책과 일치해야 한다
+#   evidence              : 근거 결과 파일(경로). 여기 없는 숫자는 원고 금지
+#   validation            : 이 claim 을 재계산하는 결정론적 스크립트(게이트)
+#   limitations           : 이 claim 을 세게 못 쓰게 막는 한정. 원문 표현 보존
+#   manuscript_locations  : 이 claim 이 등장하는 원고 위치(abstract/results/…)
+# ===========================================================================
+
+schema_version: 1
+project: biop01
+findings_source: pipeline/hspc-velocity-benchmark/results/FINDINGS.md   # canonical 종합본
+updated: 2026-08-04
+
+claims:
+  - id: C1
+    text: >-
+      chromatin→transcription lag 은 gene 수준에서 method-robust 한 양이 아니다
+      (크기·방향 모두 method 간 일치도가 낮다).
+    status: supported
+    claim_level: primary_negative
+    evidence:
+      - pipeline/hspc-velocity-benchmark/results/clean_concordance_gate.md   # CRAK-비의존 clean headline
+      - pipeline/hspc-velocity-benchmark/results/concordance.md
+    validation:
+      - "pipeline/hspc-velocity-benchmark/scripts/p3_concordance.py"
+    key_numbers:
+      magnitude_concordance: "|rho|<=0.08 (mv×moflow -0.04, mv×mvvae -0.01, moflow×mvvae +0.08)"
+      sign_agreement: "54.6% ~= chance (방향 미정 lag=0 76개 제외 기준)"
+    limitations:
+      - "permutation-FDR agreement-set 0/598 은 부호 가변 method 3개(=CRAK 포함)에서만 정의 → 대표 결과에서 제외, CRAK 민감도 분석(보조)으로만."
+      - "sign-agreement 수치는 lag=0(방향 미정) 76개 제외 규약에 의존(미제외 np.sign 규약이면 48%)."
+    manuscript_locations: [abstract, results, discussion]
+
+  - id: C2
+    text: >-
+      lag 과 달리 (a) 전사율 alpha, (b) 집단 수준 방향 균형, (c) canonical priming
+      marker 방향 — 이 셋만 method 간 robust 하다.
+    status: supported
+    claim_level: primary_positive
+    evidence:
+      - pipeline/hspc-velocity-benchmark/results/clean_concordance_gate.md
+      - pipeline/hspc-velocity-benchmark/results/concordance.md
+    key_numbers:
+      alpha_concordance: "method 간 rho=0.88"
+      population_direction: "~50/50 (두 method 수렴)"
+    limitations:
+      - "robust 한 것은 alpha·집단방향·priming marker 방향에 한정. gene별 lag 값 자체는 아니다."
+    manuscript_locations: [abstract, results]
+
+  - id: C3
+    text: >-
+      음성대조(scrambled-chromatin)는 MultiVelo 의 lag 가 chromatin 신호가 아니라
+      모델 구조에서 나옴을 입증했다.
+    status: supported
+    claim_level: supporting
+    evidence:
+      - pipeline/hspc-velocity-benchmark/results/scrambled_null.md
+    validation:
+      - "pipeline/hspc-velocity-benchmark/scripts/p3_scrambled_null.py"
+    limitations:
+      - "한 method(MultiVelo)에 대한 구조 기인 입증. 다른 method로의 일반화는 별도 근거로."
+    manuscript_locations: [results]
+
+  - id: C4
+    text: >-
+      'alpha > lag' 식별성 순서는 다섯 외부 데이터셋에서 보존되며, 다섯 번째
+      (mouse gastrulation)는 fit 도착 전 봉인한 6개 예측을 사후구제 없이 6/0 통과했다.
+    status: supported
+    claim_level: primary_generalization
+    evidence:
+      - pipeline/hspc-velocity-benchmark/results/prereg_gse205117_scorecard.md   # 사전등록 6/0
+      - pipeline/hspc-velocity-benchmark/results/concordance_human_brain.md
+      - pipeline/hspc-velocity-benchmark/results/concordance_e18_mouse_brain.md
+      - pipeline/hspc-velocity-benchmark/results/concordance_GSE194122_bmmc.md
+      - pipeline/hspc-velocity-benchmark/results/concordance_macrophage.md
+    validation:
+      - "pipeline/hspc-velocity-benchmark/scripts/p3_crossdataset_concordance.py"
+    key_numbers:
+      alpha_monotone: "macrophage +0.643 > BMMC +0.55 > human_brain +0.475 > gastrulation +0.415 > E18 +0.32"
+      lag_signal: "어디서도 무신호 (+0.03~+0.19)"
+    limitations:
+      - "cross-dataset alpha 는 조직이 멀수록 단조 감소 — 보존되는 것은 'alpha>lag 순서'이지 alpha 절대값이 아니다."
+    manuscript_locations: [results, discussion]
+
+  - id: C5
+    text: >-
+      lag 이 method 간 재현되지 않는 것은 잡음이 아니라 MultiVelo 목적함수가 lag 을
+      데이터로 잘 결정하지 못하기 때문이다(관찰이 메커니즘으로 설명됨).
+    status: supported
+    claim_level: mechanism
+    evidence:
+      - pipeline/hspc-velocity-benchmark/results/profile_likelihood_identifiability.md   # §8
+    key_numbers:
+      alpha_vs_lag_sensitivity: "유전자별 alpha쪽 민감도가 lag쪽보다 중앙값 3.53x"
+      genes_alpha_more_sensitive: "94.57%"
+    limitations:
+      - "MultiVelo 목적함수에 대한 실질(practical) 비식별성. 완전(structural) 비식별성으로 과장 금지."
+    manuscript_locations: [results, discussion]
+
+  - id: C6
+    text: >-
+      따라서 drug-timing 모델은 lag 을 단일 method 값으로 쓰면 안 되고 method
+      불확실성을 명시적으로 반영해야 한다.
+    status: provisional
+    claim_level: downstream_implication
+    evidence:
+      - pipeline/hspc-velocity-benchmark/results/lag_model.md          # prototype
+      - pipeline/hspc-velocity-benchmark/results/lag_model_atac.md
+    limitations:
+      - "P5 baseline→timing 모델은 prototype(held-out lineage, Mc proxy). drug perturbation arm 은 데이터 대기."
+    manuscript_locations: [discussion]
