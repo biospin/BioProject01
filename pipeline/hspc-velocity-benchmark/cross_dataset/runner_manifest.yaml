@@ -6,7 +6,9 @@
 #
 # 상태: 내용 확정(설계 §2와 1:1), **직렬화 형식(YAML vs p2_config dict)은 BIOP01-45 §5-1 회의 결정 대기**.
 #   YAML을 기본 권장(언어중립·리뷰 용이). 형식이 dict로 확정되면 이 데이터를 그대로 옮기면 된다.
-# 검증: cross_dataset/verify_manifest_resolution.py (stage 해소·필수컬럼 계약을 실 산출물로 대조).
+# 검증: gse205117 실 산출물로 stage 해소(멱등 SKIP)·required_cols 계약을 **인라인 대조 완료**
+#   (BIOP01-45 코멘트, commit 5a21945: 전 stage 산출물 존재 + required_cols 실체 일치, 계약 위반 0).
+#   정식 검증기 스크립트화는 형식(YAML/dict) 확정 후 — 지금 미존재 경로를 가리키지 않도록 인라인으로 표기.
 
 version: 1
 
