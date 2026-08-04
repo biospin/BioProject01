@@ -55,7 +55,7 @@ SKILL(지침)을 실제로 돌리는 코드:
 
 ## Agent routing & artifact contract (논문 생산 하네스)
 
-> 논문 집필·발표 단계용. 재사용 스캐폴드(Designed by Ka-Kyung Kim, CC BY 4.0) 설치본. 전체 랩 지도·멤버 JD = **`docs/HARNESS.md`**. 도메인 분석 슬롯 = **`hspc-velocity-analyst`**(팀이 채운 유일한 슬롯). 이 브랜치(`kkkim-pipeline`)에 project-scope로 설치.
+> 논문 집필·발표 단계용. 재사용 스캐폴드(Designed by Ka-Kyung Kim, CC BY 4.0) 설치본. 전체 랩 지도·멤버 JD = **`docs/HARNESS.md`**. 도메인 분석 슬롯 = **`hspc-velocity-analyst`**(project profile 의 analyst 슬롯 — 이식 시 검증 게이트 스크립트·paper direction·CLAIMS 도 함께 교체해야 한다. 경계: **`docs/HARNESS-LAYERS.md`**, BIOP01-67). 이 브랜치(`kkkim-pipeline`)에 project-scope로 설치.
 
 ### 자연어 라우팅
 요청에 agent 이름이 없어도 아래 표로 배정한다. 프로젝트 agent는 `.claude/agents/`. 그림 작업은 `manuscript-writer`가 `pipeline/hspc-velocity-benchmark/figures/figNN_*.py`를 실행해 소유.
