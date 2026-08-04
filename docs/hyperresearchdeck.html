@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hyperresearch — 구조와 동작 원리</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2430;
+    --line:#2a3441; --fg:#e6edf3; --dim:#8b98a8; --dimmer:#5f6d7e;
+    --a1:#7aa2f7;  /* blue  */
+    --a2:#9ece6a;  /* green */
+    --a3:#e0af68;  /* amber */
+    --a4:#bb9af7;  /* purple*/
+    --a5:#f7768e;  /* red   */
+    --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic","Noto Sans KR",sans-serif;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  #stage{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
+  .slide{
+    position:absolute;width:min(1280px,95vw);height:min(720px,92vh);
+    padding:52px 60px;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    opacity:0;transform:translateY(14px) scale(.99);pointer-events:none;
+    transition:opacity .32s ease,transform .32s ease;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .slide.on{opacity:1;transform:none;pointer-events:auto}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--a1);margin-bottom:10px}
+  h1{font-size:52px;line-height:1.14;letter-spacing:-.02em;font-weight:750}
+  h2{font-size:33px;line-height:1.22;letter-spacing:-.015em;font-weight:700;margin-bottom:6px}
+  .sub{color:var(--dim);font-size:16px;line-height:1.55;margin-bottom:22px;max-width:96%}
+  .body{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px}
+  p,li{font-size:15.5px;line-height:1.62}
+  b{color:#fff;font-weight:650}
+  code,.mono{font-family:var(--mono);font-size:13px;background:#0b0f14;border:1px solid var(--line);
+    border-radius:5px;padding:1.5px 6px;color:var(--a2)}
+  pre{font-family:var(--mono);font-size:13.5px;line-height:1.7;background:#0b0f14;border:1px solid var(--line);
+    border-radius:9px;padding:16px 18px;color:#cdd9e5;overflow:auto}
+  pre .c{color:var(--dimmer)}
+  pre .g{color:var(--a2)}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .card h3{font-size:15px;font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+  .card p{font-size:13.6px;line-height:1.55;color:var(--dim)}
+  .card p b{color:var(--fg)}
+  .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+  ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  ul li{padding-left:19px;position:relative;color:var(--dim)}
+  ul li b{color:var(--fg)}
+  ul li:before{content:"";position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--a1)}
+  table{width:100%;border-collapse:collapse;font-size:13.4px}
+  th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--dimmer);font-weight:600;padding:0 10px 9px;border-bottom:1px solid var(--line)}
+  td{padding:8px 10px;border-bottom:1px solid rgba(42,52,65,.55);color:var(--dim);vertical-align:top}
+  td b{color:var(--fg)}
+  tr:last-child td{border-bottom:none}
+  .tag{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:4px;white-space:nowrap;
+       border:1px solid;display:inline-block}
+  .t1{color:var(--a1);border-color:rgba(122,162,247,.4);background:rgba(122,162,247,.1)}
+  .t2{color:var(--a2);border-color:rgba(158,206,106,.4);background:rgba(158,206,106,.1)}
+  .t3{color:var(--a3);border-color:rgba(224,175,104,.4);background:rgba(224,175,104,.1)}
+  .t4{color:var(--a4);border-color:rgba(187,154,247,.4);background:rgba(187,154,247,.1)}
+  .t5{color:var(--a5);border-color:rgba(247,118,142,.4);background:rgba(247,118,142,.1)}
+  .flow{display:flex;align-items:stretch;gap:9px}
+  .flow .node{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:12px;text-align:center}
+  .flow .node .n{font-family:var(--mono);font-size:10px;color:var(--dimmer);letter-spacing:.1em}
+  .flow .node .t{font-size:13px;font-weight:650;margin-top:4px}
+  .flow .node .d{font-size:11.5px;color:var(--dim);margin-top:4px;line-height:1.4}
+  .arrow{align-self:center;color:var(--dimmer);font-size:15px}
+  .steps{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+  .step{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--a1);
+        border-radius:7px;padding:9px 10px}
+  .step .n{font-family:var(--mono);font-size:10.5px;color:var(--a1);font-weight:700}
+  .step .t{font-size:12.3px;font-weight:640;margin-top:2px;line-height:1.3}
+  .step .d{font-size:10.8px;color:var(--dimmer);margin-top:3px;line-height:1.35}
+  .step.l{border-left-color:var(--a2)} .step.l .n{color:var(--a2)}
+  .step.c{border-left-color:var(--a5)} .step.c .n{color:var(--a5)}
+  .step.s{border-left-color:var(--a4)} .step.s .n{color:var(--a4)}
+  .note{font-size:12.5px;color:var(--dimmer);line-height:1.5;border-left:2px solid var(--line);padding-left:12px}
+  .big{font-size:30px;font-weight:750;letter-spacing:-.02em}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .stat .v{font-size:27px;font-weight:750;letter-spacing:-.02em}
+  .stat .k{font-size:12px;color:var(--dim);margin-top:3px;line-height:1.4}
+  .quote{border-left:3px solid var(--a3);padding:10px 0 10px 16px;font-size:16px;line-height:1.55}
+  .quote b{color:var(--a3)}
+  footer{position:fixed;bottom:16px;left:0;right:0;display:flex;justify-content:center;gap:16px;
+    align-items:center;font-family:var(--mono);font-size:11px;color:var(--dimmer);pointer-events:none}
+  #bar{position:fixed;top:0;left:0;height:2px;background:var(--a1);transition:width .3s ease;z-index:9}
+  .hint{opacity:.7}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="stage">
+
+<!-- 1 -->
+<section class="slide">
+  <div class="kicker">github.com/jordan-gibbs/hyperresearch · MIT · v0.9.1</div>
+  <h1>hyperresearch<br><span style="color:var(--a1)">딥 리서치 하네스</span>의 구조와 동작 원리</h1>
+  <div class="sub" style="margin-top:20px;font-size:17px">
+    Claude Code를 <b style="color:#fff">"에이전트 파이프라인"</b>으로 바꾸는 Python CLI + 스킬 팩.<br>
+    프롬프트 한 줄 → 16단계를 거쳐 <b style="color:#fff">출처가 검증된 리서치 리포트</b>가 나옵니다.
+  </div>
+  <div class="grid g4" style="margin-top:auto">
+    <div class="stat"><div class="v" style="color:var(--a1)">16</div><div class="k">단계 파이프라인<br>(스킬 = 1단계)</div></div>
+    <div class="stat"><div class="v" style="color:var(--a2)">16종</div><div class="k">서브에이전트<br>(Sonnet / Opus 혼합)</div></div>
+    <div class="stat"><div class="v" style="color:var(--a3)">55–450</div><div class="k">1회 실행당 수집 소스<br>(기어 · 티어에 따라)</div></div>
+    <div class="stat"><div class="v" style="color:var(--a4)">∞</div><div class="k">Vault에 영구 축적<br>(다음 실행이 재사용)</div></div>
+  </div>
+  <div class="note" style="margin-top:20px">발표자료 · 2026-07 기준 main 브랜치(183443a) 코드/문서 직접 분석</div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="kicker">01 · 문제 정의</div>
+  <h2>왜 또 하나의 딥 리서치 도구인가</h2>
+  <div class="sub">기존 "Deep Research" 제품들이 공통적으로 놓치는 4가지를 정면으로 공격합니다.</div>
+  <div class="body">
+    <div class="grid g2">
+      <div class="card" style="border-color:rgba(247,118,142,.3)">
+        <h3><span class="dot" style="background:var(--a5)"></span>일회성(one-shot)</h3>
+        <p>리포트 하나 뽑고 읽은 자료는 전부 버림. 같은 주제를 또 물으면 처음부터 다시 크롤링.</p>
+      </div>
+      <div class="card" style="border-color:rgba(158,206,106,.3)">
+        <h3><span class="dot" style="background:var(--a2)"></span>→ <b>Vault</b>에 영구 저장</h3>
+        <p>읽은 모든 소스가 마크다운 + SQLite 인덱스로 남고, 다음 세션은 <b>fetch 전에 먼저 검색</b>합니다.</p>
+      </div>
+      <div class="card" style="border-color:rgba(247,118,142,.3)">
+        <h3><span class="dot" style="background:var(--a5)"></span>인용 환각 / 유령 각주</h3>
+        <p>그럴듯한 문장에 아무 링크나 붙는 문제. 실제로 그 소스가 그 문장을 뒷받침하는지 아무도 검증 안 함.</p>
+      </div>
+      <div class="card" style="border-color:rgba(158,206,106,.3)">
+        <h3><span class="dot" style="background:var(--a2)"></span>→ <b>cite-check + quote-integrity</b></h3>
+        <p>인용-문장 바인딩을 회의적으로 재검증하고, 인용부호 안 텍스트가 Vault 노트에 <b>글자 그대로</b> 없으면 출고 차단.</p>
+      </div>
+      <div class="card" style="border-color:rgba(247,118,142,.3)">
+        <h3><span class="dot" style="background:var(--a5)"></span>신디케이션 = 합의로 착각</h3>
+        <p>보도자료 하나를 5개 매체가 받아쓴 걸 "5개 출처가 동의"로 계산.</p>
+      </div>
+      <div class="card" style="border-color:rgba(158,206,106,.3)">
+        <h3><span class="dot" style="background:var(--a2)"></span>→ <b>독립성 감사</b></h3>
+        <p>파생·복제본을 클러스터링해서 <b>5부 = 1표</b>로 눌러버립니다. 게다가 철회(retraction)된 논문은 품질 점수 0으로 바닥.</p>
+      </div>
+    </div>
+    <div class="note">저자 주장: DeepResearch-Bench RACE 리더보드 1위 (내부 벤치마크, 제3자 검증 대기 중) — 발표 시 <b>"자체 측정치"</b>로 인용 권장.</div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="kicker">02 · 사용법</div>
+  <h2>개발자 입장에서 실제로 뭘 하는가</h2>
+  <div class="sub">pip 패키지 하나를 깔면 Claude Code 프로젝트에 <b>스킬 · 서브에이전트 정의 · CLI</b>가 주입됩니다.</div>
+  <div class="body">
+    <pre><span class="c"># 1. 설치 — 벌트 초기화 + .claude/ 에 스킬/에이전트 주입 + CLAUDE.md 갱신</span>
+cd your-project
+pip install hyperresearch && <span class="g">hyperresearch install</span>      <span class="c"># --global 도 가능</span>
+
+<span class="c"># 2. Claude Code 안에서 슬래시 커맨드 한 줄</span>
+<span class="g">/hyperresearch</span> 국내 배터리 3사의 전고체 로드맵과 실현 가능성을 비판적으로 분석해줘
+
+<span class="c"># 3. 실행 중/후 — 전부 CLI로 관측 가능 (모든 명령이 -j JSON 출력 지원)</span>
+hyperresearch run status -j      <span class="c"># 단계별 진행 · 지출 · 에스컬레이션 큐 깊이</span>
+hyperresearch run resume -j      <span class="c"># 죽은 지점의 정확한 다음 Skill 호출을 반환</span>
+hyperresearch search "전고체" -j  <span class="c"># 벌트 전문 검색 (--semantic / --ranked)</span>
+hyperresearch serve              <span class="c"># 벌트를 로컬 위키로 브라우징</span></pre>
+    <div class="grid g3">
+      <div class="card"><h3><span class="dot" style="background:var(--a1)"></span>런타임</h3><p>Python 3.11–3.13 · typer/pydantic/jinja2 · <b>Crawl4AI</b>(크롤링) · <b>pymupdf</b>(PDF 본문 추출)</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--a2)"></span>필수 전제</h3><p><b>Claude Code</b>. 모델 호출은 전부 Claude Code의 서브에이전트를 통해 나감 — 별도 LLM API 키 불필요</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--a3)"></span>선택 확장</h3><p><code>exa</code> <code>tavily</code> 검색 프로바이더, <code>mcp</code> 서버 모드, <code>watch</code>, Voyage/OpenAI 임베딩</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="kicker">03 · 아키텍처</div>
+  <h2>3층 구조: CLI · 스킬 체인 · Vault</h2>
+  <div class="sub">LLM이 하는 일과 결정론적 코드가 하는 일을 칼같이 분리한 게 이 프로젝트의 뼈대입니다.</div>
+  <div class="body">
+    <div class="flow">
+      <div class="node" style="border-color:rgba(122,162,247,.45)">
+        <div class="n">LAYER 1</div><div class="t">Python CLI</div>
+        <div class="d">벌트 init · fetch · sync<br>SQLite 인덱스 · lint 게이트<br>run 매니페스트 · 프로파일 렌더</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node" style="border-color:rgba(224,175,104,.45)">
+        <div class="n">LAYER 2</div><div class="t">스킬 체인 (17개 .md)</div>
+        <div class="d">엔트리 스킬 = <b>라우터</b><br>단계별 절차서를 필요한 순간에만<br>컨텍스트로 로드</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node" style="border-color:rgba(187,154,247,.45)">
+        <div class="n">LAYER 3</div><div class="t">서브에이전트 16종</div>
+        <div class="d">fetcher · 분석가 · 드래프터<br>비평가 · 패처 · 인용검증기<br>모델은 프로파일 설정값</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node" style="border-color:rgba(158,206,106,.45)">
+        <div class="n">STATE</div><div class="t">Vault + Run</div>
+        <div class="d"><code>research/notes/</code> 마크다운<br><code>research/runs/&lt;tag&gt;/</code> 작업공간<br>SQLite = 재생성 가능한 캐시</div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:2px">
+      <div class="card">
+        <h3><span class="dot" style="background:var(--a1)"></span>결정론적 코드가 담당</h3>
+        <p>URL 중복 제거 · PDF 파싱 · 전문 검색 · PageRank · 인용수/철회 여부 조회(OpenAlex·Semantic Scholar) · 스키마 CHECK 제약 · 린트 규칙 · 예산 상한 · 재개 지점 계산. <b>LLM에게 맡기면 흔들리는 것들을 전부 코드로 내림</b>.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot" style="background:var(--a4)"></span>LLM이 담당</h3>
+        <p>질의 분해 · 검색 관점 설계 · 소스 요약 · 모순 짝짓기 · 논점(loci) 선정 · 초안 집필 · 적대적 비평 · 외과적 패치. <b>판단이 필요한 곳에만</b> 모델을 씁니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="kicker">04 · 파이프라인</div>
+  <h2>16단계 — 폭 → 깊이 → 초안 → 적대적 감사</h2>
+  <div class="sub"><span class="tag t2">전 티어</span> <span class="tag t1">full 티어</span> <span class="tag t4">합성</span> <span class="tag t5">감사/차단</span> &nbsp;각 단계는 독립된 스킬 파일이며 순서대로 <code>Skill()</code> 호출로 실행됩니다.</div>
+  <div class="body">
+    <div class="steps">
+      <div class="step l"><div class="n">1</div><div class="t">Decompose</div><div class="d">질의→원자 항목·커버리지 행렬·티어 분류</div></div>
+      <div class="step s"><div class="n">1.5</div><div class="t">Chapter partition</div><div class="d">4–10개 챕터로 분할 (논문 티어)</div></div>
+      <div class="step l"><div class="n">2</div><div class="t">Width sweep</div><div class="d">다관점 검색 → 병렬 fetcher 웨이브</div></div>
+      <div class="step"><div class="n">3</div><div class="t">Contradiction graph</div><div class="d">코퍼스 전반의 모순을 랭크된 클러스터로</div></div>
+      <div class="step"><div class="n">4</div><div class="t">Loci analysis</div><div class="d">분석가 2인 병렬 → 논점 + 소스 예산</div></div>
+      <div class="step"><div class="n">5</div><div class="t">Depth investigation</div><div class="d">K명 병렬 심층조사 → 입장을 <b>확정</b>한 중간노트</div></div>
+      <div class="step"><div class="n">6</div><div class="t">Cross-locus reconcile</div><div class="d">확정 입장들 간 조정 → comparisons.md</div></div>
+      <div class="step"><div class="n">7</div><div class="t">Source tensions</div><div class="d">전문가 간 이견 추출 → JSON</div></div>
+      <div class="step"><div class="n">8</div><div class="t">Corpus critic</div><div class="d">"뭘 뒤집을 소스가 빠졌나" + 표적 보충</div></div>
+      <div class="step"><div class="n">9</div><div class="t">Evidence digest</div><div class="d">핵심 주장 + 축자 인용 정리</div></div>
+      <div class="step l"><div class="n">10</div><div class="t">Triple draft</div><div class="d">관점별 소스 큐레이션 → 초안 <b>3개 병렬</b></div></div>
+      <div class="step s"><div class="n">11</div><div class="t">Synthesize</div><div class="d">3초안 통합 → final_report.md (2패스 집필)</div></div>
+      <div class="step c"><div class="n">12</div><div class="t">Critics ×4</div><div class="d">변증·심도·폭·지시준수 비평가 병렬 공격</div></div>
+      <div class="step"><div class="n">13</div><div class="t">Gap-fetch</div><div class="d">비평가가 지목한 공백만 표적 수집</div></div>
+      <div class="step c"><div class="n">14</div><div class="t">Patcher</div><div class="d">Read+Edit 락 · 외과적 hunk만 적용</div></div>
+      <div class="step c"><div class="n">14.5</div><div class="t">Cite-check</div><div class="d">인용-문장 결합 검증 + 2차 패치</div></div>
+      <div class="step l"><div class="n">15</div><div class="t">Polish</div><div class="d">군더더기·위생 누출 제거 (Edit 락)</div></div>
+      <div class="step l"><div class="n">16</div><div class="t">Readability audit</div><div class="d">가독성 제안 JSON → 선별 적용</div></div>
+    </div>
+    <div class="note">1–2단계에서 <b>폭</b>을, 3–9단계에서 <b>깊이와 대립</b>을, 10–11에서 <b>글</b>을, 12–16에서 <b>공격과 수리</b>를 합니다. 순서가 곧 방법론입니다.</div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="kicker">05 · 핵심 설계 ①</div>
+  <h2>왜 스킬을 17개로 쪼갰나 — 컨텍스트 부패 방어</h2>
+  <div class="sub">이 프로젝트에서 가장 배울 만한 부분. 저자가 겪은 실패에서 직접 나온 설계입니다.</div>
+  <div class="body">
+    <div class="quote">
+      "V7은 <b>1200줄짜리 스킬 하나</b>였다. Layer 4가 triple-draft 절차를 필요로 할 때쯤이면 그 부분은 이미 컴팩션으로 날아가 있었다.
+      오케스트레이터는 절차를 잊었고, 초안을 하나만 썼고, 밋밋한 리포트가 나왔다."
+      <div style="font-size:12.5px;color:var(--dimmer);margin-top:8px">— hyperresearch.md (엔트리 스킬) 원문 요약</div>
+    </div>
+    <div class="grid g2">
+      <div class="card" style="border-color:rgba(247,118,142,.3)">
+        <h3><span class="dot" style="background:var(--a5)"></span>안티패턴: 모놀리식 프롬프트</h3>
+        <p>긴 실행 = 긴 대화. 대화가 길어지면 앞부분이 압축·소실되고, 후반 단계의 절차가 <b>조용히 사라집니다</b>. 에러도 안 나고, 그냥 대충 합니다.</p>
+      </div>
+      <div class="card" style="border-color:rgba(158,206,106,.3)">
+        <h3><span class="dot" style="background:var(--a2)"></span>해법: 라우터 + 지연 로딩</h3>
+        <p>엔트리 스킬은 <b>순서만</b> 압니다. 각 단계의 절차서는 그 단계를 실행하는 순간 <code>Skill(...)</code>으로 <b>새로 로드</b>됩니다. 축출 리스크 0.</p>
+      </div>
+    </div>
+    <div class="grid g3">
+      <div class="card"><h3>내구성 있는 기억</h3><p>단계 전환마다 <code>run step N --status</code>로 매니페스트에 기록. <b>대화가 아니라 파일이 상태</b>입니다.</p></div>
+      <div class="card"><h3>정본 질의(gospel)</h3><p>사용자 원문을 <code>query.md</code>에 글자 그대로 1회 저장 → 모든 단계·모든 서브에이전트가 경로로 재읽기. 전언 게임 방지.</p></div>
+      <div class="card"><h3>서브에이전트 = 컨텍스트 격리</h3><p>fetcher 8–12개가 병렬로 도는 동안 오케스트레이터 컨텍스트는 깨끗하게 유지됩니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="kicker">06 · 스케일</div>
+  <h2>티어 × 기어 — 직교하는 두 개의 레버</h2>
+  <div class="sub">"어떤 단계를 도느냐(티어)"와 "얼마나 크게 도느냐(기어)"를 분리했습니다.</div>
+  <div class="body">
+    <div class="grid g2">
+      <div class="card" style="padding:18px 20px">
+        <h3><span class="dot" style="background:var(--a1)"></span>티어 — 질의별 <b>자동</b> 라우팅</h3>
+        <table style="margin-top:10px">
+          <tr><td style="width:110px"><span class="tag t2">light</span></td><td>범위가 닫힌 사실 질의·비교·서베이<br>1→2→10→15→16 · <b>~30–40분</b> · 15–25 소스</td></tr>
+          <tr><td><span class="tag t1">full</span></td><td>기본값. 적대적 감사 포함 전 16단계<br><b>~1.5–2.5시간</b> · 55–80 소스</td></tr>
+          <tr><td><span class="tag t4">dissertation</span></td><td><b>명시 요청 시에만</b>. 4–10 챕터 루프<br><b>~4–8시간</b> · 300–450 소스 · 2.5–8만 단어</td></tr>
+        </table>
+        <p style="margin-top:12px;font-size:12.6px">1단계가 분류하며, 스킬 문서는 <b>"티어 게이트를 존중하라 — 꼼꼼히 하겠다고 건너뛴 단계를 되살리지 말라"</b>고 명시적으로 금지합니다.</p>
+      </div>
+      <div class="card" style="padding:18px 20px">
+        <h3><span class="dot" style="background:var(--a3)"></span>기어 — 프로젝트별 <b>수동</b> 설정</h3>
+        <table style="margin-top:10px">
+          <tr><td style="width:110px"><span class="tag t3">full</span></td><td>기준선. 55–80 소스</td></tr>
+          <tr><td><span class="tag t3">premier</span></td><td>100–130 소스, 심층 예산 2배, ~3–5시간</td></tr>
+        </table>
+        <pre style="margin-top:12px;font-size:12.3px;padding:12px 14px">hyperresearch profile use premier
+<span class="c"># .hyperresearch/config.toml</span>
+[profile.myown]
+extends = "full"
+source_min = 60
+models = { fetcher = <span class="g">"haiku"</span> }</pre>
+        <p style="margin-top:10px;font-size:12.6px">기어는 <b>설치 시 스킬 프롬프트에 숫자로 렌더링</b>(Jinja2)됩니다. 그래서 다음 실행부터 적용되고 <b>실행 중간에는 절대 안 바뀝니다</b>.</p>
+      </div>
+    </div>
+    <div class="note">프로파일은 pydantic 모델로 <b>엄격 검증</b>(extra=forbid, frozen). 소스 목표·fetcher 팬아웃·논점 상한·초안 개수·단어 목표·인용 밀도 하한·에이전트별 모델까지 전부 하나의 설정 객체입니다.</div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="kicker">07 · 에이전트</div>
+  <h2>서브에이전트 로스터 — 역할별 모델 배분</h2>
+  <div class="sub">"싼 모델로 많이 읽고, 비싼 모델로 판단한다." 모델은 하드코딩이 아니라 <b>프로파일 설정</b>입니다.</div>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--a2);margin-bottom:8px">SONNET — 수집 · 읽기 · 검증 (양)</div>
+        <table>
+          <tr><td><b>fetcher</b></td><td>crawl4ai로 URL 수집. 웨이브당 8–12개 병렬</td></tr>
+          <tr><td><b>source-analyst</b></td><td>5,000단어 넘는 장문 소스 1건 전담 다이제스트</td></tr>
+          <tr><td><b>loci-analyst</b></td><td>폭 코퍼스를 읽고 1–8개 심층 논점 제안</td></tr>
+          <tr><td><b>depth-investigator</b></td><td>논점 1개 조사 → <b>입장을 확정한</b> 중간노트</td></tr>
+          <tr><td><b>corpus-critic</b></td><td>초안 전 "무엇이 이 방향을 뒤집나" 공백 분석</td></tr>
+          <tr><td><b>cite-checker</b></td><td>표본 인용-문장 결합을 회의적으로 재검증</td></tr>
+          <tr><td><b>browser-fetcher</b></td><td>실제 로그인된 Chrome을 몰아 에스컬레이션 큐 처리</td></tr>
+        </table>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--a4);margin-bottom:8px">OPUS — 집필 · 비평 · 수리 (질)</div>
+        <table>
+          <tr><td><b>draft-orchestrator</b></td><td>관점 1개당 1명. 큐레이션된 소스로 초안 집필</td></tr>
+          <tr><td><b>synthesizer</b></td><td>3개 초안을 읽고 최종본 집필 (Read+Write 락)</td></tr>
+          <tr><td><b>dialectic-critic</b></td><td>초안이 놓친 반대 증거</td></tr>
+          <tr><td><b>depth-critic</b></td><td>중간노트로 메울 수 있었던 얕은 지점</td></tr>
+          <tr><td><b>width-critic</b></td><td>코퍼스는 받쳐주는데 초안이 무시한 주제 구석</td></tr>
+          <tr><td><b>instruction-critic</b></td><td>원 프롬프트의 원자 항목 대비 구조적 불일치</td></tr>
+          <tr><td><b>patcher</b></td><td><span class="tag t5">Read+Edit 락</span> 비평 결과를 외과적 hunk로만 적용</td></tr>
+          <tr><td><b>polish-auditor</b></td><td><span class="tag t5">Read+Edit 락</span> 군더더기·위생 누출 제거</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="note">모델 배분은 <code>[profile.x] models = {...}</code> 한 줄로 통째 교체 가능 — 비용 실험이 설정 변경 수준으로 떨어집니다.</div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="kicker">08 · Vault</div>
+  <h2>"마크다운이 진실, SQLite는 캐시"</h2>
+  <div class="sub">읽은 것을 버리지 않는 구조. 세션을 거듭할수록 시작 지점이 앞당겨집니다.</div>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <pre style="font-size:12.6px">research/
+├─ notes/        <span class="c"># 소스 1건 = 마크다운 1개 (YAML 프론트매터)</span>
+├─ raw/          <span class="c"># 원본 PDF (note-id.pdf)</span>
+├─ index/        <span class="c"># 자동 생성 인덱스</span>
+└─ runs/&lt;tag&gt;/   <span class="c"># 실행별 격리 작업공간</span>
+    ├─ query.md          <span class="c"># 정본 질의 (gospel)</span>
+    ├─ run.json          <span class="c"># 매니페스트 = 내구성 메모리</span>
+    └─ final_report.md
+.hyperresearch/index.db  <span class="c"># 지워도 sync 로 완전 재생성</span></pre>
+        <div class="card" style="margin-top:12px">
+          <h3><span class="dot" style="background:var(--a2)"></span>왜 이게 중요한가</h3>
+          <p>도구 없이도 내 리서치를 읽을 수 있습니다. 아무 에디터로 열고, git으로 버전 관리하고, 인덱스가 깨지면 <code>hyperresearch sync</code> 한 번. <b>락인 없음</b>.</p>
+        </div>
+      </div>
+      <div class="grid" style="gap:12px;align-content:start">
+        <div class="card"><h3><span class="dot" style="background:var(--a1)"></span>스키마가 강제된 노트</h3>
+          <p><code>tier</code>(ground_truth / institutional / practitioner / commentary)와 <code>content_type</code>(paper / docs / policy / dataset …)은 <b>SQLite CHECK 제약</b>으로 어휘가 고정. 프론트매터가 오염돼도 인덱스는 안 썩습니다.</p></div>
+        <div class="card"><h3><span class="dot" style="background:var(--a3)"></span>출처의 출처(provenance)</h3>
+          <p>모든 fetch는 <code>--suggested-by</code>로 "누가 이걸 물어왔는지"를 기록 → 시드에서 뻗은 <b>루트 트리</b> 형성. 끊긴 컴포넌트는 린트가 잡습니다.</p></div>
+        <div class="card"><h3><span class="dot" style="background:var(--a4)"></span>검색 3종</h3>
+          <p>전문 검색(FTS) · <code>--include-body</code> 본문 검색 · <code>--semantic</code> 임베딩 혼합(voyage/openai, 기본은 키 불필요한 none). 그래프 <code>hubs</code>/<code>backlinks</code>도 제공.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="kicker">09 · 소스 품질</div>
+  <h2>품질을 "느낌"이 아니라 <b style="color:var(--a3)">지속되는 점수</b>로</h2>
+  <div class="sub">모든 소스는 4가지 신호가 합성된 <code>quality_score</code>를 갖고, 이 점수는 Vault에 남습니다.</div>
+  <div class="body">
+    <div class="grid g4">
+      <div class="card"><h3><span class="dot" style="background:var(--a1)"></span>소스 유형 티어</h3><p>원 데이터 / 기관 / 실무자 / 논평 — 증거로서의 <b>역할</b>을 분류</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--a2)"></span>수집 시점 유용성</h3><p>fetcher가 실제로 읽고 매긴 utility 스코어</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--a3)"></span>인용 권위</h3><p>OpenAlex · Semantic Scholar에서 인용수·게재지·<b>철회 플래그</b> 조회</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--a4)"></span>벌트 PageRank</h3><p>링크 + provenance 그래프 상의 중심성</p></div>
+    </div>
+    <div class="grid g2">
+      <div class="card" style="border-color:rgba(247,118,142,.3);padding:18px 20px">
+        <h3><span class="dot" style="background:var(--a5)"></span>독립성 감사 — 5부 = 1표</h3>
+        <p><code>sources independence</code>가 신디케이트·파생 복제본을 클러스터링합니다. 같은 보도자료를 받아쓴 5개 기사는 <b>증거 무게 1개분</b>으로만 계산됩니다. 2단계의 "증거 중복 감사"에서 특정 항목의 독립 소스가 2개 미만으로 떨어지면 <b>웨이브 3 표적 재수집</b>이 발동합니다.</p>
+      </div>
+      <div class="card" style="border-color:rgba(224,175,104,.3);padding:18px 20px">
+        <h3><span class="dot" style="background:var(--a3)"></span>철회 논문 — 출고 차단 사유</h3>
+        <p>철회된 소스는 품질 점수가 <b>0에 수렴</b>하도록 강제되고, 출고 직전 <b>인용된 모든 DOI를 다시 조회</b>합니다. 어제 철회된 논문이 오늘 잡힙니다. 옛날 실행에서 재사용한 벌트 소스도 예외 없이. 철회를 명시하지 않고 인용하면 <b>하드 에러</b>.</p>
+      </div>
+    </div>
+    <div class="note">학술 주제는 <b>웹 검색보다 학술 API를 먼저</b> 칩니다 (Semantic Scholar · arXiv · OpenAlex · PubMed). 웹은 파생 논평을 주고, 학술 API는 인용 랭킹된 정본을 줍니다. 그 뒤에 맥락·뉴스·<b>"X에 대한 비판"류 적대적 검색</b>을 최소 1회 이상 반드시 수행.</div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="kicker">10 · 핵심 설계 ②</div>
+  <h2>"고치되, 다시 쓰지 마라" — 도구 권한으로 강제</h2>
+  <div class="sub">프롬프트로 부탁하는 대신, <b>물리적으로 불가능하게</b> 만든 것이 이 프로젝트의 두 번째 큰 아이디어입니다.</div>
+  <div class="body">
+    <div class="flow">
+      <div class="node" style="border-color:rgba(187,154,247,.45)"><div class="n">STEP 11</div><div class="t">최종본 생성</div><div class="d">여기까지만 "쓰기" 허용</div></div>
+      <div class="arrow">→</div>
+      <div class="node" style="border-color:rgba(247,118,142,.45)"><div class="n">STEP 12</div><div class="t">비평가 4인 병렬 공격</div><div class="d">findings JSON 산출</div></div>
+      <div class="arrow">→</div>
+      <div class="node" style="border-color:rgba(122,162,247,.45)"><div class="n">STEP 13</div><div class="t">공백 표적 수집</div><div class="d">비평이 지목한 곳만</div></div>
+      <div class="arrow">→</div>
+      <div class="node" style="border-color:rgba(247,118,142,.45)"><div class="n">STEP 14 · 15 · 16</div><div class="t">🔒 Read + Edit 만</div><div class="d">Write 도구 자체가 없음</div></div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="dot" style="background:var(--a5)"></span>왜 락을 거나</h3>
+        <p>LLM에게 "조금만 고쳐"라고 하면 결국 통째로 다시 씁니다. 그 과정에서 <b>검증이 끝난 인용과 수치가 조용히 바뀝니다</b>. Claude Code의 <b>도구 허용목록 수준</b>에서 Write를 제거하면 이 실패 모드가 원천 차단됩니다. hunk당 크기 상한까지 걸려 "그냥 다시 쓰기"가 기계적으로 불가능합니다.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot" style="background:var(--a2)"></span>부작용까지 설계됨</h3>
+        <p>패처는 Write를 못 하므로 <b>로그 파일을 만들 수도 없습니다</b>. 그래서 오케스트레이터가 <b>빈 스텁 파일을 먼저 써두고</b> 패처가 Edit으로 채우게 합니다. 작은 hunk에 안 들어가는 비평은 "구조적 이슈"로 <b>에스컬레이션</b>되며, 미적용 CRITICAL은 <code>patch-surgery</code> 린트가 전부 드러냅니다.</p>
+      </div>
+    </div>
+    <div class="grid g4">
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:13px">quote-integrity</h3><p style="font-size:12.3px">인용부호 안 문자열이 벌트 노트에 축자로 없으면 <b>차단</b></p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:13px">retracted-citations</h3><p style="font-size:12.3px">철회 소스 무고지 인용 = <b>하드 에러</b></p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:13px">numeric-consistency</h3><p style="font-size:12.3px">증거로 추적 안 되는 숫자 <b>플래그</b></p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:13px">scaffold-prompt · locus 커버리지</h3><p style="font-size:12.3px">원문 프롬프트 누락, 조사 안 된 논점 <b>에러</b></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="kicker">11 · 운영</div>
+  <h2>장시간 실행을 실무에서 굴리는 장치들</h2>
+  <div class="sub">2–8시간짜리 에이전트 작업은 반드시 죽습니다. 죽는 걸 전제로 설계돼 있습니다.</div>
+  <div class="body">
+    <div class="grid g3">
+      <div class="card"><h3><span class="dot" style="background:var(--a1)"></span>재개 가능</h3><p>실행마다 매니페스트를 남기고 <code>run resume</code>이 <b>죽은 그 단계</b>의 정확한 Skill 호출을 되돌려줍니다. 실행 작업공간은 태그로 격리돼 동시 실행끼리 충돌하지 않습니다.</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--a3)"></span>예산 상한</h3><p><code>run init --budget 50</code>으로 추정 지출 한도를 걸면, 넘는 순간 <b>조용히 불어나는 대신 실행이 막힙니다</b>. <code>run report</code>는 단계별 벽시계·지출·소스 수율 텔레메트리.</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--a2)"></span>출고 게이트</h3><p><code>run verify</code>가 제목 구조·분량·<b>인용 밀도</b>·cite-check 해소 여부를 최종 점검. 통과 못 하면 리포트는 나가지 않습니다.</p></div>
+    </div>
+    <div class="grid g2">
+      <div class="card" style="border-color:rgba(187,154,247,.3);padding:18px 20px">
+        <h3><span class="dot" style="background:var(--a4)"></span>브라우저 레인 — 막힌 fetch는 죽지 않고 <b>줄을 섭니다</b></h3>
+        <p><code>hyperresearch setup</code>으로 한 번 로그인해두면 인증 크롤링이 가능합니다(LinkedIn·X·Facebook·Instagram·TikTok은 세션 킬 방지를 위해 <b>보이는 브라우저</b> 강제). 헤드리스가 로그인 벽/봇 벽에 막히면 해당 URL은 <b>에스컬레이션 큐</b>로 들어가고, Claude-in-Chrome 확장이 있으면 browser-fetcher 에이전트가 <b>실제 로그인된 내 크롬</b>을 몰아 큐를 비웁니다. 확장이 없으면 그냥 쌓이고 웨이브 요약에 개수만 보고 — <b>기존보다 나빠지지 않음</b>.</p>
+        <p style="margin-top:8px"><b style="color:var(--a5)">단호한 경계선:</b> CAPTCHA · 2FA · 로그인은 <b>절대 자동으로 풀지 않습니다</b>. 한 통의 메시지로 모아서 사람에게 넘깁니다.</p>
+      </div>
+      <div class="card" style="padding:18px 20px">
+        <h3><span class="dot" style="background:var(--a2)"></span>수집 웨이브의 실제 동작</h3>
+        <p><b>웨이브 1</b> — fetcher 8–12개를 <b>한 메시지에</b> 스폰(진짜 병렬), 겹치지 않는 배치 배분. 위키피디아는 <b>인용 가능한 소스가 아니라 "소스 허브"</b>로만 취급해 참고문헌을 뽑아 다음 웨이브로 넘깁니다.<br>
+        <b>웨이브 2</b> — 커버리지 점검 후 얇거나 빈 항목만 표적 보충(20–40 URL).<br>
+        <b>웨이브 3</b> — 독립 소스가 2개 미만인 항목에 대해서만 조건부 발동.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <div class="kicker">12 · 정리</div>
+  <h2>가져갈 것 · 조심할 것</h2>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--a2);margin-bottom:10px">에이전트를 만든다면 훔칠 만한 패턴</div>
+        <ul>
+          <li><b>절차서를 지연 로딩하라.</b> 긴 파이프라인의 진짜 적은 모델 성능이 아니라 컨텍스트 부패입니다.</li>
+          <li><b>상태는 파일에, 대화에 두지 마라.</b> 매니페스트 + 정본 질의 파일 = 재개 가능성과 일관성을 동시에.</li>
+          <li><b>부탁하지 말고 도구를 빼앗아라.</b> "다시 쓰지 마"는 프롬프트가 아니라 허용목록으로 강제.</li>
+          <li><b>검증은 결정론적 코드로.</b> 축자 인용 대조, 철회 조회, 스키마 CHECK — LLM 판단에 맡기지 않음.</li>
+          <li><b>적대적으로 설계하라.</b> 비평가를 병렬로 붙이고, 수집 단계에서도 "비판" 검색을 의무화.</li>
+          <li><b>스케일 노브를 하나의 검증된 설정 객체로.</b> 비용/품질 실험이 config 한 줄로 떨어집니다.</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--a5);margin-bottom:10px">한계 (저자가 직접 명시)</div>
+        <ul style="--b:var(--a5)">
+          <li><b>사실 정확성은 보장 못 합니다.</b> 린트 게이트가 잡는 건 <b>구조적</b> 실패(스캐폴드 누락, 끊긴 provenance, 미해소 CRITICAL)뿐.</li>
+          <li><b>어떤 소스가 중요한지는 여전히 사람 판단.</b> 에이전트가 고르고, 사람이 방향을 잡습니다.</li>
+          <li><b>로그인 안 한 페이월은 못 뚫습니다.</b></li>
+          <li><b>Anthropic 모델 전용.</b> Claude Code 서브에이전트 로스터에 묶여 있고, 사용량은 티어·기어·코퍼스 크기에 비례해 커집니다.</li>
+          <li><b>벤치마크 1위 주장은 자체 측정.</b> 제3자 검증 대기 중이고 README도 "전망치(projection)"라고 씀 — 인용 시 반드시 단서 필요.</li>
+          <li><b>v0.9.1 · Alpha.</b> Python 3.14 미지원.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note" style="margin-top:auto">한 문장 요약 — <b style="color:#fff">hyperresearch는 "더 똑똑한 프롬프트"가 아니라, 에이전트가 실패하는 방식들을 하나씩 구조로 막아놓은 하네스다.</b></div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <span id="idx">1 / 13</span>
+  <span class="hint">← → 또는 Space 로 이동 · F 전체화면</span>
+</footer>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('on',k===i));
+    document.getElementById('idx').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+  }
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(i+1)}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(i-1)}
+    else if(e.key==='Home')go(0); else if(e.key==='End')go(slides.length-1);
+    else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+  });
+  document.addEventListener('click',e=>{ if(e.clientX < window.innerWidth*0.25) go(i-1); else go(i+1); });
+  go(0);
+</script>
+</body>
+</html>
