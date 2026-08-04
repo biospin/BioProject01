@@ -82,5 +82,6 @@ research-methodologist / literature-scout / novelty-strategist   (기획·근거
 | 산출물 계약 | ✅ 경로 검증(results/, manuscript/, figures/) |
 | 입구(Orchestrator **Skill**) | ✅ `.claude/skills/paper-production-orchestrator/SKILL.md` |
 | 검증 게이트 | ✅ `p3_concordance.py` + `p3_crossdataset_concordance.py` + `p3_scrambled_null.py` 재계산 |
+| 재사용 경계(3계층) | ✅ core / project profile / run instance 분리 — 타 분야 이식은 "슬롯 1개"가 아니라 project profile 전체(analyst·게이트 스크립트·paper direction·CLAIMS) 교체. → [`docs/HARNESS-LAYERS.md`](HARNESS-LAYERS.md) (BIOP01-67) |
 | 개선 루프 | `SESSION-LOG.md`(세션별 회고 누적) |
 | 미결(사람 확정) | 저자·소속·corresponding email·공개 정책 — manuscript-writer의 `<FILL>` |
