@@ -64,6 +64,21 @@ conda run --no-capture-output -n scv-preprocess python p3_scrambled_null.py
 # 출력된 숫자를 results/FINDINGS.md + concordance*.md 와 대조. 불일치 → 멈춤·보고.
 ```
 
+### 인용 무결성 게이트 (BIOP01-81 항목2 — 공개 직전 필수, stdlib·conda 불필요)
+```bash
+cd pipeline/hspc-velocity-benchmark
+python3 scripts/check_manuscript_numbers.py         # 본문 숫자가 결과 파일에 실재하는지 (2(4))
+python3 scripts/bib_to_cites.py manuscript/refs.bib > /tmp/cites.json
+python3 scripts/verify_citations.py /tmp/cites.json  # refs.bib 저자·연도·DOI 검증 (2(2))
+python3 scripts/p13_check_uncited_sources.py         # 이름으로 부른 출처에 인용 있는지 (보너스)
+python3 scripts/check_quote_integrity.py             # 축자 인용이 근거에 실재하는지 (2(1))
+python3 scripts/check_retractions.py                 # 인용 논문 철회 여부 (2(3), 네트워크 필요)
+# 수정 단계였다면:
+python3 scripts/check_revision_preserved.py          # 검증된 숫자·인용 보존 (항목1)
+```
+- 어느 하나라도 비-0 종료(특히 `check_retractions.py` exit 2 = 철회 인용) → **멈추고 사람에게 보고**. 자동 통과를 신뢰하지 않는다.
+- `check_retractions.py`는 OpenAlex 조회에 네트워크가 필요하다. 실패는 PASS가 아니라 NEEDS_HUMAN(사람 확인)이다.
+
 ## 산출물 계약
 | 단계 | 멤버 | 산출 파일 | 다음이 읽음 |
 | --- | --- | --- | --- |
