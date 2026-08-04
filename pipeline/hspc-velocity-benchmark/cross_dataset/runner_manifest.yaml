@@ -1,0 +1,56 @@
+# runner_manifest.yaml — BIOP01-45 워커 계층 계약 (P2 fit → P3 채점)
+#
+# 이 파일은 흩어진 runner 실행 규약(env·GPU·출력·필수컬럼)을 한 곳에 선언한다.
+# 트리거(openclaw/codex/사람)가 무엇이든 이 계약은 불변이다 — "누가 실행하나"가 아니라
+# "어느 runner를 어떤 env로, 무엇을 산출하는가"만 정의한다. (설계: ORCHESTRATION-WIRING-DESIGN.md §2)
+#
+# 상태: 내용 확정(설계 §2와 1:1), **직렬화 형식(YAML vs p2_config dict)은 BIOP01-45 §5-1 회의 결정 대기**.
+#   YAML을 기본 권장(언어중립·리뷰 용이). 형식이 dict로 확정되면 이 데이터를 그대로 옮기면 된다.
+# 검증: cross_dataset/verify_manifest_resolution.py (stage 해소·필수컬럼 계약을 실 산출물로 대조).
+
+version: 1
+
+defaults:
+  cwd: scripts                         # 모든 runner는 scripts/에서 실행
+  suffix_env: CROSS_DATASET_SUFFIX     # 예: _gse205117 → 파일명 접미사
+  config_env: CROSS_DATASET_CONFIG     # 예: ../cross_dataset/config_gse205117.py
+  outputs_dir: results
+  runtime_log: results/runtime.csv
+
+stages:                                # P2 fit 산출 (선언 순서 = 의존성 순서)
+  - id: floor
+    runner: p2_rna_only.py
+    env: scv-preprocess
+    gpu: false
+    output: rna_only_dynamical_genes{suffix}.csv
+    required_cols: [gene, fit_alpha, fit_likelihood]
+  - id: multivelo
+    runner: p2_multivelo.py
+    env: velo-mv
+    gpu: false
+    output: multivelo_genes{suffix}.csv
+    required_cols: [gene, fit_alpha, fit_t_sw1, fit_t_sw2, fit_likelihood]
+  - id: dl_prep
+    runner: p2_dl_prep.py
+    env: velo-torch
+    gpu: true
+    produces_input_for: [multivelovae, moflow]   # 산출 CSV 없음(중간 substrate)
+  - id: multivelovae
+    runner: p2_multivelovae.py
+    env: velo-torch
+    gpu: true
+    output: multivelovae_genes{suffix}.csv
+    required_cols: [gene, vae_alpha, vae_alpha_c]
+  - id: moflow                         # 사전등록 예측5(원정의 MV×MoFlow)에 필수 — BIOP01-41 교훈
+    runner: p2_moflow.py
+    env: velo-torch
+    gpu: true
+    output: moflow_genes{suffix}.csv
+    required_cols: [gene, cs_lag_median]          # cs_lag(오타) 아님 — BIOP01-41 조용한 폴백 사고 방지
+
+score:                                 # P3 채점 (fit 위에서, CPU)
+  - id: prereg
+    runner: cross_dataset/p3_prereg_gse205117.py   # dataset별 채점기 (parametric 통합은 별건)
+    env: scv-preprocess
+    gpu: false
+    output: prereg{suffix}_scorecard.md
