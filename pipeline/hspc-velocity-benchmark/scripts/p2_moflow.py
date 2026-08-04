@@ -27,22 +27,15 @@ from MoFlow.eval_dtw import get_dtw
 METHOD = "moflow"
 
 
-def main(n_genes=0, gpu=False, n_jobs=None):
-    cfg.OUT_VELO.mkdir(parents=True, exist_ok=True); cfg.RESULTS.mkdir(parents=True, exist_ok=True)
-    n_jobs = n_jobs or cfg.MV_NJOBS              # per-gene Lightning Trainer 병렬도(GPU util 낮음→코어 수가 속도 좌우)
-    tag = cfg.SUFFIX + (".smoke" if n_genes else "")   # cross-dataset suffix + smoke (p2_multivelovae 패턴)
-    rna = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_rna{cfg.SUFFIX}.h5ad")
-    atac = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_atac{cfg.SUFFIX}.h5ad")
-    if n_genes:
-        g = list(rna.var_names[:n_genes]); rna = rna[:, g].copy(); atac = atac[:, g].copy()
-    print(f"MoFlow: {rna.n_vars} genes, {rna.n_obs} cells, gpu={gpu}")
-
+def fit_once(rna, atac, gpu, n_jobs, save_tag):
+    """공용 fit 경로 — MOFlow 적합 + gene별 c-s lag(time_lag_c_s) 추출.
+    main()과 p2_moflow_runtorun_refit.py가 공유한다(재구현 금지)."""
     import scvelo as scv
     with timer() as t:
         m = MOFlow(rna, atac, embed="X_umap",
                    device=("cuda" if gpu else None))    # device=None → CPU accelerator
         # velocity()는 fit gene subset + velo layer를 담은 새 adata를 *반환*.
-        result = m.velocity(rna, n_jobs=n_jobs, save_path=str(cfg.OUT_VELO / f"moflow{tag}_out"))
+        result = m.velocity(rna, n_jobs=n_jobs, save_path=str(cfg.OUT_VELO / f"{save_tag}_out"))
         # get_dtw(timekey='velo_s_pseudotime') 위해 pseudotime 계산.
         # ⚠️ velocity_graph는 다중 gene 필요(소수 gene smoke는 실패) → try, 실패 시 lag 생략.
         pt_ok = True
@@ -67,13 +60,28 @@ def main(n_genes=0, gpu=False, n_jobs=None):
             rows[gene] = dict(cs_lag_mean=np.nan, cs_lag_median=np.nan, err=str(e)[:40])
     import pandas as pd
     genes = pd.DataFrame(rows).T; genes.index.name = "gene"
+    return genes, result, t.sec
+
+
+def main(n_genes=0, gpu=False, n_jobs=None):
+    cfg.OUT_VELO.mkdir(parents=True, exist_ok=True); cfg.RESULTS.mkdir(parents=True, exist_ok=True)
+    n_jobs = n_jobs or cfg.MV_NJOBS              # per-gene Lightning Trainer 병렬도(GPU util 낮음→코어 수가 속도 좌우)
+    tag = cfg.SUFFIX + (".smoke" if n_genes else "")   # cross-dataset suffix + smoke (p2_multivelovae 패턴)
+    rna = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_rna{cfg.SUFFIX}.h5ad")
+    atac = sc.read_h5ad(cfg.OUT_VELO / f"dl_input_atac{cfg.SUFFIX}.h5ad")
+    if n_genes:
+        g = list(rna.var_names[:n_genes]); rna = rna[:, g].copy(); atac = atac[:, g].copy()
+    print(f"MoFlow: {rna.n_vars} genes, {rna.n_obs} cells, gpu={gpu}")
+
+    genes, result, sec = fit_once(rna, atac, gpu, n_jobs, save_tag=f"moflow{tag}")
+
     out_csv = cfg.RESULTS / f"moflow_genes{tag}.csv"; genes.to_csv(out_csv)
     n_ok = int(genes["cs_lag_median"].notna().sum())
     print(f"✓ c-s lag {genes.shape}, 산출 gene {n_ok} → {out_csv.name}")
 
     result.write_h5ad(cfg.OUT_VELO / f"moflow{tag}.h5ad")
     log_runtime(cfg.RUNTIME_CSV, method=METHOD, arm="chromatin_aware",
-                n_cells=result.n_obs, n_genes=result.n_vars, wall_sec=t.sec, peak_mb=peak_mem_mb(),
+                n_cells=result.n_obs, n_genes=result.n_vars, wall_sec=sec, peak_mb=peak_mem_mb(),
                 note=f"DTW c-s lag; gpu={gpu}; smoke n={n_genes}" if n_genes else f"DTW c-s lag; gpu={gpu}")
     return 0
 
