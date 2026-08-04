@@ -1,20 +1,14 @@
-# HARNESS.md — 랩 구조 (Agent 하네스 지도) — HSPC velocity-lag benchmark
+# HARNESS.md — 랩 구조 (Agent 하네스 지도) — SpatialPathoAgent (BioProject02)
 
 *Designed by Ka-Kyung Kim, 2026 — a reusable paper-production harness, contributed as a scaffold (CC BY 4.0).*
 
-이 문서는 이 프로젝트의 `.claude` 하네스를 **하나의 연구 랩**으로 본 지도다.
-각 agent는 직원이 아니라 **랩의 멤버(연구원)** 이고, 사람(+메인 루프)이 랩을 이끄는 **PI**다.
-운영 규칙·라우팅·산출물 계약 요약은 `CLAUDE.md`의 *Agent routing & artifact contract* 에 둔다. 이 파일은 그 확장판(멤버 명부 + 관계도 + JD)이다.
+이 문서는 이 프로젝트의 `.claude` **논문 생산 하네스**를 하나의 연구 랩으로 본 지도다. 운영 규칙·라우팅·산출물 계약 요약은 `CLAUDE.md`의 *Agent routing & artifact contract*. 이 파일은 그 확장판(멤버 명부 + 관계도 + JD)이다.
 
-- 멤버는 **누가 일을 시작할지** 사람이 매번 지정하지 않아도, CLAUDE.md 라우팅표로 자연어 요청에서 배정된다.
-- 멤버는 결과를 **대화에만 남기지 않고** 산출물 계약(아래)에 따라 파일로 넘긴다.
-- `paper-orchestrator`는 *계획만* 짠다. 실제 멤버 호출(실행)은 PI/메인 루프가 `paper-production-orchestrator` **Skill**로 한다 — subagent는 subagent를 못 부르기 때문.
-
----
+> ⚠️ 이건 **논문 *생산* 하네스**(결과→논문·발표)다. BioProject02의 기존 **분석 파이프라인**(`agents/<role>/` 워크스페이스: data/embedding/modeling/therapeutic_evidence/critic)을 대체하지 않는다 — 그 위에 얹혀 결과를 논문으로 쓰는 레이어이고, 분석 레이어는 도메인 슬롯 `spatialpatho-analyst`가 대표한다.
 
 ## 1. 멤버 명부 (Roster)
 
-| # | 멤버 | 소속 벤치 | 한 줄 역할 | 상태 |
+| # | 멤버 | 벤치 | 한 줄 역할 | 상태 |
 | --- | --- | --- | --- | --- |
 | D | `hspc-velocity-analyst` | 분석실 | **(도메인 슬롯)** HSPC velocity-lag 파이프라인(P0–P5)·eval·통계·cross-dataset 실행/확장, result 파일 유지 | ✅ 채움 |
 | 1 | `literature-scout` | 문헌·기획 | 선행연구 탐색·정직한 포지셔닝·related work | 재사용 |
@@ -36,48 +30,25 @@
 ## 2. 관계도 (Org / collaboration chart)
 
 ```
-                         PI = 사람 + 메인 루프
-                    (호출·승인·공개 게이트 책임)
-                              │  실행 입구 = paper-production-orchestrator (Skill)
-                    ┌─────────┴─────────┐
-                    │  paper-orchestrator│  ← 계획만(실행 X)
-                    └─────────┬─────────┘
-   ┌──────────────┬──────────┼───────────────┬──────────────┐
-   ▼              ▼          ▼                ▼              ▼
- 문헌·기획      분석실      집필실          심사·QA       엔지니어링
- ────────      ──────      ──────          ───────       ──────────
- literature-   hspc-       manuscript-     paper-critic  design
-   scout        velocity-   writer         venue-reviewer(선택) [그림 생성=
- novelty-       analyst     presenter       (그림 QA는     figNN_*.py,
-   strategist                               paper-critic)   run by writer]
- research-
-   methodologist
+research-methodologist / literature-scout / novelty-strategist            (기획·근거)
+   └─▶ spatialpatho-analyst ──▶ <FILL: result files + consolidated summary>  (분석·검증)
+   └─▶ manuscript-writer ──▶ <FILL: manuscript>                              (집필)
+            ║  <FILL: figure script> ──▶ <FILL: figures dir>                 (그림)
+   └─▶ paper-critic (+ agents/critic/ 체크리스트) ──▶ reviewer               (심사)
+            └─▶ (수정) manuscript-writer
+   └─▶ <FILL: verify-gate = headline AUC/AUPRC 재계산> ──▶ presenter         (검증→발표)
 ```
+실행 입구 = `paper-production-orchestrator` Skill(메인 루프가 실행). `paper-orchestrator`(agent)는 계획만.
+- **검증 게이트**(헤드라인 숫자 재계산)와 **공개 게이트**(저자·소속·저자순서·IP·GPU 제공처)는 PI가 통과시킨다.
 
-### 일이 흐르는 표준 경로 (논문 생산 루프)
-```
-research-methodologist / literature-scout / novelty-strategist   (기획·근거: paper_analysis/ 14편)
-        └─▶ hspc-velocity-analyst ──▶ results/FINDINGS.md + results/*             (분석·검증)
-        └─▶ manuscript-writer ──▶ manuscript/draft_v2.md + draft_v2_ko.md        (집필, 영/한 동시)
-                 ║  figures/figNN_*.py ──▶ figures/*.png                          (그림)
-        └─▶ paper-critic ──▶ venue-reviewer ──▶ manuscript/REVIEW-*.md                 (심사)
-                 └─▶ (수정 반영) manuscript-writer
-        └─▶ verify-gate(p3_concordance + p3_crossdataset_concordance + p3_scrambled_null) ──▶ presenter
-```
-- **검증 게이트**(헤드라인 숫자 결정론적 재계산)와 **공개 게이트**(저자·소속·IP 검토)는 PI가 통과시킨다.
-
----
-
-## 3. 멤버별 JD 요약
-권위 있는 전체 정의는 각 `.claude/agents/<name>.md` 본문. (분석=hspc-velocity-analyst; 집필=manuscript-writer; 발표=presenter; 검수=paper-critic; 기획=literature-scout/novelty-strategist/research-methodologist; 계획=paper-orchestrator; 디자인=design.)
-
----
+## 3. 멤버별 JD
+권위 있는 전체 정의는 각 `.claude/agents/<name>.md` 본문. 분석=spatialpatho-analyst(기존 파이프라인 대표), 나머지는 재사용 연결조직.
 
 ## 4. 현재 하네스 상태 (성숙도)
 
 | 항목 | 상태 |
 | --- | --- |
-| 멤버(agent) 정의 | ✅ 재사용 7 + 도메인 슬롯(hspc-velocity-analyst) 채움 |
+| 멤버(agent) 정의 | ✅ 재사용 7 + 도메인 슬롯(spatialpatho-analyst) |
 | 자연어 라우팅 | ✅ CLAUDE.md 라우팅표 적용 |
 | 산출물 계약 | ✅ 경로 검증(results/, manuscript/, figures/) |
 | 입구(Orchestrator **Skill**) | ✅ `.claude/skills/paper-production-orchestrator/SKILL.md` |
@@ -85,3 +56,4 @@ research-methodologist / literature-scout / novelty-strategist   (기획·근거
 | 재사용 경계(3계층) | ✅ core / project profile / run instance 분리 — 타 분야 이식은 "슬롯 1개"가 아니라 project profile 전체(analyst·게이트 스크립트·paper direction·CLAIMS) 교체. → [`docs/HARNESS-LAYERS.md`](HARNESS-LAYERS.md) (BIOP01-67) |
 | 개선 루프 | `SESSION-LOG.md`(세션별 회고 누적) |
 | 미결(사람 확정) | 저자·소속·corresponding email·공개 정책 — manuscript-writer의 `<FILL>` |
+

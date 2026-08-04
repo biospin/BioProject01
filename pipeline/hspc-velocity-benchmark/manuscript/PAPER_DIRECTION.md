@@ -38,6 +38,11 @@
 
 ## 5. 진행 상태
 
+### 2026-07-27 결정 (kkkim) — 저널·주저자 확정
+- **타깃 저널 = Genome Biology 확정** (base-case CRM 폐기). draft_v2는 이미 GB IMRaD 포맷이라 구조 변경 없음. 단 오늘 GB 27:242(Wu 종합 벤치마크)가 게재됐으므로 desk-reject 위험이 상향 — **Positioning 문단이 "같은 데이터·다른 질문(행렬 재현성·ATAC-shuffle 인과·외부 rate 앵커)"을 명확히 방어**해야 함. critic의 최우선 렌즈로 지정.
+- **주저자(first author) = Ka-Kyung Kim(kkkim) 확정.** 전체 저자 목록·순서·corresponding·박상준 Acknowledgements 처리는 오늘 밤 회의에서 확정 → 그 전까지 원고 `<FILL: author list/corresponding>` 유지(반쯤 채우지 않음). 박상준=비저자+Acknowledgements+서면동의(ICMJE ②③④ 미충족).
+- **critic 착수 승인**: 과학적 내용(층② 감사·외부재현 4/4·스쿱 반영·refs 71) critic-ready. `<FILL>` 메타데이터는 critic 대상 아님(회의 pending 명시).
+
 ### 2026-07-18 결정 (novelty 적대적 판정 후)
 - **적대적 심사(GB) 판정**: 현 draft는 **~75~85% reject 위험** — "음성/부분재현 감사 + 얇은 양성"으로 읽힘. 정직한 base-case venue = **Cell Reports Methods**, GB는 stretch. (kkkim 결정: **A 결과로 재프레이밍 후 GB 도전**, 재검토.)
 - ✅ **make-or-break A 통과(양성 헤드라인 확보)**: profile-likelihood를 α_c·β·γ로 확장(`p5_stiffness_all_params.py`) → **곡률이 외부 측정검증을 예측**(α≫α_c>β>γ, p<1e-11; α 회복·γ 역방향). 커밋 69861b8. → §1 thesis·§2 표 갱신.
@@ -61,6 +66,9 @@
 ### 이전 (2026-07-12~15)
 - ✅ 4-vs-4 확증 + §8(SNR-bounded) + 방어가능선 전략 봉인(커밋 d52416c).
 - ✅ 5번째 GSE205117(gastrulation) 완주 — 사전등록 6/0 PASS(MoFlow arm 원정의 재채점, 커밋 9eb0b76). 본문·Table1 반영.
+
+### 2026-07-27 — 스쿱 점검·인용 반영 (Wu 2026 GB)
+- 오늘 GB 게재된 세 번째 벤치마크(Wu et al. 27:242, 우리 데이터 GSE209878·GSE284047을 임베딩 수준으로 사용)를 스쿱 점검 후 인용 편입. PLOS Ancheta 2026(유전자별 driver 순위 방법 의존, 우리와 방향 일치)도 corroboration으로 인용. **스쿱 아님**(임베딩 순위 vs 우리 행렬 재현성·ATAC-shuffle 인과·외부 rate 앵커). refs 69→71([27] Wu·[28] Ancheta). advisor 지적 반영: Background·Positioning의 "causal negative control 없음" 문장이 Wu의 negative-control task와 충돌하지 않게 "정적 세포 출력 타당성이지 chromatin 인과가 아니다"로 문장 안에서 구분. 분석 상세=paper_analysis/epigenomic-lag/wu-2026-velocity-benchmark/.
 
 ## 6. 정직한 한계 (본문 명시)
 식별가능성-SNR 분리 불가 / freed-nuisance 조건부(α 곡률도 0.19× 붕괴) / skin DEFER / drug-timing은 design principle(wet-lab 미검증) / cross-dataset α gradient는 n=3 confounded라 headline 금지(categorical 대비만).
