@@ -6,7 +6,7 @@
 | 파일 | 내용 |
 |---|---|
 | `draft_v2.md` | **본문 정본**(영어). 한국어 검토본 = `draft_v2_ko.md`. 내용 수정은 항상 두 파일 동시 |
-| `refs.bib` | 인용 — `paper_analysis/*/<paper-id>/*.bib`에서 모음 |
+| `refs.bib` | 인용 — 본문 참고문헌 목록[1]~[N]에서 `scripts/build_refs_bib.py draft_v2.md`로 재생성(진리원천=목록). 검증 `bib_to_cites.py \| verify_citations.py`. (구 "paper_analysis/*.bib 수집"은 method 논문 .bib 부재로 71개 못 만들어 폐기) |
 | `supplementary.md` | 보충 (추가 표·방법 상세) |
 | `figure-legends.md` | `../figures/figNN`과 1:1 대응하는 legend |
 

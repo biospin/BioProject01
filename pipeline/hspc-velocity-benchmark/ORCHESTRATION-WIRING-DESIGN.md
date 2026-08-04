@@ -9,17 +9,20 @@
 > kkkim A(복원) 확정 → **PR #5 머지(`cb886ee`)로 복원 완료**. 실측: `skills/ROUTES.md`(69줄) 등 41파일 복귀,
 > `harness_doctor` **RESULT PASS(phantom-path 0)**. → 라우터 blocker 제거, 초안 §3의 dataset→task 2단 라우팅이 실체 위에 섬.
 >
-> 🚧 **선결 ② 신규 (2026-07-27, 이건규 BIOP01-71 코멘트 11506) — 트리거 계층 결정 대기.**
-> **`openclaw` CLI가 팀 컨테이너 6개 전부에 없다(0/6, 지용기 이 박스도 실측 부재).** 이 초안 제목·§3이 전제한
-> "OpenClaw route로 트리거"가 **실행 도구 부재**로 지금 성립하지 않는다. 대체 경로는 존재한다 —
-> `skills/OPENCLAW-RUN.md`가 같은 `agents/openai.yaml`을 **codex로 실행**하는 길을 기록하고 있고 codex는 인증돼 동작한다.
-> → **트리거를 openclaw로 갈지, codex 기준으로 문서·설계를 정정할지는 회의 결정**(BIOP01-45와 묶어 상정, 이건규 제안).
-> **이 결정이 나기 전 §3-2·3-4 route 의사코드는 확정하지 않는다**(openclaw 전제라 codex면 표기가 달라짐).
+> ✅ **선결 ② 해소 (2026-08-04, 리더 결정) — 트리거 = codex, 형식 = YAML.**
+> `openclaw` CLI가 팀 6대 중 실사용 불가(5대 바이너리 부재 + 6대 auth 부재, kkkim/이건규 실측)인 반면 **codex는 설치·인증 완료**.
+> → **트리거는 codex**(같은 `agents/openai.yaml`을 codex로 실행, `skills/OPENCLAW-RUN.md` 3번 경로), **manifest 형식은 YAML**로 확정.
+> 남은 서버측 선결 1건: "codex가 이 `openai.yaml`을 실제로 완주하는지" 1회 실증(codex 샌드박스 `bwrap` 이슈 포함) — kkkim 서버.
 >
-> ✅ **단 §2 `runner_manifest.yaml`(워커 계층)은 두 결정 모두에 불변이다.** manifest는 "어느 runner를 어떤 env로"만
-> 정의하고, "누가 트리거하나"(openclaw/codex/사람)는 상위 계층이다. 라우터 복원으로 하위 배선 근거는 이미 실체가 됐고,
-> 트리거가 openclaw든 codex든 manifest는 그대로 재사용된다. → **manifest 스키마 확정 + §6 CPU 검증은 트리거 결정과 무관하게 선행 가능.**
-> (근거: 코멘트 11397·11439의 계층 분리 논지 그대로.)
+> **결정에 따라 실체화된 것 (2026-08-04):**
+> - `cross_dataset/runner_manifest.yaml` — 워커 계층 계약(YAML). gse205117 실산출물로 멱등·계약 인라인 검증 PASS.
+> - `cross_dataset/verify_manifest_resolution.py` — 정식 검증기(멱등·누락감지·계약 3검사). 실행 PASS(exit 0).
+> - `cross_dataset/run_from_manifest.sh` — codex가 트리거하는 실행 래퍼. manifest를 읽어 stage별 `conda run`,
+>   skip-if-output + required_cols 사후검증(BIOP01-41 게이트). `--dry-run`으로 gse205117 전 stage SKIP 확인.
+>
+> ✅ **§2 `runner_manifest.yaml`(워커 계층)은 트리거/형식 결정과 애초에 무관했다** — manifest는 "어느 runner를 어떤 env로"만
+> 정의하고, "누가 트리거하나"(codex)는 상위 계층이다. (근거: 코멘트 11397·11439의 계층 분리 논지.)
+> **남은 것**: codex→래퍼 실증(서버) + numpy env byte-identical scorecard 재생성(kkkim) → DoD "end-to-end 1회" 마감.
 
 ---
 
@@ -139,13 +142,16 @@ score:                                 # P3 채점 (fit 위에서)
 
 ---
 
-## 5. 협의가 필요한 열린 결정 (braveji ↔ kkkim)
+## 5. 열린 결정 — 처리 상태 (리더 결정 2026-08-04)
 
-1. **manifest 형식**: YAML 신규 파일 vs 기존 `p2_config.py`에 dict로 넣기. (초안은 YAML — 언어중립·OpenClaw가 읽기 쉬움. 단 repo에 PyYAML 의존 추가됨.)
-2. **route 실행 주체**: OpenClaw가 직접 `conda run` vs 얇은 `run_from_manifest.sh` 래퍼를 호출. (초안은 래퍼 권장 — 기존 watchdog·flock 자산 재사용, OpenClaw는 트리거만.)
-3. **GPU 스케줄링**: `CUDA_VISIBLE_DEVICES`를 manifest 고정 vs route가 여유 GPU 탐지 후 주입. (GPU 서버 Xid79 상황과 연동 — kkkim 판단.)
-4. **dataset별 채점기 일반화**: 지금 `p3_prereg_<ds>.py`가 dataset마다 하나. manifest score stage를 dataset-parametric 단일 스크립트로 통합할지. (별건 리팩터로 분리 제안.)
-5. **적용 범위**: P2(fit)만 자동화 vs P3~P5(채점·bootstrap·FDR)까지. (초안은 P2+P3까지, P4/P5는 후속.)
+1. **manifest 형식** → ✅ **YAML 확정.** `cross_dataset/runner_manifest.yaml`. (PyYAML은 repo에 이미 있음 확인 6.0.1.)
+2. **route 실행 주체** → ✅ **래퍼 확정.** `cross_dataset/run_from_manifest.sh`가 manifest를 읽어 실행; 트리거(codex)는 이 래퍼만 부른다. 기존 watchdog·flock 자산과 병행.
+3. **GPU 스케줄링** → 래퍼는 manifest `gpu:true` stage에 `CUDA_VISIBLE_DEVICES=1` 고정(기존 규약). 여유 GPU 탐지는 후속 개선(비필수).
+4. **dataset별 채점기 일반화** → **별건으로 분리 유지.** 지금은 `p3_prereg_<ds>.py`를 score stage에 직접 지정. parametric 통합은 후속 리팩터.
+5. **적용 범위** → **P2(fit) + P3(prereg 채점)까지.** manifest `stages`(P2) + `score`(P3). P4/P5(bootstrap·FDR)는 후속.
+
+> **트리거 = codex 확정(2026-08-04):** openclaw 팀 전체 실사용 불가, codex 설치·인증됨. codex가 `agents/openai.yaml`을 실행 → `run_from_manifest.sh` 호출.
+> 서버측 선결 1건: codex가 openai.yaml을 실제 완주하는지 실증(bwrap 샌드박스 결정 포함) — kkkim.
 
 ---
 

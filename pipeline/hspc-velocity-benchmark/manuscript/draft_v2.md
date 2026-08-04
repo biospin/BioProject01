@@ -17,7 +17,7 @@ No arrow glyphs in title, body or tables. Research- and education-use draft.
 Written NEW alongside draft.md (draft.md preserved for comparison/gate). Do not overwrite draft.md.
 -->
 
-# A reliability map for multiome RNA velocity outputs in single-cell kinetics
+# A reliability map for per-gene multiome RNA velocity parameters in single-cell kinetics
 
 <!--
 TITLE — declarative, no negation, no arrow, no metaphor. The reliability-map framing is the lead;
@@ -38,11 +38,11 @@ the external-measurement result is corroboration inside the map, not a title cla
 
 **Background.** Chromatin-informed ("multiome") RNA-velocity methods emit several per-gene quantities — a transcription rate, a degradation rate, and a chromatin-to-transcription *lag* (the offset between when a locus opens or closes and when its transcription switches) — each proposed as a biological readout, the lag in particular for predicting the timing of epigenetic-drug responses. A derived quantity is usable downstream only if it is reliable: reproducible across reasonable algorithms and, where possible, consistent with an independent measurement. We asked, for human hematopoietic stem and progenitor cells (HSPCs) profiled by 10x Multiome, which velocity outputs meet that bar.
 
-**Approach.** Across up to five velocity arms (an RNA-only scVelo floor plus MultiVelo, MultiVeloVAE, MoFlow and CRAK-Velo) we tested each output on four axes: cross-method reproducibility (permutation-FDR), a causal within-lineage ATAC-shuffle control, cross-dataset replication in five external multiomes (one preregistered), and external anchoring of the fitted rates to measured synthesis (K562 TT-seq) and degradation (mRNA half-life) rates.
+**Approach.** Across up to five velocity arms (an RNA-only scVelo floor plus MultiVelo, MultiVeloVAE, MoFlow and CRAK-Velo) we tested each output on four axes: cross-method reproducibility (permutation-FDR), a causal within-lineage ATAC-shuffle control, cross-dataset replication in five external multiomes (one preregistered), and external anchoring of the fitted rates to measured synthesis (K562 TT-seq) and degradation (mRNA half-life) rates. We audit the per-gene kinetic parameters and, one layer up, the cell×gene velocity matrix — not the low-dimensional embedding arrows or trajectories that velocity is principally used for.
 
 **Findings.** The outputs separated sharply. Only the transcription rate α reproduced across methods (Spearman ρ=0.88, observed); the chromatin-to-transcription lag and the degradation rate γ did not. The chromatin-to-transcription lag reproduced weakly at best in magnitude (strongest pair ρ=+0.163, most pairs |ρ|≤0.08) and only at chance in sign (54.6%), and shuffling ATAC left it statistically unchanged, identifying the lag as model-structural rather than chromatin-driven. The degradation rate γ was likewise method-fragile (cross-method ρ≈−0.1) and not recovered even where a ground truth existed (K562 half-life 3/3 null; the textbook scVelo γ ran reversed, −0.224, CI excluding 0). As external corroboration, fitted α also tracked the measured K562 TT-seq synthesis rate in all three methods (non-housekeeping ρ +0.24 to +0.29, all CIs excluding 0); because steady-state transcript abundance tracked that same measurement at least as strongly (Spearman(abundance, synthesis)=+0.410 versus Spearman(α, synthesis)=+0.262), we read this as consistency evidence, not as α being a uniquely measurement-grounded output. The α-over-lag ordering held in all six systems and passed a preregistered six-of-six scorecard sealed before any fit. Profile-likelihood analysis gave the mechanism — α is stiff (identifiable), the lag sloppy and boundary-limited — with identifiability aligning partially, but not confirmably, with external validation.
 
-**Conclusions.** We distil these results into a velocity-output reliability map: trust α and rate-derived signals (reproducible across methods and corroborated by an external measurement, usable directly); treat the lag, its sign, absolute timing and γ as unreliable, requiring orthogonal validation. Any downstream timing-prediction model should route through the robust baseline-ATAC-to-α path rather than a single-method lag.
+**Conclusions.** We distil these results into a velocity-output reliability map: trust α and rate-derived signals, reproducible across methods, though α is largely expression (steady-state abundance tracks the external synthesis measurement at least as strongly, so α does not add demonstrable synthesis information beyond it); treat the lag, its sign, absolute timing and γ as unreliable, requiring orthogonal validation. Any downstream timing-prediction model should route through the robust baseline-ATAC-to-α path rather than a single-method lag.
 
 **Keywords:** RNA velocity, single-cell multiome, chromatin accessibility, transcriptional kinetics, parameter identifiability, external validation, benchmarking, hematopoiesis
 
@@ -324,7 +324,7 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 [9] Gayoso A, Weiler P, Lotfollahi M, et al. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. *Nature Methods* 21, 50–59 (2024). doi:10.1038/s41592-023-01994-w.
 
-[10] Gu Y, et al. Bayesian inference of RNA velocity incorporating timepoints, lineage bifurcations, and count data (veloVAE). *PLOS Computational Biology* 22(3), e1014060 (2026). doi:10.1371/journal.pcbi.1014060. [Distinct from MultiVeloVAE [2].]
+[10] Gu Y, et al. Bayesian inference of RNA velocity incorporating timepoints, lineage bifurcations, and count data (veloVAE). *PLOS Computational Biology* 22(3), e1014060 (2026). doi:10.1371/journal.pcbi.1014060. [Distinct from MultiVeloVAE [4].]
 
 [11] Qiao C, Huang Y. Representation learning of RNA velocity reveals robust cell transitions. *Proceedings of the National Academy of Sciences* 118(49), e2105859118 (2021). doi:10.1073/pnas.2105859118.
 
@@ -414,7 +414,7 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 [54] Lederer AR, Leonardi M, Talamanca L, et al. Statistical inference with a manifold-constrained RNA velocity model uncovers cell cycle speed modulations. *Nature Methods* 21(12), 2271–2286 (2024). doi:10.1038/s41592-024-02471-8.
 
-[55] Gu et al. Profile-likelihood identifiability analysis of single-cell transcription (telegraph) kinetics. *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/btaf581. [Distinct from [8].]
+[55] Gu et al. Profile-likelihood identifiability analysis of single-cell transcription (telegraph) kinetics. *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/btaf581.
 
 [56] Wang. Sloppiness and Action Constraint in Cell State Transitions: Are Single Cells Sloppy? bioRxiv 2025.12.31.697145 (v2, 2025). [Methodological analog on cell-state Gaussian coordinates.]
 
