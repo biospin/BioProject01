@@ -20,6 +20,7 @@ MANIFEST="$HERE/runner_manifest.yaml"
 DATASET=""
 DRYRUN=0
 CONDA="${CONDA:-/home/kkkim/miniconda3/bin/conda}"       # 서버별 상이 → --conda로 override
+GPU_ID="${GPU_ID:-1}"                                    # gpu:true stage의 CUDA_VISIBLE_DEVICES → env GPU_ID로 override (3-GPU 공유 충돌 회피)
 while [ $# -gt 0 ]; do
   case "$1" in
     --dataset) DATASET="$2"; shift 2;;
@@ -35,17 +36,25 @@ CONFIG="../cross_dataset/config_${DATASET}.py"           # scripts/ 기준 상�
 
 log(){ echo "[$(date '+%F %T')] $*"; }
 
-# manifest에서 stage 메타를 파이프 구분 라인으로 방출 (id|env|gpu|runner|output|required_cols).
+# manifest에서 stage 메타를 파이프 구분 라인으로 방출 (kind|id|env|gpu|runner|output|required_cols|cwd|gate).
+# cwd  = stage.cwd 또는 defaults.cwd (ROOT 기준 상대. score는 cwd:. → ROOT에서 실행).
+# gate = 자기 output이 없는 substrate stage(dl_prep)의 하위 산출물 목록 → 다 있으면 재실행 불요.
 # score stage도 kind=score로 함께 (P3 채점까지 한 래퍼에서).
 emit_stages() {
 python3 - "$MANIFEST" <<'PY'
 import sys, yaml
 m = yaml.safe_load(open(sys.argv[1]))
+default_cwd = m.get("defaults", {}).get("cwd", "scripts")
+outmap = {s["id"]: (s.get("output") or "") for s in m["stages"]}
 def row(kind, s):
     out = s.get("output","") or ""
     req = ",".join(s.get("required_cols",[]) or [])
+    cwd = s.get("cwd", default_cwd)
+    gate = ""
+    if not out and s.get("produces_input_for"):   # dl_prep류: 하위 산출물이 다 있으면 substrate 재생성 불요
+        gate = ",".join(x for x in (outmap.get(d,"") for d in s["produces_input_for"]) if x)
     print("|".join([kind, s["id"], s["env"], str(s.get("gpu",False)).lower(),
-                     s["runner"], out, req]))
+                     s["runner"], out, req, cwd, gate]))
 for s in m["stages"]: row("fit", s)
 for s in m["score"]:  row("score", s)
 PY
@@ -67,7 +76,7 @@ log "manifest=$MANIFEST dataset=$DATASET suffix=$SUFFIX dry_run=$DRYRUN"
 [ "$DRYRUN" = 1 ] || { [ -x "$CONDA" ] || { echo "conda 실행 불가: $CONDA (--conda로 지정)" >&2; exit 3; }; }
 
 FAIL=0
-while IFS='|' read -r kind id env gpu runner output req; do
+while IFS='|' read -r kind id env gpu runner output req cwd gate; do
   # 산출물 경로(있으면). {suffix} 치환.
   outfile=""
   if [ -n "$output" ]; then outfile="$RESULTS/${output/\{suffix\}/$SUFFIX}"; fi
@@ -83,9 +92,25 @@ while IFS='|' read -r kind id env gpu runner output req; do
     continue
   fi
 
-  # 실행 명령 구성
-  cuda=""; [ "$gpu" = "true" ] && cuda="CUDA_VISIBLE_DEVICES=1 "
-  cmd="cd $SCRIPTS && ${cuda}CROSS_DATASET_CONFIG=$CONFIG CROSS_DATASET_SUFFIX=$SUFFIX $CONDA run --no-capture-output -n $env python -u $runner"
+  # dl_prep류(자기 output 없음 + gate 하위 산출물 선언): 하위가 다 있으면 substrate 재생성 불요 → SKIP.
+  # (dl_prep은 GPU 작업이라, multivelovae·moflow 산출물이 이미 있으면 매번 다시 돌리는 낭비를 막는다.)
+  if [ -z "$output" ] && [ -n "$gate" ]; then
+    all_present=1
+    IFS=',' read -ra gouts <<< "$gate"
+    for g in "${gouts[@]}"; do
+      gf="$RESULTS/${g/\{suffix\}/$SUFFIX}"
+      { [ -f "$gf" ] && [ "$(wc -l <"$gf")" -ge 2 ]; } || { all_present=0; break; }
+    done
+    if [ "$all_present" = 1 ]; then
+      log "[$id] SKIP (하위 산출물 존재 → GPU substrate 재생성 불요: $gate)"
+      continue
+    fi
+  fi
+
+  # 실행 명령 구성. cwd는 ROOT 기준 상대(fit=scripts, score=.); {suffix}는 이미 반영.
+  rundir="$ROOT/$cwd"
+  cuda=""; [ "$gpu" = "true" ] && cuda="CUDA_VISIBLE_DEVICES=$GPU_ID "
+  cmd="cd $rundir && ${cuda}CROSS_DATASET_CONFIG=$CONFIG CROSS_DATASET_SUFFIX=$SUFFIX $CONDA run --no-capture-output -n $env python -u $runner"
 
   if [ "$DRYRUN" = 1 ]; then
     log "[$id] RUN (dry) env=$env gpu=$gpu → ${output:-<산출물 없음>}"
