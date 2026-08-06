@@ -65,8 +65,8 @@ artifacts:
 execution:
   require_repo_root: true          # 상위 디렉터리 실행 금지 (BIOP01-65)
   forbid_generic_fallback: true    # 전문 agent 실패를 general-purpose로 대체 금지
-  run_state: RUN_STATE.yaml        # BIOP01-68 (예정)
-  claim_ledger: CLAIMS.yaml        # BIOP01-69 (예정)
+  run_state: RUN_STATE.yaml        # BIOP01-68 — run instance 계층(runner만 갱신). 스키마 헤더는 파일 참조
+  claim_ledger: CLAIMS.yaml        # BIOP01-69 — claim provenance ledger(headline claim C1~C6 등록)
 
 # 문서가 참조하지만 manifest에 없거나 implemented=false인 agent 이름은 doctor가 FAIL 처리한다.
 # 2026-07-26 2차 조사: README.md·AGENTS.md 가 스캔 대상에서 빠져 skills/ROUTES.md 팬텀을 놓쳤다 → 확대.
