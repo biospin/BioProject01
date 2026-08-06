@@ -2,7 +2,7 @@
 
 > 출처 개념: AKM WEEK 03 — Verification(사실 검증)을 Refinement(표현 개선)와 분리한다. "더 자연스러운 문장 = 사실 확인"이라는 착각을 깬다. 이 문서는 그 프레임워크를 BIOP01 원고(`draft_v2.md`/`draft_v2_ko.md`)에 운영화한다.
 >
-> 실행기: `scripts/verify_manuscript.py` (과제2 = 에이전트·파일 기반, tool evidence). 산출: `results/manuscript_verification_report.md`.
+> 실행기: `scripts/verify_manuscript.py` (과제2 = 에이전트·파일 기반, tool evidence). 산출: `results/verification/manuscript_verification_report.md`.
 > **원칙: 이 하네스는 검증하고 보고할 뿐 고치지 않는다.** 수정은 사람이 correction gate(구체적 충돌이 있을 때만·cap 안에서) 아래 한다.
 
 ## 왜 필요한가
@@ -71,4 +71,12 @@
 python3 scripts/verify_manuscript.py                 # 전체 결정적 검사 체인 + verdict 리포트
 python3 scripts/verify_manuscript.py --with-recompute # p3 재계산 게이트까지(scv-preprocess env 필요)
 ```
-산출: `results/manuscript_verification_report.md`(baseline SHA·per-check verdict·HOLD 카드). 커밋·투고 전, 그리고 리뷰 지적 반영 후 실행한다.
+산출: `results/verification/manuscript_verification_report.md`(baseline SHA·per-check verdict·HOLD 카드). 커밋·투고 전, 그리고 리뷰 지적 반영 후 실행한다.
+
+## ★ 함정 기록 — circular evidence (2026-08-07 실제 발생·수정)
+
+`--with-recompute` 재실행에서 숫자 드리프트 verdict가 HOLD→PASS로 뒤집혔다. 원인: 러너 리포트를 `results/`에 쓰는데, `check_manuscript_numbers.py`의 source 코퍼스가 `results/*.md`라 **자기 이전 리포트(플래그된 수치를 인용)를 근거로 읽어** 그 수치가 "근거에 실재"한다고 통과시켰다. AKM가 경고한 **weak-judge propagation / circular evidence** 그 자체다. 하네스가 자기 산출물을 검증 근거로 삼으면 안 된다.
+
+수정: 러너 리포트를 `results/verification/`(코퍼스 glob `results/*.md`가 매치 안 함)에 쓴다. 검증 산출물은 검증 대상의 source 코퍼스에서 반드시 격리한다. 재실행 결과 숫자 드리프트가 정직하게 HOLD(9.44→9.4 정당 반올림 오탐)로 복귀했다.
+
+교훈: 검증 verdict가 재실행에서 이유 없이 좋아지면 오염을 의심한다(정상이면 결정적 검사는 재현적이어야 한다).

@@ -116,8 +116,9 @@ def main(argv=None):
             r = subprocess.run(cmd, cwd=BENCH, capture_output=True, text=True, timeout=1200)
             rc = r.returncode
             results.append(dict(label=f"재계산 게이트 {g}",
-                                verdict="PASS" if rc == 0 else "HOLD", rc=rc,
-                                note="재계산 완료" if rc == 0 else f"rc={rc} 확인 필요",
+                                verdict="PASS_WITH_NOTE" if rc == 0 else "HOLD", rc=rc,
+                                note=("재계산 실행 완료(rc=0) — 커밋값과 diff 0은 별도 대조 필요(이 게이트는 실행 성공만 확인)"
+                                      if rc == 0 else f"rc={rc} 확인 필요"),
                                 tail="\n".join((r.stdout + r.stderr).strip().splitlines()[-4:])))
         except Exception as e:
             results.append(dict(label=f"재계산 게이트 {g}", verdict="SKIP", rc=None,
@@ -125,10 +126,12 @@ def main(argv=None):
 
     # ── 리포트 ──
     npass = sum(r["verdict"] == "PASS" for r in results)
+    npwn = sum(r["verdict"] == "PASS_WITH_NOTE" for r in results)
     nhold = sum(r["verdict"] == "HOLD" for r in results)
     nfail = sum(r["verdict"] == "FAIL" for r in results)
     nskip = sum(r["verdict"] == "SKIP" for r in results)
-    overall = "FAIL" if nfail else ("HOLD" if nhold else "PASS")
+    overall = ("FAIL" if nfail else "HOLD" if nhold else
+               "PASS_WITH_NOTE" if npwn else "PASS")
 
     L = []
     A = L.append
@@ -150,7 +153,7 @@ def main(argv=None):
     for r in results:
         A(f"| {r['label']} | **{r['verdict']}** | {r['rc']} | {r['note']} |")
     A("")
-    A(f"## 종합: **{overall}**  (PASS {npass} · HOLD {nhold} · FAIL {nfail} · SKIP {nskip})")
+    A(f"## 종합: **{overall}**  (PASS {npass} · PASS_WITH_NOTE {npwn} · HOLD {nhold} · FAIL {nfail} · SKIP {nskip})")
     A("")
     holds = [r for r in results if r["verdict"] in ("HOLD", "FAIL")]
     if holds:
@@ -174,15 +177,19 @@ def main(argv=None):
         if r["verdict"] == "SKIP":
             A(f"- {r['label']}: {r['note']}")
 
-    out = BENCH / "results/manuscript_verification_report.md"
+    # ★ 리포트는 results/verification/ 하위에 쓴다 — results/*.md 코퍼스에 들어가면
+    #   check_manuscript_numbers가 자기 리포트에서 수치를 찾는 circular-evidence 오염이 난다
+    #   (AKM weak-judge propagation). 이 경로는 코퍼스 glob이 매치하지 않는다.
+    out = BENCH / "results/verification/manuscript_verification_report.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(L) + "\n")
 
     # 콘솔 요약
     print(f"[verify_manuscript] Tier 3 | baseline EN={sha256(DRAFT_EN)} git={git_head()}")
     for r in results:
-        mark = {"PASS": "✅", "HOLD": "⚠️", "FAIL": "❌", "SKIP": "⏭"}[r["verdict"]]
-        print(f"  {mark} {r['verdict']:<4} {r['label']} — {r['note']}")
-    print(f"\n종합: {overall} (PASS {npass}·HOLD {nhold}·FAIL {nfail}·SKIP {nskip})")
+        mark = {"PASS": "✅", "PASS_WITH_NOTE": "🟡", "HOLD": "⚠️", "FAIL": "❌", "SKIP": "⏭"}.get(r["verdict"], "?")
+        print(f"  {mark} {r['verdict']:<14} {r['label']} — {r['note']}")
+    print(f"\n종합: {overall} (PASS {npass}·PWN {npwn}·HOLD {nhold}·FAIL {nfail}·SKIP {nskip})")
     print(f"리포트: {out.relative_to(BENCH)}")
     return 2 if nfail else (1 if nhold else 0)
 
