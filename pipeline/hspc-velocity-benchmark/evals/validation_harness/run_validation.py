@@ -243,6 +243,21 @@ def main() -> int:
                              observed=obs, harness_ok=harness_ok, detail=detail,
                              fix=c.get("fix"), overall=c.get("overall")))
 
+    # 교정 루프 실증(§3): mutate→detect→fix(정정)→re-verify 가 닫히는지 대표 케이스로 확인.
+    # 이 도메인 fix 는 assist(사람 확인) — 여기선 '정정=정본 값 복원'으로 루프 폐쇄만 보인다.
+    def _mut_a3(d):
+        for c in d["claims"]:
+            if c["id"] == "C2":
+                c["key_numbers"]["alpha_concordance"] = "method 간 rho=0.987654"
+    fs_bad, _ = case_ledger_claims(_mut_a3)
+    detected = any(f["check"] == "key_number_vs_evidence" and f["claim"] == "C2"
+                   and "0.987654" in f["detail"] for f in fs_bad)
+    fs_fixed = ledger_findings(CLAIMS_CANON, MANU / "draft_v2.md")   # 정정(정본값 복원) 후 재검증
+    still = any(f["check"] == "key_number_vs_evidence" and f["claim"] == "C2"
+                and "0.987654" in f["detail"] for f in fs_fixed)
+    remediation = {"case": "A3", "tier": "assist", "detected": detected,
+                   "after_fix_clean": not still, "loop_closed": detected and not still}
+
     post = {p.name: sha(p) for p in CANONICAL}
     canonical_intact = pre == post
     shutil.rmtree(SANDBOX, ignore_errors=True)
@@ -254,6 +269,7 @@ def main() -> int:
         canonical_sha256_before=pre, canonical_sha256_after=post,
         canonical_intact=canonical_intact,
         not_tested=[f["id"] for f in findings if f["observed"] == "NOT_TESTED"],
+        remediation_demo=remediation,
         cases=findings,
     )
     (HERE / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2))
@@ -269,6 +285,8 @@ def main() -> int:
             all_ok = False
         print(f"  {f['id']:<24}{f['kind']:<17}{str(f['expected']):<14}{f['observed']:<14}{mark}")
     print(f"\nNOT_TESTED(게이트 없음): {report['not_tested']}")
+    rem = remediation
+    print(f"교정 루프(A3, {rem['tier']}): 탐지={rem['detected']} → 정정후 clean={rem['after_fix_clean']} → 루프닫힘={rem['loop_closed']}")
     print(f"보고서: {HERE / 'report.json'}")
     ok = all_ok and canonical_intact
     print(f"\nRESULT: {'PASS (모든 케이스가 사전선언 판정과 일치, 정본 불변)' if ok else 'FAIL (불일치/훼손 — 보고서 확인)'}")

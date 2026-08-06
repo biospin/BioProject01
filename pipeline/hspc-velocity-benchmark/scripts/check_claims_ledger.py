@@ -34,6 +34,18 @@ REPO = Path(__file__).resolve().parents[3]        # scripts/ → bench → pipel
 PRIMARY = {"primary_positive", "primary_negative", "primary_generalization"}
 NUM = re.compile(r"[-+]?\d+\.\d+|[-+]?\d+/\d+|[-+]?\d+%")   # 0.88, -0.04, 0/598, 48%
 
+# 교정(fix) 등급·자리 — 방법론 §3. 이 도메인 결함은 정답이 하나로 안 정해져 auto 가 아니다
+# (§12: 판단 필요 항목을 자동 PASS/FAIL 로 환원하지 않는다). detector 가 자리·제안을 명시하고
+# 적용은 사람이 확인한다(assist). 루프는 교정 후 재실행으로 닫는다.
+FIX = {
+    "claim_level_vs_status": {"tier": "assist", "target": "source",
+        "suggestion": "claim_level 을 status 에 맞게 하향(primary_→mechanism/supporting/downstream) 또는 evidence 확보 후 status 승격"},
+    "limitations_preserved": {"tier": "assist", "target": "artifact",
+        "suggestion": "삭제된 한계 문장을 원고에 복원(CLAIMS.limitations 참조)"},
+    "key_number_vs_evidence": {"tier": "assist", "target": "source",
+        "suggestion": "key_number 를 evidence 파일의 실측값으로 정정"},
+}
+
 
 def norm(s: str) -> str:
     return str(s).replace("−", "-")
@@ -93,6 +105,8 @@ def main() -> int:
                     findings.append(dict(check="key_number_vs_evidence", claim=cid, verdict="CONTRADICTED",
                                          detail=f"key_number 수치 {missing} 가 evidence 파일에 없음"))
 
+    for f in findings:                    # 방법론 §3·§5: 각 결함에 교정 자리·등급·제안(4요소 ④)
+        f["fix"] = FIX.get(f["check"])
     contra = [f for f in findings if f["verdict"] == "CONTRADICTED"]
     insuff = [f for f in findings if f["verdict"] == "INSUFFICIENT"]
     report = dict(claims=str(a.claims), draft=str(a.draft),

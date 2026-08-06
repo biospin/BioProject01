@@ -106,7 +106,7 @@ exact-token 대조 → **substring 대조**(`check_manuscript_numbers` 규약)�
 
 | 항목 | 왜 안 고쳤나 |
 |---|---|
-| **교정(fix) 루프 자동화** | detection gap 은 닫았으나, 게이트가 fix 3등급(auto/assist/manual)을 **산출·자동적용하지 않는다.** cases.yaml 에 등급만 선언. 관측→교정→재검증 자동화는 후속 |
+| **auto-fix(무인 자동적용)** | detector 가 fix(등급·자리·제안)를 **산출하고**, 관측→탐지→교정→재검증 루프가 닫히는 것도 실증했다(`remediation_demo`: A3 탐지→정정→재검증 clean, loop_closed=True). 다만 등급은 **assist** — 지어낸 수치·틀린 인용·claim 격상은 정답이 하나로 안 정해져 사람이 정정값을 확인해야 한다. **auto(무인) 는 의도적으로 안 만들었다**(방법론 §12: 판단 필요를 자동 PASS/FAIL 로 환원 금지). 입력 정규화처럼 정답이 유일한 auto 자리가 이 도메인엔 없다 |
 | **정본 CLAIMS C4 `0.19`** | lag_signal 범위 상단(`+0.03~+0.19`)이 evidence 리터럴 부재(파생·범위값). `check_manuscript_numbers` 허용 baseline 과 같은 성격. 이건규 님 보고, 정본은 미수정 |
 | **게이트↔CI 배선** | `check_claims_ledger` 를 harness_doctor/package_validation 에 hard gate 로 붙이는 것은 후속(현재는 하네스가 호출) |
 | **BIOP02 이식** | §7. 복사 아닌 벤치마킹이라 도메인 게이트 조사 선행 |
