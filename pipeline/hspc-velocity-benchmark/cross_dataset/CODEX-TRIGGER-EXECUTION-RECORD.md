@@ -2,7 +2,7 @@
 
 > 성격: 워커 계층(run_from_manifest.sh + runner_manifest.yaml)을 실제로 무엇으로 돌렸고, 무엇이
 > 나왔고, 무엇이 막혔는지의 이력. 설계·계획은 `ORCHESTRATION-WIRING-DESIGN.md`.
-> 결론: **워커층·재현성은 통과. codex 트리거는 이 환경에서 샌드박스 바이패스를 전제로 성립.**
+> 결론: **워커층·재현성·codex 트리거 모두 통과.** codex 는 샌드박스 바이패스(`--dangerously-bypass-approvals-and-sandbox`)로 래퍼를 완주(exit 0). 트리거 결정 A(codex) 실증 완료.
 
 ---
 
@@ -84,17 +84,18 @@ codex exec --dangerously-bypass-approvals-and-sandbox \
 # 또는:  -c sandbox_mode=danger-full-access
 ```
 
-**성공 판정**: codex 가 래퍼를 실제 실행해 전 SKIP·`DONE`·exit 0 을 보고하면 트리거 실증 완료.
+**성공 판정 → 확인됨(2026-08-06)**: 위 바이패스 명령으로 codex 가 래퍼를 실제 실행 —
+`succeeded in 4ms`, 전 stage SKIP, `DONE`, exit 0. **트리거 결정 A(codex) 실증 완료.**
 
 ---
 
 ## 5. 남은 것 · 함의
 
-- **codex 바이패스 재시도** — 위 명령 1회. 완주하면 트리거 결정 A 확정.
+- ~~codex 바이패스 재시도~~ — **완료.** 바이패스로 codex 가 워커를 완주(exit 0). 트리거 A 확정.
 - **openai.yaml → 래퍼 자동 배선** — 완전 자동(사람이 `codex exec` 안 치고 openai.yaml 로 트리거)하려면
   skill/openai.yaml 프롬프트에 "run_from_manifest.sh 실행" 지시를 넣어야 한다(이건규 님 skill / 지용기 님 워커층 소관). 실증 후 결정.
 - **카운슬(BIOP01-81) GPT leg** — 같은 방식(`codex exec` 바이패스)으로 개통 가능. 이 실증이 그 선결.
 
 ## 6. 변경 이력
 
-- 2026-08-06 최초 작성. 워커 dry-run 통과·byte-identical 통과·codex 샌드박스 차단 진단. 트리거 A는 바이패스 전제 성립.
+- 2026-08-06 최초 작성 + 당일 갱신. 워커 dry-run·byte-identical 통과, codex 샌드박스 차단 진단 → **바이패스로 codex 완주(exit 0) 확인**. 트리거 A(codex) 실증 완료.
