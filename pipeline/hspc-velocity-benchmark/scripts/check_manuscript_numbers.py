@@ -50,6 +50,28 @@ def main():
     corpus, srcfiles = load_sources(a.src)
     src_signed = set(DEC.findall(corpus))
     src_bare = {n.lstrip('+-') for n in src_signed}
+    # 반올림 tolerance용: 근거 소수값의 절대값 float 집합
+    src_floats = set()
+    for n in src_bare:
+        try:
+            src_floats.add(abs(float(n)))
+        except ValueError:
+            pass
+
+    def rounds_to_source(tok):
+        """원고 tok이 어떤 근거값의 (tok 자릿수 기준) 정당한 반올림인가.
+        예: draft 9.4(1자리)는 근거 9.44의 반올림이다(|9.44−9.4|≤0.05). 과대매칭 방지 위해
+        tok 자릿수의 half-unit 이내만 인정(round-half-up/even 모두 커버)."""
+        t = tok.lstrip('+-')
+        if '.' not in t:
+            return False
+        d = len(t.split('.', 1)[1])
+        try:
+            v = abs(float(tok))
+        except ValueError:
+            return False
+        half = 0.5 * (10 ** -d) + 1e-12
+        return any(abs(y - v) <= half for y in src_floats)
 
     doc = (BENCH / a.doc).read_text(errors="ignore")
     # References/Bibliography 이후는 인용 메타데이터(DOI·날짜)라 본문 주장 대조 대상 아님
@@ -57,6 +79,7 @@ def main():
     if cut:
         doc = doc[:cut.start()]
     misses = []
+    n_rounded = 0
     for i, raw in enumerate(doc.splitlines(), 1):
         line = norm(raw)
         for m in DEC.finditer(line):
@@ -65,13 +88,16 @@ def main():
                 continue
             if tok in src_signed or tok.lstrip('+-') in src_bare:
                 continue
+            if rounds_to_source(tok):          # 근거값의 정당한 반올림 → 드리프트 아님
+                n_rounded += 1
+                continue
             misses.append({"line": i, "value": tok, "context": raw.strip()[:100]})
 
     print(f"원고: {a.doc}")
     print(f"근거 문서 {len(srcfiles)}개: {', '.join(srcfiles[:6])}{' …' if len(srcfiles)>6 else ''}")
-    print(f"근거 소수값 {len(src_bare)}종\n")
+    print(f"근거 소수값 {len(src_bare)}종 | 반올림 tolerance로 통과 {n_rounded}건\n")
     if not misses:
-        print("✅ 원고의 모든 소수 수치가 근거 문서에 실재합니다(드리프트 없음).")
+        print(f"✅ 원고의 모든 소수 수치가 근거 문서에 실재합니다(드리프트 없음; 반올림 일치 {n_rounded}건 포함).")
     else:
         print(f"⚠️ 근거 문서에 없는 원고 수치 {len(misses)}건 — 리뷰 필요(오타/구버전/드리프트/미반영 결과 가능):\n")
         for x in misses:
