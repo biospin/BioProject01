@@ -104,3 +104,21 @@
 - HOLD fields: 해당 없음.
 - Learn Back: CONDITIONAL_CANDIDATE(위 H).
 - limitations: (1) verifier가 same-agent라 완전 독립 아님 — cross-model/human(Lv5·Lv8)은 미적용. (2) 한 개 headline claim만 대상(다른 헤드라인은 별도 pass 필요). (3) p3 재계산 게이트는 `--with-recompute`로 별도 실행해야 완전.
+
+---
+
+## 과제2 후속 — Cross-model 독립검증 (Lv5, 다른 모델)
+
+> BIOP01-84 후속(3). 다른 모델(sonnet) 서브에이전트가 source 파일만 직접 읽고 적대적 독립 검증. same-agent(위 과제1, Lv1)와 독립. 도구 7회, 96k tokens.
+
+**OVERALL: SUPPORT_WITH_NOTE.** 핵심 수치(+0.163·CI [+0.078,+0.244]·signed −0.010)는 identifiability_dissociation.md·concordance.md·clean_concordance_gate.md·FINDINGS.md 4곳에서 정확 재현. "weakly at best"는 TOST 비등가 결과(등가 미인증)와 정합 — 과대·과소 주장 아님.
+
+- Sub-fact 1(strongest MV×VAE +0.163) SUPPORT. 단 "strongest"는 다른 5쌍의 *magnitude* 재계산이 source에 없어 apples-to-apples 교차확인은 안 됨(signed |ρ| 최대 0.151과만 대비).
+- Sub-fact 2(signed −0.010) SUPPORT.
+- Sub-fact 3("most pairs |ρ|≤0.08") **SUPPORT_WITH_NOTE(실질 note)**: §3.5 6쌍 중 5쌍의 ≤0.08은 **signed** lag Spearman에서 온 값이고 magnitude convention 재계산은 MV×VAE 1쌍만 존재. 그 1쌍에서 signed(−0.010)와 magnitude(+0.163)가 16× 차이·부호 뒤집힘. 원고가 "under the magnitude convention … most pairs |ρ|≤0.08"로 붙여 쓰면 **균일한 magnitude convention이 전 쌍에 적용된 듯 읽힐 위험**. identifiability_dissociation.md L24가 MV×VAE에 대해 같은 범주혼동 경고를 달았으나 "most pairs" 일반화엔 확장 안 함.
+- Sub-fact 4("weakly at best" 과대 아님) SUPPORT (Table 2 "Unreliable", TOST 비등가).
+- 정밀 note: 엄밀히는 6쌍 중 moflow×crakvelo(0.151) 초과·moflow×VAE(0.083) 경계라 "4 of 6 ≤0.08 + 경계1 + 초과1". "most"는 합리적 반올림.
+
+**disposition**: 수치 오류 아님(드리프트 0). 이건 *framing 정밀도* note로, 원고 수정 여부는 저자·리뷰어 판단(AKM: note는 contradiction 아님 → 자동 수정 안 함). 후보 조치 = 원고에서 convention을 clause별로 명시("strongest pair는 magnitude convention +0.163; 나머지 쌍은 signed |ρ|≤0.08"). BIOP01-52 원고 리뷰 후보 항목.
+
+★ 의의: cross-model(Lv5)이 same-model(Lv1)이 놓친 실질 뉘앙스를 잡음 — 증거 독립성 사다리를 올리는 값을 실증.
