@@ -7,7 +7,7 @@
 
 - `manuscript/draft_v2.md` sha256[:16] = `94a9f03d95c8058f`
 - `manuscript/draft_v2_ko.md` sha256[:16] = `5f94d633317277fa`
-- git HEAD = `f582b84` | 위험 Tier = **3 (투고·공개)** | correction cap = 2
+- git HEAD = `89227ad` | 위험 Tier = **3 (투고·공개)** | correction cap = 2
 
 ## Per-check verdict (tool evidence 층, 사다리 Lv3~4)
 
@@ -18,15 +18,12 @@
 | 수정 보존 EN (check_revision_preserved) | **PASS** | 0 | 이상 없음 |
 | 수정 보존 KO (check_revision_preserved) | **PASS** | 0 | 이상 없음 |
 | 본문→목록 인용결함 (p13_check_uncited_sources) | **PASS** | 0 | 이상 없음 |
-| 재계산 게이트 p3_concordance.py | **SKIP** | None | --with-recompute 미지정(scv-preprocess+data 필요) |
-| 재계산 게이트 p3_crossdataset_concordance.py | **SKIP** | None | --with-recompute 미지정(scv-preprocess+data 필요) |
-| 재계산 게이트 p3_scrambled_null.py | **SKIP** | None | --with-recompute 미지정(scv-preprocess+data 필요) |
+| 재계산 게이트 p3_concordance.py | **PASS** | 0 | 재계산이 커밋값과 byte-identical (diff 0) |
+| 재계산 게이트 p3_crossdataset_concordance.py | **PASS** | 0 | 재계산이 커밋값과 byte-identical (diff 0) |
+| 재계산 게이트 p3_scrambled_null.py | **PASS** | 0 | 재계산이 커밋값과 byte-identical (diff 0) |
 
-## 종합: **PASS**  (PASS 5 · PASS_WITH_NOTE 0 · HOLD 0 · FAIL 0 · SKIP 3)
+## 종합: **PASS**  (PASS 8 · PASS_WITH_NOTE 0 · HOLD 0 · FAIL 0 · SKIP 0)
 
 HOLD/FAIL 없음 — 전 결정적 검사 통과. 단 최종 verdict는 사람(Lv8)이 확정한다.
 
 ## SKIP 목록 (별도 실행 필요)
-- 재계산 게이트 p3_concordance.py: --with-recompute 미지정(scv-preprocess+data 필요)
-- 재계산 게이트 p3_crossdataset_concordance.py: --with-recompute 미지정(scv-preprocess+data 필요)
-- 재계산 게이트 p3_scrambled_null.py: --with-recompute 미지정(scv-preprocess+data 필요)
