@@ -70,3 +70,5 @@ timestamp_utc,method,arm,n_cells,n_genes,wall_sec,peak_mem_mb,commit,note
 2026-07-21T10:41:22+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b0_s303,15315,498,2709.1,11088.0,c8d5bdf,shuffle-draw variability; subsample seed=20260701 shuf_seed=303; njobs=8
 2026-07-21T10:43:45+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b2_s305,15315,499,2731.7,11089.0,c8d5bdf,shuffle-draw variability; subsample seed=20260703 shuf_seed=305; njobs=8
 2026-07-21T10:46:05+00:00,multivelo_shuffle_seed,shuffle_seed_refit:b1_s304,15315,499,2755.9,11075.9,c8d5bdf,shuffle-draw variability; subsample seed=20260702 shuf_seed=304; njobs=8
+2026-08-05T08:49:45+00:00,moflow_runtorun,runtorun_refit:run1,21878,636,6789.1,8047.3,5e35798,ATAC intact independent re-run; gpu=True
+2026-08-06T02:46:43+00:00,moflow_runtorun,runtorun_refit:run2,21878,636,6689.3,8113.0,5e35798,ATAC intact independent re-run; gpu=True

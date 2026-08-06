@@ -1,0 +1,73 @@
+{
+ "design": "MoFlow run-to-run null: identical full-cohort input, ATAC intact, independent re-run only",
+ "audit_genes": 354,
+ "orig_cells": 21878,
+ "sealed_criteria": {
+  "moflow_reproducible": "min-over-runs lower CI(centered ceiling) > max |near-zero pair centered cosine|",
+  "moflow_not_separable": "ceiling CI touches or falls below that threshold, or includes 0"
+ },
+ "near_zero_pairs_raw_excess": {
+  "MultiVelo × MoFlow": -0.012113868549931794,
+  "MoFlow × CRAK-Velo": 0.0026473532780073583,
+  "MoFlow × MultiVeloVAE": 0.0030109183862805367
+ },
+ "near_zero_pairs_centered": {
+  "MultiVelo × MoFlow": -0.01176658645272255,
+  "MoFlow × CRAK-Velo": 0.0019254691433161497,
+  "MoFlow × MultiVeloVAE": 0.0018753123003989458
+ },
+ "runs": [
+  {
+   "run": 1,
+   "n_gene": 354,
+   "n_cell": 21878,
+   "same_cells_as_first_run": null,
+   "centered_ci": [
+    0.9999053180217743,
+    0.9999030828475952,
+    0.9999077335000038
+   ],
+   "raw_median": 0.9997379779815674,
+   "raw_null": 0.36715182662010193,
+   "raw_excess": 0.6325861513614655,
+   "sign_agreement": 0.9983017955668275
+  },
+  {
+   "run": 2,
+   "n_gene": 354,
+   "n_cell": 21878,
+   "same_cells_as_first_run": true,
+   "centered_ci": [
+    0.9999053180217743,
+    0.9999030828475952,
+    0.9999077335000038
+   ],
+   "raw_median": 0.9997379779815674,
+   "raw_null": 0.3673593997955322,
+   "raw_excess": 0.6323785781860352,
+   "sign_agreement": 0.9983017955668275
+  }
+ ],
+ "run1_vs_run2": {
+  "n_gene": 354,
+  "centered_ci": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ "shuffle_recompute": {
+  "centered_median": 0.11260438710451126,
+  "ci": [
+   0.11122911470010877,
+   0.11391775077208877
+  ],
+  "n_gene": 353
+ },
+ "verdict": "MOFLOW-REPRODUCIBLE (근접-0 쌍은 arm 불안정으로 설명 안 됨)",
+ "verdict_checks": {
+  "min_lower_ci_ceiling": 0.9999030828475952,
+  "near_zero_threshold": 0.01176658645272255,
+  "passes": true
+ }
+}
