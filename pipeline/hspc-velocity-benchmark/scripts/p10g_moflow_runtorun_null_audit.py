@@ -92,9 +92,12 @@ def recompute_shuffle_delta(genes, A_full, ok_mask):
     p_scr, layer = SCRAMBLED["MoFlow-scr"]
     if not os.path.exists(p_scr):
         return None
-    B = load(p_scr, layer, list(genes))
-    good = ok_mask & np.isfinite(B).all(0) & (np.nanstd(B, 0) > 0)
-    m, lo, hi = boot_ci(centered_cos(A_full[:, good], B[:, good]))
+    scr_genes = set(_names(p_scr, "var"))
+    g = [x for x in genes if x in scr_genes]
+    gmask = np.isin(genes, np.array(g))
+    B = load(p_scr, layer, g)
+    good = ok_mask[gmask] & np.isfinite(B).all(0) & (np.nanstd(B, 0) > 0)
+    m, lo, hi = boot_ci(centered_cos(A_full[:, gmask][:, good], B[:, good]))
     return dict(centered_median=m, ci=[lo, hi], n_gene=int(good.sum()))
 
 
