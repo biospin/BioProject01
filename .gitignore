@@ -141,3 +141,5 @@ pipeline/hspc-velocity-benchmark/cross_dataset/*_DONE
 pipeline/hspc-velocity-benchmark/cross_dataset/*_PROGRESS
 *.lock
 evals/**/logs/
+pipeline/hspc-velocity-benchmark/evals/validation_harness/.sandbox/
+pipeline/hspc-velocity-benchmark/evals/validation_harness/report.json

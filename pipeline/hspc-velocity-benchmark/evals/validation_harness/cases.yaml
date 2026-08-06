@@ -1,0 +1,138 @@
+# cases.yaml — 결과물 검수 하네스 mutation 케이스 (사전선언)
+# ---------------------------------------------------------------------------
+# 방법론: RESULT_VALIDATION_METHOD_PORTABLE_v1 §4.
+# 목적: 새 게이트를 만드는 게 아니라, "이미 있는 게이트가 의도한 결함을 정말
+#       탐지하는지" mutation 으로 증명한다. 각 케이스의 기대 판정은 **러너를 짜기
+#       전에** 여기 적었다(코드가 케이스를 정당화하지 못하게).
+#
+# 판정 6종: SUPPORTED / CONTRADICTED / INSUFFICIENT / NOT_TESTED / EXPECTED_MISS / REVIEW_REQUIRED
+# 정본(draft_v2.md·draft_v2_ko.md·CLAIMS.yaml·refs.bib·results/*)은 수정하지 않는다.
+# mutation 은 bench 하위 .sandbox/ 사본에서만. 러너가 정본 checksum 불변을 검증한다.
+#
+# scope: BIOP01 only. BIOP02 게이트는 이번 라운드에서 조사하지 않았다 → 별도 라운드(NOT_TESTED 로 명시 금지, 범위 밖).
+
+version: 1
+project: biop01
+# 기존 게이트가 정상 draft 에도 내는 등록된 miss(=허위 아님). 러너는 이것을 델타에서 제외한다.
+registered_expected_miss:
+  check_manuscript_numbers:
+    - value: "9.4"        # draft_v2 L67, lag 상관 문맥. 파생·서술 수치로 소스 union 밖 — 사전 등록.
+
+cases:
+  # ---- 정본(mutation 없음) : 게이트가 늘-실패가 아님을 증명 ----
+  - id: M0_baseline
+    kind: normal
+    mutation: none
+    expect:
+      check_manuscript_numbers: SUPPORTED     # 등록된 EXPECTED_MISS(9.4) 외 새 miss 0
+    overall: SUPPORTED
+    downstream_allowed: true
+
+  # ---- mutation 1 : CLAIMS/근거에 없는 숫자를 본문에 삽입 ----
+  - id: M1_fabricated_number
+    kind: mutation
+    target: draft_v2.md
+    mutation: "본문 Results 문장에 근거에 없는 값 'Spearman rho=0.999' 삽입"
+    detector: check_manuscript_numbers
+    expect:
+      check_manuscript_numbers: CONTRADICTED  # ★ 0.999 가 misses 에 새로 등장
+    overall: CONTRADICTED
+    downstream_allowed: false
+    fix: { tier: assist, target: artifact, note: "지어낸 수치 제거 또는 근거 추가 후 재검증" }
+
+  # ---- mutation 2 : claim_level 을 근거보다 한 단계 격상 ----
+  - id: M2_claim_level_escalation
+    kind: mutation
+    target: CLAIMS.yaml
+    mutation: "C6 claim_level: downstream_implication(provisional) → primary_positive/supported 로 격상"
+    detector: none
+    expect:
+      claim_level_vs_evidence: NOT_TESTED      # ★ CLAIMS.yaml 의 claim_level 을 근거와 대조하는 게이트가 없음(BIOP01-69 '연동 후속')
+    overall: NOT_TESTED
+    downstream_allowed: false
+    fix: { tier: manual, target: generator, note: "claim_level↔evidence 대조 detector 미구현 = 이 실험의 gap 발견" }
+
+  # ---- mutation 3 : 근거 파일 수치를 바꾸고 원고는 그대로(낡은 문장) ----
+  - id: M3_stale_manuscript
+    kind: mutation
+    target: "results/atac_alpha_expression_confound.md"
+    precondition: "값 0.724 는 results/*.md 중 atac_alpha_expression_confound.md 단독 출현(단일소스). 다중소스면 union 이 stale 을 못 잡음."
+    mutation: "근거 파일의 0.724 → 0.111 로 변경, 원고의 0.724 는 그대로 둠"
+    detector: check_manuscript_numbers
+    expect:
+      check_manuscript_numbers: CONTRADICTED  # ★ 0.724 가 소스 union 에서 사라져 새 miss
+    overall: CONTRADICTED
+    downstream_allowed: false
+    fix: { tier: assist, target: input, note: "원고 수치 갱신 또는 근거 재확인" }
+
+  # ---- mutation 4 : 존재하지 않는 인용 삽입 ----
+  - id: M4_fabricated_citation
+    kind: mutation
+    target: refs.bib
+    mutation: "가짜 DOI(10.9999/fake.2099.000000) 항목을 refs.bib 에 추가"
+    detector: verify_citations
+    network: true                              # CrossRef 조회 — 불통이면 INSUFFICIENT(CONTRADICTED 와 구분)
+    expect:
+      verify_citations: CONTRADICTED           # ★ 가짜 = NOT_FOUND → CONTRADICTED (대조 control 항목은 VERIFIED→SUPPORTED)
+    overall: CONTRADICTED
+    downstream_allowed: false
+    fix: { tier: manual, target: source, note: "지어낸 인용 제거 또는 실제 문헌으로 교체" }
+
+  # ---- mutation 5 : limitations 삭제 ----
+  - id: M5_limitations_deleted
+    kind: mutation
+    target: draft_v2.md
+    mutation: "Discussion 의 한계(limitations) 문단 제거"
+    detector: none
+    expect:
+      limitations_present: NOT_TESTED          # ★ 한계 섹션 존재/보존을 검사하는 게이트 없음(check_revision_preserved 는 수치·인용마커만)
+    overall: NOT_TESTED
+    downstream_allowed: false
+    fix: { tier: manual, target: generator, note: "한계 보존 detector 미구현 = gap. CLAIMS.limitations 대조로 승격 가능(후속)" }
+
+  # ========================= 분석 관점 (analysis) =========================
+  # 논문-작성 게이트(위)가 "원고가 결과를 충실히 반영하나"라면, 아래는 "분석 자체가
+  # 올바른 수를 재현 가능하게 내나"를 본다. 기존 evals/reproducibility_pilot 재사용.
+
+  # ---- A1 : 분석 eval 스코어러가 실제로 제약되나(비공허성) ----
+  - id: A1_analysis_eval_nonvacuous
+    kind: analysis
+    detector: "reproducibility_pilot/mutation_check.py"
+    mutation: "스코어러를 degenerate(always_pass/fail/caution/na)·invert_threshold 로 치환"
+    expect:
+      analysis_eval_nonvacuous: SUPPORTED    # ★ 모든 mutant 이 케이스셋에 의해 killed → 스코어러가 제약됨
+    overall: SUPPORTED
+    downstream_allowed: true
+
+  # ---- A2 : 봉인 corpus 를 사전등록 기대대로 분류하나 ----
+  - id: A2_analysis_corpus_classification
+    kind: analysis
+    detector: "reproducibility_pilot/run_pilot.py"
+    mutation: "결함 주입 fixture(scorer_validation·regression_corpus)를 스코어러로 분류"
+    expect:
+      analysis_corpus_matches_sealed: SUPPORTED   # ★ 모든 케이스가 봉인 사전등록 기대와 일치
+    overall: SUPPORTED
+    downstream_allowed: true
+
+  # ---- A3 : CLAIMS.yaml key_number 가 근거 파일에 실재하나 ----
+  - id: A3_claims_evidence_integrity
+    kind: analysis
+    detector: none
+    mutation: "CLAIMS.yaml claim 의 key_number 를 근거 evidence 파일에 없는 값으로 변경"
+    expect:
+      claims_key_number_in_evidence: NOT_TESTED   # ★ CLAIMS.yaml 의 key_numbers↔evidence 를 대조하는 게이트 없음(BIOP01-69 연동 후속)
+    overall: NOT_TESTED
+    downstream_allowed: false
+    fix: { tier: manual, target: generator, note: "CLAIMS key_numbers↔evidence 대조 detector 미구현 = gap(claim_level·limitations 와 같은 계열)" }
+
+  # ---- 하네스 음성 대조 : 일부러 틀린 기대 → 러너가 exit 1 을 내야 함 ----
+  - id: N0_negative_control
+    kind: negative_control
+    based_on: M1_fabricated_number
+    mutation: "M1 과 동일(0.999 삽입)이나 기대를 일부러 SUPPORTED 로 선언"
+    detector: check_manuscript_numbers
+    expect:
+      check_manuscript_numbers: SUPPORTED      # 관측은 CONTRADICTED 가 나올 것 → 불일치 = 러너가 잡아야 함
+    overall: SUPPORTED
+    downstream_allowed: true
+    note: "관측≠기대 여야 정상. 러너가 이 불일치를 잡지 못하면 하네스가 공허하다는 뜻."
