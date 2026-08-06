@@ -104,22 +104,42 @@ def main(argv=None):
 
     results = [run_check(lbl, argv, needs=needs) for (lbl, argv, needs) in checks]
 
-    # p3 재계산 게이트 (옵션, env 필요)
+    # p3 재계산 게이트 (옵션, env 필요) — 실행 후 git diff로 '커밋값과 diff 0'을 실제 대조.
+    def results_dirty():
+        r = subprocess.run(["git", "diff", "--name-only", "--", "results/"],
+                           cwd=BENCH, capture_output=True, text=True)
+        return set(x for x in r.stdout.split("\n") if x.strip())
+
     for g in ("p3_concordance.py", "p3_crossdataset_concordance.py", "p3_scrambled_null.py"):
         if not a.with_recompute:
             results.append(dict(label=f"재계산 게이트 {g}", verdict="SKIP", rc=None,
                                 note="--with-recompute 미지정(scv-preprocess+data 필요)", tail=""))
             continue
+        pre = results_dirty()   # 게이트 전 이미 더러운 파일(남의 미커밋 포함) — 건드리지 않는다
         cmd = [a.conda, "run", "--no-capture-output", "-n", "scv-preprocess",
                "python", f"scripts/{g}"]
         try:
             r = subprocess.run(cmd, cwd=BENCH, capture_output=True, text=True, timeout=1200)
             rc = r.returncode
-            results.append(dict(label=f"재계산 게이트 {g}",
-                                verdict="PASS_WITH_NOTE" if rc == 0 else "HOLD", rc=rc,
-                                note=("재계산 실행 완료(rc=0) — 커밋값과 diff 0은 별도 대조 필요(이 게이트는 실행 성공만 확인)"
-                                      if rc == 0 else f"rc={rc} 확인 필요"),
-                                tail="\n".join((r.stdout + r.stderr).strip().splitlines()[-4:])))
+            tail = "\n".join((r.stdout + r.stderr).strip().splitlines()[-4:])
+            if rc != 0:
+                results.append(dict(label=f"재계산 게이트 {g}", verdict="HOLD", rc=rc,
+                                    note=f"rc={rc} — 실행 실패, 확인 필요", tail=tail))
+                continue
+            changed = sorted(results_dirty() - pre)   # 이 게이트가 새로 바꾼 tracked 파일만
+            if not changed:
+                verdict, note = "PASS", "재계산이 커밋값과 byte-identical (diff 0)"
+            else:
+                verdict = "HOLD"
+                note = "재계산 ≠ 커밋값 (diff 0 실패): " + ", ".join(changed)
+                # 게이트가 새로 바꾼 파일만 복원(남의 미커밋 보호). 진단은 tail에.
+                diffstat = subprocess.run(["git", "diff", "--stat", "--"] + changed,
+                                          cwd=BENCH, capture_output=True, text=True).stdout
+                tail = (diffstat.strip() + "\n" + tail).strip()
+            if changed:
+                subprocess.run(["git", "checkout", "--"] + changed, cwd=BENCH,
+                               capture_output=True, text=True)
+            results.append(dict(label=f"재계산 게이트 {g}", verdict=verdict, rc=rc, note=note, tail=tail))
         except Exception as e:
             results.append(dict(label=f"재계산 게이트 {g}", verdict="SKIP", rc=None,
                                 note=f"실행 불가: {type(e).__name__} (env 확인)", tail=""))
