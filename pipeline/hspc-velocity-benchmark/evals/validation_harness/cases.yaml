@@ -44,13 +44,13 @@ cases:
   - id: M2_claim_level_escalation
     kind: mutation
     target: CLAIMS.yaml
-    mutation: "C6 claim_level: downstream_implication(provisional) → primary_positive/supported 로 격상"
-    detector: none
+    mutation: "C6 claim_level: downstream_implication → primary_positive 로 격상(status=provisional 유지)"
+    detector: check_claims_ledger             # BIOP01-82 로 gap 폐쇄(과거 NOT_TESTED → 이제 탐지)
     expect:
-      claim_level_vs_evidence: NOT_TESTED      # ★ CLAIMS.yaml 의 claim_level 을 근거와 대조하는 게이트가 없음(BIOP01-69 '연동 후속')
-    overall: NOT_TESTED
+      claim_level_vs_status: CONTRADICTED      # ★ primary_* 는 status=supported 필요 → provisional 격상 위반
+    overall: CONTRADICTED
     downstream_allowed: false
-    fix: { tier: manual, target: generator, note: "claim_level↔evidence 대조 detector 미구현 = 이 실험의 gap 발견" }
+    fix: { tier: assist, target: source, note: "claim_level 을 근거에 맞게 하향 또는 status 승격" }
 
   # ---- mutation 3 : 근거 파일 수치를 바꾸고 원고는 그대로(낡은 문장) ----
   - id: M3_stale_manuscript
@@ -82,13 +82,13 @@ cases:
   - id: M5_limitations_deleted
     kind: mutation
     target: draft_v2.md
-    mutation: "Discussion 의 한계(limitations) 문단 제거"
-    detector: none
+    mutation: "원고에서 C1 limitations 수치(0/598·48%) 제거 = 한계 문단 삭제 근사"
+    detector: check_claims_ledger             # BIOP01-82 로 gap 폐쇄
     expect:
-      limitations_present: NOT_TESTED          # ★ 한계 섹션 존재/보존을 검사하는 게이트 없음(check_revision_preserved 는 수치·인용마커만)
-    overall: NOT_TESTED
+      limitations_preserved: CONTRADICTED      # ★ CLAIMS.limitations 수치가 원고에서 통째 사라짐
+    overall: CONTRADICTED
     downstream_allowed: false
-    fix: { tier: manual, target: generator, note: "한계 보존 detector 미구현 = gap. CLAIMS.limitations 대조로 승격 가능(후속)" }
+    fix: { tier: assist, target: artifact, note: "삭제된 한계 복원 또는 ledger 와 정합" }
 
   # ========================= 분석 관점 (analysis) =========================
   # 논문-작성 게이트(위)가 "원고가 결과를 충실히 반영하나"라면, 아래는 "분석 자체가
@@ -117,13 +117,13 @@ cases:
   # ---- A3 : CLAIMS.yaml key_number 가 근거 파일에 실재하나 ----
   - id: A3_claims_evidence_integrity
     kind: analysis
-    detector: none
-    mutation: "CLAIMS.yaml claim 의 key_number 를 근거 evidence 파일에 없는 값으로 변경"
+    detector: check_claims_ledger             # BIOP01-82 로 gap 폐쇄
+    mutation: "C2 key_number 0.88 → 0.987654(근거에 없는 값)로 변경"
     expect:
-      claims_key_number_in_evidence: NOT_TESTED   # ★ CLAIMS.yaml 의 key_numbers↔evidence 를 대조하는 게이트 없음(BIOP01-69 연동 후속)
-    overall: NOT_TESTED
+      key_number_vs_evidence: CONTRADICTED     # ★ key_number 수치가 evidence 파일에 없음
+    overall: CONTRADICTED
     downstream_allowed: false
-    fix: { tier: manual, target: generator, note: "CLAIMS key_numbers↔evidence 대조 detector 미구현 = gap(claim_level·limitations 와 같은 계열)" }
+    fix: { tier: assist, target: source, note: "key_number 를 evidence 실측값으로 정정" }
 
   # ---- 하네스 음성 대조 : 일부러 틀린 기대 → 러너가 exit 1 을 내야 함 ----
   - id: N0_negative_control

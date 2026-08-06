@@ -64,6 +64,27 @@ def verdict_from_delta(new_misses: set[str]) -> str:
     return "CONTRADICTED" if new_misses else "SUPPORTED"
 
 
+CLAIMS_CANON = BENCH.parents[1] / "CLAIMS.yaml"
+
+
+def ledger_findings(claims_path: Path, draft_path: Path) -> list[dict]:
+    """check_claims_ledger 를 사본에 대해 돌려 findings 반환."""
+    out = SANDBOX / "ledger_out.json"
+    run([sys.executable, str(SCRIPTS / "check_claims_ledger.py"),
+         "--claims", str(claims_path), "--draft", str(draft_path), "--json", str(out)])
+    return json.loads(out.read_text()).get("findings", [])
+
+
+def case_ledger_claims(mutate) -> tuple[list[dict], Path]:
+    """CLAIMS.yaml 사본에 mutate 적용 후 findings 반환."""
+    import yaml as _y
+    d = _y.safe_load(CLAIMS_CANON.read_text())
+    mutate(d)
+    cp = SANDBOX / "CLAIMS_mut.yaml"
+    cp.write_text(_y.safe_dump(d, allow_unicode=True))
+    return ledger_findings(cp, MANU / "draft_v2.md"), cp
+
+
 def verify_cites(cites_path: Path) -> tuple[str, dict]:
     """verify_citations 어댑터. (fabricated 항목 판정, 상세) 반환."""
     out_json = SANDBOX / "vc_out.json"
@@ -180,9 +201,34 @@ def main() -> int:
             ec, log = run([sys.executable, "run_pilot.py"], cwd=REPRO)
             obs, detail = ("SUPPORTED" if ec == 0 else "CONTRADICTED"), {"exit": ec, "tail": log.strip().splitlines()[-1:]}
             key = "analysis_corpus_matches_sealed"
-        elif cid in ("M2_claim_level_escalation", "M5_limitations_deleted", "A3_claims_evidence_integrity"):
-            obs, detail = "NOT_TESTED", {"reason": "이 결함을 검사하는 게이트가 없음(detector: none)"}
-            key = list(exp.keys())[0]
+        elif cid == "M2_claim_level_escalation":
+            def mut(d):
+                for c in d["claims"]:
+                    if c["id"] == "C6":
+                        c["claim_level"] = "primary_positive"      # status=provisional 유지
+            fs, _ = case_ledger_claims(mut)
+            hit = [f for f in fs if f["check"] == "claim_level_vs_status" and f["claim"] == "C6"]
+            obs, detail = ("CONTRADICTED" if hit else "SUPPORTED"), {"finding": hit}
+            key = "claim_level_vs_status"
+        elif cid == "A3_claims_evidence_integrity":
+            def mut(d):
+                for c in d["claims"]:
+                    if c["id"] == "C2":
+                        c["key_numbers"]["alpha_concordance"] = "method 간 rho=0.987654"
+            fs, _ = case_ledger_claims(mut)
+            hit = [f for f in fs if f["check"] == "key_number_vs_evidence" and f["claim"] == "C2" and "0.987654" in f["detail"]]
+            obs, detail = ("CONTRADICTED" if hit else "SUPPORTED"), {"finding": hit}
+            key = "key_number_vs_evidence"
+        elif cid == "M5_limitations_deleted":
+            mut_doc = SANDBOX / "draft_lim.md"
+            txt = (MANU / "draft_v2.md").read_text()
+            for tok in ("0/598", "48%"):                            # C1 limitations 수치 제거 = 한계 삭제 근사
+                txt = txt.replace(tok, "")
+            mut_doc.write_text(txt)
+            fs = ledger_findings(CLAIMS_CANON, mut_doc)
+            hit = [f for f in fs if f["check"] == "limitations_preserved" and f["claim"] == "C1"]
+            obs, detail = ("CONTRADICTED" if hit else "SUPPORTED"), {"finding": hit}
+            key = "limitations_preserved"
         else:
             obs, detail = "NOT_TESTED", {"reason": "unhandled case"}
             key = list(exp.keys())[0]

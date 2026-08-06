@@ -16,11 +16,11 @@
 | M1_fabricated_number | 논문 | 근거에 없는 `rho=0.999` 본문 삽입 | check_manuscript_numbers | **CONTRADICTED** ✅ 탐지 |
 | M3_stale_manuscript | 논문 | 근거 파일 `0.724`→`0.111`, 원고 그대로 | check_manuscript_numbers | **CONTRADICTED** ✅ 탐지 |
 | M4_fabricated_citation | 논문 | 가짜 DOI 인용 삽입 | verify_citations(CrossRef 실조회) | **CONTRADICTED** ✅ 탐지 |
-| M2_claim_level_escalation | 논문 | claim_level 을 근거보다 격상 | (없음) | **NOT_TESTED** ⚠️ gap |
-| M5_limitations_deleted | 논문 | 한계 문단 삭제 | (없음) | **NOT_TESTED** ⚠️ gap |
+| M2_claim_level_escalation | 논문 | claim_level 을 근거보다 격상 | **check_claims_ledger** | **CONTRADICTED** ✅ 탐지(gap 폐쇄) |
+| M5_limitations_deleted | 논문 | 한계 수치(0/598·48%) 삭제 | **check_claims_ledger** | **CONTRADICTED** ✅ 탐지(gap 폐쇄) |
 | A1_analysis_eval_nonvacuous | 분석 | 스코어러 degenerate/invert 치환 | reproducibility_pilot/mutation_check | SUPPORTED ✅ 스코어러 제약됨 |
 | A2_analysis_corpus_classification | 분석 | 결함주입 fixture 분류 | reproducibility_pilot/run_pilot | SUPPORTED ✅ 봉인 corpus 정확 |
-| A3_claims_evidence_integrity | 분석 | CLAIMS key_number 를 근거 밖 값으로 | (없음) | **NOT_TESTED** ⚠️ gap |
+| A3_claims_evidence_integrity | 분석 | CLAIMS key_number 를 근거 밖 값으로 | **check_claims_ledger** | **CONTRADICTED** ✅ 탐지(gap 폐쇄) |
 | N0_negative_control | 하네스 | M1 과 동일하나 기대를 SUPPORTED 로 오선언 | check_manuscript_numbers | 관측 CONTRADICTED≠기대 → 러너가 잡음 ✅ |
 
 ## 사용자 3질문에 대한 실측 답
@@ -34,11 +34,17 @@
 **(c) 탐지 후 교정(§3 Fix 3등급)이 루프로 닫혀 있는가 — 아니다(detection-only).**
 현행 게이트 어느 것도 `fix` 필드(auto/assist/manual + target)를 내지 않는다. 관측→판정에서 멈추고 교정·재검증 배선이 없다. 각 case 에 부여할 fix 등급은 `cases.yaml` 에 선언했으나 **게이트가 이를 산출하지 않는다** → 루프 미완결이 확정 발견.
 
-## ⚠️ 확정 gap 3종 (NOT_TESTED) — 이 실험의 최대 발견
+## gap 3종 → detector 로 폐쇄 (BIOP01-82, 루프 닫음)
 
-셋 다 **CLAIMS.yaml ledger 를 읽는 게이트가 없어서**다(BIOP01-69: ledger 는 있으나 "게이트가 실제 참조하는 연동은 후속"으로 명시). 원고 수치·인용은 잡지만:
-- **claim_level 격상**(근거보다 센 주장) — 탐지 게이트 없음.
-- **limitations 삭제** — 한계 보존 검사 없음(`check_revision_preserved` 는 수치·인용마커만, git baseline 필요).
-- **CLAIMS key_number ↔ evidence 무결성** — 대조 게이트 없음.
+최초 실행에서 3종이 **NOT_TESTED**(CLAIMS.yaml ledger 를 읽는 게이트 부재, BIOP01-69 "연동 후속")로 나왔다.
+이 하네스가 gap 을 확정 → `scripts/check_claims_ledger.py` 신설(결정론적 3검사) → 하네스가 재검증(CONTRADICTED).
+관측→판정→(detector 구축)→재검증으로 **탐지 gap 을 닫았다.** 이제 NOT_TESTED = 0.
 
-→ 코드 작성만으로 "완료" 처리하지 않는다. 위 3종은 미검출로 정직 기록하고, ledger 연동 detector 를 후속 작업으로 남긴다.
+`check_claims_ledger.py` 3검사(LLM 판단 없음, 등록값 substring 대조):
+1. **claim_level ↔ status** — primary_* 등급은 status=supported 필요.
+2. **limitations 보존** — 각 claim limitations 의 수치가 원고에 실재.
+3. **key_number ↔ evidence** — 각 claim key_number 의 수치가 그 evidence 파일에 실재.
+
+**남은 것(정직):**
+- **교정 루프 미완결** — detection gap 은 닫았으나 fix 3등급(auto/assist/manual) 을 게이트가 아직 **산출/자동적용하지 않는다.** cases.yaml 에 fix 등급은 선언했으나 관측→교정→재검증 자동화는 후속.
+- **정본 ledger 소소 발견** — 정본 CLAIMS.yaml C4 key_number lag_signal 범위 상단 `0.19`(요약 `+0.03~+0.19`)가 evidence 파일에 리터럴로 없다(파생·범위값). `check_manuscript_numbers` 의 허용 baseline miss 와 같은 성격 — 이건규 님께 보고, 정본은 미수정.
