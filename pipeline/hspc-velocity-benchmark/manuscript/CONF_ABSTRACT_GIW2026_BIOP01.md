@@ -12,21 +12,25 @@ A reliability map for per-gene multiome RNA velocity parameters in single-cell k
 
 ## Abstract (~200 words, blind)
 
-Chromatin-informed ("multiome") RNA-velocity methods emit several per-gene quantities — a
-transcription rate α, a degradation rate γ, and a chromatin-to-transcription lag — each
-proposed as a biological readout. A derived quantity is usable only if it is reliable:
-reproducible across reasonable algorithms and, where possible, consistent with an independent
-measurement. Across up to five velocity arms (an RNA-only scVelo floor plus MultiVelo,
-MultiVeloVAE, MoFlow and CRAK-Velo) on human hematopoietic stem and progenitor cells profiled
-by 10x Multiome, we tested each output on four axes: cross-method reproducibility
-(permutation-FDR), a causal within-lineage ATAC-shuffle control, cross-dataset replication in
-five external multiomes (one preregistered), and external anchoring to measured synthesis
-(K562 TT-seq) and degradation rates. Only the transcription rate α reproduced across methods
-(Spearman ρ=0.88); the lag and γ did not — the lag reproduced weakly in magnitude and only at
-chance in sign, and shuffling ATAC left it unchanged, marking it model-structural rather than
-chromatin-driven. The α-over-lag ordering held in all six systems and passed a preregistered
-six-of-six scorecard sealed before any fit. We distil these results into a velocity-output
-reliability map with a concrete routing rule: trust α and rate-derived signals; treat the lag,
-its sign, absolute timing, and γ as requiring orthogonal validation.
+Multiome RNA-velocity methods emit several per-gene quantities — a transcription rate α, a
+degradation rate γ, and a chromatin-to-transcription lag — each proposed as a biological
+readout. A derived quantity is usable only if it is reliable: reproducible across algorithms
+and consistent with independent measurement. Across up to five velocity arms (an RNA-only
+scVelo floor plus MultiVelo, MultiVeloVAE, MoFlow and CRAK-Velo) on human hematopoietic stem
+and progenitor cells (10x Multiome), we tested each output on four axes: cross-method
+reproducibility, a causal within-lineage ATAC-shuffle control, replication in five external
+multiomes, and anchoring to measured synthesis and degradation rates. Only α reproduced across
+methods (Spearman ρ=0.88); the lag reproduced weakly in magnitude (strongest pair +0.163), only
+at chance in sign (54.6%), and was unchanged by ATAC shuffling, marking it model-structural. γ
+was fragile (ρ≈−0.1) and ran reversed against measured half-life (−0.224). Fitted α tracked
+measured synthesis (+0.24 to +0.29), but transcript abundance tracked it at least as strongly
+(+0.410 versus +0.262) — consistency evidence, not α-specific accuracy. The α-over-lag ordering
+held in all six systems; the sixth was preregistered and passed six-of-six, sealed before
+fitting. Trust α against an abundance baseline; treat lag, sign, timing and γ as requiring
+orthogonal validation.
 
-<!-- 단어 수 목표 ~200. 초과 시 마지막 문장부터 압축. long abstract(2p)는 draft_v2 Results·Fig1/Fig7에서 파생. -->
+<!-- 199단어(≤200 CFP 상한). 이건규 critic(BIOP01-87) 🔴A abundance confound·🔴B 사전등록 범위·
+🟡C 단어수·🟡D γ 역방향·🟡E lag 수치 전부 반영. 수치는 draft_v2·results 실측(이건규 line-by-line 대조).
+long abstract(2p)에서 필수 분리: (1) per-gene lag층 ATAC-shuffle vs velocity-matrix층 철회(draft L117)를
+층 구분, (2) "Only α" 범위=per-gene(집단수준 robust 2종은 별도), (3) 그림=Fig1(lag vs α) + Fig4(외부앵커+
+abundance 대조 막대) 우선, Fig7(지도)은 마지막. -->
