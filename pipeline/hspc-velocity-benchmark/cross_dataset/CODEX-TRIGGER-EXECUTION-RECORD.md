@@ -92,10 +92,19 @@ codex exec --dangerously-bypass-approvals-and-sandbox \
 ## 5. 남은 것 · 함의
 
 - ~~codex 바이패스 재시도~~ — **완료.** 바이패스로 codex 가 워커를 완주(exit 0). 트리거 A 확정.
-- **openai.yaml → 래퍼 자동 배선** — 완전 자동(사람이 `codex exec` 안 치고 openai.yaml 로 트리거)하려면
-  skill/openai.yaml 프롬프트에 "run_from_manifest.sh 실행" 지시를 넣어야 한다(이건규 님 skill / 지용기 님 워커층 소관). 실증 후 결정.
+- **openai.yaml → 래퍼 자동 배선** — **별건 후속으로 분리(결정, 지용기 2026-08-07).** 완전 자동(사람이
+  `codex exec` 안 치고 openai.yaml 로 트리거)은 BIOP01-45 DoD의 blocker가 아니다. 근거:
+  1. `skills/…/openai.yaml` 은 **이건규 님 하네스 도메인**(07-21 합의: 하네스 구조는 이건규 담당) — 워커층
+     단독으로 고치지 않는다. 완전자동 배선은 skill층·워커층 공동 결정 사항이다.
+  2. openai.yaml `default_prompt` 의 의미는 **"model plan 작성"(planning)** 이다. 여기에 **"래퍼 실행
+     (execution)"** 을 얹으면 planning/execution 두 의미가 섞인다.
+  3. 실행은 `--dangerously-bypass-approvals-and-sandbox` 를 요구한다. 라우트된 프롬프트에 샌드박스
+     바이패스를 **암묵적으로 심는 것은 안전상 부적절** — 명시적 `codex exec` 경로(§4, 이 문서에 기록·감사 가능)가 낫다.
+  → **BIOP01-45 DoD 는 명시적 `codex exec` 경로로 충족**(kkkim 3종 검증). 완전자동은 openclaw 가
+     팀 전역에서 실제 가용해질 때(샌드박스 바이패스 없이) 재검토한다.
 - **카운슬(BIOP01-81) GPT leg** — 같은 방식(`codex exec` 바이패스)으로 개통 가능. 이 실증이 그 선결.
 
 ## 6. 변경 이력
 
 - 2026-08-06 최초 작성 + 당일 갱신. 워커 dry-run·byte-identical 통과, codex 샌드박스 차단 진단 → **바이패스로 codex 완주(exit 0) 확인**. 트리거 A(codex) 실증 완료.
+- 2026-08-07 §5 갱신: openai.yaml 완전자동 배선을 **별건 후속으로 분리**(위 3근거). BIOP01-45 DoD 는 명시적 codex exec 경로로 충족 확인.
