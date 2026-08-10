@@ -31,7 +31,7 @@ FRAMING(BIOP01-86 지침):
 - Fig1 = fig01_p2_concordance.png (실재). 참고: 과업이 부른 "4축 개요 도식"은 렌더본 없음(fig04_harness_concept.png는 하네스 개념도이지 4축 도식 아님) → 필요 시 별도 렌더 <FILL>.
 - Framing 충돌 메모: critic(초록 주석 L36)은 Fig1+Fig4(abundance bar) 선호, 과업(BIOP01-86)은 Fig1+Fig7 지정. 과업을 따르되 abundance confound 수치(+0.410 vs +0.262)를 Results 본문에 명시해 보완함.
 - ⚠️ human cortex(GSE162170) 발생단계: 본 초록은 "human fetal cortex"로 표기(GSE162170=Trevino 발생기 대뇌피질, draft_v2 L123 "Human fetal cortex", 과업 브리핑 "human fetal cortex"와 정합). 단 FINDINGS §7-A는 "성인 human_brain"로 적혀 있어 불일치 — FINDINGS 오기로 판단하나 kkkim 최종 확인 요망.
-- ⚠️ γ 외부 앵커(측정 degradation rate/half-life) 출처 미확정: synthesis 앵커=Todorovski 2024 K562 TT-seq(검증됨), 그러나 γ가 대조된 "measured degradation rate/half-life"의 assay 출처는 read한 파일에서 확정 못 함(Schwalb decay는 QC2 null로 배제됨). 본문은 "measured degradation rate"로만 표기(TT-seq 귀속 제거). 출처 확정 후 병기 → <FILL: γ 외부 앵커 출처>.
+- γ 외부 앵커 출처 확정(2026-08-10): γ가 대조된 measured degradation rate = **Todorovski 2024 measured mRNA half-life(SLAM-seq)**, α의 TT-seq synthesis 앵커와 **같은 study(GSE229305)**. K562·THP1 same-study, MOLM13(Muhar 2018) cross-study; 회수 = ρ(γ, k_deg), k_deg=ln2/t½. K562 3/3 null, scVelo γ는 MOLM13에서 역방향 −0.224(draft_v2 L97/L219/L295). 본문 Methods axis-4에 "measured mRNA half-life (SLAM-seq, same metabolic-labeling study)"로 귀속 채움. (앞 초안 메모의 "Schwalb=γ 소스·QC2 null 배제"는 착오 — Schwalb 2016 GSE75792는 α의 2차 synthesis 소스(null)이지 γ 소스가 아님.) 잔여 확인(비블로킹): draft_v2 데이터가용성=GSE229305인데 results/drug_arm_feasibility.md는 half-life subseries를 GSE229314로 표기 → 어느 subaccession이 half-life 정본인지 kkkim 확인 권장.
 - 분량: 본문 ~1250단어(가이드 900~1100 초과, 수치 밀도상 추가 압축은 필수내용 손실). 2p 적합 여부는 Fig.2 렌더 후 조판에서 확인 필요.
 ════════════════════════════════════════════════════════════════════════
 -->
@@ -70,7 +70,8 @@ replication:** the ordering was re-tested in five external multiomes spanning ti
 fetal cortex, fetal E18 mouse brain, same-tissue human BMMC, HSPC-direct macrophage, developmental
 mouse gastrulation), the last against six predictions sealed before fitting. **(4) External
 anchoring:** fitted α was compared to a measured synthesis rate (K562 TT-seq) and fitted γ to a
-measured degradation rate, with transcript abundance as a competing baseline. All headline
+measured mRNA half-life (SLAM-seq, same metabolic-labeling study), with transcript abundance as a
+competing baseline. All headline
 correlations carry paired-bootstrap 95% CIs.
 
 ## Results
