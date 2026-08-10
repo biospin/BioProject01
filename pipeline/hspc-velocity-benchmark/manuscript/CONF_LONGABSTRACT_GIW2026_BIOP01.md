@@ -32,7 +32,7 @@ FRAMING(BIOP01-86 지침):
 - Framing 충돌 메모: critic(초록 주석 L36)은 Fig1+Fig4(abundance bar) 선호, 과업(BIOP01-86)은 Fig1+Fig7 지정. 과업을 따르되 abundance confound 수치(+0.410 vs +0.262)를 Results 본문에 명시해 보완함.
 - ⚠️ human cortex(GSE162170) 발생단계: 본 초록은 "human fetal cortex"로 표기(GSE162170=Trevino 발생기 대뇌피질, draft_v2 L123 "Human fetal cortex", 과업 브리핑 "human fetal cortex"와 정합). 단 FINDINGS §7-A는 "성인 human_brain"로 적혀 있어 불일치 — FINDINGS 오기로 판단하나 kkkim 최종 확인 요망.
 - γ 외부 앵커 출처 확정(2026-08-10): γ가 대조된 measured degradation rate = **Todorovski 2024 measured mRNA half-life(SLAM-seq)**, α의 TT-seq synthesis 앵커와 **같은 study(GSE229305)**. K562·THP1 same-study, MOLM13(Muhar 2018) cross-study; 회수 = ρ(γ, k_deg), k_deg=ln2/t½. K562 3/3 null, scVelo γ는 MOLM13에서 역방향 −0.224(draft_v2 L97/L219/L295). 본문 Methods axis-4에 "measured mRNA half-life (SLAM-seq, same metabolic-labeling study)"로 귀속 채움. (앞 초안 메모의 "Schwalb=γ 소스·QC2 null 배제"는 착오 — Schwalb 2016 GSE75792는 α의 2차 synthesis 소스(null)이지 γ 소스가 아님.) accession 해소(2026-08-10): 모순 아님 — SuperSeries/subseries 관계. **GSE229314**=Todorovski 2024 SuperSeries로 half-life(K562·THP1 SLAM-seq)는 그 S10 보충자료; **GSE229305**=그 안의 TT-seq synthesis subseries(=α 앵커). MOLM13=Muhar 2018(별개, Zenodo). draft_v2(305=synthesis)·drug_arm(314=half-life) 둘 다 정확. 단 draft_v2 데이터가용성(L245)에 half-life SuperSeries GSE229314가 누락(synthesis subseries만 등재) → 정본 보완 사항으로 kkkim에 남김(비블로킹).
-- 분량: 본문 ~1250단어(가이드 900~1100 초과, 수치 밀도상 추가 압축은 필수내용 손실). 2p 적합 여부는 Fig.2 렌더 후 조판에서 확인 필요.
+- 분량(2026-08-10 트림): 본문 산문(Background~Conclusion) 1125→1101단어(목표 1050~1150 내). 중복 서사만 압축, 수치·claim·caveat 100% 보존(numeric-token diff 손실 0). 참고문헌 포함 전체는 1495→~1471단어. 2p 적합은 단어수보다 그림 2개(300dpi)+참고문헌 11개가 좌우 — 조판에서 넘치면 산문 추가 압축이 아니라 그림 폭·배치로 조정.
 ════════════════════════════════════════════════════════════════════════
 -->
 
@@ -44,24 +44,23 @@ FRAMING(BIOP01-86 지침):
 
 Multiome RNA-velocity methods emit several per-gene quantities, each offered as a biological
 readout: a transcription rate α, a degradation rate γ, and a chromatin-to-transcription lag meant to
-say which genes have chromatin opening ahead of transcription. Downstream analyses increasingly
-consume these quantities directly, for example to order genes by regulatory timing. A derived
-quantity is usable only if it is reliable, and reliability is testable: the quantity should reproduce
-when a different algorithm is run on the *same* cells, should not be an artifact of model structure,
-should hold up in independent data, and should agree with an external measurement of the same rate
-where one exists. These axes are rarely applied to the individual velocity outputs. Recent general
-benchmarks score velocity at the embedding and transition-vector level and report that direction is
-method-dependent [25,26,27], but they neither sort the per-gene outputs by reliability nor anchor them
-to an external measurement. We therefore ask not "which method wins" but "how does one measure the
-reliability of a velocity output", and build a reliability map telling a downstream analyst which
-outputs to trust directly and which require orthogonal validation.
+say which genes open chromatin ahead of transcription. Downstream analyses increasingly consume
+these directly, for example to order genes by regulatory timing. A derived quantity is usable only if
+reliable, and reliability is testable: it should reproduce when a different algorithm is run on the
+*same* cells, not be an artifact of model structure, hold up in independent data, and agree with an
+external measurement of the same rate where one exists — axes rarely applied to individual velocity
+outputs. Recent general benchmarks score velocity at the embedding and transition-vector level and
+report method-dependent direction [25,26,27], but neither sort the per-gene outputs by reliability nor
+anchor them to an external measurement. We therefore ask not "which method wins" but "how does one
+measure the reliability of a velocity output", and build a reliability map telling an analyst which
+outputs to trust directly and which need orthogonal validation.
 
 ## Methods: a four-axis reliability protocol
 
 We ran up to five velocity arms — an RNA-only scVelo floor [1,9] plus four chromatin-informed
 methods (MultiVelo [3], MultiVeloVAE [4], MoFlow [5], CRAK-Velo [6]) — on human hematopoietic stem
 and progenitor cells (10x Multiome, GSE209878; day0+day7 integrated, 21,878 cells), branching from a
-common preprocessing so method differences are not confounded by preprocessing. Each per-gene output
+common preprocessing so method differences are not preprocessing artifacts. Each per-gene output
 was tested on four axes. **(1) Cross-method reproducibility:** pairwise rank agreement across arms on
 a shared gene axis, with a gene-label permutation-FDR agreement test (N=10⁴). **(2) Causal
 ATAC-shuffle control:** within each lineage we permuted the ATAC signal to break the chromatin↔RNA
@@ -93,8 +92,8 @@ it (−0.224).
 ATAC within lineage left the lag distribution statistically unchanged (Mann–Whitney p=0.20, KS p=0.51;
 per-gene lag ρ=0.72 preserved; chromatin likelihood 0.239→0.237) and did not perturb the canonical
 priming-marker lags more than a bulk shuffle (Mann–Whitney p=0.58). The MultiVelo lag therefore comes
-from its switch-time ordering constraint and gene-intrinsic RNA dynamics rather than from chromatin,
-which is why "which gene is chromatin-leading" flips with the method. (A separate audit of the
+from its switch-time ordering constraint and gene-intrinsic RNA dynamics, not chromatin, which is why
+"which gene is chromatin-leading" flips with the method. (A separate audit of the
 cell×gene velocity matrix, a different target, detected a small, bounded, direction-only chromatin
 contribution; we keep that layer distinct and do not carry its numbers into the per-gene map.)
 
@@ -129,9 +128,8 @@ a correlational fact we do not upgrade to causation). Everything else is unrelia
 chromatin-opening rate α_c (ρ=0.29), γ, and the per-gene lag magnitude, sign and absolute timing. The
 routing rule follows: consume α and rate-derived signals directly, and do not consume a single-method
 lag, sign or γ without an orthogonal measurement. For downstream timing prediction this yields a
-concrete design principle — route from baseline features to α, where the same baseline that fails to
-predict the lag (ρ≈0.05) predicts α on held-out lineages (ρ=+0.31), rather than through a single-method
-lag. This bounds the reliability of the current methods, not the existence of timing biology: deeper
+concrete design principle: route from baseline features to α, since the same baseline that fails to
+predict the lag (ρ≈0.05) predicts α on held-out lineages (ρ=+0.31). This bounds the reliability of the current methods, not the existence of timing biology: deeper
 sequencing or metabolic labeling could yet render the lag identifiable. Load-bearing limits: pseudotime
 is not wall-clock; the lag-fragile leg outside HSPC rests largely on a single method pair; the five
 external replications are single-sample; the α anchor carries the abundance confound and rests
