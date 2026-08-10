@@ -27,7 +27,7 @@ FRAMING(BIOP01-86 지침):
 
 미확정(<FILL>) / 확인필요:
 - 저자·소속·corresponding email: 블라인드 제출이라 미기재. 최종 kkkim 확정.
-- Figure 2(reliability map/routing) = draft_v2 Fig. 7 "main; new" — PNG 미렌더. figures/ 에 fig07*.png/py 없음 → 파일명 <FILL>. 제출 전 렌더 필요.
+- Figure 2(reliability map/routing) = draft_v2 Fig. 7 "main; new" — 렌더 완료(figures/fig07_reliability_map.py → fig07_reliability_map.png, 300dpi). 본문 Source 파일명 채움. 축 명칭 충돌 해소(2026-08-10): fig07은 정본 draft_v2 L301대로 4열=cross-method reproducible/chromatin-causal/baseline-predictable/measurement-corroborated로 렌더. Figure 2 legend를 그림·정본에 맞춰 baseline-predictable로 정정함(cross-dataset replicable 폐기). 주의: 이 map 4열은 Methods의 '4축 평가 프로토콜'(cross-method·causal·cross-dataset·external anchor)과 3열째가 다르다 — map은 Table 2를 시각화한 synthesis라 routing에 직결되는 baseline-predictability를 열로 쓰고 cross-dataset은 robustness 증거축으로 본문(axis 3)에만 둔다. draft_v2도 동일 구조(평가 4축 ≠ Fig.7 4열).
 - Fig1 = fig01_p2_concordance.png (실재). 참고: 과업이 부른 "4축 개요 도식"은 렌더본 없음(fig04_harness_concept.png는 하네스 개념도이지 4축 도식 아님) → 필요 시 별도 렌더 <FILL>.
 - Framing 충돌 메모: critic(초록 주석 L36)은 Fig1+Fig4(abundance bar) 선호, 과업(BIOP01-86)은 Fig1+Fig7 지정. 과업을 따르되 abundance confound 수치(+0.410 vs +0.262)를 Results 본문에 명시해 보완함.
 - ⚠️ human cortex(GSE162170) 발생단계: 본 초록은 "human fetal cortex"로 표기(GSE162170=Trevino 발생기 대뇌피질, draft_v2 L123 "Human fetal cortex", 과업 브리핑 "human fetal cortex"와 정합). 단 FINDINGS §7-A는 "성인 human_brain"로 적혀 있어 불일치 — FINDINGS 오기로 판단하나 kkkim 최종 확인 요망.
@@ -145,9 +145,10 @@ Lag-magnitude pairwise rank agreement (most pairs |ρ|≤0.08, strongest +0.163)
 `figures/fig01_p2_concordance.png`.
 
 **Figure 2.** Velocity-output reliability map and routing rule. Each velocity output (rows) scored on
-the four reliability axes (cross-method reproducible / chromatin-causal / cross-dataset replicable /
-externally corroborated), with the trust-versus-validate routing rule. Source:
-`<FILL: reliability-map 그림 미렌더 — draft_v2 Fig. 7 "main; new">`.
+the four reliability-map columns (cross-method reproducible / chromatin-causal / baseline-predictable /
+measurement-corroborated), the visual form of the paper's Table 2 decision map, with the
+trust-versus-validate routing rule. Source:
+`figures/fig07_reliability_map.png`.
 
 ## References
 
