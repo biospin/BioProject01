@@ -246,11 +246,11 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 **Competing interests.** `<FILL>`.
 
-**Funding.** `<FILL>`.
+**Funding.** `<FILL: NIPA (National IT Industry Promotion Agency) open-source AI/SW community content-creation support — application submitted 2026-08-10; grant confirmation and any required acknowledgement wording under confirmation>`.
 
 **Authors' contributions.** `<FILL>`.
 
-**Acknowledgements.** `<FILL>`.
+**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. `<FILL: NIPA acknowledgement sentence to be added if required — under confirmation>`
 
 ---
 

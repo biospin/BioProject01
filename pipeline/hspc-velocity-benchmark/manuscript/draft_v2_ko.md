@@ -229,11 +229,12 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 **이해 상충.** `<FILL>`.
 
-**연구비.** `<FILL>`.
+**연구비.** `<FILL: NIPA(정보통신산업진흥원) 오픈소스 AI·SW 커뮤니티 기술 콘텐츠 제작 지원 — 2026-08-10 신청; 지원 확정 및 요청 시 사사 문구 확인 중>`.
 
 **저자 기여.** `<FILL>`.
 
-**감사의 글.** `<FILL>`.
+**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. `<FILL: NIPA 사사 문구 요청 시 추가 — 확인 중>`
+(영문 제출본 사사 원문: "The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research.")
 
 ---
 
