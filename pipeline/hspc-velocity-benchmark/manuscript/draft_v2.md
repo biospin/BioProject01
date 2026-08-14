@@ -33,13 +33,13 @@ the external-measurement result is corroboration inside the map, not a title cla
 **Affiliations:**
 1. Independent Researcher, Seoul, Republic of Korea
 2. R&D Center, Genolution Inc., Seoul 07793, Republic of Korea
-3. Laboratory of RNA Cell Biology, Department of Bioconvergence Engineering, Dankook University Graduate School, Yongin 16892, Korea
+3. Laboratory of RNA Cell Biology, Department of Bioconvergence Engineering, Dankook University Graduate School, Yongin 16892, Republic of Korea
 4. Pseudo Lab, `<FILL: city, country>`
 5. Omixai Co., Ltd., `<FILL: city, country>`
 6. Seegene Inc., Seoul, Republic of Korea
 7. Qaumtum c&s, `<FILL: city, country>`
 
-> 소속 확인 필요 3건(지어내지 않고 제출값 그대로 둠): (1) 7번 "Qaumtum c&s"(퀀템씨엔에스) — 공식 영문 표기 확인 필요. (2) 4·5·7번 도시·국가 미제출. (3) 3번 국가 표기가 제출값 그대로 "Korea"라 다른 항목("Republic of Korea")과 다름. 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
+> 소속 확인 필요 2건(지어내지 않고 제출값 그대로 둠): (1) 7번 "Qaumtum c&s"(퀀템씨엔에스) — 공식 영문 표기 확인 필요. (2) 4·5·7번 도시·국가 미제출. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일함(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
 
 **Corresponding author:** Ka-Kyung Kim (김가경), Independent Researcher, Seoul, Republic of Korea, `<FILL: email>`
 
