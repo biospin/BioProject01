@@ -18,9 +18,9 @@ draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md
 4. Pseudo Lab, Seoul, Republic of Korea
 5. Omixai Co., Ltd., Seoul, Republic of Korea
 6. Seegene Inc., Seoul, Republic of Korea
-7. QUANTUM C&S Co., Ltd., Seoul, Republic of Korea
+7. Quantum C&S Co., Ltd., Seoul, Republic of Korea
 
-> 소속은 투고 서식대로 영문 원문을 그대로 싣는다. 확인 2건 해소(2026-08-15, kkkim 확정): (1) 7번을 공식 홈페이지 https://quantumcns.ai/ 표기 **QUANTUM C&S Co., Ltd.**로 맞췄고 주소도 같은 출처(서울 구로구 디지털로31길 62)에서 확인했다. 제출값 "Qaumtum c&s"와의 차이는 대소문자와 `Co., Ltd.` 유무만이 아니라 철자 자체다 — Qa**um**tu**m** vs Qu**an**tu**m**(a/u 뒤바뀜, m/n). ★지용기 님 본인 확인 필요(제출값을 바꾼 유일한 건). (2) 4·5·7번 도시·국가 = 전부 Seoul, Republic of Korea (kkkim 지시 2026-08-15). 근거 강도: 7번=1차(회사 홈페이지), 5번=2차(THE VC 기업정보, 본사 서울), 4번=Pseudo Lab 사이트에 도시 표기가 없어 kkkim 판단. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일했다(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
+> 소속은 투고 서식대로 영문 원문을 그대로 싣는다. 확인 2건 해소(2026-08-15, kkkim 확정): (1) 7번을 공식 홈페이지 https://quantumcns.ai/ 기준 **Quantum C&S Co., Ltd.**로 맞췄고 주소도 같은 출처(서울 구로구 디지털로31길 62)에서 확인했다. 홈페이지 표기는 로고 스타일의 전대문자 QUANTUM C&S지만, 나머지 소속(Genolution Inc.·Omixai Co., Ltd.·Seegene Inc.)이 전부 title case라 본문 표기를 통일했다. 제출값 "Qaumtum c&s"와의 차이는 대소문자와 `Co., Ltd.` 유무만이 아니라 철자 자체다 — Qa**um**tu**m** vs Qu**an**tu**m**(a/u 뒤바뀜, m/n). ★지용기 님 본인 확인 필요(제출값을 바꾼 유일한 건). (2) 4·5·7번 도시·국가 = 전부 Seoul, Republic of Korea (kkkim 지시 2026-08-15). 근거 강도: 7번=1차(회사 홈페이지), 5번=2차(THE VC 기업정보, 본사 서울), 4번=Pseudo Lab 사이트에 도시 표기가 없어 kkkim 판단. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일했다(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
 
 **교신저자:** 김가경(Ka-Kyung Kim), 독립연구자, 대한민국 서울, kakyung.kim@gmail.com
 
