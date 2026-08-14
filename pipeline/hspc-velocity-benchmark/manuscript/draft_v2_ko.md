@@ -2,7 +2,7 @@
 draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md. 2026-07-19.
 수치·통계·주장·구조는 영문 draft_v2.md가 정본이며, 이 문서는 kkkim의 한국어 검토용이다.
 헤드라인 = velocity 출력 신뢰도 지도(지도 이름에 "측정 앵커"를 붙이지 않는다). 외부 TT-seq는 보강(corroboration)일 뿐이며, abundance가 합성율을 α만큼 예측하므로 일관성 증거로 다룬다.
-저자·소속·교신·IP·accession·repository는 <FILL> 유지.
+교신저자 = 김가경, 독립연구자, 대한민국 서울로 확정(BIOP01-79, 2026-08-14). 공저자 영문명·소속, 교신 이메일, IP·repository는 <FILL> 유지.
 -->
 
 # single-cell kinetics에서 유전자별 multiome RNA velocity 모수의 신뢰도 지도
@@ -11,9 +11,9 @@ draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md
 
 > 저자 순서: 제안(전 공동저자 합의 전). 근거 = BIOP02-114 댓글 11842(2026-08-11, git 전 브랜치 + BIOP01 코멘트 전수 + draft 본문 도달 여부, ICMJE 4항목). 순번 1·교신 김가경 / 2 류재면 / 3 이건규 / 4 박세진 / 5·시니어(말미) 지용기. 영문명·소속·교신 이메일은 확정 대기(BIOP01-79).
 
-**소속:** <FILL: affiliations>
+**소속:** 1. 독립연구자(Independent Researcher), 대한민국 서울 — 김가경(Ka-Kyung Kim). `<FILL: affiliations — 류재면, 이건규, 박세진, 지용기>`
 
-**교신저자:** 김가경(Ka-Kyung Kim), `<FILL: email>`
+**교신저자:** 김가경(Ka-Kyung Kim), 독립연구자, 대한민국 서울, `<FILL: email>`
 
 > *연구·교육용 초안.* 이 원고는 이미 검증된 결과를 동료 심사를 위해 재구성한 것이며, 임상·진단 자원이 아니다. 저자·소속·교신저자·IP 항목은 확정 전 자리표시자다.
 
@@ -231,11 +231,11 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 **이해 상충.** `<FILL>`.
 
-**연구비.** `<FILL: NIPA(정보통신산업진흥원) 오픈소스 AI·SW 커뮤니티 기술 콘텐츠 제작 지원 — 2026-08-10 신청; 지원 확정 및 요청 시 사사 문구 확인 중>`.
+**연구비.** 저자 일동은 본 연구에 대해 연구비 지원을 받지 않았다.
 
 **저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경: Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면: Formal analysis, Software, Validation, Writing – review & editing. 이건규: Validation, Software, Writing – review & editing. 박세진: Validation, Formal analysis, Writing – review & editing. 지용기: Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준 님에게 감사한다. `<FILL: NIPA 사사 문구 요청 시 추가 — 확인 중>`
+**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준 님에게 감사한다.
 (영문 제출본 사사 원문: "The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research.")
 
 ---

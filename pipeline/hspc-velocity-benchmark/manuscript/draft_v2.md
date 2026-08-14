@@ -12,7 +12,9 @@ Reframing decision 2026-07-19 (external-anchor demotion, BIOP01-54):
   Curvature-to-external-validation is SUPPORTING/SUGGESTIVE only. Named-marker chromatin claims are
   CORRELATIONAL only (marker-shuffle test NULL, MW p=0.58). Data-level chromatin-RNA coupling is a
   supporting diagnostic (chromatin-dependent, but lineage-specific), not a lag substitute.
-No new analysis; no fabricated numbers. Author/affiliation/corresponding/IP/repository left as <FILL>.
+No new analysis; no fabricated numbers. Corresponding author = Ka-Kyung Kim, Independent Researcher,
+  Seoul, Republic of Korea (BIOP01-79, 2026-08-14). Co-author English names/affiliations, corresponding
+  email, IP and repository remain <FILL>.
 No arrow glyphs in title, body or tables. Research- and education-use draft.
 Written NEW alongside draft.md (draft.md preserved for comparison/gate). Do not overwrite draft.md.
 -->
@@ -28,9 +30,9 @@ the external-measurement result is corroboration inside the map, not a title cla
 
 > 저자 순서: 제안(전 공동저자 합의 전). 근거 = BIOP02-114 댓글 11842(2026-08-11, git 전 브랜치 + BIOP01 코멘트 전수 + draft 본문 도달 여부, ICMJE 4항목). 순번 1·교신 김가경 / 2 류재면 / 3 이건규 / 4 박세진 / 5·시니어(말미) 지용기. 영문명·소속·교신 이메일은 확정 대기(BIOP01-79).
 
-**Affiliations:** <FILL: affiliations>
+**Affiliations:** 1. Independent Researcher, Seoul, Republic of Korea — Ka-Kyung Kim (김가경). `<FILL: affiliations — 류재면, 이건규, 박세진, 지용기>`
 
-**Corresponding author:** Ka-Kyung Kim (김가경), `<FILL: email>`
+**Corresponding author:** Ka-Kyung Kim (김가경), Independent Researcher, Seoul, Republic of Korea, `<FILL: email>`
 
 > *Research- and education-use draft.* This manuscript reorganizes already-verified results for peer review; it is not a clinical or diagnostic resource. Author, affiliation, corresponding-author and IP fields are placeholders pending confirmation.
 
@@ -248,11 +250,11 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 **Competing interests.** `<FILL>`.
 
-**Funding.** `<FILL: NIPA (National IT Industry Promotion Agency) open-source AI/SW community content-creation support — application submitted 2026-08-10; grant confirmation and any required acknowledgement wording under confirmation>`.
+**Funding.** The authors received no funding for this work.
 
 **Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. `<FILL: 영문명 — 류재면>` (류재면): Formal analysis, Software, Validation, Writing – review & editing. `<FILL: 영문명 — 이건규>` (이건규): Validation, Software, Writing – review & editing. `<FILL: 영문명 — 박세진>` (박세진): Validation, Formal analysis, Writing – review & editing. `<FILL: 영문명 — 지용기>` (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank `<FILL: 영문명 — 박상준>` (박상준) for the conceptual origin of the project. `<FILL: NIPA acknowledgement sentence to be added if required — under confirmation>`
+**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank `<FILL: 영문명 — 박상준>` (박상준) for the conceptual origin of the project.
 
 ---
 
