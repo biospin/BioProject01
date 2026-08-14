@@ -29,6 +29,7 @@ the external-measurement result is corroboration inside the map, not a title cla
 **Authors:** Ka-Kyung Kim (김가경)^1^*, Jaemyun Lyu (류재면)^2,3^, Geon gyu Lee (이건규)^4,5^, Sejin Park (박세진)^6^, Yong Gi Ji (지용기)^7^ (senior author)
 
 > 저자 순서: 제안(전 공동저자 합의 전). 근거 = BIOP02-114 댓글 11842(2026-08-11, git 전 브랜치 + BIOP01 코멘트 전수 + draft 본문 도달 여부, ICMJE 4항목). 순번 1·교신 김가경 / 2 류재면 / 3 이건규 / 4 박세진 / 5·시니어(말미) 지용기. 영문명·소속·교신 이메일은 확정 대기(BIOP01-79).
+> ⚠️ **저자명 영문 표기는 본인 제출값이 정본이다. 서식 통일을 이유로 고치지 않는다.** "Geon gyu Lee"의 소문자 `gyu`는 오기가 아니라 이건규 님이 기존 논문에서 써 온 표기이므로 그대로 둔다(kkkim 판단 2026-08-15). 소속 표기 통일(전대문자 → title case)은 기관명에만 적용했다.
 
 **Affiliations:**
 1. Independent Researcher, Seoul, Republic of Korea
