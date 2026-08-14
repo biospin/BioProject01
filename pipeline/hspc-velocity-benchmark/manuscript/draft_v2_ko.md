@@ -2,16 +2,25 @@
 draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md. 2026-07-19.
 수치·통계·주장·구조는 영문 draft_v2.md가 정본이며, 이 문서는 kkkim의 한국어 검토용이다.
 헤드라인 = velocity 출력 신뢰도 지도(지도 이름에 "측정 앵커"를 붙이지 않는다). 외부 TT-seq는 보강(corroboration)일 뿐이며, abundance가 합성율을 α만큼 예측하므로 일관성 증거로 다룬다.
-교신저자 = 김가경, 독립연구자, 대한민국 서울로 확정(BIOP01-79, 2026-08-14). 공저자 영문명·소속, 교신 이메일, IP·repository는 <FILL> 유지.
+저자 5인 영문명·소속 전원 입력 완료(BIOP01-79, 2026-08-14). 잔여 <FILL>: 교신 이메일, 소속 확인 3건(Qaumtum c&s 공식표기·4/5/7번 도시국가), 박상준 로마자, IP·repository.
 -->
 
 # single-cell kinetics에서 유전자별 multiome RNA velocity 모수의 신뢰도 지도
 
-**저자:** 김가경(Ka-Kyung Kim)*, 류재면, 이건규, 박세진, 지용기(시니어 저자)
+**저자:** 김가경(Ka-Kyung Kim)^1^*, 류재면(Jaemyun Lyu)^2,3^, 이건규(Geon gyu Lee)^4,5^, 박세진(Sejin Park)^6^, 지용기(Yong Gi Ji)^7^(시니어 저자)
 
 > 저자 순서: 제안(전 공동저자 합의 전). 근거 = BIOP02-114 댓글 11842(2026-08-11, git 전 브랜치 + BIOP01 코멘트 전수 + draft 본문 도달 여부, ICMJE 4항목). 순번 1·교신 김가경 / 2 류재면 / 3 이건규 / 4 박세진 / 5·시니어(말미) 지용기. 영문명·소속·교신 이메일은 확정 대기(BIOP01-79).
 
-**소속:** 1. 독립연구자(Independent Researcher), 대한민국 서울 — 김가경(Ka-Kyung Kim). `<FILL: affiliations — 류재면, 이건규, 박세진, 지용기>`
+**소속:**
+1. Independent Researcher, Seoul, Republic of Korea
+2. R&D Center, Genolution Inc., Seoul 07793, Republic of Korea
+3. Laboratory of RNA Cell Biology, Department of Bioconvergence Engineering, Dankook University Graduate School, Yongin 16892, Korea
+4. Pseudo Lab, `<FILL: city, country>`
+5. Omixai Co., Ltd., `<FILL: city, country>`
+6. Seegene Inc., Seoul, Republic of Korea
+7. Qaumtum c&s, `<FILL: city, country>`
+
+> 소속은 투고 서식대로 영문 원문을 그대로 싣는다. 확인 필요 3건(지어내지 않고 제출값 그대로 둠): (1) 7번 "Qaumtum c&s"(퀀템씨엔에스) 공식 영문 표기 확인. (2) 4·5·7번 도시·국가 미제출. (3) 3번 국가 표기가 제출값 그대로 "Korea"라 다른 항목("Republic of Korea")과 다름. 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
 
 **교신저자:** 김가경(Ka-Kyung Kim), 독립연구자, 대한민국 서울, `<FILL: email>`
 
@@ -233,7 +242,7 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 **연구비.** 저자 일동은 본 연구에 대해 연구비 지원을 받지 않았다.
 
-**저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경: Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면: Formal analysis, Software, Validation, Writing – review & editing. 이건규: Validation, Software, Writing – review & editing. 박세진: Validation, Formal analysis, Writing – review & editing. 지용기: Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
+**저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경(Ka-Kyung Kim): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면(Jaemyun Lyu): Formal analysis, Software, Validation, Writing – review & editing. 이건규(Geon gyu Lee): Validation, Software, Writing – review & editing. 박세진(Sejin Park): Validation, Formal analysis, Writing – review & editing. 지용기(Yong Gi Ji): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
 **감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준 님에게 감사한다.
 (영문 제출본 사사 원문: "The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research.")

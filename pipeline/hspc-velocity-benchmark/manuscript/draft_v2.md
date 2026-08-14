@@ -12,9 +12,9 @@ Reframing decision 2026-07-19 (external-anchor demotion, BIOP01-54):
   Curvature-to-external-validation is SUPPORTING/SUGGESTIVE only. Named-marker chromatin claims are
   CORRELATIONAL only (marker-shuffle test NULL, MW p=0.58). Data-level chromatin-RNA coupling is a
   supporting diagnostic (chromatin-dependent, but lineage-specific), not a lag substitute.
-No new analysis; no fabricated numbers. Corresponding author = Ka-Kyung Kim, Independent Researcher,
-  Seoul, Republic of Korea (BIOP01-79, 2026-08-14). Co-author English names/affiliations, corresponding
-  email, IP and repository remain <FILL>.
+No new analysis; no fabricated numbers. Author English names + affiliations for all five authors are in
+  (BIOP01-79, 2026-08-14). Remaining <FILL>: corresponding email, three affiliation gaps (Qaumtum c&s
+  official spelling; city/country for affiliations 4, 5, 7), 박상준 romanisation, IP and repository.
 No arrow glyphs in title, body or tables. Research- and education-use draft.
 Written NEW alongside draft.md (draft.md preserved for comparison/gate). Do not overwrite draft.md.
 -->
@@ -26,11 +26,20 @@ TITLE — declarative, no negation, no arrow, no metaphor. The reliability-map f
 the external-measurement result is corroboration inside the map, not a title claim.
 -->
 
-**Authors:** Ka-Kyung Kim (김가경)*, `<FILL: 영문명 — 류재면>` (류재면), `<FILL: 영문명 — 이건규>` (이건규), `<FILL: 영문명 — 박세진>` (박세진), `<FILL: 영문명 — 지용기>` (지용기, senior author)
+**Authors:** Ka-Kyung Kim (김가경)^1^*, Jaemyun Lyu (류재면)^2,3^, Geon gyu Lee (이건규)^4,5^, Sejin Park (박세진)^6^, Yong Gi Ji (지용기)^7^ (senior author)
 
 > 저자 순서: 제안(전 공동저자 합의 전). 근거 = BIOP02-114 댓글 11842(2026-08-11, git 전 브랜치 + BIOP01 코멘트 전수 + draft 본문 도달 여부, ICMJE 4항목). 순번 1·교신 김가경 / 2 류재면 / 3 이건규 / 4 박세진 / 5·시니어(말미) 지용기. 영문명·소속·교신 이메일은 확정 대기(BIOP01-79).
 
-**Affiliations:** 1. Independent Researcher, Seoul, Republic of Korea — Ka-Kyung Kim (김가경). `<FILL: affiliations — 류재면, 이건규, 박세진, 지용기>`
+**Affiliations:**
+1. Independent Researcher, Seoul, Republic of Korea
+2. R&D Center, Genolution Inc., Seoul 07793, Republic of Korea
+3. Laboratory of RNA Cell Biology, Department of Bioconvergence Engineering, Dankook University Graduate School, Yongin 16892, Korea
+4. Pseudo Lab, `<FILL: city, country>`
+5. Omixai Co., Ltd., `<FILL: city, country>`
+6. Seegene Inc., Seoul, Republic of Korea
+7. Qaumtum c&s, `<FILL: city, country>`
+
+> 소속 확인 필요 3건(지어내지 않고 제출값 그대로 둠): (1) 7번 "Qaumtum c&s"(퀀템씨엔에스) — 공식 영문 표기 확인 필요. (2) 4·5·7번 도시·국가 미제출. (3) 3번 국가 표기가 제출값 그대로 "Korea"라 다른 항목("Republic of Korea")과 다름. 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
 
 **Corresponding author:** Ka-Kyung Kim (김가경), Independent Researcher, Seoul, Republic of Korea, `<FILL: email>`
 
@@ -252,7 +261,7 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 **Funding.** The authors received no funding for this work.
 
-**Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. `<FILL: 영문명 — 류재면>` (류재면): Formal analysis, Software, Validation, Writing – review & editing. `<FILL: 영문명 — 이건규>` (이건규): Validation, Software, Writing – review & editing. `<FILL: 영문명 — 박세진>` (박세진): Validation, Formal analysis, Writing – review & editing. `<FILL: 영문명 — 지용기>` (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
+**Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. Jaemyun Lyu (류재면): Formal analysis, Software, Validation, Writing – review & editing. Geon gyu Lee (이건규): Validation, Software, Writing – review & editing. Sejin Park (박세진): Validation, Formal analysis, Writing – review & editing. Yong Gi Ji (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
 **Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank `<FILL: 영문명 — 박상준>` (박상준) for the conceptual origin of the project.
 
