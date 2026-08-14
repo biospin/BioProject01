@@ -1,0 +1,19 @@
+<ac:structured-macro ac:name="warning" data-biop01-correction="2026-08-14"><ac:rich-text-body>
+<p><strong>정정 안내 (2026-08-14 게시본 갱신)</strong></p>
+<p>이 글은 2026년 7월에 쓰였고, 그 뒤 원고에서 <strong>주장 하나가 철회</strong>되었습니다. 아래 본문에는 아직 옛 서술이 남아 있으므로 이 안내를 먼저 읽어 주십시오.</p>
+<p><strong>철회 — "day0 크로마틴만으로 &alpha;를 맞힐 수 있다"</strong></p>
+<p>본문 뒷부분에 <em>"처리 전 day0 크로마틴 정보만으로 학습에 쓰지 않은 계통의 &alpha;를 맞힐 수 있었다(&rho;=+0.31)"</em>, 영문판에 <em>"it also revealed a usable path: day0 chromatin &rarr; &alpha;"</em> 라는 대목이 있습니다. <strong>이 귀속은 철회되었습니다.</strong></p>
+<p>검정해 보니 그 예측력은 크로마틴이 아니라 <strong>발현량(abundance)</strong>이 만들고 있었습니다.</p>
+<ul>
+<li>발현량 단독 &rho;=+0.724</li>
+<li>발현량 + ATAC &rho;=+0.708 &mdash; 크로마틴을 더해도 <strong>증분 &minus;0.016</strong>(개선 없음)</li>
+<li>발현량을 통제한 편상관 +0.112, human brain에서는 +0.212 &rarr; +0.013</li>
+</ul>
+<p>예측 경로가 존재한다는 결론 자체는 유지되지만, 공은 크로마틴이 아니라 발현량에 있습니다. 원고는 이를 <strong>"기저 상태에서 &alpha;로"(baseline-to-&alpha;)</strong> 로 표현합니다. 근거 = <code>results/atac_alpha_expression_confound.md</code>.</p>
+<p><strong>함께 정정된 것</strong></p>
+<ul>
+<li><strong>시간차 부호/크기 라벨</strong> &mdash; 본문의 {&minus;0.04, &minus;0.01, +0.08}은 <em>signed</em> 값인데 "크기"로 설명되어 있습니다. magnitude 기준 최강 쌍은 <strong>+0.163</strong>(95% CI +0.078~+0.244)입니다.</li>
+<li><strong>표지 유전자 인과</strong> &mdash; AZU1·ELANE 등의 크로마틴 선행은 상관 관찰이며 인과 근거가 아닙니다. marker-shuffle 검정은 NULL이었습니다(MW p=0.58).</li>
+</ul>
+<p><strong>정본은 저장소 원본입니다.</strong> 이 페이지 본문 전체 교체는 순차 진행 중이며, 그 전까지 정본은 <code>BioProject01/blog/2026-07-08_BIOP01_01_lag-vs-alpha.md</code>(브랜치 <code>kkkim-pipeline</code>)입니다. 지적·추적 = JIRA BIOP01-83.</p>
+</ac:rich-text-body></ac:structured-macro>
