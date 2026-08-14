@@ -1,0 +1,82 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[a4paper,margin=1.9cm,columnsep=0.7cm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\captionsetup{font=footnotesize,labelfont=bf,skip=4pt}
+\newlist{refs}{enumerate}{1}
+\setlist[refs]{label=,leftmargin=1.1em,itemindent=-1.1em,
+               nosep,itemsep=1pt,font=\footnotesize}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1em}
+\pagestyle{empty}
+\renewcommand{\baselinestretch}{0.98}
+\begin{document}
+\twocolumn[
+\begin{@twocolumnfalse}
+\begin{center}
+{\large\bfseries A reliability map for per-gene multiome RNA velocity parameters in single-cell kinetics\par}
+\vspace{2pt}
+{\footnotesize\itshape GIW/ISCB-Asia 2026 --- oral track long abstract. Authors and affiliations withheld for blind review.\par}
+\end{center}
+\vspace{6pt}
+\end{@twocolumnfalse}
+]
+\small
+\section*{Background and motivation}
+
+Multiome RNA-velocity methods emit several per-gene quantities, each offered as a biological readout: a transcription rate $\alpha$, a degradation rate $\gamma$, and a chromatin-to-transcription lag meant to say which genes open chromatin ahead of transcription. Downstream analyses increasingly consume these directly, for example to order genes by regulatory timing. A derived quantity is usable only if reliable, and reliability is testable: it should reproduce when a different algorithm is run on the \emph{same} cells, not be an artifact of model structure, hold up in independent data, and agree with an external measurement of the same rate where one exists --- axes rarely applied to individual velocity outputs. Recent general benchmarks score velocity at the embedding and transition-vector level and report method-dependent direction [25,26,27], but neither sort the per-gene outputs by reliability nor anchor them to an external measurement. We therefore ask not ``which method wins'' but ``how does one measure the reliability of a velocity output'', and build a reliability map telling an analyst which outputs to trust directly and which need orthogonal validation.
+
+\section*{Methods: a four-axis reliability protocol}
+
+We ran up to five velocity arms --- an RNA-only scVelo floor [1,9] plus four chromatin-informed methods (MultiVelo [3], MultiVeloVAE [4], MoFlow [5], CRAK-Velo [6]) --- on human hematopoietic stem and progenitor cells (10x Multiome, GSE209878; day0+day7 integrated, 21,878 cells), branching from a common preprocessing so method differences are not preprocessing artifacts. Each per-gene output was tested on four axes. \textbf{(1) Cross-method reproducibility:} pairwise rank agreement across arms on a shared gene axis, with a gene-label permutation-FDR agreement test (N=10$^4$). \textbf{(2) Causal ATAC-shuffle control:} within each lineage we permuted the ATAC signal to break the chromatin$\leftrightarrow$RNA coupling and re-fit, asking whether the per-gene lag depends on chromatin at all. \textbf{(3) Cross-dataset replication:} the ordering was re-tested in five external multiomes spanning tissue distance (human fetal cortex, fetal E18 mouse brain, same-tissue human BMMC, HSPC-direct macrophage, developmental mouse gastrulation), the last against six predictions sealed before fitting. \textbf{(4) External anchoring:} fitted $\alpha$ was compared to a measured synthesis rate (K562 TT-seq) and fitted $\gamma$ to a measured mRNA half-life (SLAM-seq, same metabolic-labeling study), with transcript abundance as a competing baseline. All headline correlations carry paired-bootstrap 95\% CIs.
+
+\section*{Results}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig01_p2_concordance.png}
+\caption{Cross-method concordance of the per-gene lag versus the transcription rate $\alpha$ in HSPC. Lag-magnitude pairwise rank agreement (most pairs |$\rho$|$\le$0.08, strongest +0.163) and sign-agreement (54.6\%, at chance) contrasted with the $\alpha$ reproducibility scatter ($\rho$=0.88).}
+\label{fig1}
+\end{figure}
+
+\textbf{Among the per-gene outputs, only $\alpha$ reproduces across methods.} The transcription rate $\alpha$ reproduced at Spearman $\rho$=0.88 (cross-method +0.882) and was recovered even by the RNA-only floor, which has no chromatin channel (floor vs MultiVelo +0.818; floor vs MultiVeloVAE +0.889). The per-gene lag did not reproduce: under its original signed definition the three HSPC pairs were $-$0.04, $-$0.01 and +0.08, and under a magnitude convention the strongest pair (MultiVelo vs MultiVeloVAE) reached only +0.163 (95\% CI [+0.078, +0.244]), with most pairs at |$\rho$|$\le$0.08 (Figure 1). Direction was at chance: per-gene sign-agreement between the two sign-variable methods was 54.6\% (n=560, binomial p=0.03), and the chromatin-leads fraction was balanced near 50/50 (MoFlow 44.8\%, MultiVeloVAE 49.3\%, CRAK-Velo 41.1\%), so a genome-wide ``chromatin primes transcription'' ordering is not supported. A fourth method did not rescue concordance (MoFlow vs CRAK-Velo $-$0.151). $\gamma$ was fragile too (cross-method $\rho$$\approx$$-$0.11): the multiome methods did not recover a measured half-life, and the RNA-only scVelo $\gamma$ ran reversed against it ($-$0.224).
+
+\textbf{The lag is model-structural, not chromatin-driven (axis 2).} At the per-gene lag layer, shuffling ATAC within lineage left the lag distribution statistically unchanged (Mann--Whitney p=0.20, KS p=0.51; per-gene lag $\rho$=0.72 preserved; chromatin likelihood 0.239$\rightarrow$0.237) and did not perturb the canonical priming-marker lags more than a bulk shuffle (Mann--Whitney p=0.58). The MultiVelo lag therefore comes from its switch-time ordering constraint and gene-intrinsic RNA dynamics, not chromatin, which is why ``which gene is chromatin-leading'' flips with the method. (A separate audit of the cell$\times$gene velocity matrix, a different target, detected a small, bounded, direction-only chromatin contribution; we keep that layer distinct and do not carry its numbers into the per-gene map.)
+
+\textbf{The ordering replicates, including under preregistration (axis 3).} The $\alpha$-robust/lag-fragile ordering held in the four externals carrying a second multiome arm (within-dataset $\alpha$ medians +0.81 to +0.93 versus lag near zero), and cross-dataset $\alpha$ decayed monotonically with tissue distance yet stayed reproducible (HSPC-direct macrophage +0.643 > BMMC +0.55 > human cortex +0.475 > gastrulation +0.415 > E18 +0.32) while the lag was signal-free everywhere (+0.03 to +0.19). In gastrulation, the priming-maximal system, six sealed predictions passed six-of-six without post-hoc rescue.
+
+\textbf{$\alpha$ agrees with a measured rate, but not $\alpha$-specifically (axis 4).} Fitted $\alpha$ tracked the measured TT-seq synthesis rate (non-housekeeping $\rho$ +0.24 to +0.29). This is corroboration but not $\alpha$-specific accuracy: transcript abundance tracked the same measurement at least as strongly (Spearman(abundance, synthesis) +0.410 versus Spearman($\alpha$, synthesis) +0.262). $\alpha$ is not a mere renaming of abundance --- two independent methods agree on $\alpha$ (+0.882) slightly more than $\alpha$ resembles abundance (+0.809), leaving a small \emph{reproducible} kinetic signal --- but the external match is consistency evidence, not a claim that $\alpha$ is the most accurate synthesis estimator.
+
+\textbf{Why the lag fails.} On MultiVelo's own objective function $\alpha$ is stiff (identifiable) while the lag is sloppy and boundary-limited (conservative freed-nuisance curvature ratio 2.49$\times$, $\alpha$ stiffer in 77\% of genes). ConsensusVelo already showed the weak identifiability of velocity switch-times [41]; that work is confirmatory of our mechanism, and our contribution is the $\alpha$-stiff/lag-sloppy \emph{dissociation} in the multiome setting.
+
+\section*{Conclusion}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig07_reliability_map.png}
+\caption{Velocity-output reliability map and routing rule. Each velocity output (rows) scored on the four reliability-map columns (cross-method reproducible / chromatin-causal / baseline-predictable / measurement-corroborated), the visual form of the paper's Table 2 decision map, with the trust-versus-validate routing rule.}
+\label{fig2}
+\end{figure}
+
+We distil these axes into a velocity-output \textbf{reliability map} with an explicit routing rule (Figure 2). Exactly one per-gene output is reliable on the internal axis and corroborated on the external axis --- the transcription rate $\alpha$. Two further outputs are usable only as population statements (the $\sim$50/50 directional balance and the cross-method direction agreement of canonical priming markers, a correlational fact we do not upgrade to causation). Everything else is unreliable: the chromatin-opening rate $\alpha_c$ ($\rho$=0.29), $\gamma$, and the per-gene lag magnitude, sign and absolute timing. The routing rule follows: consume $\alpha$ and rate-derived signals directly, and do not consume a single-method lag, sign or $\gamma$ without an orthogonal measurement. For downstream timing prediction this yields a concrete design principle: route from baseline features to $\alpha$, since the same baseline that fails to predict the lag ($\rho$$\approx$0.05) predicts $\alpha$ on held-out lineages ($\rho$=+0.31). This bounds the reliability of the current methods, not the existence of timing biology: deeper sequencing or metabolic labeling could yet render the lag identifiable. Load-bearing limits: pseudotime is not wall-clock; the lag-fragile leg outside HSPC rests largely on a single method pair; the five external replications are single-sample; the $\alpha$ anchor carries the abundance confound and rests primarily on one TT-seq source; and we audited per-gene kinetic parameters, not the embedding-level trajectories velocity is principally used for.
+
+\section*{References}
+\begin{refs}
+\item [1] La Manno G, Soldatov R, Zeisel A, et al. RNA velocity of single cells. \emph{Nature} 560, 494--498 (2018). doi:10.1038/s41586-018-0414-6.
+\item [3] Li C, Virgilio MC, Collins KL, Welch JD. Multi-omic single-cell velocity models epigenome--transcriptome interactions and improves cell fate prediction. \emph{Nature Biotechnology} 41, 387--398 (2023). doi:10.1038/s41587-022-01476-y.
+\item [4] Li C, Gu Y, Virgilio MC, Lee KH, Collins KL, Welch JD. Inferring differential dynamics from multi-lineage, multi-omic, and multi-sample single-cell data with MultiVeloVAE. \emph{Nature Communications} 16, 11505 (2025). doi:10.1038/s41467-025-66287-6.
+\item [5] Hong A, Lee S, Kim K. Multi-omic relay velocity modeling uncovers dynamic chromatin-transcription regulation across cell states. \emph{Nature Communications} 17, 566 (2025). doi:10.1038/s41467-025-67259-6.
+\item [6] El Kazwini N, Gao M, Kouadri Boudjelthia I, Cai F, Huang Y, Sanguinetti G. CRAK-Velo: chromatin accessibility kinetics integration improves RNA velocity estimation. \emph{Genome Biology} 27(1) (2026). doi:10.1186/s13059-026-04086-y.
+\item [9] Gayoso A, Weiler P, Lotfollahi M, et al. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. \emph{Nature Methods} 21, 50--59 (2024). doi:10.1038/s41592-023-01994-w.
+\item [25] Luo Y, Ren J, Yang Q, You Z, Zhou Y, Qin Q, Li Q. Benchmarking RNA velocity methods across 17 independent studies. \emph{Cell Reports Methods} 6(4), 101367 (2026). doi:10.1016/j.crmeth.2026.101367.
+\item [26] Huang K, Zhou Y, Wang T, et al. Benchmarking algorithms for RNA velocity inference. bioRxiv 2026.01.03.697314 (2026). [Preprint.]
+\item [27] Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. Comprehensive benchmarking of RNA velocity methods across single-cell datasets. \emph{Genome Biology} 27(1), 242 (2026). doi:10.1186/s13059-026-04182-z.
+\item [41] Zhang et al. Quantifying uncertainty in RNA velocity (ConsensusVelo). bioRxiv 2024.05.14.594102 (2024); \emph{Biometrics} (in press). [Full author list/final venue to confirm.]
+\end{refs}
+
+\end{document}
