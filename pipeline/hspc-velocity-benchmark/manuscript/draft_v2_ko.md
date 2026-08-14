@@ -2,7 +2,7 @@
 draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md. 2026-07-19.
 수치·통계·주장·구조는 영문 draft_v2.md가 정본이며, 이 문서는 kkkim의 한국어 검토용이다.
 헤드라인 = velocity 출력 신뢰도 지도(지도 이름에 "측정 앵커"를 붙이지 않는다). 외부 TT-seq는 보강(corroboration)일 뿐이며, abundance가 합성율을 α만큼 예측하므로 일관성 증거로 다룬다.
-저자 5인 영문명·소속 전원 입력 완료(BIOP01-79, 2026-08-14). 잔여 <FILL>: 교신 이메일, 소속 확인 3건(Qaumtum c&s 공식표기·4/5/7번 도시국가), 박상준 로마자, IP·repository.
+저자 5인 영문명·소속 전원 입력 완료(BIOP01-79, 2026-08-14). 교신 이메일, 소속 4·5·7번 도시국가, 7번 공식표기는 2026-08-15 kkkim 확정으로 해소. 잔여 <FILL>: 이해상충, IP·repository.
 -->
 
 # single-cell kinetics에서 유전자별 multiome RNA velocity 모수의 신뢰도 지도
@@ -15,14 +15,14 @@ draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md
 1. Independent Researcher, Seoul, Republic of Korea
 2. R&D Center, Genolution Inc., Seoul 07793, Republic of Korea
 3. Laboratory of RNA Cell Biology, Department of Bioconvergence Engineering, Dankook University Graduate School, Yongin 16892, Republic of Korea
-4. Pseudo Lab, `<FILL: city, country>`
-5. Omixai Co., Ltd., `<FILL: city, country>`
+4. Pseudo Lab, Seoul, Republic of Korea
+5. Omixai Co., Ltd., Seoul, Republic of Korea
 6. Seegene Inc., Seoul, Republic of Korea
-7. Qaumtum c&s, `<FILL: city, country>`
+7. QUANTUM C&S Co., Ltd., Seoul, Republic of Korea
 
-> 소속은 투고 서식대로 영문 원문을 그대로 싣는다. 확인 필요 2건(지어내지 않고 제출값 그대로 둠): (1) 7번 "Qaumtum c&s"(퀀템씨엔에스) 공식 영문 표기 확인. (2) 4·5·7번 도시·국가 미제출. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일했다(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
+> 소속은 투고 서식대로 영문 원문을 그대로 싣는다. 확인 2건 해소(2026-08-15, kkkim 확정): (1) 7번을 공식 홈페이지 https://quantumcns.ai/ 표기 **QUANTUM C&S Co., Ltd.**로 맞췄고 주소도 같은 출처(서울 구로구 디지털로31길 62)에서 확인했다. 제출값 "Qaumtum c&s"와의 차이는 대소문자와 `Co., Ltd.` 유무만이 아니라 철자 자체다 — Qa**um**tu**m** vs Qu**an**tu**m**(a/u 뒤바뀜, m/n). ★지용기 님 본인 확인 필요(제출값을 바꾼 유일한 건). (2) 4·5·7번 도시·국가 = 전부 Seoul, Republic of Korea (kkkim 지시 2026-08-15). 근거 강도: 7번=1차(회사 홈페이지), 5번=2차(THE VC 기업정보, 본사 서울), 4번=Pseudo Lab 사이트에 도시 표기가 없어 kkkim 판단. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일했다(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
 
-**교신저자:** 김가경(Ka-Kyung Kim), 독립연구자, 대한민국 서울, `<FILL: email>`
+**교신저자:** 김가경(Ka-Kyung Kim), 독립연구자, 대한민국 서울, kakyung.kim@gmail.com
 
 > *연구·교육용 초안.* 이 원고는 이미 검증된 결과를 동료 심사를 위해 재구성한 것이며, 임상·진단 자원이 아니다. 저자·소속·교신저자·IP 항목은 확정 전 자리표시자다.
 
@@ -244,7 +244,7 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 **저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경(Ka-Kyung Kim): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면(Jaemyun Lyu): Formal analysis, Software, Validation, Writing – review & editing. 이건규(Geon gyu Lee): Validation, Software, Writing – review & editing. 박세진(Sejin Park): Validation, Formal analysis, Writing – review & editing. 지용기(Yong Gi Ji): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준 님에게 감사한다.
+**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준(Sangjun Park) 님에게 감사한다.
 (영문 제출본 사사 원문: "The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research.")
 
 ---

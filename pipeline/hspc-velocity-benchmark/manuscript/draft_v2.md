@@ -13,8 +13,8 @@ Reframing decision 2026-07-19 (external-anchor demotion, BIOP01-54):
   CORRELATIONAL only (marker-shuffle test NULL, MW p=0.58). Data-level chromatin-RNA coupling is a
   supporting diagnostic (chromatin-dependent, but lineage-specific), not a lag substitute.
 No new analysis; no fabricated numbers. Author English names + affiliations for all five authors are in
-  (BIOP01-79, 2026-08-14). Remaining <FILL>: corresponding email, three affiliation gaps (Qaumtum c&s
-  official spelling; city/country for affiliations 4, 5, 7), 박상준 romanisation, IP and repository.
+  (BIOP01-79, 2026-08-14). Corresponding email, affiliation 4/5/7 city-country and the affiliation-7
+  official spelling closed 2026-08-15 (kkkim). Remaining <FILL>: competing interests, IP and repository.
 No arrow glyphs in title, body or tables. Research- and education-use draft.
 Written NEW alongside draft.md (draft.md preserved for comparison/gate). Do not overwrite draft.md.
 -->
@@ -34,14 +34,14 @@ the external-measurement result is corroboration inside the map, not a title cla
 1. Independent Researcher, Seoul, Republic of Korea
 2. R&D Center, Genolution Inc., Seoul 07793, Republic of Korea
 3. Laboratory of RNA Cell Biology, Department of Bioconvergence Engineering, Dankook University Graduate School, Yongin 16892, Republic of Korea
-4. Pseudo Lab, `<FILL: city, country>`
-5. Omixai Co., Ltd., `<FILL: city, country>`
+4. Pseudo Lab, Seoul, Republic of Korea
+5. Omixai Co., Ltd., Seoul, Republic of Korea
 6. Seegene Inc., Seoul, Republic of Korea
-7. Qaumtum c&s, `<FILL: city, country>`
+7. QUANTUM C&S Co., Ltd., Seoul, Republic of Korea
 
-> 소속 확인 필요 2건(지어내지 않고 제출값 그대로 둠): (1) 7번 "Qaumtum c&s"(퀀템씨엔에스) — 공식 영문 표기 확인 필요. (2) 4·5·7번 도시·국가 미제출. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일함(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
+> 소속 확인 2건 해소(2026-08-15, kkkim 확정): (1) 7번을 공식 홈페이지 https://quantumcns.ai/ 표기 **QUANTUM C&S Co., Ltd.**로 맞춤(주소도 같은 출처: 서울 구로구 디지털로31길 62). 제출값 "Qaumtum c&s"와의 차이는 대소문자와 `Co., Ltd.` 유무만이 아니라 **철자 자체**다 — Qa**um**tu**m** vs Qu**an**tu**m**(a/u 뒤바뀜, m/n). ★지용기 님 본인 확인 필요(제출값을 바꾼 유일한 건). (2) 4·5·7번 도시·국가 = 전부 Seoul, Republic of Korea (kkkim 지시 2026-08-15). 근거 강도: 7번=1차(회사 홈페이지), 5번=2차(THE VC 기업정보, 본사 서울), 4번=Pseudo Lab 사이트에 도시 표기 없어 kkkim 판단. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일함(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
 
-**Corresponding author:** Ka-Kyung Kim (김가경), Independent Researcher, Seoul, Republic of Korea, `<FILL: email>`
+**Corresponding author:** Ka-Kyung Kim (김가경), Independent Researcher, Seoul, Republic of Korea, kakyung.kim@gmail.com
 
 > *Research- and education-use draft.* This manuscript reorganizes already-verified results for peer review; it is not a clinical or diagnostic resource. Author, affiliation, corresponding-author and IP fields are placeholders pending confirmation.
 
@@ -263,7 +263,7 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 **Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. Jaemyun Lyu (류재면): Formal analysis, Software, Validation, Writing – review & editing. Geon gyu Lee (이건규): Validation, Software, Writing – review & editing. Sejin Park (박세진): Validation, Formal analysis, Writing – review & editing. Yong Gi Ji (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank `<FILL: 영문명 — 박상준>` (박상준) for the conceptual origin of the project.
+**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank Sangjun Park (박상준) for the conceptual origin of the project.
 
 ---
 
