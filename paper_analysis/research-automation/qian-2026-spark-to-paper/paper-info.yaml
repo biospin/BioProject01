@@ -1,0 +1,125 @@
+# Qian, Zhuoyang, 2026 — Spark-to-Paper — arXiv preprint
+# arXiv: 2608.11924
+# Topics: research-automation (primary), LLM-agents, scientific-writing  |  Importance: 상(하네스 관점)
+
+# ─── end of header (auto-managed by build_index.py; do not edit this block manually) ───
+
+# Identity
+document_type: "paper"
+title: "Spark-to-Paper: End-to-End Research Paper Generation as a Composable Skill"
+authors:
+  - "Qian, Zhuoyang"
+  - "Wu, Biao"
+  - "Wang, Yiran"
+  - "Yan, Chris D"
+  - "Dai, Desan"
+  - "Zheng, Liangwei"
+  - "Jiang, Jin"
+  - "Zhang, Junsheng"
+  - "Wang, Wenhao"
+year: 2026
+venue: "arXiv (preprint)"
+doi: ""
+arxiv: "2608.11924"
+corresponding: "wangwenhao@vastilab.com"
+keywords:
+  - "research automation"
+  - "LLM agent"
+  - "scientific paper generation"
+  - "composable skill"
+  - "verification / integrity gate"
+
+version:
+  type: "preprint"
+  peer_reviewed: false
+  preprint:
+    server: "arXiv"
+    id: "2608.11924"
+    note: "미peer-review. figure count 등 일부는 저자 self-reported(존재 증거이지 benchmark 아님)."
+
+topics:
+  - "research-automation"        # primary
+  - "LLM-agents"
+  - "scientific-writing"
+
+citation:
+  key: "qian2026sparktopaper"
+  short_id: "spark-to-paper-qian"
+  bibtex_file: "sources/qian-2026-spark-to-paper.bib"
+  bibtex_type: "misc"
+
+sources:
+  paper:
+    url: "https://arxiv.org/abs/2608.11924"
+    url_alt:
+      - "https://arxiv.org/html/2608.11924"
+    local: "sources/fulltext_extract.md"
+    status: "extracted"
+    note: "PDF 미반입. sources/fulltext_extract.md = arXiv HTML fulltext WebFetch 추출본(수치·구조 근거). 원 PDF 필요 시 kkkim 반입."
+  code:
+    - url: "https://github.com/Spark-To-Paper-Skills/spark-to-paper-skills"
+      type: "github"
+      status: "url-only"
+      note: "저자 repo. 소스 릴리스 명시는 없음(예고). Claude Code + Claude model family 사용."
+  abstract_text:
+    source: "arxiv-html"
+    local: "sources/fulltext_extract.md"
+    status: "extracted"
+
+categorization:
+  domain:
+    - "research automation"
+    - "LLM agent"
+    - "scientific writing / paper generation"
+    - "verification / hallucination control"
+  use_case:
+    - "methodology-reference"        # 우리 하네스 설계의 직접 선례
+    - "competitive-landscape"        # 우리 paper-production-harness·verify-harness와 수렴/경쟁
+  importance:
+    level: "상"
+    perspective: "우리 팀 논문 생산·검증 하네스(kakyungkim/paper-production-harness + verify-harness 3층)와 독립적으로 같은 문제를 푼 외부 선례. BIOP01 §6.1 AI Scientist 검증게이트(BIOP01-81)·검증하네스 운영화(BIOP01-84)의 직접 근거·비교축. 단 우리 velocity 과학 논문(HSPC multiome) 자체와는 무관한 메타(연구자동화) 자료 — 스쿱 아님, 하네스 방법론 참조·인용 대상."
+
+# 하네스 관점 대조 (스쿱 아님 — 방법론 비교)
+harness_comparison:
+  our_asset: "paper-production-harness (topic-agnostic scaffold) + verify-harness 3층(AKM 사실검증 + mutation + 검사카탈로그·독립성 사다리)"
+  verdict: "independent-convergence"
+  they_ahead:
+    - "정량 fabrication-detection ablation 14→69→81→92% (우리는 아직 헤드라인 탐지율 미산출)"
+    - "비용/토큰/시간 벤치($8.1·11.9M·3.2h)"
+    - "Claim Admission 5라벨(supported/partially/unsupported/contradicted/needs-confirmation)"
+    - "citation validity를 human/prior와 정량 대비(99.5% vs 97.8% vs 81)"
+  we_ahead:
+    - "게이트 자체를 mutation으로 검증(watchmen) — 그들은 게이트 공허성 미검"
+    - "circular-evidence 격리(리포트를 검사 코퍼스 밖)"
+    - "cross-model + 사람/advisor 독립성 사다리 — 그들 adversarial은 same-model isolated라 precision 74%/오탐 26%"
+    - "재계산 diff-0(byte-identical) 명시"
+  shared:
+    - "결정론 gate vs 의미판단(model review) 분리"
+    - "실험 preregistration(표 먼저)"
+    - "self-refutation loop cap → 실패 리포트(억지 성공 금지)"
+    - "파일 아티팩트로 stage 간 소통"
+  strategic:
+    - "§6.1(BIOP01-81)·검증하네스(BIOP01-84) 논지의 외부 근거로 인용"
+    - "우리 verify-harness Layer2(mutation)로 '그들 92% vs 우리 N%' 비교축 만들 후보"
+    - "Claim Admission 5라벨을 우리 claim ledger에 접목 검토"
+
+related:
+  - key: "biop01-verify-harness"
+    relation: "our-harness"
+    note: "우리 verify-harness 3층 + paper-production-harness. 이 논문이 독립 수렴한 선례."
+  - key: "lu2024aiscientist"
+    relation: "baseline-in-paper"
+    note: "AI Scientist — Spark-to-Paper의 audit 대상 baseline(citation 93%). 우리 §6.1도 참조."
+
+workflow:
+  last_updated: '2026-08-18'
+  analysis_status:
+    abstract: "done"
+    core: "done"
+    lens_academic: "done"
+    lens_industry: "done"
+    methodology_brief: "done"
+    slides: "skipped"
+
+# lit-search 발견 맥락
+# 역할: methodology-reference / competitive-landscape — 우리 논문 생산·검증 하네스의 직접 선례. kkkim이 arXiv 2608.11924 지정, paper-analysis-harness 방식으로 분석 후 harness와 대조 지시(2026-08-18).
