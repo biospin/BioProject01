@@ -1,0 +1,13 @@
+<ac:structured-macro ac:name="warning" data-biop01-correction="2026-08-14"><ac:rich-text-body>
+<p><strong>정정 안내 (2026-08-14 게시본 갱신)</strong></p>
+<p>이 글은 2026년 7월에 쓰였고, 그 뒤 원고에서 <strong>주장 몇 가지가 철회·정정</strong>되었습니다. 아래 본문에는 아직 옛 서술이 남아 있으므로 이 안내를 먼저 읽어 주십시오.</p>
+<p><strong>철회 &mdash; "유전자 598개 중 0개 일치가 나온 건 검정이 무능해서가 아니다"</strong></p>
+<p>본문 시험 2에 이 문장이 붙어 있는데, <strong>틀렸습니다.</strong> 그 0/598은 크기가 아니라 <strong>방향</strong> 검정이고, 방향 검정 쪽은 실제로 검정력에 막혀 있습니다. 부호가 흔들리는 깨끗한 프로그램이 둘(MoFlow·MultiVeloVAE)뿐이라 유전자당 얻을 수 있는 최소 p값이 0.5 근처(실측 0.499)이고, 그러면 신호가 있든 없든 어떤 FDR 문턱도 통과할 수 없습니다. 게다가 그 598개 검정은 셋째 프로그램으로 CRAK-Velo를 끌어 쓴 값이라 그 자체가 CRAK에 기댑니다. 그래서 원고는 0/598을 헤드라인에서 내리고 CRAK 포함 민감도 분석으로 강등했습니다. 자기비판 시리즈에서 이 대목을 방어 논리로 쓴 것이 이 글의 가장 큰 잘못이었습니다.</p>
+<p><strong>함께 정정된 것</strong></p>
+<ul>
+<li><strong>"한 프로그램 안에서는 시간차에 신호가 있다"</strong> &mdash; 이 문장을 거두어들입니다. ATAC를 계통 안에서 뒤섞고 모델을 다시 적합해도 시간차 분포는 통계적으로 그대로였습니다(Mann&ndash;Whitney p=0.20, 유전자별 순위 &rho;=0.72). 그 시간차는 크로마틴이 아니라 <strong>모델 구조</strong>가 만든 값이라, 한 프로그램 안에서 나오는 시간차조차 크로마틴을 근거로 읽어서는 안 됩니다.</li>
+<li><strong>"계산법의 흠이 아니다"</strong> &mdash; 전면 면책은 지나쳤습니다. 같은 연구에서 CRAK-Velo의 시간차에 부호 역전과 크기가 0.06배로 무너지는 추정 문제를 실제로 찾아냈습니다. 계산법 쪽 흠도 있었고, 다만 그것만으로는 불일치가 설명되지 않는다는 것이 모의고사(양성대조)의 결론입니다.</li>
+<li><strong>분해 속도 &gamma;의 재현 실패</strong> &mdash; 재현에 실패한 값이 시간차 하나가 아니라는 점을 처음 판에서 빠뜨렸습니다. &gamma;도 프로그램을 바꾸면 값이 달라지고(&rho;&asymp;&minus;0.1), 외부 측정(K562 반감기)과 대조하면 세 프로그램 모두 맞지 않았으며, scVelo의 &gamma;는 방향까지 뒤집혀 나왔습니다(&minus;0.224, 신뢰구간이 0을 배제). 재현되는 것은 &alpha; 하나입니다.</li>
+</ul>
+<p><strong>정본은 저장소 원본입니다.</strong> 이 페이지 본문 전체 교체는 순차 진행 중이며, 그 전까지 정본은 <code>BioProject01/blog/2026-07-13_BIOP01_06_self-adversarial-hardening.md</code>(브랜치 <code>kkkim-pipeline</code>)입니다. 지적·추적 = JIRA BIOP01-83.</p>
+</ac:rich-text-body></ac:structured-macro>

@@ -1,0 +1,16 @@
+<ac:structured-macro ac:name="warning" data-biop01-correction="2026-08-14"><ac:rich-text-body>
+<p><strong>정정 안내 (2026-08-14 게시본 갱신)</strong></p>
+<p>이 글은 2026년 7월에 쓰였고, 그 뒤 원고에서 <strong>헤드라인 근거가 철회되고 수치 하나가 정정</strong>되었습니다. 아래 본문에는 아직 옛 서술이 남아 있으므로 이 안내를 먼저 읽어 주십시오.</p>
+<p><strong>철회 &mdash; "우연을 엄격히 걸러내도 방향이 일관된 유전자는 0개였다"</strong></p>
+<p>본문 다섯 검증 요약에 <em>"우연: 우연을 엄격히 걸러내도 방향이 일관된 유전자는 0개였다"</em>, 영문판에 <em>"Chance: even after strictly removing chance, no gene kept a consistent direction"</em> 라는 대목이 있습니다. <strong>이 0/598은 헤드라인에서 내려왔습니다.</strong></p>
+<p>이 검정은 부호가 흔들리는 프로그램 셋이 필요해 <strong>CRAK-Velo</strong>(같은 글 뒷부분에서 부호 버그를 지적한 그 값)를 넣어 돌린 것이고, 깨끗한 두 프로그램(MoFlow·MultiVeloVAE)만으로 돌리면 유전자당 얻을 수 있는 최소 p값이 0.5 근처(실측 0.499)라 <strong>신호가 있든 없든 0이 나옵니다</strong>(검정력 제한). 그래서 지금 원고는 0/598을 CRAK 포함 <strong>보조 민감도 분석</strong>으로 강등하고, 헤드라인은 크기 일치도로 갈아탔습니다.</p>
+<ul>
+<li>가장 잘 맞는 한 쌍 &rho;=+0.163, 나머지 |&rho;| 0.08 이하</li>
+<li>방향 쪽 깨끗한 숫자 = MoFlow×MultiVeloVAE 부호 일치율 <strong>54.6%</strong>(방향이 미정인 유전자를 뺀 560개, 이항 p=0.031)</li>
+</ul>
+<p><strong>함께 정정된 것</strong></p>
+<ul>
+<li><strong>방향 일치 비율</strong> &mdash; 본문에 처음 적은 43.6%&rarr;32.4%는 시간차가 정확히 0이라 방향이 미정인 유전자를 세는 방식이 명시되지 않아 흔들린 값입니다. 그 91개를 빼고 다시 세면 <strong>42.3%</strong>(239개, 이항 p=0.020)로, 여전히 우연인 50%보다 유의하게 낮습니다. 결론은 그대로고 숫자만 바뀝니다.</li>
+</ul>
+<p><strong>정본은 저장소 원본입니다.</strong> 이 페이지 본문 전체 교체는 순차 진행 중이며, 그 전까지 정본은 <code>BioProject01/blog/2026-07-08_BIOP01_02_five-checks.md</code>(브랜치 <code>kkkim-pipeline</code>)입니다. 지적·추적 = JIRA BIOP01-83.</p>
+</ac:rich-text-body></ac:structured-macro>
