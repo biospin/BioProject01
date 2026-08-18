@@ -51,3 +51,15 @@ Spark-to-Paper는 우리가 하네스를 글로 쓸 때(BIOP01 §6.1 AI Scientis
 - **main·live Contributors: 이미 깨끗**(kakyungkim·Geongyu만, cytogenai·claude 0).
 - 잔재는 **GitHub 불변 PR ref `refs/pull/1/head`=3c54903**(옛 초기 커밋, cytogenai@gmail.com + Claude Fable 트레일러)에만. **force-push로 제거 불가**(GitHub 관리 immutable, PR 삭제 불가).
 - contributor 그래프는 default branch(main) 기준이라 이미 깨끗 — 재출현은 **그래프 캐시**. 완전 purge는 GitHub Support 또는 repo 재생성(파괴적)뿐. → 상세·옵션은 티켓.
+
+## 7. 라이선스·귀속 (도입 시 준수 — 2026-08-18 확인)
+> 법적 자문 아님. 표준 규칙 기준.
+
+- **논문**: arXiv.org perpetual non-exclusive license(CC 아님) — 인용·짧은 fair-use 인용만, verbatim 텍스트·그림 재배포 불가.
+- **코드 repo** `Spark-To-Paper-Skills/spark-to-paper-skills`: **MIT** — 복사·수정·재배포 가능(고지 유지 조건).
+- **방법·아이디어**: 저작권 대상 아님 → 우리 harness에 **재구현은 라이선스 무관하게 자유**. 특허 명시 없음.
+
+**도입 3원칙**:
+1. 재구현 우선(코드 복사 말고). 도입1(mutation ablation)·도입2(Claim Admission 5라벨)은 재구현이라 MIT 고지 관리 불필요.
+2. 방법 쓴 모든 곳에 인용 `@qian2026sparktopaper`(DESIGN_NOTES·verify-harness SKILL·논문 §6.1·커밋). DESIGN_NOTES는 이미 Spark-to-Paper 선례 절 보유.
+3. 코드를 실제 복사할 때만: 파일 상단 MIT 저작권 고지 + LICENSE 사본. 우리 harness(CC BY 4.0)와 병존 가능.
