@@ -3,7 +3,7 @@
 > 근거: `_core.md` + `sources/`. 학술 기여·한계·우리 원고 방어선 관점.
 
 ## 학술적 기여
-- 규모: 19 도구/30 method × 34 데이터셋 × 8 task. RNA velocity 벤치마크 중 현재 최대 축(이전 Luo 14×17, Huang 29×176과 함께 3대 벤치마크).
+- 규모: 19 도구/30 method × 34 데이터셋 × 8 task. RNA velocity 벤치마크 중 현재 최대 축(이전 Luo 15×17, Huang 29×176과 함께 3대 벤치마크).
 - 개념 기여: **directional consistency ↔ negative control robustness trade-off**(ρ=−0.572, P=0.003)를 정량화. "방향 신호 최적화가 spurious velocity를 낳는다"를 순위 역전(LatentVelo 1위↔23위)으로 실증.
 - 단일 랭킹을 거부하고 task-aware 선택 지침을 산출물로 삼음 — 사용성 측면 기여.
 
