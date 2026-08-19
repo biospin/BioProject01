@@ -1,0 +1,6 @@
+dataset,moflow_genes,cslag_valid,cslag_all_nan,frac_zero,pt_empty_bins,pt_max_bin_frac
+human_brain,723,723,False,0.1231,0,0.2426
+e18_mouse_brain,1150,0,True,,15,0.991
+GSE194122_bmmc,284,284,False,0.1056,0,0.1912
+macrophage,879,879,False,0.2071,0,0.1881
+gse205117,1165,1165,False,0.0893,0,0.304

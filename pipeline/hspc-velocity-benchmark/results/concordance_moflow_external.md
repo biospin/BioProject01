@@ -18,8 +18,8 @@
 ## e18_mouse_brain
 | comparison | convention | Spearman ρ | 95% CI | n_shared | note |
 |---|---|---|---|---|---|
-| MV×MoFlow lag | magnitude | — | — | 0 | shared<10 |
-| MV×MoFlow lag | signed | — | — | 0 | shared<10 |
+| MV×MoFlow lag | magnitude | — | — | 0 | MoFlow fit OK(1150 genes) but cs_lag all-NaN (collapsed velo-pseudotime) |
+| MV×MoFlow lag | signed | — | — | 0 | MoFlow fit OK(1150 genes) but cs_lag all-NaN (collapsed velo-pseudotime) |
 | MV×VAE lag | magnitude | +0.057 | [-0.005, +0.118] | 1027 |  |
 | MV×VAE lag | signed | +0.073 | [+0.014, +0.131] | 1027 |  |
 | floor×MV alpha | alpha | +0.777 | [+0.748, +0.803] | 973 |  |
@@ -47,6 +47,17 @@
 | floor×MV alpha | alpha | +0.826 | [+0.795, +0.853] | 702 |  |
 | MV×VAE alpha | alpha | +0.917 | [+0.902, +0.930] | 871 |  |
 | floor×VAE alpha | alpha | +0.865 | [+0.840, +0.887] | 709 |  |
+
+## gse205117
+| comparison | convention | Spearman ρ | 95% CI | n_shared | note |
+|---|---|---|---|---|---|
+| MV×MoFlow lag | magnitude | +0.038 | [-0.027, +0.099] | 968 |  |
+| MV×MoFlow lag | signed | -0.012 | [-0.078, +0.053] | 968 |  |
+| MV×VAE lag | magnitude | -0.026 | [-0.091, +0.038] | 969 |  |
+| MV×VAE lag | signed | +0.099 | [+0.035, +0.162] | 969 |  |
+| floor×MV alpha | alpha | +0.911 | [+0.897, +0.923] | 846 |  |
+| MV×VAE alpha | alpha | +0.953 | [+0.946, +0.959] | 969 |  |
+| floor×VAE alpha | alpha | +0.927 | [+0.915, +0.937] | 1001 |  |
 
 ## caveat (필수)
 - MV 4-state는 switch-time 단조정렬 → MV lag은 구조적 양수, sign 무정보 → **magnitude rank**가 headline.

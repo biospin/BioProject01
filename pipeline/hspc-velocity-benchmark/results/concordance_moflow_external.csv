@@ -6,8 +6,8 @@ human_brain,MV×VAE lag,signed,,,,0,method(s) 없음
 human_brain,floor×MV alpha,alpha,0.767,0.7192,0.8085,485,
 human_brain,MV×VAE alpha,alpha,,,,0,method(s) 없음
 human_brain,floor×VAE alpha,alpha,,,,0,method(s) 없음
-e18_mouse_brain,MV×MoFlow lag,magnitude,,,,0,shared<10
-e18_mouse_brain,MV×MoFlow lag,signed,,,,0,shared<10
+e18_mouse_brain,MV×MoFlow lag,magnitude,,,,0,MoFlow fit OK(1150 genes) but cs_lag all-NaN (collapsed velo-pseudotime)
+e18_mouse_brain,MV×MoFlow lag,signed,,,,0,MoFlow fit OK(1150 genes) but cs_lag all-NaN (collapsed velo-pseudotime)
 e18_mouse_brain,MV×VAE lag,magnitude,0.0568,-0.0048,0.1177,1027,
 e18_mouse_brain,MV×VAE lag,signed,0.0735,0.0139,0.1313,1027,
 e18_mouse_brain,floor×MV alpha,alpha,0.7767,0.7475,0.8029,973,
@@ -27,3 +27,10 @@ macrophage,MV×VAE lag,signed,0.2115,0.1454,0.2797,871,
 macrophage,floor×MV alpha,alpha,0.8262,0.795,0.8534,702,
 macrophage,MV×VAE alpha,alpha,0.917,0.9018,0.9298,871,
 macrophage,floor×VAE alpha,alpha,0.8654,0.8401,0.8869,709,
+gse205117,MV×MoFlow lag,magnitude,0.0378,-0.0267,0.0994,968,
+gse205117,MV×MoFlow lag,signed,-0.012,-0.0778,0.053,968,
+gse205117,MV×VAE lag,magnitude,-0.0259,-0.0908,0.038,969,
+gse205117,MV×VAE lag,signed,0.0985,0.0352,0.1615,969,
+gse205117,floor×MV alpha,alpha,0.9112,0.8968,0.9227,846,
+gse205117,MV×VAE alpha,alpha,0.9529,0.9455,0.9588,969,
+gse205117,floor×VAE alpha,alpha,0.927,0.9152,0.9367,1001,
