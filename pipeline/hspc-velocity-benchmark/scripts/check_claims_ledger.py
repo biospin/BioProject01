@@ -32,6 +32,10 @@ import yaml
 
 REPO = Path(__file__).resolve().parents[3]        # scripts/ → bench → pipeline → repo
 PRIMARY = {"primary_positive", "primary_negative", "primary_generalization"}
+# Claim Admission taxonomy (BIOP01-88 도입2 — Spark-to-Paper Appendix C 재구현, @qian2026sparktopaper)
+ADMIT = {"supported", "partially-supported", "unsupported", "contradicted", "needs-confirmation"}
+LEGACY = {"provisional", "withdrawn", "hypothesis_only"}   # 점진 마이그레이션 — 통과시키되 신 라벨 권장
+ALLOWED = ADMIT | LEGACY
 NUM = re.compile(r"[-+]?\d+\.\d+|[-+]?\d+/\d+|[-+]?\d+%")   # 0.88, -0.04, 0/598, 48%
 
 # 교정(fix) 등급·자리 — 방법론 §3. 이 도메인 결함은 정답이 하나로 안 정해져 auto 가 아니다
@@ -44,6 +48,14 @@ FIX = {
         "suggestion": "삭제된 한계 문장을 원고에 복원(CLAIMS.limitations 참조)"},
     "key_number_vs_evidence": {"tier": "assist", "target": "source",
         "suggestion": "key_number 를 evidence 파일의 실측값으로 정정"},
+    "admission_label": {"tier": "assist", "target": "source",
+        "suggestion": "status 를 5라벨(supported/partially-supported/unsupported/contradicted/needs-confirmation) 중 하나로"},
+    "admission_needs_confirmation": {"tier": "assist", "target": "source",
+        "suggestion": "근거 확보 후 supported/partially 로 승격하거나 약화·삭제 — 제출 전 해소(미해결 blocker)"},
+    "admission_partial_needs_limit": {"tier": "assist", "target": "source",
+        "suggestion": "좁힌 범위를 limitations 에 명시"},
+    "admission_contradicted_in_draft": {"tier": "assist", "target": "artifact",
+        "suggestion": "contradicted claim 을 본문에서 삭제하거나 한계로만 서술"},
 }
 
 
@@ -68,6 +80,7 @@ def main() -> int:
     ap.add_argument("--claims", default=str(REPO / "CLAIMS.yaml"))
     ap.add_argument("--draft", default=str(REPO / "pipeline/hspc-velocity-benchmark/manuscript/draft_v2.md"))
     ap.add_argument("--json", default=None)
+    ap.add_argument("--strict", action="store_true", help="needs-confirmation/contradicted 를 exit 1 로(제출 게이트)")
     a = ap.parse_args()
 
     ledger = yaml.safe_load(Path(a.claims).read_text())
@@ -104,14 +117,29 @@ def main() -> int:
                 if missing:
                     findings.append(dict(check="key_number_vs_evidence", claim=cid, verdict="CONTRADICTED",
                                          detail=f"key_number 수치 {missing} 가 evidence 파일에 없음"))
+        # 4. Claim Admission taxonomy (BIOP01-88 도입2 — Spark-to-Paper Appendix C 재구현)
+        st = c.get("status")
+        if st not in ALLOWED:
+            findings.append(dict(check="admission_label", claim=cid, verdict="CONTRADICTED",
+                                 detail=f"status={st!r} 미정의 라벨 (허용 {sorted(ADMIT)} + legacy {sorted(LEGACY)})"))
+        if st == "needs-confirmation":
+            findings.append(dict(check="admission_needs_confirmation", claim=cid, verdict="NEEDS_HUMAN",
+                                 detail="needs-confirmation 은 제출 전 해소 필요(미해결 blocker)"))
+        if st == "partially-supported" and not c.get("limitations"):
+            findings.append(dict(check="admission_partial_needs_limit", claim=cid, verdict="CONTRADICTED",
+                                 detail="partially-supported 는 좁힘을 limitations 로 문서화해야 한다"))
+        if st == "contradicted" and c.get("manuscript_locations"):
+            findings.append(dict(check="admission_contradicted_in_draft", claim=cid, verdict="NEEDS_HUMAN",
+                                 detail=f"contradicted claim 이 본문 {c.get('manuscript_locations')} 에 배치됨 — 삭제/한계화 확인"))
 
     for f in findings:                    # 방법론 §3·§5: 각 결함에 교정 자리·등급·제안(4요소 ④)
         f["fix"] = FIX.get(f["check"])
     contra = [f for f in findings if f["verdict"] == "CONTRADICTED"]
     insuff = [f for f in findings if f["verdict"] == "INSUFFICIENT"]
+    needs  = [f for f in findings if f["verdict"] == "NEEDS_HUMAN"]
     report = dict(claims=str(a.claims), draft=str(a.draft),
                   n_claims=len(ledger.get("claims", [])), findings=findings,
-                  contradicted=len(contra), insufficient=len(insuff))
+                  contradicted=len(contra), insufficient=len(insuff), needs_human=len(needs))
     if a.json:
         Path(a.json).write_text(json.dumps(report, ensure_ascii=False, indent=2))
 
@@ -120,8 +148,9 @@ def main() -> int:
     else:
         for f in findings:
             print(f"  [{f['verdict']}] {f['claim']} {f['check']}: {f['detail']}")
-        print(f"RESULT: {len(contra)} CONTRADICTED, {len(insuff)} INSUFFICIENT")
-    return 1 if contra else 0
+        print(f"RESULT: {len(contra)} CONTRADICTED, {len(insuff)} INSUFFICIENT, {len(needs)} NEEDS_HUMAN"
+              + (" (--strict: NEEDS_HUMAN 도 실패)" if a.strict else ""))
+    return 1 if contra or (a.strict and needs) else 0
 
 
 if __name__ == "__main__":

@@ -18,12 +18,31 @@
 # 필드:
 #   id                    : C1, C2 … 안정 식별자(원고·리뷰에서 참조)
 #   text                  : claim 한 문장. 원고 표현과 같은 강도로 적는다
-#   status               : supported | provisional | withdrawn | hypothesis_only
+#   status               : Claim Admission 라벨(아래 taxonomy)
 #   claim_level           : 주장 강도. 원고 claim_level 정책과 일치해야 한다
 #   evidence              : 근거 결과 파일(경로). 여기 없는 숫자는 원고 금지
 #   validation            : 이 claim 을 재계산하는 결정론적 스크립트(게이트)
 #   limitations           : 이 claim 을 세게 못 쓰게 막는 한정. 원문 표현 보존
 #   manuscript_locations  : 이 claim 이 등장하는 원고 위치(abstract/results/…)
+#
+# Claim Admission taxonomy (status 값) — BIOP01-88 도입2
+#   Spark-to-Paper(Qian et al. 2026, arXiv:2608.11924, Appendix C)의 5라벨을
+#   우리 ledger 에 맞춰 재구현(방법 인용 @qian2026sparktopaper). 라벨별 조치:
+#     supported           : 근거가 claim 을 그대로 지지 → 유지.
+#     partially-supported : 근거가 더 좁은 버전만 지지 → 문구를 좁혀 유지
+#                           (좁힘을 limitations 로 반드시 문서화).
+#     needs-confirmation  : 판정 보류 → 제출 전 반드시 해소(사람 확인).
+#                           미해결로 남길 수 없다(=제출 blocker).
+#     unsupported         : 근거 없음 → 실험 추가·약화·삭제.
+#     contradicted        : 근거가 반증 → 삭제 또는 한계로만 서술
+#                           (본문 강주장 금지).
+#   전파: status·문구를 바꾸면 그 claim 이 등장하는 전 occurrence
+#         (abstract·intro·results·conclusion)에 일관 반영한다.
+#   legacy 별칭(점진 마이그레이션): provisional≈needs-confirmation,
+#         withdrawn≈contradicted(제거), hypothesis_only≈unsupported(가설 보존).
+#   게이트: check_claims_ledger.py 가 라벨 유효성 + needs-confirmation 미해소
+#         + partially-supported 한계누락 + contradicted 본문잔존을 대조한다
+#         (--strict 는 needs-confirmation/contradicted 를 exit 1 로).
 # ===========================================================================
 
 schema_version: 1
