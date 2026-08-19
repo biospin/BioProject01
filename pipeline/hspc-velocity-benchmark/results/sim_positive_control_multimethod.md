@@ -48,6 +48,7 @@
 
 ## (d) permutation-FDR test-A 검정력 보정
 - real HSPC 문맥 n=598, N_perm=10000, 검출 기준 p_perm<0.1(gene-label shuffle null, p4 방식). 알려진 concordant ρ를 effect size별로 주입한다 → 검출 빈도(power)를 측정한다.
+- ⚠️ **세트 구분**: 이 검정력 보정은 CRAK 포함 세트(n=598) 기준이다. clean headline 세트(CRAK 제외 sign-informative, n=560)의 min p_perm=0.499는 **구조적 검정력 제한**(power-bounded, 2-method degenerate; `clean_concordance_gate.md` 기록)이며 위 power 곡선이 직접 다루지 않는다. 두 세트를 구분해 인용한다(n=598 강등세트 power 보정 vs n=560 clean세트 구조적 bound — 세트 혼용은 블로그6에서 철회한 논리와 같은 뿌리).
 
 | ρ_target | ρ_realized | power (p_perm<0.10) |
 |---|---|---|
