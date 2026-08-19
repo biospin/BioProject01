@@ -1,0 +1,29 @@
+dataset,comparison,convention,rho,ci_lo,ci_hi,n_shared,note
+human_brain,MV×MoFlow lag,magnitude,,,,0,method(s) 없음
+human_brain,MV×MoFlow lag,signed,,,,0,method(s) 없음
+human_brain,MV×VAE lag,magnitude,,,,0,method(s) 없음
+human_brain,MV×VAE lag,signed,,,,0,method(s) 없음
+human_brain,floor×MV alpha,alpha,0.767,0.7194,0.8076,485,
+human_brain,MV×VAE alpha,alpha,,,,0,method(s) 없음
+human_brain,floor×VAE alpha,alpha,,,,0,method(s) 없음
+e18_mouse_brain,MV×MoFlow lag,magnitude,,,,0,shared<10
+e18_mouse_brain,MV×MoFlow lag,signed,,,,0,shared<10
+e18_mouse_brain,MV×VAE lag,magnitude,0.0568,-0.0048,0.1177,1027,
+e18_mouse_brain,MV×VAE lag,signed,0.0735,0.0139,0.1313,1027,
+e18_mouse_brain,floor×MV alpha,alpha,0.7767,0.7475,0.8029,973,
+e18_mouse_brain,MV×VAE alpha,alpha,0.8978,0.8824,0.9102,1027,
+e18_mouse_brain,floor×VAE alpha,alpha,0.8101,0.7832,0.834,1112,
+GSE194122_bmmc,MV×MoFlow lag,magnitude,-0.1164,-0.2282,-0.003,272,
+GSE194122_bmmc,MV×MoFlow lag,signed,0.033,-0.0839,0.149,272,
+GSE194122_bmmc,MV×VAE lag,magnitude,-0.0876,-0.2053,0.0305,272,
+GSE194122_bmmc,MV×VAE lag,signed,0.0267,-0.0893,0.143,272,
+GSE194122_bmmc,floor×MV alpha,alpha,0.8197,0.7666,0.8601,232,
+GSE194122_bmmc,MV×VAE alpha,alpha,0.906,0.8793,0.9249,272,
+GSE194122_bmmc,floor×VAE alpha,alpha,0.851,0.8081,0.8833,244,
+macrophage,MV×MoFlow lag,magnitude,-0.0251,-0.0892,0.0412,871,
+macrophage,MV×MoFlow lag,signed,0.0139,-0.0543,0.0825,871,
+macrophage,MV×VAE lag,magnitude,0.0743,0.0063,0.1411,871,
+macrophage,MV×VAE lag,signed,0.2115,0.1454,0.2797,871,
+macrophage,floor×MV alpha,alpha,0.8262,0.795,0.8534,702,
+macrophage,MV×VAE alpha,alpha,0.917,0.9018,0.9298,871,
+macrophage,floor×VAE alpha,alpha,0.8654,0.8401,0.8869,709,
