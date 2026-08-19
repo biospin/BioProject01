@@ -7,8 +7,8 @@
 ## human_brain
 | comparison | convention | Spearman ρ | 95% CI | n_shared | note |
 |---|---|---|---|---|---|
-| MV×MoFlow lag | magnitude | — | — | 0 | method(s) 없음 |
-| MV×MoFlow lag | signed | — | — | 0 | method(s) 없음 |
+| MV×MoFlow lag | magnitude | -0.052 | [-0.135, +0.029] | 551 |  |
+| MV×MoFlow lag | signed | -0.028 | [-0.113, +0.056] | 551 |  |
 | MV×VAE lag | magnitude | — | — | 0 | method(s) 없음 |
 | MV×VAE lag | signed | — | — | 0 | method(s) 없음 |
 | floor×MV alpha | alpha | +0.767 | [+0.719, +0.808] | 485 |  |

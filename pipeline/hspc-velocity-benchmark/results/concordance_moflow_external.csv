@@ -1,9 +1,9 @@
 dataset,comparison,convention,rho,ci_lo,ci_hi,n_shared,note
-human_brain,MV×MoFlow lag,magnitude,,,,0,method(s) 없음
-human_brain,MV×MoFlow lag,signed,,,,0,method(s) 없음
+human_brain,MV×MoFlow lag,magnitude,-0.0523,-0.1348,0.0285,551,
+human_brain,MV×MoFlow lag,signed,-0.028,-0.1125,0.0559,551,
 human_brain,MV×VAE lag,magnitude,,,,0,method(s) 없음
 human_brain,MV×VAE lag,signed,,,,0,method(s) 없음
-human_brain,floor×MV alpha,alpha,0.767,0.7194,0.8076,485,
+human_brain,floor×MV alpha,alpha,0.767,0.7192,0.8085,485,
 human_brain,MV×VAE alpha,alpha,,,,0,method(s) 없음
 human_brain,floor×VAE alpha,alpha,,,,0,method(s) 없음
 e18_mouse_brain,MV×MoFlow lag,magnitude,,,,0,shared<10
