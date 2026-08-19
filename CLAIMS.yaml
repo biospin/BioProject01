@@ -116,7 +116,7 @@ claims:
       - "pipeline/hspc-velocity-benchmark/scripts/p3_crossdataset_concordance.py"
     key_numbers:
       alpha_monotone: "macrophage +0.643 > BMMC +0.55 > human_brain +0.475 > gastrulation +0.415 > E18 +0.32"
-      lag_signal: "어디서도 무신호 (+0.03~+0.19)"
+      lag_signal: "어디서도 무신호 (cross-dataset HSPC×external lag +0.028~+0.185)"
     limitations:
       - "cross-dataset alpha 는 조직이 멀수록 단조 감소 — 보존되는 것은 'alpha>lag 순서'이지 alpha 절대값이 아니다."
     manuscript_locations: [results, discussion]
