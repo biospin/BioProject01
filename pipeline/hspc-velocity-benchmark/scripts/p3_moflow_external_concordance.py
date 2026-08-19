@@ -28,7 +28,9 @@ RESULTS = Path(__file__).resolve().parent.parent / "results"
 B = 10000
 SEED = 20260707
 MIN_SHARED = 10
-DATASETS = ["human_brain", "e18_mouse_brain", "GSE194122_bmmc", "macrophage"]
+# gse205117(gastrulation): 이미 MoFlow가 돌아 있어(moflow_genes_gse205117.csv) read-only로 포함.
+# within-dataset MV×MoFlow를 비교 sibling으로 얻는다("gastrulation 건드리지 말 것"=재-fit 금지, read-only는 허용).
+DATASETS = ["human_brain", "e18_mouse_brain", "GSE194122_bmmc", "macrophage", "gse205117"]
 
 
 def load(name: str) -> pd.DataFrame | None:
@@ -75,16 +77,26 @@ def series_lag(ds):
         out["floor_alpha"] = fl["fit_alpha"].dropna()
     mo = load(f"moflow_genes_{ds}.csv")
     if mo is not None and "cs_lag_median" in mo.columns:
-        out["moflow_lag"] = mo["cs_lag_median"].dropna()
+        valid = mo["cs_lag_median"].dropna()
+        if len(valid) > 0:
+            out["moflow_lag"] = valid
+        else:
+            # MoFlow velocity fit OK but DTW c-s lag undefined (all-NaN). e18: velo_s_pseudotime
+            # collapsed (99% cells at t≈1.0, 15/20 empty bins) → fastdtw IndexError on NaN.
+            out["_moflow_note"] = f"MoFlow fit OK({len(mo)} genes) but cs_lag all-NaN (collapsed velo-pseudotime)"
+    elif mo is None:
+        out["_moflow_note"] = "moflow csv 없음"
     return out
 
 
 def pair(rows, ds, label, A, B_, s, rng, kind):
     """kind: 'signed' or 'magnitude' (lag) or 'alpha'. Adds a row if shared>=MIN_SHARED."""
     if A not in s or B_ not in s:
+        uses_moflow = "moflow" in A or "moflow" in B_
+        miss = s.get("_moflow_note", "method(s) 없음") if uses_moflow else "method(s) 없음"
         rows.append(dict(dataset=ds, comparison=label, convention=kind,
                          rho=np.nan, ci_lo=np.nan, ci_hi=np.nan, n_shared=0,
-                         note="method(s) 없음"))
+                         note=miss))
         return None
     sh = sorted(set(s[A].index) & set(s[B_].index))
     a, b = s[A].loc[sh].astype(float).values, s[B_].loc[sh].astype(float).values
