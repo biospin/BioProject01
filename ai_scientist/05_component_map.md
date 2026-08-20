@@ -8,8 +8,8 @@ AI Scientist 설계의 각 요소가 실제로 어느 파일에 구현·문서�
 | --- | --- |
 | 랩 구조 지도(멤버 명부·관계도·JD) | `docs/HARNESS.md` |
 | 라우팅표 + 산출물 계약 요약 | `CLAUDE.md` (*Agent routing & artifact contract* 절) |
-| 멤버 정의 8종 | `.claude/agents/{hspc-velocity-analyst,literature-scout,novelty-strategist,research-methodologist,manuscript-writer,presenter,paper-critic,paper-orchestrator,design}.md` |
-| 오케스트레이터(실행 입구) | `.claude/skills/paper-production-orchestrator/SKILL.md` |
+| 멤버 정의 11 | `.claude/agents/{hspc-velocity-analyst,literature-scout,novelty-strategist,research-methodologist,manuscript-writer,manuscript-condenser,presenter,paper-critic,venue-reviewer,paper-orchestrator,design}.md` |
+| Skill (유일한 project-scope, 실행 입구) | `.claude/skills/paper-production-orchestrator/SKILL.md` — 논문 생산 오케스트레이션. 나머지 능력은 agent, 그 외 skill은 Claude Code 전역 skill |
 | 단일 컨텍스트(thesis·claim 등급표·loop 규율) | `pipeline/hspc-velocity-benchmark/manuscript/PAPER_DIRECTION.md` |
 | 분석 실행 엔진(P0–P5) | `pipeline/hspc-velocity-benchmark/scripts/` (`download_data.sh`, `p1_build.py`, `p2_*.py`, `p3_*.py`, `p10*` 등) |
 | method 선택 근거 | `pipeline/hspc-velocity-benchmark/DESIGN.md`, `paper_analysis/`(dual-lens 14편) |

@@ -15,7 +15,7 @@ AI Scientist 설계의 목표는 이 연구 문제를 푸는 **과정 전체**�
 3. **실험 설계·감사**: 가설을 검증 가능한 실험으로 바꾸고 누수·통계 위험을 미리 잡는다. (`research-methodologist`)
 4. **실험 수행·분석**: 파이프라인을 돌려 eval·통계·cross-dataset 재현을 계산한다. (`hspc-velocity-analyst` + `scripts/` P0–P5)
 5. **집필·그림**: 결과 파일에서 원고와 그림을 만든다. (`manuscript-writer` + `figures/figNN_*.py`)
-6. **검수·리뷰**: 제출 전 적대적 자체검토와 정식 venue 리뷰를 돌린다. (`paper-critic`, `reviewer`)
+6. **검수·리뷰**: 제출 전 적대적 자체검토와 정식 venue 리뷰를 돌린다. (`paper-critic`, `venue-reviewer`)
 7. **발표**: 청중에 맞춰 슬라이드와 발제를 만든다. (`presenter`)
 
 이 일곱 단계를 사람이 매번 순서대로 부르지 않도록, 자연어 요청을 멤버에 배정하는 라우팅표(`CLAUDE.md`)와 여러 단계를 엮어 실행하는 오케스트레이터 Skill(`paper-production-orchestrator`)을 두었다. 자세한 구조는 [02_single_lab_harness.md](02_single_lab_harness.md)에서 다룬다.

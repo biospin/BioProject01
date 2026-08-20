@@ -13,7 +13,7 @@
 
 | 레이어 | 무엇인가 | 이 저장소의 구현·근거 |
 | --- | --- | --- |
-| **A. 단일 랩 자동화** | 한 연구자의 연구 과정 전체를 agent 멤버들이 나눠 맡아 자동으로 돌리는 "AI 연구 랩" | `.claude/agents/` 8종 + `paper-production-orchestrator` Skill + `AGENTS.md`/`skills/` 라우터 + 파이프라인 `scripts/`(P0–P5). 지도 = `docs/HARNESS.md` |
+| **A. 단일 랩 자동화** | 한 연구자의 연구 과정 전체를 agent 멤버들이 나눠 맡아 자동으로 돌리는 "AI 연구 랩" | `.claude/agents/` 멤버 11 + `paper-production-orchestrator` Skill(유일한 project-scope Skill) + `AGENTS.md`/`skills/` 라우터 + 파이프라인 `scripts/`(P0–P5). 지도 = `docs/HARNESS.md` |
 | **B. 멀티 AI 협업 인계** | 여러 연구자·여러 AI가 JIRA 상태 신호로 작업을 자동 인계하는 체계 | `guide/ai-handoff-architecture-guide.md` + `guide/openclaw-claude-guide.md` |
 
 레이어 A는 "AI 한 명이 논문 한 편을 어떻게 끝까지 끌고 가나"를, 레이어 B는 "그런 AI 여럿이 팀으로 어떻게 이어달리나"를 설계한다. A가 랩 안의 분업이라면 B는 랩과 랩, 사람과 사람 사이의 배턴 터치다.

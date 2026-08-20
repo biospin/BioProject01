@@ -15,9 +15,10 @@
 | `novelty-strategist` | 문헌·기획 | 차별화 각도와 가장 값싼 입증 실험 제안 |
 | `research-methodologist` | 문헌·기획 | 가설·기여문·실험설계, 누수·통계 감사 |
 | `manuscript-writer` | 집필실 | 프리프린트·저널·블로그 본문 초안과 그림 연계 |
+| `manuscript-condenser` | 집필실 | 확정 원고를 목표 분량으로 감축(근거·숫자 보존, 감축 대장 기록). 투고 직전만 (선택) |
 | `presenter` | 집필실 | 청중 맞춤 슬라이드·발제 |
 | `paper-critic` | 심사·QA | 제출 전 적대적 자체검토와 그림 시각 QA |
-| `reviewer` | 심사·QA | 정식 venue 스타일 공식 리뷰(선택) |
+| `venue-reviewer` | 심사·QA | 외부 venue 스타일 시뮬레이션 리뷰(referee). paper-critic + 검증 게이트 통과 후만 (선택) |
 | `paper-orchestrator` | 코디네이션 | 멀티 agent 작업의 **계획**만 수립(실행은 PI) |
 | `design` | 엔지니어링 | 로고·아이콘·브랜드·그림 미감 |
 | 그림 생성 스크립트 | 엔지니어링 | `figures/figNN_*.py`. 결과 파일에서 그림 생성·번호 정합 |
@@ -42,6 +43,8 @@
 
 `paper-production-orchestrator` Skill(`.claude/skills/paper-production-orchestrator/SKILL.md`)이 논문 생산 루프의 입구다. 메인 루프(PI)가 이 Skill을 실행하며 멤버를 순서대로 부른다. subagent는 subagent를 못 부르므로, "계획만 짜는" `paper-orchestrator` agent와 달리 실제 실행은 이 Skill이 맡는다.
 
+이 프로젝트가 정의한 project-scope Skill은 `paper-production-orchestrator` 하나다. 나머지 능력은 위 명부의 agent(멤버)로 두었고, Claude Code 전역 skill과는 구분한다. 즉 "여러 단계를 엮는 오케스트레이션"만 Skill로, "한 단계의 실제 작업"은 각 agent로 나눈 구조다.
+
 실행 흐름은 다음과 같다.
 
 ```
@@ -54,7 +57,7 @@
 4. 집필 + 그림 — manuscript-writer → draft_v2.md + draft_v2_ko.md, figures/*.png
 5. 검수 — paper-critic (적대적 + 그림 시각 QA)
 6. 수정 — manuscript-writer 가 지적 반영
-7. (선택) 정식 리뷰 — reviewer → REVIEW-<venue>-<date>.md
+7. (선택) 정식 리뷰 — venue-reviewer → REVIEW-<venue>-<date>.md
 8. 검증 게이트 — 헤드라인 숫자 결정론적 재계산 (실패하면 멈추고 사람에게 보고)
 9. (선택) 발표 — presenter
 ```
@@ -69,7 +72,7 @@
 | --- | --- | --- | --- |
 | 분석·eval | hspc-velocity-analyst | `results/FINDINGS.md` + `results/*.csv` + `results/*.md` | 집필·검수 |
 | 집필·그림 | manuscript-writer | `manuscript/draft_v2.md` + `draft_v2_ko.md`(영/한 동시), `figures/*.png` | 검수·리뷰·발표 |
-| 검수 | paper-critic / reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
+| 검수 | paper-critic / venue-reviewer | `manuscript/REVIEW-<venue>-<date>.md` | 집필(수정) |
 | 발표 | presenter | 슬라이드·발제 | 사람 |
 | 상태 핸드오프 | 전원 | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` | 다음 세션 |
 
