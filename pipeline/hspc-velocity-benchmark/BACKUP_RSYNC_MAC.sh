@@ -3,13 +3,14 @@
 # 전체 80G(+processed 24G)는 이건규 Drive로(BACKUP_RCLONE_DRIVE.sh).
 set -euo pipefail
 SRV=kkkim@121.126.38.195
+PORT=2205   # kkkim 컨테이너 SSH 포트(SHARED-INFRA-GUIDE §1)
 B=~/project/BioProject01/pipeline/hspc-velocity-benchmark   # 서버 경로
 DST=~/biop01_backup
 
 mkdir -p "$DST/data"
-rsync -avz --progress "$SRV:$B/data/velocity" "$DST/data/"   # 55G
-rsync -avz --progress "$SRV:$B/results"       "$DST/"        # 20M
-rsync -avz "$SRV:$B/BACKUP_MANIFEST.tsv"      "$DST/"
+rsync -avz --progress -e "ssh -p $PORT" "$SRV:$B/data/velocity" "$DST/data/"   # 55G
+rsync -avz --progress -e "ssh -p $PORT" "$SRV:$B/results"       "$DST/"        # 20M
+rsync -avz -e "ssh -p $PORT" "$SRV:$B/BACKUP_MANIFEST.tsv"      "$DST/"
 
 # 무결성 검증(tier1만): 매니페스트 sha256 대조
 echo "검증:"
