@@ -116,3 +116,13 @@ claim 자체에도 게이트가 있다. headline claim은 반증기준, 가장 �
 - **고치되 다시 쓰지 마라 (도구 권한으로 강제).** 검수 지적을 반영할 때 `manuscript-writer`가 원고를 통째로 다시 쓰면 검증이 끝난 헤드라인 숫자·인용이 조용히 바뀔 수 있다. 프롬프트로 "조금만 고쳐"라고 부탁하는 대신, 수정 단계의 도구 허용목록에서 `Write`를 빼고 `Read`+`Edit`만 남겨 외과적 패치만 가능하게 막는다(hunk 크기 상한 포함). 검증된 숫자를 바꾸려면 다시 검증 게이트를 통과해야 한다.
 - **인용 무결성 게이트.** 지금 검증 게이트는 헤드라인 숫자 재계산까지다. 여기에 인용 검증을 더한다. (1) 인용부호 안 문자열이 근거(`paper_analysis/`·원문)에 축자로 없으면 출고 차단, (2) `refs.bib`의 인용-문장 결합을 회의적으로 재검증, (3) 인용한 논문의 철회(retraction) 여부를 출고 직전 다시 조회, (4) 본문 숫자가 결과 파일로 추적되지 않으면 플래그. 근거 없는 인용·수치를 사람 주의가 아니라 lint로 잡는다.
 - **다중 모델 적대적 검토.** `paper-critic`은 지금 단일 검수자다. Layer B가 이미 갖춘 모델 함대(Claude·Codex·Gemini)를 인계뿐 아니라 headline claim의 교차검증에 쓴다. 모델·세션을 독립으로 두고, 자기비판과 타모델 비판을 분리하며, 비판 자체를 다시 비판(메타리뷰)한다. 종합은 다수결이 아니라 근거의 질로 판정하고, 합의를 진실로, 모델 이름을 권위로 삼지 않는다. claim은 Proven / Plausible / Speculative / Unsupported / Incorrect로, 비판은 Valid-and-Fatal / Valid-but-Fixable / Weak / Hallucinated 등으로 분류해 claim-defensibility 등급표를 더 촘촘하게 만든다.
+
+### 6.2 게이트 순서와 오케스트레이션 규율
+
+게이트는 흩어져 있지 않고 정해진 stage transition 위에 놓인다. 순서는 analysis → result_validation → writing → figures → review → package_validation → claim_defensibility → release다. 여기에 다음 규율이 붙는다(오케스트레이터 SKILL·`docs/HARNESS-LAYERS.md`).
+
+- **검증 게이트는 둘이다.** ① 결과 검증은 리뷰 앞에 둔다. 헤드라인 숫자를 재계산해 결과 파일과 대조하고, 통과 못 한 원고는 리뷰로 보내지 않는다(원 규칙: critic + gate FIRST, then reviewer). ② 패키지 검증은 공개 직전에 한 번 더 돌린다. 리뷰 반영으로 본문이 바뀌었을 수 있으므로 본문 숫자와 결과 파일을 재대조하고 그림·표·supplementary 동봉을 확인한다.
+- **reviewer 격리.** `venue-reviewer`는 검증을 통과한 원고 패키지만 입력받고, 내부 논의·분석 과정·critic 노트는 보지 않는다. 외부 심사 시늉을 오염 없이 하려는 것이다.
+- **claim-defensibility가 release 앞의 독립 스테이지다.** headline claim은 반증기준·make-or-break 검정·advisor 확인을 통과하기 전에는 PROVISIONAL로 두고 release로 넘기지 않는다.
+- **mock 경로 정직 표기.** 도메인 분석이 API 키 미설정 등으로 offline mock 경로로 돌았으면, 결과는 데모이고 "실 결과 아님"을 보고에 명시한다. mock 출력을 실 결과로 올리지 않는다.
+- **실패는 stop_and_report.** 자동 게이트가 실패하면 멈추고 무엇이 왜 실패했는지 보고한다. 전문 agent가 실패해도 general-purpose로 조용히 대체하지 않는다.

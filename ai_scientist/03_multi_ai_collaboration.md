@@ -74,6 +74,8 @@
 
 `ai-handoff-architecture-guide.md`는 이벤트 허브로 n8n을, 워커로 공용 서버의 `run_agent.sh`를 상정한다. `openclaw-claude-guide.md`는 그 ②+③(허브+워커)을 **OpenClaw와 메시지 큐로 대체**하는 경로를 제시한다. 별도 n8n·워커 서버를 세우지 않고 같은 인계 루프를 돌린다.
 
+현황을 정직하게 적는다. **openclaw CLI는 팀 컨테이너에 아직 설치돼 있지 않다(2026-07 기준 6개 중 0개).** 지금 실제 실행은 Claude Code와 codex로 하고, OpenClaw 도입 여부는 미결이다. 그래서 이 문서의 OpenClaw 경로는 실현된 것이 아니라 **설계 옵션**이고, 하네스 문서는 openclaw 설치를 전제로 쓰지 않는다. 전제로 쓰면 아무도 실행할 수 없는 절차가 된다.
+
 | 인계 가이드 계층 | 원 구성 | OpenClaw로 실현 |
 | --- | --- | --- |
 | ① 이벤트 소스 | JIRA 상태 전환 / PR 머지 | 그대로 유지 |

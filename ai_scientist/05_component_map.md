@@ -18,6 +18,10 @@ AI Scientist 설계의 각 요소가 실제로 어느 파일에 구현·문서�
 | 집필·그림 산출물 | `pipeline/hspc-velocity-benchmark/manuscript/draft_v2{,_ko}.md`, `figures/figNN_*.py` |
 | 검수·리뷰 산출물 | `manuscript/REVIEW-<venue>-<date>.md` |
 | 검증 게이트 스크립트 | `scripts/p3_concordance.py`, `p3_crossdataset_concordance.py`, `p3_scrambled_null.py` |
+| 하네스 SSOT 매니페스트 | `harness.yaml` (역할·산출물·게이트 기준표) |
+| 하네스 자기검진(harness-doctor) | `scripts/harness_doctor.py` + `.github/workflows/harness-doctor.yml` (팬텀 역할·경로 CI 차단, BIOP01-66) |
+| 하네스 3계층 경계 | `docs/HARNESS-LAYERS.md` (core / project profile / run instance, BIOP01-67) |
+| 선언적 실행 상태·claim 추적 | `harness_after/RUN_STATE.template.yaml`(BIOP01-68), `harness_after/CLAIMS.template.yaml`(BIOP01-69) |
 | 글쓰기 규율(한국어 윤문) | `.claude/rules/writing-style.md` |
 | 상태 핸드오프 | `HANDOFF.md`, `TODO.md`, `SESSION-LOG.md` |
 

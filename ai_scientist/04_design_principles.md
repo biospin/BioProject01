@@ -47,15 +47,16 @@ AI 체인은 스스로를 무한히 호출하거나 토큰을 쏟아낼 수 있�
 - 자동 승인 옵션(`--permission-mode acceptEdits`, `--yolo`)은 격리된 작업 디렉토리와 최소 권한 계정을 전제로만 쓴다.
 - 토큰·API 키는 코드나 코멘트에 남기지 않고 환경변수·시크릿 매니저로만 관리한다.
 
-## 6. 표준 포맷과 재사용
+## 6. 표준 포맷과 재사용 — 단, "슬롯 하나만"은 과소진술
 
-멤버 정의와 라우터를 특정 프로젝트에 묶지 않고 재사용할 수 있게 만들었다.
+멤버 정의와 라우터를 특정 프로젝트에 묶지 않고 재사용할 수 있게 만들었다. 다만 재사용의 범위를 정확히 적는다. 이 하네스는 세 계층으로 나뉜다(`docs/HARNESS-LAYERS.md`, BIOP01-67).
 
-- 논문 생산 하네스는 재사용 스캐폴드(CC BY 4.0)로 설계했고, 도메인 전용 슬롯 하나(`hspc-velocity-analyst`)만 이 프로젝트가 채웠다.
-- 분석 하네스는 OpenClaw/Codex 네이티브 포맷(`AGENTS.md` + `skills/ROUTES.md` + `openai.yaml`)을 유지해 OpenClaw로 바로 실행하고 Claude Code에서도 동작한다.
-- MCP 표준을 따르므로 서버 정의를 세 AI가 그대로 재사용한다.
+- **재사용되는 것은 core harness다.** agent 호출 규약, 산출물 계약, stage transition 순서, 실패 정책, reviewer 격리, release 게이트, 그리고 하네스 자기검진(원칙 9). 분야가 바뀌어도 그대로 간다.
+- **새 분야로 옮기려면 project profile 전체를 새로 써야 한다.** 도메인 agent(`hspc-velocity-analyst`), 검증 게이트 명령(`p3_*.py`), paper direction, 산출물 경로, claim별 과학 정책까지. "도메인 전용 슬롯 하나만 채우면 된다"는 과소진술이다. run instance(개별 실행 상태)는 또 다른 계층이다.
+- **전문 agent 실패를 general-purpose로 조용히 대체하지 않는다**(`forbid_generic_fallback`). 대체하면 밋밋한 결과가 성공으로 위장된다. 실패는 멈추고 보고한다.
+- 포맷은 OpenClaw/Codex 네이티브(`AGENTS.md` + `skills/ROUTES.md` + `openai.yaml`)로 유지하되, **openclaw CLI는 팀 컨테이너에 아직 설치돼 있지 않다(2026-07 기준 6개 중 0개).** 실제 실행은 Claude Code와 codex로 하고, 문서는 openclaw 설치를 전제로 쓰지 않는다. MCP 표준 덕분에 서버 정의는 세 AI가 그대로 재사용한다.
 
-이 표준화가 있어 새 데이터셋·새 논문·다른 AI로 옮겨도 구조를 다시 짜지 않는다.
+이 표준화가 있어 core는 새 데이터셋·새 논문·다른 AI로 옮겨도 다시 짜지 않지만, project profile은 매번 새로 채운다.
 
 ## 7. 근거와 코드를 분리한다
 
@@ -69,3 +70,14 @@ LLM에게 맡기면 흔들리는 일은 코드로 내리고, 판단이 필요한
 - 모델이 맡는 것: 가설·차별화 각도 설계, 문헌 포지셔닝, 초안 집필, 적대적 검수.
 
 같은 발상을 검증에도 넓힌다. 축자 인용 대조, 철회 조회, 숫자 추적성 같은 확인은 LLM 판단이 아니라 결정론적 lint로 처리한다([02_single_lab_harness.md](02_single_lab_harness.md) §6.1). 규칙 7이 근거와 코드를 폴더로 나눈 것이라면, 규칙 8은 한 작업 안에서 정해진 로직과 모델 판단을 나누는 것이다.
+
+## 9. 하네스가 자기 구성을 검증한다 (harness-doctor)
+
+문서가 실재하지 않는 역할·경로를 가리키면 팀은 그 문서를 계속 믿는다. 2026-07 조사에서 그런 결함 네 종이 나왔다. 팬텀 역할, cwd 의존 침묵 폴백, 게이트 순서 역전, 머지로 인한 `skills/` 파일 유실. 개별 수리 대신 **구성 자체를 검증하는 게이트**를 뒀다(BIOP01-66).
+
+- **단일 기준표(SSOT):** `harness.yaml`이 어떤 역할·산출물·게이트가 있어야 하는지 선언한다(역할별 `path`·`required`·`implemented`·`aka`).
+- **기준표 ↔ 실물 대조:** `scripts/harness_doctor.py`가 manifest와 실제 파일·문서 참조를 대조해 팬텀 역할·팬텀 경로를 FAIL시킨다. `README.md`·`AGENTS.md`·`CLAUDE.md`·`docs/HARNESS.md`·오케스트레이터 SKILL을 스캔하며, **문서에 백틱으로 쓴 경로까지 검사 대상**이다. 없는 경로를 적으면 PR이 막힌다.
+- **CI 차단:** `.github/workflows/harness-doctor.yml`이 PR blocking으로 돌고, 검진기 자체도 단위 테스트로 검증한다.
+- **선언적 상태:** 개별 실행 상태와 claim 추적도 파일로 둔다(`harness_after/RUN_STATE.template.yaml` BIOP01-68, `harness_after/CLAIMS.template.yaml` BIOP01-69).
+
+원칙 1이 "상태를 대화가 아니라 파일에" 두는 것이라면, 원칙 9는 그 파일들이 실재와 어긋나지 않게 하네스가 스스로를 감사하는 것이다.
