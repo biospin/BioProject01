@@ -4,7 +4,7 @@
 set -euo pipefail
 SRV=kkkim@121.126.38.195
 PORT=2205   # kkkim 컨테이너 SSH 포트(SHARED-INFRA-GUIDE §1)
-B=~/project/BioProject01/pipeline/hspc-velocity-benchmark   # 서버 경로
+B=/home/kkkim/project/BioProject01/pipeline/hspc-velocity-benchmark   # 서버 절대경로(원격 ~는 로컬서 풀려 깨짐)
 DST=~/biop01_backup
 
 mkdir -p "$DST/data"
