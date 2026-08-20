@@ -1,0 +1,42 @@
+{
+  "model": "gemini",
+  "model_version": "Gemini 3.1 Pro (Extended thinking)",
+  "session": "S1-gemini-C1",
+  "target": "original",
+  "input_format": "텍스트 붙여넣기(파일 업로드 아님) — concordance.md 전문 + CLAIMS.yaml C1 블록 원문을 프롬프트 본문에 markdown 코드블록으로 inline 포함, clean_concordance_gate.md §0은 구조적 논증만 발췌(스테일 수치 48.1% 제외)",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "chromatin→transcription lag은 gene 수준에서 method-robust한 양이 아니다 (크기·방향 모두 method 간 일치도가 낮다).",
+      "verdict": "Unsupported",
+      "evidence": "저자들은 크기 일치도가 '|rho|<=0.08'이라며 강건하지 않다고 주장하지만, 이는 서로 다른 알고리즘 간의 단순 비교에서 오는 방법론적 아티팩트일 가능성이 매우 높습니다. 근거 문서의 '§3.6 진단'에 따르면, rate-proxy lag (1/α_c−1/α)를 사용하여 동일한 기준으로 통일하여 비교했을 때 multivelo와 multivelovae의 Spearman 상관계수는 +0.124 (p=0.0039)로 유의미한 상승을 보입니다. 즉, 정의를 통일하면 저자들이 설정한 |rho|<=0.08 기준을 초과하는 강건성이 도출됨에도 불구하고 대표 결과에서 이를 배제했습니다. 또한 lag을 결정하는 주요 파라미터인 alpha_c 역시 Spearman +0.291 (p=5.7e-12)로 고도의 통계적 유의성을 보이며 일치하고 있어, 원자료 자체가 C1 주장을 반증하고 있습니다.",
+      "citations": ["1", "2"]
+    }
+  ],
+  "critiques": [
+    {
+      "id": "critique-1",
+      "text": "한계 1(0/598 agreement-set의 CRAK 의존성)에 대한 판정과 이유",
+      "verdict": "Valid-and-Fatal",
+      "targets_claim": "C1",
+      "evidence": "저자들이 부호-일치 검정의 극단적 실패 사례로 암시하는 '0/598 agreement-set' 결과는 통계적 퇴화(degenerate)를 막기 위해 결함이 있는 방법론(CRAK-Velo)을 억지로 포함시켜야만 성립하는 치명적인 아티팩트입니다. 정상적인 부호 가변 method는 MoFlow와 MultiVeloVAE 2개뿐이므로, 이 둘만으로는 gene당 최소 가능 permutation p값이 약 0.50에 달해 통계적 검정 자체가 원천적으로 불가능합니다. 따라서 '별도로 버그가 지적된 method'인 CRAK-Velo를 포함해야만 '3개 method 조건'을 채워 도출할 수 있는 수치를 기반으로 일치도가 낮다고 주장하는 것은 학술적으로 심각한 결격 사유이며 해당 claim을 완전히 무효화합니다.",
+      "citations": ["1", "2"]
+    },
+    {
+      "id": "critique-2",
+      "text": "한계 2(sign-agreement의 lag=0 제외 규약 의존성)에 대한 판정과 이유",
+      "verdict": "Partially-Valid",
+      "targets_claim": "C1",
+      "evidence": "MoFlow와 MultiVeloVAE 간의 부호 일치도 54.6%는 방향 미정인 lag=0 유전자 76개를 임의로 배제한 전처리 규약에 전적으로 의존합니다. 전체 공유 유전자 636개 중 10% 이상을 차지하는 76개를 분석에서 제외하는 것은 뚜렷한 선택 편향(selection bias)을 유발합니다. 실제로 미제외 np.sign 규약을 적용할 경우 일치도는 48%로 하락하며, 이는 저자들이 주장하는 '우연 수준(chance)'조차 되지 못하는 수치입니다. 미제외 데이터를 기준으로 48%를 보고하도록 수정할 수는 있으나(Fixable), 본인들의 내러티브(54.6% ~= chance)를 위해 데이터를 취사선택했다는 방법론적 비판을 피할 수 없습니다.",
+      "citations": ["1", "2"]
+    },
+    {
+      "id": "critique-3",
+      "text": "원자료 §1.5를 기반으로 한 전역적 방향 편향 부재(전역적 강건성) 은폐에 대한 비판",
+      "verdict": "Valid-and-Fatal",
+      "targets_claim": "C1",
+      "evidence": "원자료는 오히려 '방향성' 측면에서 방법론 간 고도의 일관성을 입증하고 있음에도, 저자들은 이를 교묘하게 은폐하고 있습니다. 제약이 없는 3개의 method 모두에서 중앙값(median)이 완벽하게 0이거나 0에 극도로 수렴합니다 (moflow: +0.000, crakvelo: +0.000, multivelovae: -0.002). 더불어 chromatin-leads와 rna-leads의 비율 역시 모든 모델에서 약 50대 50으로 일치하며, Wilcoxon 검정 결과(p=0.0309, 0.0171, 7.68e-06) 방향 편향이 미미함이 공통적으로 확인되었습니다. 이는 모든 방법론이 '전역적인 chromatin 선행 현상은 존재하지 않는다'는 동일한 생물학적 결론을 강력하고 강건하게 지지함을 의미합니다. 그러나 저자들은 이를 'gene 수준의 부호 일치도'라는 지엽적인 지표로 국한시켜, 마치 모델 간 방향성 예측이 전혀 일치하지 않는 것처럼 데이터를 심각하게 왜곡 해석했습니다.",
+      "citations": ["1", "2"]
+    }
+  ]
+}
