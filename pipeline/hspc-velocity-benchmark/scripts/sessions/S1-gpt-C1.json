@@ -1,0 +1,52 @@
+{
+  "model": "gpt",
+  "model_version": "gpt-5.5",
+  "session": "S1-gpt-C1",
+  "target": "original",
+  "input_format": "텍스트 inline(concordance.md 전문 + CLAIMS.yaml C1 블록 원문)",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "chromatin→transcription lag 은 gene 수준에서 method-robust 한 양이 아니다 (크기·방향 모두 method 간 일치도가 낮다).",
+      "verdict": "Plausible",
+      "evidence": "크기 concordance는 핵심 비교에서 매우 낮다: multivelo×moflow Spearman -0.038, multivelo×multivelovae -0.010, moflow×multivelovae 0.083이다. 방향 concordance도 MoFlow×MultiVeloVAE sign-agreement 54.6%로 chance에 가깝고, lag=0을 제외하지 않는 np.sign 규약에서는 48%로 더 낮아진다. 다만 부호 정보를 가진 non-buggy method가 MoFlow와 MultiVeloVAE 두 개뿐이라 방향 검정은 강한 일반화가 어렵고, 전역 fit 기반이라는 한계도 남아 있어 'Proven'보다는 'Plausible'이 적절하다.",
+      "citations": [
+        "1",
+        "2"
+      ]
+    }
+  ],
+  "critiques": [
+    {
+      "id": "critique-1",
+      "text": "permutation-FDR agreement-set 0/598은 C1의 headline 근거로 쓰면 부적절하다. 깨끗한 3-method 부호검정이 존재하지 않고, 3개 method를 채우려면 버그가 지적된 CRAK-Velo를 포함해야 하므로 해당 수치는 CRAK에 본질적으로 의존한다.",
+      "verdict": "Valid-but-Fixable",
+      "targets_claim": "C1",
+      "evidence": "근거2는 MultiVelo 부호가 구조적으로 +라서 부호-일관성 검정에 넣을 수 없고, 남는 non-buggy 부호 method는 {MoFlow, MultiVeloVAE} 2개뿐이라고 명시한다. 2-method 부호검정은 gene당 최소 달성가능 p가 약 0.50이고 경험적 min p_perm=0.499라 퇴화한다. 따라서 0/598 agreement-set은 CRAK-Velo를 포함한 보조 민감도 분석으로만 취급해야 한다. 그러나 C1은 CRAK 비의존적인 magnitude concordance 저하(-0.038, -0.010, 0.083)만으로도 상당 부분 유지된다.",
+      "citations": [
+        "1",
+        "2"
+      ]
+    },
+    {
+      "id": "critique-2",
+      "text": "54.6% sign-agreement는 lag=0 유전자 76개를 제외하는 분석 규약에 의존하므로 방향 일치도 수치로 단정적으로 제시하면 취약하다.",
+      "verdict": "Valid-but-Fixable",
+      "targets_claim": "C1",
+      "evidence": "근거1의 MoFlow×MultiVeloVAE sign-agreement 54.6%는 shared 636 중 방향 미정 lag=0 76개를 제외한 n=560 기준이다. 지정 한계에 따르면 lag=0을 제외하지 않는 np.sign 규약에서는 48%가 된다. 하지만 두 값 모두 강한 방향 일치의 증거는 아니므로, C1은 정확한 54.6%에 기대기보다 '규약에 민감하지만 대체로 chance 부근'이라고 표현하면 방어 가능하다.",
+      "citations": [
+        "1"
+      ]
+    },
+    {
+      "id": "critique-3",
+      "text": "C1의 'method-robust한 양이 아니다'라는 표현은 현재 근거 범위보다 약간 넓다. 분석은 shared fit gene과 전역 fit에 기반하며, concordance 문서 자체도 within-lineage 일치도에는 per-lineage fit이 필요하다고 제한한다.",
+      "verdict": "Partially-Valid",
+      "targets_claim": "C1",
+      "evidence": "근거1은 switch time이 전역 fit이며 진짜 within-lineage 일치도는 per-lineage fit이 필요하다고 적는다. 따라서 현재 결과는 gene-level 전역 fitting 조건에서의 method concordance 부족을 강하게 시사하지만, 모든 lineage별 생물학적 맥락에서 lag이 method-robust하지 않다고 확정하려면 추가 분석이 필요하다.",
+      "citations": [
+        "1"
+      ]
+    }
+  ]
+}
