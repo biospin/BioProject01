@@ -239,13 +239,13 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 **데이터 및 자료 가용성.** 모든 일차·외부 데이터셋은 공개다(GSE209878, GSE194122, GSE284047, GSE205117, GSE229305, GSE75792, GSE162170; E18 마우스 뇌는 10x Genomics "Fresh Embryonic E18 Mouse Brain 5k" 데모 데이터셋으로 GEO accession이 없다). 분석 코드와 결정론적 재계산 스크립트: `<FILL: repository/DOI + license>`.
 
-**이해 상충.** `<FILL>`.
+**이해 상충.** 저자 일동은 이해상충이 없음을 선언한다.
 
-**연구비.** 저자 일동은 본 연구에 대해 연구비 지원을 받지 않았다.
+**연구비.** 본 연구는 과학기술정보통신부(MSIT)가 지원하는 "오픈소스 AI·SW 개발자 및 커뮤니티 지원 사업"의 지원을 받아 수행되었다.
 
 **저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경(Ka-Kyung Kim): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면(Jaemyun Lyu): Formal analysis, Software, Validation, Writing – review & editing. 이건규(Geon gyu Lee): Validation, Software, Writing – review & editing. 박세진(Sejin Park): Validation, Formal analysis, Writing – review & editing. 지용기(Yong Gi Ji): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준(Sangjun Park) 님에게 감사한다.
+**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준(Sangjun Park, 연세대학교) 님에게 감사한다.
 (영문 제출본 사사 원문: "The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research.")
 
 ---

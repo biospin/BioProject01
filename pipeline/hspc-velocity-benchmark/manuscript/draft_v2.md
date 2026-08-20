@@ -258,13 +258,13 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 **Availability of data and materials.** All primary and external datasets are public (GSE209878, GSE194122, GSE284047, GSE205117, GSE229305, GSE75792, GSE162170; the E18 mouse brain is the 10x Genomics "Fresh Embryonic E18 Mouse Brain 5k" demo dataset, which has no GEO accession). Analysis code and deterministic recomputation scripts: `<FILL: repository/DOI + license>`.
 
-**Competing interests.** `<FILL>`.
+**Competing interests.** The authors declare no competing interests.
 
-**Funding.** The authors received no funding for this work.
+**Funding.** This research was supported by the "Open Source AI·SW Developer and Community Support Program" funded by the Ministry of Science and ICT (MSIT), Republic of Korea.
 
 **Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. Jaemyun Lyu (류재면): Formal analysis, Software, Validation, Writing – review & editing. Geon gyu Lee (이건규): Validation, Software, Writing – review & editing. Sejin Park (박세진): Validation, Formal analysis, Writing – review & editing. Yong Gi Ji (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank Sangjun Park (박상준) for the conceptual origin of the project.
+**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank Sangjun Park (박상준, Yonsei University) for the conceptual origin of the project.
 
 ---
 
