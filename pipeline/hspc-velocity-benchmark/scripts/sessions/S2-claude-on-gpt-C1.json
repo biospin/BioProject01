@@ -1,0 +1,46 @@
+{
+  "model": "claude",
+  "model_version": "claude-opus-4-8",
+  "session": "S2-claude-on-gpt-C1",
+  "target": "S1-gpt-C1",
+  "input_format": "S1-gpt-C1.json + concordance.md (원자료 대조: CLAIMS.yaml C1 블록 + clean_concordance_gate.md §0). 주: council_schema.json의 target enum은 {original, claude-critique, gpt-critique, gemini-critique}로 'S1-gpt-C1'을 허용하지 않으나, 과제 지시대로 target을 S1-gpt-C1로 둔다(council_synthesize.py는 target 키 존재만 검사하므로 통과). enum 정합은 사람이 조정.",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "GPT의 C1 'Plausible' 판정에 대한 메타판정 — GPT의 verdict 강도와 근거가 타당한가.",
+      "verdict": "Plausible",
+      "evidence": "GPT의 Plausible은 잘 보정된 판정이며 동의한다. (1) 근거의 방향이 옳다: GPT는 CRAK-비의존 magnitude concordance(concordance.md §3.5 multivelo×moflow -0.038, multivelo×multivelovae -0.010, moflow×multivelovae +0.083; clean_concordance_gate.md §2가 이 세 쌍을 'CLEAN 3-way'로 확인)를 C1의 load-bearing 근거로 삼았고, sign-agreement 54.6%(§3.5 n=560)≈chance를 보조로 썼다. 이는 clean gate §4가 지정한 헤드라인 재구성과 정확히 일치한다. (2) 강도 보정이 정확하다: 부호 정보 non-buggy method가 {MoFlow, MultiVeloVAE} 2개뿐이고 switch time이 전역 fit이라 Proven이 아닌 Plausible로 낮춘 것은 과대·과소 어느 쪽도 아니다. (3) 결정적으로 GPT는 Gemini S1이 범한 통계오류(§3.6 rate-proxy ρ=+0.124를 '강건성'으로 재해석해 Unsupported 판정)를 답습하지 않았다 — 유의성과 효과크기를 혼동하지 않았다. 따라서 GPT의 Plausible은 Gemini의 Unsupported보다 근거상 우월하다. 미세 지적은 critiques 참조(§3.6 미개입, 방향 leg의 단일쌍 의존).",
+      "citations": ["1", "2"]
+    }
+  ],
+  "critiques": [
+    {
+      "id": "meta-c1",
+      "text": "GPT critique-1(0/598 agreement-set은 본질적으로 CRAK 의존이라 헤드라인 부적절, Valid-but-Fixable)에 대한 재비판 — GPT의 판정을 확인한다.",
+      "verdict": "Valid-but-Fixable",
+      "evidence": "GPT의 Valid-but-Fixable을 유지한다(과대·과소 아님). 지적 자체가 원자료와 일치한다: clean_concordance_gate.md §0이 '부호 정보 non-buggy method는 {MoFlow, MultiVeloVAE}=2개뿐, 2-method 부호검정은 gene당 min p≈0.50(경험 min p_perm=0.499)으로 퇴화, 3개를 채우는 유일한 길은 CRAK 추가 → 0/598은 CRAK에 본질적으로 의존'이라고 스스로 명시한다. GPT는 이를 정확히 재현했다. 핵심: GPT는 '그러나 C1은 CRAK-비의존 magnitude concordance만으로 상당 부분 유지된다'고 덧붙여 Fatal이 아님을 옳게 판단했다 — 이 점에서 같은 지적을 Valid-and-Fatal로 올린 Gemini critique-1은 과대판정이며(claim이 magnitude 근거로 생존하므로), GPT의 강도가 더 정확하다. 이미 CLAIMS.yaml limitation ①(0/598을 대표결과에서 제외, CRAK 민감도 보조로 강등)이 이 내용을 담아 원고가 정직하게 서술 중이므로, 살아있는 결함이 아니라 반영된 caveat다.",
+      "citations": ["1", "2"]
+    },
+    {
+      "id": "meta-c2",
+      "text": "GPT critique-2(54.6% sign-agreement가 lag=0 제외 규약에 의존, Valid-but-Fixable)에 대한 재비판 — GPT의 판정을 확인하되 이미-공개된 caveat임을 명시한다.",
+      "verdict": "Valid-but-Fixable",
+      "evidence": "GPT의 판정에 동의한다. 수치가 원자료와 맞다: concordance.md §3.5 moflow×multivelovae sign-agreement 54.6%는 shared 636 중 방향 미정 lag=0 76개를 제외한 n=560 기준이다. GPT가 인용한 미제외 규약 값 '48%'는 concordance.md 본문에는 없고 CLAIMS.yaml limitation ②('미제외 np.sign 규약이면 48%')에서 온 값이다(주의: clean_concordance_gate.md §2의 48.1%는 정정 전 스테일 값이라 판정에서 배제). GPT의 완화 문구 '규약에 민감하지만 대체로 chance 부근'은 방어 가능하고 정직하다 — Gemini critique-2가 쓴 '48%는 우연조차 못 된다'는 수사(48%도 50% chance와 유의차 없을 가능성이 높다)를 GPT는 피했다. 다만 이 지적은 이미 CLAIMS.yaml limitation ②에 명시돼 있어 신규 결함이라기보다 공개된 caveat의 재확인이다. 이 점에서 Partially-Valid로 볼 여지도 있으나, GPT의 권고(양 값·규약 명기)가 실제 수정 액션이므로 Valid-but-Fixable로 유지한다. 비-fatal.",
+      "citations": ["1", "2"]
+    },
+    {
+      "id": "meta-c3",
+      "text": "GPT critique-3(scope: cross-method 비robust가 전역 fit 기반이라 claim 문구가 근거보다 약간 넓음, Partially-Valid)에 대한 재비판 — 원자료로 검증했고 GPT의 판정이 정당하다.",
+      "verdict": "Partially-Valid",
+      "evidence": "원자료 검증 결과 GPT의 Partially-Valid은 정당하며, GPT leg에서 Gemini가 제기하지 못한 가장 값진 신규 지적이다. concordance.md에는 per-lineage/within-lineage refit이 존재하지 않는다 — §4 한계가 'switch time은 *전역* fit → 진짜 within-lineage 일치도는 per-lineage fit 필요(추후)'라고 스스로 명시할 뿐이다. 즉 GPT의 scope 비판은 지어낸 것이 아니라 원자료 자신이 밝힌 한계를 정확히 짚었다. 따라서 현재 결과는 '전역 fit 조건에서의 cross-method concordance 부족'을 강하게 시사하나, '모든 lineage별 생물맥락에서 lag이 method-robust하지 않다'로 확정하려면 per-lineage cross-method fit이 더 필요하다는 GPT의 논지가 성립한다. 강도 보정도 옳다: C1의 핵심(전역 fit 조건 cross-method 비robust)은 그대로 서므로 Fatal이 아니라 Partially-Valid이며, 완화는 '한계 서술에 전역-fit 기반임을 한 줄 추가'로 충분하다.",
+      "citations": ["1"]
+    },
+    {
+      "id": "meta-c4",
+      "text": "GPT가 놓쳤거나 저평가한 부분 — §3.6 진단 미개입과 방향(direction) leg가 단일쌍에 의존한다는 점의 미형식화(신규 소-critique).",
+      "verdict": "Partially-Valid",
+      "evidence": "GPT 판정을 뒤집지 않는 두 가지 커버리지 공백을 기록한다. (1) §3.6 미개입: GPT는 concordance.md §3.6 진단을 전혀 다루지 않았다. 이 절은 양날이다 — α_c method-민감(Spearman +0.291) 대 α robust(+0.882)는 C1의 *메커니즘*(lag 불일치의 근원이 α_c)을 뒷받침하지만, 같은 절의 통일 rate-proxy lag ρ=+0.124는 clean 3-way 모든 |ρ|≤0.083보다 커서 CLAIMS.yaml 헤드라인 'magnitude_concordance |rho|<=0.08'과 가벼운 긴장 관계에 있다(Gemini가 파고든 지점). GPT가 §3.6을 어느 쪽으로도 인용하지 않은 것은 C1을 강화도 약화도 하지 않았으나, 원고 방어를 위해선 이 긴장을 명시적으로 처리해야 한다. (2) 방향 leg 단일쌍 의존: C1 문구는 '크기·방향 *모두*'라는 연언인데, 크기 leg는 clean 3쌍에 서지만 방향 leg는 부호 가변 non-buggy 쌍이 MoFlow×MultiVeloVAE 단 1개(§3.5 n=560)뿐이다. GPT는 이를 인지해 claim evidence에 '방향 검정은 강한 일반화가 어렵다'고 적었으나 독립 critique로 형식화하지 않았다 — 배치 문제이지 실질 오류는 아니다. 둘 다 비-fatal, GPT의 Plausible과 양립.",
+      "citations": ["1", "2"]
+    }
+  ]
+}

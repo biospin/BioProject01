@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_version": "claude-opus-4-8",
+  "session": "S1-claude-C1",
+  "target": "original",
+  "input_format": "텍스트 inline(concordance.md+CLAIMS C1)",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "chromatin→transcription lag은 gene 수준에서 method-robust한 양이 아니다 (크기·방향 모두 method 간 일치도 낮다).",
+      "verdict": "Plausible",
+      "evidence": "크기(magnitude) leg은 잘 뒷받침된다: clean 3-way 쌍별 Spearman이 모두 |rho|<=0.083 (multivelo×moflow -0.038 p=0.38 n=537, multivelo×mvvae -0.010 p=0.81 n=538, moflow×mvvae +0.083 p=0.036 n=636)으로, n=537~636의 충분한 검정력 하에서도 near-zero다. CRAK 포함 쌍은 오히려 부호가 뒤집혀(moflow×crak -0.151 p=0.006) 더 비일관이다. 기전도 밝혀졌다: 공통 rate 중 α는 method-robust(alpha Spearman +0.882)하나 lag을 결정하는 α_c는 method-민감(alpha_c +0.291)이라 lag 불일치의 근원이다(concordance.md §3.6). 방향(direction) leg은 이보다 약하다: clean 2-method 부호-일치(moflow×mvvae) 54.6%≈chance이나 이는 lag=0 76개 제외 규약 의존이고, 미제외 np.sign 규약이면 48%다(CLAIMS.yaml C1 limitation; 둘 다 우연 수준이라 결론은 규약에 견고). 다만 부호-일치 agreement-set 0은 clean 2-method FDR이 degenerate(min p_perm=0.499)라 검정력 한계이며, 정보력 있는 3-method 부호 검정은 CRAK(버그 지적 method) 없이는 존재하지 않는다. 헤드라인은 CRAK 비의존 magnitude concordance로 적절히 pivot했다. 크기 leg이 결정적이고 방향 leg이 power-bounded·규약의존이라 Proven이 아닌 Plausible.",
+      "citations": ["1", "2"]
+    }
+  ],
+  "critiques": [
+    {
+      "id": "critique-1",
+      "text": "method 간 per-gene lag concordance가 낮다는 관측은 (i) 진짜 method-간 비robust와 (ii) 각 method 내부의 per-gene lag 추정 잡음(attenuation)을 구분하지 못한다. within-method test-retest 신뢰도(bootstrap lag-sign stability)가 확립되지 않았으므로, |rho|<=0.08은 '서로 다른 양을 측정한다'인지 '각자 잡음이 커 상관이 희석된다'인지 판별할 수 없다.",
+      "verdict": "Valid-but-Fixable",
+      "targets_claim": "C1",
+      "evidence": "concordance.md §4가 'H1 bootstrap lag-sign stability는 반복 fit 필요(추후)'라 within-method 신뢰도가 미확립임을 스스로 인정한다. GPU에서 method별 반복 fit → per-gene lag bootstrap CI를 내면 잡음-희석 대 진짜-불일치를 분리할 수 있어 fixable. 다만 어느 쪽이든 'gene 수준 lag이 method-robust하지 않다'는 claim 자체는 유지된다(추정 잡음도 비robust의 한 형태) — 위협받는 것은 기전 해석이지 negative claim의 성립은 아니다.",
+      "citations": ["1"]
+    },
+    {
+      "id": "critique-2",
+      "text": "claim의 '방향(sign)도 일치도 낮다' 절반은 magnitude 절반보다 근거가 약하다. 가장 눈에 띄는 수치인 0/598 agreement-set은 부호정보 method 3개가 필요해 본질적으로 CRAK(버그 지적 method)에 의존하고, CRAK를 뺀 clean 2-method 부호-FDR은 degenerate(min p_perm=0.499)라 agreement-set=0은 신호가 아니라 검정력 부재의 산물이다.",
+      "verdict": "Partially-Valid",
+      "targets_claim": "C1",
+      "evidence": "clean_concordance_gate.md §0이 clean 2-method sign FDR은 per-gene min 달성 p≈0.50이라 신호와 무관하게 agreement-set이 자명히 0이고(min p_perm=0.499), 정보력 있는 3-method 부호 검정은 CRAK 없이는 존재하지 않는다고 명시한다. CLAIMS.yaml C1 limitation이 이미 0/598을 대표결과에서 빼고 CRAK 민감도로 강등했으므로 비판은 상당 부분 선제 반영됨 → Partially-Valid. 남는 지적: '방향 일치도 낮다'의 정직한 진술은 '감지 가능한 일치 없음'이 아니라 '부호 검정이 underpowered'다. 방향 non-robustness는 magnitude leg만큼 강하게 주장하면 과함.",
+      "citations": ["1", "2"]
+    },
+    {
+      "id": "critique-3",
+      "text": "핵심 sign-agreement 수치 54.6%가 lag=0(방향 미정) 76개 gene 제외라는 analyst 재량 규약에 의존한다(636 중 76≈12% 제외). 제외/미제외에 따라 54.6% 대 48%로 값이 흔들린다.",
+      "verdict": "Weak",
+      "targets_claim": "C1",
+      "evidence": "concordance.md §3.5(moflow×mvvae 54.6%, lag=0 76개 제외)와 CLAIMS.yaml C1 limitation(미제외 np.sign 규약 48%)가 두 규약값을 모두 보고한다. 그러나 두 규약 모두 chance(50%) 근방이라 '방향 일치도 낮다'는 결론은 규약 선택에 견고하다 → 결론을 뒤집지 못하므로 Weak. CLAIMS.yaml C1 limitation이 두 규약값을 모두 명시해 투명하게 처리했다.",
+      "citations": ["1", "2"]
+    },
+    {
+      "id": "critique-4",
+      "text": "magnitude leg에서 clean 쌍 중 하나(moflow×mvvae +0.083)는 명목 유의(p=0.036)라 '전혀 일치 없음'이 아니라 '약한 양의 일치'가 존재한다. claim을 '일치도 zero'로 읽으면 과하다.",
+      "verdict": "Weak",
+      "targets_claim": "C1",
+      "evidence": "concordance.md §3.5에 moflow×mvvae rho=+0.083 p=0.036으로 유의하나 효과크기 무시 가능(|rho|<=0.083). claim의 표현이 '일치도가 낮다(low)'이지 '0'이 아니므로 +0.083과 모순되지 않는다 → 비판은 claim을 반증하지 못하고 표현 정밀도 문제에 그쳐 Weak. 다만 초록·본문에서 '일치 없음'으로 절대화하지 않도록 'negligible/weak'로 서술 권고.",
+      "citations": ["1"]
+    },
+    {
+      "id": "critique-5",
+      "text": "clean 3-way magnitude concordance의 세 쌍 중 두 개(multivelo×moflow, multivelo×mvvae)는 MultiVelo가 lag 100% 양수(sign이 구조적 상수)라 그 rank가 사실상 '크기 ordering'인 반면, moflow/mvvae의 lag은 부호가 반반(~44.8/43.2%, 49.3/50.7%)이라 그 rank는 '부호-우선 후 크기' ordering이다. 크기-ordering 대 부호-우선-ordering의 Spearman은 크기가 완벽히 일치해도 near-zero로 나올 수 있어, 두 multivelo 쌍의 |rho|<=0.08은 '크기 불일치'의 증거로 쓰기엔 부적합하다.",
+      "verdict": "Valid-but-Fixable",
+      "targets_claim": "C1",
+      "evidence": "concordance.md §1(MultiVelo sign은 구조적 양수·무정보, lag *크기* gene간 변이만 정보)과 §1.5(moflow chromatin-leads 44.8%/rna-leads 43.2%, mvvae 49.3%/50.7%)로 두 method 군의 부호 분포가 상이함이 확인된다. §3.5·§3.6이 headline을 magnitude concordance로 pivot했는데, clean 3-way 세 쌍 중 두 개가 이 confound에 노출되므로 잘 검정된 clean 근거는 사실상 moflow×mvvae(+0.083, 두 method 모두 sign-가변) 한 쌍으로 축소된다. Fixable: 모든 method를 |lag| rank(크기 전용)로 통일해 재계산하면 MultiVelo 구조적 부호가 confound하지 않는다. 방향: 이 비판은 magnitude leg의 clean 근거를 줄이지만(Proven으로 못 올림) claim을 뒤집진 않는다 — 남는 moflow×mvvae도 |rho|<=0.083으로 무시 가능해 'lag 크기 method-robust하지 않다'는 여전히 성립하며 Plausible 판정을 오히려 지지한다.",
+      "citations": ["1"]
+    }
+  ]
+}
