@@ -4,7 +4,13 @@
 > `scrambled_null.md`, `confound.md`, `cellcycle_genelevel.md`, `lineage_lag.md`)에 상세 근거를 명시하고,
 > 여기서는 그것들을 연구 질문에 맞춰 한 줄로 결과+해석으로 묶고 통합 결론을 낸다.
 > 새 분석이 끝날 때마다 갱신한다. 진행 상태는 `../PROGRESS-LIVE.md`, 현황은 `../../../HANDOFF.md`.
-> 최종 갱신: **2026-07-14** (§7-E: 5번째 cross-dataset **mouse gastrulation(GSE205117)** 병합 — 사전등록 6예측 6/0 PASS, priming 극대 조직서도 α-robust/lag-fragile 재현). 이전: 2026-07-09 §8 profile-likelihood.
+> 최종 갱신: **2026-08-26** (공개 전 정합성 감사: external-lag convention, macrophage Δρ 축, TT-seq gene-axis provenance 명시). 이전: 2026-07-14 §7-E mouse gastrulation 병합.
+
+## 공개 전 수치 provenance 정정 (2026-08-26)
+- **External Table 1 lag convention:** E18 `+0.057`, BMMC `−0.088`, macrophage `+0.074`, gastrulation `−0.026`은 모두 MultiVelo×MultiVeloVAE **lag-magnitude rank correlation**이다. signed-lag correlation으로 부르지 않는다. Human fetal cortex의 대응 magnitude pair는 MultiVelo×MoFlow `−0.052 [−0.135,+0.029]`; signed pair `−0.028 [−0.113,+0.056]`는 별도 민감도 수치다. HSPC headline magnitude pair는 `+0.163 [+0.078,+0.244]`; signed `−0.01`은 별도 수치다.
+- **Macrophage Δρ axis:** `+0.843 [+0.773,+0.912]`는 **within-macrophage, same 871-gene MV×MVVAE axis**의 `ρ_α=+0.917 − ρ_lag=+0.074`이다. Cross-dataset point estimates `+0.643`과 `+0.148`의 단순차는 `+0.495`이며, 기존 `+0.843` CI를 cross-dataset 차이에 붙이지 않는다.
+- **Todorovski TT-seq α axis:** primary non-housekeeping 전체 matched set의 canonical 값은 RNA-only `+0.236`, MultiVelo `+0.262`, MultiVeloVAE `+0.285`이다 (`external_rate_validation.md`). `+0.23~+0.43`은 Schwalb와의 head-to-head를 위해 다시 맞춘 더 작은 common-gene axis의 Todorovski 범위이며 primary headline과 교체하지 않는다.
+- **Post-2026-07-14 results:** abundance head-to-head와 velocity-matrix audit의 canonical 수치는 각각 `coupling_lag_alternative.md`, `velocity_matrix_audit.md`, `velocity_matrix_paired_shuffle.md`, `velocity_matrix_runtorun_null.md`, `moflow_runtorun_null.md`에서 관리한다. 원고에서 이 수치를 쓸 때는 해당 파일을 canonical detail source로 명시한다.
 
 ## 연구 질문 (목표)
 gene별 **chromatin→transcription lag**(activation/shutdown 시점차)을 정량해서, baseline epigenomic
@@ -39,7 +45,7 @@ feature로 **epigenetic drug response timing**을 예측한다. 1차 데이터�
 ## ★ 통합 결론 (현재까지)
 **chromatin→transcription lag은 gene 수준에서 method-robust한 양이 아니다.** 크기·방향 모두 method 간
 일치도가 높지 않으며(H1 실패 — **CRAK-비의존 clean headline**: lag은 magnitude에서 잘해야 약하게 재현(magnitude convention strongest pair MultiVelo×MultiVeloVAE **+0.163**[95%CI +0.078~+0.244], 대부분 쌍 |ρ|≤0.08; signed convention 원 lag ρ {mv×moflow −0.04, mv×mvvae −0.01, moflow×mvvae +0.08}은 0 근처 부호 불안정 lag이 signed에서 상쇄돼 magnitude보다 낮게 나온 값이다) + 2-method sign-agreement 54.6%≈chance(방향 미정 lag=0 76개 제외; 미제외 np.sign 규약이면 48%). permutation-FDR **agreement-set 0/598은 부호 가변 method 3개가 필요해 CRAK 포함 시에만 정의된다 → CRAK에 의존하므로 대표 결과에서 빼고 CRAK 민감도 분석(보조)으로 다룬다**; 2026-07-05 `clean_concordance_gate.md`), 음성대조는 한 method(MultiVelo)의 lag가
-chromatin 신호가 아니라 모델 구조에서 나옴을 입증했다. **(a) 전사율 α(method 간 ρ=0.88), (b) 집단 수준 방향 균형(~50/50, 두 method 수렴), (c) canonical priming marker 방향(method 간 일치)만이 robust 했다.**
+ATAC shuffle 아래에서 rank가 주로 모델 구조와 RNA 동역학에 의해 보존되며 작은 paired shift도 남음을 보였다. **(a) 전사율 α(method 간 ρ=0.88)와 (b) 집단 수준 방향 균형(~50/50, 두 method 수렴)은 robust했고, selected canonical marker 방향은 HSPC의 제한적 기술 관찰일 뿐 reliability 등급이 아니다.**
 → drug-timing 모델은 lag을 단일 method 값으로 쓰면 안 되고, **method 불확실성을 명시적으로 반영**해야 한다.
 이 'α > lag' 순서는 **다섯 외부 데이터셋(발생기 human_brain(GSE162170 Trevino 2021 발생기 피질)·태아 E18 mouse brain·same-tissue human BMMC·HSPC-직계 macrophage·mouse gastrulation)에서도 보존된다**(§7). 이는 HSPC 한 데이터셋에서만 나온 우연이 아니다. cross-dataset α는 조직이 멀수록 순서대로 낮아지지만(단조 감소; HSPC-직계 macrophage +0.643 > BMMC +0.55 > human_brain +0.475 > gastrulation +0.415 > E18 +0.32) lag은 어디서도 무신호다(+0.03~+0.19). 다섯 번째(mouse gastrulation)는 **fit 도착 전 봉인한 6개 예측을 사후구제 없이 6/0 통과**했다(사전등록, `prereg_gse205117_scorecard.md`; priming이 극대인 발생 조직에서도 재현).
 게다가 이 'α > lag' 순서는 **MultiVelo 목적함수 자체를 뜯어봐도 확인된다**(§8). 목적함수(우도)를 α 값 쪽으로 흔들면 점수가 급격히 나빠지지만(α는 데이터로 잘 정해진다), lag 쪽으로 흔들면 점수가 거의 변하지 않는다(lag은 데이터로 잘 정해지지 않는다). 유전자별로 α 쪽 민감도가 lag 쪽보다 중앙값 **3.53×** 크고, α가 더 민감한 유전자가 **94.57%**다. 즉 lag이 method 간 재현되지 않는 것은 잡음이 아니라 목적함수가 애초에 lag을 데이터로 잘 결정하지 못하기 때문이며, 관찰이 메커니즘으로 설명된다.
@@ -57,7 +63,7 @@ chromatin 신호가 아니라 모델 구조에서 나옴을 입증했다. **(a) 
 - **4-way 확장(+CRAK-Velo)**: CRAK-Velo lag 부호 버그(`dtw_lag`이 MoFlow `fastdtw`와 반대) **검증·수정**(`crakvelo_sign_check.md`) 후
   moflow×crakvelo Spearman **−0.151**, crakvelo×multivelovae **−0.04** — 4번째 method를 넣어도 무상관이거나 약한 음의 일치를 보인다. CRAK-Velo도 chromatin-leads가 **41.1%**로 균형이다.
   단 canonical priming marker(CSF1R·S100A9 등)는 두 method 모두 chromatin-leading(양수)으로 **일치** → 강건한 건 marker뿐.
-- **permutation FDR(P4) 통계 확증**(`permutation_fdr.md`, N=10⁴): (A) cross-method ρ은 2/3 쌍이 gene-label shuffle null 대비 유의하나 **effect가 극약하고(|ρ|≤0.15) 방향이 불일치한다**.
+- **permutation FDR(P4) 통계 확증**(`permutation_fdr.md`, N=10⁴): (A) cross-method ρ은 2/3 쌍이 gene-label shuffle null 대비 유의하나 **effect가 극약하고(|ρ|≤0.151) 방향이 불일치한다**.
   (B) per-gene cross-method sign-consistency **agreement-set = 0/598 gene**(FDR<0.10) → **공집합**. 어떤 gene도 method 간 lag 방향이 무작위 이상으로 일관되지 않는다.
 - **⚠️ clean-gate 정정(2026-07-05, `clean_concordance_gate.md`)**: (B)의 0/598은 부호 가변 method 3개(moflow, **crakvelo**, mvvae)를 요구한다. MultiVelo lag은 구조적 100% 양수(switch-time 단조정렬)라 *sign*-consistency 검정에 넣을 수 없고(null 오지정), 따라서 clean 부호 가변 method는 {moflow, mvvae} 2개뿐 → 2-method sign FDR은 min p_perm≈0.50으로 **원리적 power-bound(신호 무관 0)**. 즉 **0/598은 본질적으로 CRAK-의존** → **CRAK 민감도 arm으로 강등**. **CRAK-비의존 clean headline은 lag magnitude 재현성**(magnitude convention strongest pair MultiVelo×MultiVeloVAE +0.163, 대부분 쌍 |ρ|≤0.08; signed 3-way ρ {−0.04, −0.01, +0.08}은 verify-gate `p3_concordance.py`가 재계산) + 2-method sign-agreement 54.6%(미정 제외; np.sign 규약 48%). MultiVelo는 sign이 아니라 magnitude/rank 검정에만 참여(lag 크기는 gene간 변이 有). *reframe이지 method-swap이 아님* — {mv,moflow,mvvae}로 sign 검정 재실행 금지(상수-부호 오류 재도입).
 - **근원 진단**: lag을 결정하는 **chromatin opening rate α_c가 method-민감**(ρ=0.29)인 반면 전사율 α는 강건하다(ρ=0.88).
@@ -65,10 +71,10 @@ chromatin 신호가 아니라 모델 구조에서 나옴을 입증했다. **(a) 
 > 해석: "어느 gene이 chromatin 선행인지"는 method를 바꾸면 달라진다(비robust, 4-way·FDR로 확증). 단 집단 수준 방향 균형 + canonical marker는 method 간 수렴한다(robust).
 
 ### 2. 음성대조 — chromatin은 MultiVelo lag을 구동하지 않음
-- ATAC를 within-lineage 셔플(chromatin↔RNA 결합 파괴) 후 재fit → lag 분포 원본과 **통계적으로 동일**
+- ATAC를 within-lineage 셔플(chromatin↔RNA 결합 파괴) 후 재fit → unpaired lag 분포 차이는 검출되지 않았으나
   (Mann–Whitney p=0.20, KS p=0.51), per-gene lag **ρ=0.72** 보존, chromatin likelihood 0.239→0.237(불변).
 - 단 Wilcoxon paired p=0.0003 (median 5.87→5.48 소폭 감소)은 chromatin의 **marginal 기여**만 나타낸다.
-> 해석: MultiVelo lag은 chromatin 신호가 아니라 **모델 구조(switch-time 순서)·gene 고유 RNA 동역학**에서 나온다.
+> 해석: MultiVelo lag rank는 이 intervention 아래에서 **모델 구조(switch-time 순서)·gene 고유 RNA 동역학에 의해 대부분 보존**된다. paired shift가 있으므로 문자 그대로 불변이거나 chromatin과 완전히 독립이라고 단정하지 않는다.
 > §1의 'MultiVelo 100% chromatin-leads = 아티팩트' 결론을 음성대조로 독립적으로 확증한다.
 
 ### 3. Confound — lag 결론 비편향
@@ -117,7 +123,7 @@ HSPC 한 데이터셋에서만 나온 산물이 아님을 **다섯 외부 multio
 - **(D) macrophage differentiation (GSE284047·figshare 30280333, Day14 HSPC 직계 분화 — 가장 가까운 조직축; figshare postpro가 raw spliced/unspliced 보유 nnz 35.6% → 공통 전처리 분기)** `concordance_macrophage.md`:
   - **within-macrophage cross-method α**(floor×MV×VAE, 같은 gene축): Spearman +0.826 / +0.865 / **+0.917**(중앙값 **+0.865**) — α-robust leg가 **강하게 재현**(within-α는 gastrulation 0.927(§7-E)과 함께 외부 최상위권).
   - **within-macrophage lag 크기 rank**(MV×VAE): **+0.074**(TOST |ρ|<0.2 → 0과 등가) — lag-fragile leg 재현.
-  - **cross-dataset HSPC↔macrophage**(human↔human, SYMBOL 직접 매칭 shared 274): α rank **+0.643**(95%CI [+0.554,+0.719], p=2.5e-33) vs lag 크기 rank **+0.148**(95%CI [+0.027,+0.263], p=0.014), floor α sanity +0.677. HSPC 직계라 **cross-dataset α가 다섯 외부 중 최고**(+0.643 > gastrulation +0.415). Δρ=ρ_α−ρ_lag=**+0.843**(95%CI [+0.773,+0.912], 0 배제=dissociation). ✅ canonical numpy(B=10000, seed=20260707) 확정(2026-07-10).
+  - **cross-dataset HSPC↔macrophage**(human↔human, SYMBOL 직접 매칭 shared 274): α rank **+0.643**(95%CI [+0.554,+0.719], p=2.5e-33) vs lag 크기 rank **+0.148**(95%CI [+0.027,+0.263], p=0.014), floor α sanity +0.677. HSPC 직계라 **cross-dataset α가 다섯 외부 중 최고**(+0.643 > gastrulation +0.415). 별도의 **within-macrophage same-gene MV×MVVAE** 대조는 α +0.917 vs lag +0.074, Δρ=**+0.843**(95%CI [+0.773,+0.912], n=871)이다. 이 CI를 cross-dataset 점추정치 차이에 붙이지 않는다.
 - **(E) mouse gastrulation (GSE205117, E7.5–8.75 10x Multiome, 발생 아틀라스 — priming 극대 조직; GEX=STARsolo Velocyto raw, ATAC=GEO fragments 자체 peak→gene 집계, 10779 cells)** `prereg_gse205117_scorecard.md`. **이 데이터셋만 fit 도착 전 6개 예측을 봉인(사전등록)하고 사후구제 없이 채점**(paired bootstrap B=10000, seed=20260707):
   - **within-gastrulation cross-method α**(floor×MV×VAE): Spearman +0.911 / +0.927 / **+0.953**(중앙값 **+0.927**) — α-robust leg 재현(HSPC ρ=0.88과 정합).
   - **within-gastrulation lag 크기 rank**(MV×VAE): **−0.026**(95%CI [−0.089,+0.038]) — lag-fragile leg 재현. Δρ=ρ_α−ρ_lag=**+0.979**(95%CI [+0.916,+1.041], 0 배제).
@@ -162,7 +168,7 @@ cross-method/cross-dataset의 관찰(§1·§6·§7)이 *왜* 생기는지를 Mul
 1. **Pseudotime ≠ wall-clock**: day0/day7 batch 통합 → lag은 pseudotime 단위. wall-clock anchor는 불가하다(H2 강등).
 2. lag 정의가 method마다 다름(switch-timing vs rate-timescale vs DTW) → 비교는 rank·sign 분리 보고.
 3. 전역 fit 기반이다(per-lineage refit 미완). bootstrap stability는 미완이다.
-4. ~~음성대조는 MultiVelo 단일 method~~ → **해소(2026-07-06)**: MoFlow(구조 독립 2번째 method)로 ATAC-shuffle 음성대조 확장 완료(`scrambled_null_moflow.md`). MoFlow lag도 셔플 생존(per-gene ρ=0.52 ≫ method-swap ρ=0.08, chromatin-채널 fit-quality 불변) → "lag은 model-structural, not chromatin-driven"이 두 method로 일반화. (CRAK-Velo scramble은 후속이다.)
+4. ~~음성대조는 MultiVelo 단일 method~~ → **해소(2026-07-06)**: MoFlow(구조 독립 2번째 method)로 ATAC-shuffle 대조 확장 완료(`scrambled_null_moflow.md`). MoFlow lag도 셔플 뒤 rank signal을 보존(per-gene ρ=0.52 > method-swap ρ=0.08, chromatin-channel fit-quality 불변)한다. 허용 해석은 두 method에서 **relative insensitivity**가 관찰됐다는 것까지이며, 완전한 chromatin independence로 일반화하지 않는다.
 
 ---
 
@@ -224,7 +230,7 @@ Moreover this ordering is **promoted to *proven* by the geometric properties of 
 - **4-way extension (+CRAK-Velo)**: after **verifying·correcting** the CRAK-Velo lag sign bug (`dtw_lag` had opposite sign to MoFlow `fastdtw`) (`crakvelo_sign_check.md`),
   moflow×crakvelo Spearman **−0.151**, crakvelo×multivelovae **−0.04** — adding a 4th method still gives uncorrelated/weak-negative agreement. CRAK-Velo also chromatin-leads **41.1%** (balanced).
   But the canonical priming markers (CSF1R·S100A9 etc.) are chromatin-leading (positive) in both methods and **agree** → only the markers are robust.
-- **permutation FDR (P4) statistical confirmation** (`permutation_fdr.md`, N=10⁴): (A) cross-method ρ is significant vs the gene-label shuffle null for 2/3 pairs, but the **effect is extremely weak (|ρ|≤0.15) and directionally inconsistent**.
+- **permutation FDR (P4) statistical confirmation** (`permutation_fdr.md`, N=10⁴): (A) cross-method ρ is significant vs the gene-label shuffle null for 2/3 pairs, but the **effect is extremely weak (|ρ|≤0.151) and directionally inconsistent**.
   (B) per-gene cross-method sign-consistency **agreement-set = 0/598 genes** (FDR<0.10) → **empty set**. No gene has cross-method lag direction consistent beyond random.
 - **⚠️ clean-gate correction (2026-07-05, `clean_concordance_gate.md`)**: the 0/598 in (B) requires 3 sign-variable methods (moflow, **crakvelo**, mvvae). MultiVelo lag is structurally 100% positive (switch-time monotone ordering) so it cannot enter the *sign*-consistency test (null misspecified); therefore the clean sign-variable methods are only {moflow, mvvae}, 2 of them → the 2-method sign FDR has min p_perm≈0.50, a **principled power-bound (0 regardless of signal)**. That is, **0/598 is essentially CRAK-dependent → demoted to a CRAK sensitivity arm**. The **CRAK-independent clean headline is that the lag reproduces weakly at best in magnitude** (magnitude-convention strongest pair MultiVelo×MultiVeloVAE +0.163, most pairs |ρ|≤0.08; the signed 3-way ρ {−0.04, −0.01, +0.08} are recomputed by the verify-gate `p3_concordance.py`) + 2-method sign-agreement 54.6% (undetermined excluded; 48% under np.sign). MultiVelo participates only in the magnitude/rank test, not the sign test (lag magnitude does vary across genes). *This is a reframe, not a method-swap* — do not re-run the sign test with {mv,moflow,mvvae} (reintroduces the constant-sign error).
 - **root diagnosis**: the **chromatin opening rate α_c that determines lag is method-sensitive** (ρ=0.29), whereas the transcription rate α is robust (ρ=0.88).
@@ -232,10 +238,10 @@ Moreover this ordering is **promoted to *proven* by the geometric properties of 
 > Interpretation: "which gene is chromatin-leading" changes when you switch methods (non-robust, confirmed by 4-way·FDR). But the population-level directional balance + canonical markers converge across methods (robust).
 
 ### 2. Negative control — chromatin does not drive MultiVelo lag
-- after within-lineage shuffling of ATAC (breaking the chromatin↔RNA coupling) and re-fitting → the lag distribution is **statistically identical**
+- after within-lineage shuffling of ATAC (breaking the chromatin↔RNA coupling) and re-fitting → no unpaired distribution difference was detected, but
   to the original (Mann–Whitney p=0.20, KS p=0.51), per-gene lag **ρ=0.72** preserved, chromatin likelihood 0.239→0.237 (unchanged).
 - only the Wilcoxon paired p=0.0003 (median 5.87→5.48, slight decrease) = a **marginal contribution** of chromatin.
-> Interpretation: MultiVelo lag comes from the **model structure (switch-time order) · gene-intrinsic RNA dynamics**, not from the chromatin signal.
+> Interpretation: under this intervention, MultiVelo lag rank is **predominantly preserved by model structure (switch-time order) and gene-intrinsic RNA dynamics**. The paired shift precludes literal invariance or complete chromatin independence.
 > This independently confirms via the negative control §1's conclusion that 'MultiVelo 100% chromatin-leads = artifact'.
 
 ### 3. Confound — lag conclusion unbiased
@@ -284,7 +290,7 @@ Tested across **four external multiomes** (including same-tissue human BMMC and 
 - **(D) macrophage differentiation (GSE284047 · figshare 30280333, Day14 HSPC-direct differentiation — the nearest tissue axis; the figshare postpro retains raw spliced/unspliced nnz 35.6% → common preprocessing branch)** `concordance_macrophage.md`:
   - **within-macrophage cross-method α** (floor×MV×VAE, same gene axis): Spearman +0.826 / +0.865 / **+0.917** (median **+0.865**) — the α-robust leg **reproduces most strongly of the four externals**.
   - **within-macrophage lag magnitude rank** (MV×VAE): **+0.074** (TOST |ρ|<0.2 → equivalent to 0) — reproduces the lag-fragile leg.
-  - **cross-dataset HSPC↔macrophage** (human↔human, direct SYMBOL matching, shared 274): α rank **+0.643** (95%CI [+0.554,+0.719], p=2.5e-33) vs lag magnitude rank **+0.148** (95%CI [+0.027,+0.263], p=0.014), floor α sanity +0.677. As HSPC's direct differentiation product, **cross-dataset α is the highest of the four**. Δρ=ρ_α−ρ_lag=**+0.843** (95%CI [+0.773,+0.912], excludes 0 = dissociation). ✅ canonical numpy (B=10000, seed=20260707) confirmed (2026-07-10).
+  - **cross-dataset HSPC↔macrophage** (human↔human, direct SYMBOL matching, shared 274): α rank **+0.643** (95%CI [+0.554,+0.719], p=2.5e-33) vs lag magnitude rank **+0.148** (95%CI [+0.027,+0.263], p=0.014), floor α sanity +0.677. The separate **within-macrophage same-gene MV×MVVAE** contrast is α +0.917 vs lag +0.074, Δρ=**+0.843** (95%CI [+0.773,+0.912], n=871); that CI does not belong to the cross-dataset point-estimate difference.
 > Verdict: **within-dataset the α-robust/lag-fragile ordering reproduces strongly** (macrophage within α 0.865 ≫ lag 0.07; BMMC within α 0.85 ≫ lag −0.09; E18 within α 0.81 ≫ lag 0.06), and **cross-dataset α decays monotonically with tissue distance while lag is signal-free everywhere**: HSPC-direct macrophage α **+0.643** > same-tissue human BMMC **+0.55** > fetal human_brain **+0.475** > cross-species E18 **+0.32**, whereas lag is +0.05~+0.19 noise on all four axes. That is, not the strong claim "α is preserved across species" but rather the **ordering statement "in whatever dataset, α is more robust to method·dataset than lag"**, consistent across 5 axes (HSPC + human_brain + E18 + BMMC + macrophage).
 > ⚠️ honest caveat: the lag-fragile leg rests within-dataset on **only a single method pair (MV×VAE)** (BMMC·E18·macrophage all have MoFlow/CRAK unrun → thinner than HSPC's 3 pairs). All four replications are 1 donor/sample each — no strong generalization; the narrative rests only on the consistency of the five axes. BMMC ATAC is a gencode-proximity aggregation of the processed peak matrix (implementation differs from HSPC's mv.aggregate_peaks_10x → conservative noise on the cross rank). macrophage points are final but p·CI await canonical numpy regeneration (§7-D).
 
@@ -324,4 +330,4 @@ Testing *why* the cross-method/cross-dataset observations (§1·§6·§7) arise,
 1. **Pseudotime ≠ wall-clock**: day0/day7 batch-integrated → lag is in pseudotime units. wall-clock anchor impossible (H2 demoted).
 2. lag definition differs per method (switch-timing vs rate-timescale vs DTW) → comparisons reported separately by rank·sign.
 3. based on global fit (per-lineage refit incomplete). bootstrap stability incomplete.
-4. ~~negative control is a single method, MultiVelo~~ → **resolved (2026-07-06)**: extended the ATAC-shuffle negative control with MoFlow (a structurally independent 2nd method) (`scrambled_null_moflow.md`). MoFlow lag also survives the shuffle (per-gene ρ=0.52 ≫ method-swap ρ=0.08, chromatin-channel fit-quality unchanged) → "lag is model-structural, not chromatin-driven" generalizes to two methods. (CRAK-Velo scramble is follow-up.)
+4. ~~negative control is a single method, MultiVelo~~ → **resolved (2026-07-06)**: extended the ATAC-shuffle intervention with MoFlow (a structurally independent 2nd method) (`scrambled_null_moflow.md`). MoFlow lag retains rank signal after shuffling (per-gene ρ=0.52 > method-swap ρ=0.08, chromatin-channel fit-quality unchanged). This supports relative insensitivity in two methods, not complete chromatin independence.
