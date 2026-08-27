@@ -1,0 +1,7 @@
+# 동일인의 여러 git identity를 표시상 하나로 합친다. 커밋 히스토리는 바뀌지 않는다.
+# git shortlog / git log / git blame 이 이 파일을 읽어 author를 정규화한다.
+# 형식: 정본이름 <정본이메일> <과거이메일>
+
+kakyungkim <kakyung.kim@gmail.com>
+kakyungkim <kakyung.kim@gmail.com> <kkkim@cytogenlab.com>
+kakyungkim <kakyung.kim@gmail.com> <84395053+kakyungkim@users.noreply.github.com>
