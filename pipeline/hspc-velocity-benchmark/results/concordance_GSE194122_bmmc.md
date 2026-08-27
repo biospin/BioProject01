@@ -49,4 +49,4 @@
 - lag는 크기 rank만 비교하며 방향은 보지 않는다: MultiVelo 부호는 4-state를 순서대로 정렬(단조)한 구조라 구조적으로 양수(무정보)다.
 - replication은 단일 donor(site4/donor9, ~4.3k cells) 1건이므로 강한 일반화 주장은 금지한다. HSPC + human_brain + E18 + BMMC 축의 일관성만으로 서사를 세운다.
 - concordance는 *전역* per-gene fit rank이며 within-lineage가 아니다. BMMC lineage(제공 cell_type)는 load-bearing이 아니다.
-- RNA는 donor09 GEX BAM에 velocyto run을 돌려 복구했고(spliced/unspliced), ATAC는 processed h5ad peak matrix에서 gencode-proximity gene을 집계했다 — HSPC의 mv.aggregate_peaks_10x와 구현이 다르다(문서화). cross-dataset rank에는 잡음만 더한다(낮은 rho=lag fragile에 보수적).
+- RNA는 donor09 GEX BAM에 velocyto run을 돌려 복구했고(spliced/unspliced), ATAC는 processed h5ad peak matrix에서 gencode-proximity gene을 집계했다. HSPC의 mv.aggregate_peaks_10x와는 구현이 다르다(문서화). 이 구현 차이는 cross-dataset rank에 잡음만 더한다(낮은 rho=lag fragile에 보수적).

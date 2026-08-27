@@ -47,6 +47,6 @@
 
 ## caveat (필수)
 - lag는 크기 rank만 비교하며 방향은 보지 않는다: MultiVelo 부호는 4-state를 순서대로 정렬(단조)한 구조라 구조적으로 양수(무정보)다.
-- 외부 데이터셋 replication은 단 1건이므로 강한 일반화 주장은 금지한다. HSPC + human_brain + E18 3개 축의 일관성만으로 서사를 세운다.
+- 외부 데이터셋 replication은 단 1건이므로 강한 일반화 주장은 금지한다. HSPC + human_brain + E18 3개 데이터셋의 일관성만으로 서사를 세운다.
 - concordance는 *전역* per-gene fit rank이며 within-lineage가 아니다. E18 lineage(제공 celltype)는 load-bearing이 아니다.
-- E18의 spliced/unspliced와 HSPC의 것은 서로 다른 원천이라 → cross-dataset rank에는 잡음만 더한다(낮은 rho=lag fragile에 보수적, 높은 rho=강한 신호).
+- E18과 HSPC의 spliced/unspliced는 서로 다른 원천이라 → cross-dataset rank에는 잡음만 더한다(낮은 rho=lag fragile에 보수적, 높은 rho=강한 신호).

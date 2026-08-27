@@ -27,7 +27,7 @@
 > floor는 RNA-only라 lag가 없다 → lag는 chromatin-aware 2개(MV×VAE)에서만 검정한다.
 
 - **lag **크기** rank: MV × VAE** (shared 871): Spearman **+0.074** 95%CI [+0.006, +0.143] (p=0.028) | TOST |ρ|<0.2: **EQUIVALENT (CI ⊂ [−0.2,+0.2])**
-  - ⚠️ sign-agreement는 생략한다: MultiVelo의 lag sign은 4-state 단조정렬 탓에 구조적으로 양수여서 무정보다.
+  - ⚠️ sign-agreement는 생략한다: MultiVelo의 lag sign은 4-state 단조정렬 탓에 구조적으로 양수여서 정보가 없다.
 
 ### A3. paired Δρ = ρ_α − ρ_lag (dissociation, CI가 0 제외?)
 
@@ -57,8 +57,8 @@
 - α는 robust하고(≈+0.87) lag는 약함/dissociation이다(within MV×VAE lag +0.07, cross lag +0.15, Δρ +0.84 CI[+0.77,+0.91]). HSPC same-lineage 서사와 일치한다.
 
 ## caveat (필수)
-- lag 크기 rank만 비교한다(방향이 아님): MultiVelo의 sign은 4-state 단조정렬로 구조적 양수여서 무정보다.
-- 'lag not robust'는 실패-미기각이 아니라 **TOST 등가(|ρ|<0.2)**와 부트스트랩 CI로 프레이밍한다. Δρ CI가 0을 제외하면 dissociation(α ≫ lag)이라는 것이 핵심 주장이다.
-- replication은 macrophage 1건뿐이다 — 강한 일반화는 금지한다. HSPC+human_brain+E18+BMMC+macrophage 축의 일관성으로만 서사를 전개한다.
+- lag 크기 rank만 비교한다(방향이 아님): MultiVelo의 sign은 4-state 단조정렬로 구조적 양수여서 정보를 주지 않는다.
+- 'lag not robust'는 실패-미기각이 아니라 **TOST 등가(|ρ|<0.2)**와 부트스트랩 CI로 프레이밍한다. Δρ CI가 0을 제외하면 dissociation(α ≫ lag)이라는 점이 핵심 주장이다.
+- replication은 macrophage 1건뿐이다. 강한 일반화는 금지한다. HSPC+human_brain+E18+BMMC+macrophage 축의 일관성으로만 서사를 전개한다.
 - concordance는 *전역* per-gene fit rank이다(within-lineage가 아님).
-- ⚠️ **전처리 분기점(중요)**: figshare postpro는 저자 그래프에서 HVG 필터와 scVelo moments를 이미 마쳤다(Ms/Mu). raw spliced/unspliced가 없으면 moment로 fallback한다 → 다른 3종보다 pre-baked 상태다(방법론 #5). 이는 human_brain의 외부-제공 spliced/unspliced caveat보다 강하다 — Methods에 명시한다. cross rank에는 잡음만 더한다(낮은 rho=lag fragile에 보수적).
+- ⚠️ **전처리 분기점(중요)**: figshare postpro는 저자 그래프에서 HVG 필터와 scVelo moments를 이미 마쳤다(Ms/Mu). raw spliced/unspliced가 없으면 moment로 fallback한다 → 다른 3종보다 pre-baked 상태다(방법론 #5). 이는 human_brain의 외부-제공 spliced/unspliced caveat보다 강하다. Methods에 명시한다. cross rank에는 잡음만 더한다(낮은 rho=lag fragile에 보수적).

@@ -7,7 +7,7 @@
 
 ## #1 — Paired Δρ dissociation (α ≫ lag), bootstrap CI + TOST
 
-> **lag = MAGNITUDE rank (|·|)** 를 어디서나 쓴다 — FINDINGS와 정합인 관례다(외부 `concordance_*.py`가 `.abs()`를 쓴다; MultiVelo sign은 structural이라 무정보다). headline은 **dissociation**(Δρ가 0을 배제)이지 등가성이 아니다.
+> **lag = MAGNITUDE rank (|·|)** 를 어디서나 쓴다 — FINDINGS와 정합인 관례다(외부 `concordance_*.py`가 `.abs()`를 쓴다; MultiVelo sign은 structural이라 정보가 없다). headline은 **dissociation**(Δρ가 0을 배제)이지 등가성이 아니다.
 
 ### HSPC (within-dataset, MultiVelo × MultiVeloVAE, shared 538 genes) — PRIMARY
 
@@ -22,7 +22,7 @@
 
 - **magnitude lag (MV×VAE)** ρ=+0.163, 95%CI [+0.078, +0.244] → **등가 아님 (CI가 [−0.2,+0.2]를 벗어난다)** — weak-positive, 상한이 +0.2를 넘는다 → 엄격한 한계에서 등가성이 인증되지 않는다.
   - ⚠️ FINDINGS §3.5는 **signed** MV×VAE lag −0.010도 인용하는데(MV-magnitude와 VAE-signed를 섞음 → 범주 불일치다); magnitude와 정합한 값은 +0.163이다. cross-dataset 정합을 위해 magnitude를 보고한다.
-- **directional lag (MoFlow×VAE, guardrail-clean sign pair, shared 636)** ρ=**+0.083** 95%CI [+0.007, +0.158] → **등가 (CI ⊂ [−0.2,+0.2])** — method들이 0을 넘어 lag *방향*까지 일치하지는 않는다.
+- **directional lag (MoFlow×VAE, guardrail-clean sign pair, shared 636)** ρ=**+0.083** 95%CI [+0.007, +0.158] → **등가 (CI ⊂ [−0.2,+0.2])** — method가 0을 넘어 lag *방향*까지 일치하지는 않는다.
   → 갈린 판정: *directional* lag concordance는 0과 등가이고(MoFlow×VAE), *magnitude* concordance는 weak-positive다(MV×VAE). 둘 다 α보다 ~0.7 아래에 있다.
 
 ### External replications (within-dataset MV×VAE, magnitude lag)
@@ -47,7 +47,7 @@
 ### RNA-pinned evidence — floor (NO chromatin channel) recovers α ≈ chromatin methods
 
 - **α: floor × MultiVelo** (shared 368): Spearman **+0.818** 95%CI [+0.773, +0.855] — floor는 ATAC이 전혀 없는데도 α를 chromatin-method 수준으로 회복한다.
-- **α: floor × MultiVeloVAE** (shared 434): Spearman **+0.889** 95%CI [+0.862, +0.910] — floor는 ATAC이 전혀 없는데도 α를 chromatin-method 수준으로 회복한다.
+- **α: floor × MultiVeloVAE** (shared 434): Spearman **+0.889** 95%CI [+0.862, +0.910] — ATAC이 전혀 없는 floor가 여기서도 α를 chromatin-method 수준으로 회복한다.
 
 → **α만이 식별 가능한 불변량으로 홀로 선다**; α_c, β, γ는 모두 fragile하다(CI가 0을 포함하거나 0 근처다). 경험적 identifiability 순위: **α ≫ α_c > β > γ**.
 
@@ -58,7 +58,7 @@
 - **γ/β ratio** (MV×VAE, n=538): Spearman **-0.324** 95%CI [-0.400, -0.244]
 - **β alone** (MV×VAE, n=538): Spearman **+0.080** 95%CI [-0.010, +0.169]
 - **γ alone** (MV×VAE, n=538): Spearman **-0.109** 95%CI [-0.192, -0.024]
-> 판정: 이론상 식별 가능한 steady-state slope γ/β조차 cross-method를 깔끔하게 재현하지 **못한다**(ρ=−0.32, *음수* = 반재현) — **오직 α만 깔끔하게 재현한다**. 예측은 약한 의미로만 성립한다: |ρ(γ/β)|≈0.32가 |ρ_β|=0.08과 |ρ_γ|=0.11보다 크다(그 조합은 개별 rate보다 덜 나쁘게 정해진다 — *크기* 상의 scVelo scaling sloppiness다). 그러나 음의 부호(rank 상관이 흡수하지 못하는 MV vs VAE parameterization/scaling 관례 차이)는 slope 자체가 재현 가능한 불변량이 아님을 뜻한다. α만 홀로 선다.
+> 판정: 이론상 식별 가능한 steady-state slope γ/β조차 cross-method에서 깔끔하게 재현되지 **않는다**(ρ=−0.32, *음수* = 반재현) — **오직 α만 깔끔하게 재현한다**. 예측은 약한 의미로만 성립한다: |ρ(γ/β)|≈0.32가 |ρ_β|=0.08과 |ρ_γ|=0.11보다 크다(그 조합은 개별 rate보다 덜 나쁘게 정해진다 — *크기* 상의 scVelo scaling sloppiness다). 그러나 음의 부호(rank 상관이 흡수하지 못하는 MV vs VAE parameterization/scaling 관례 차이)는 slope 자체가 재현 가능한 불변량이 아님을 뜻한다. α만 남는다.
 
 ## Diff-budget — lag = 잡음 섞인 두 timing의 차
 
@@ -67,7 +67,7 @@
 - **1/α component**: Spearman **+0.882** 95%CI [+0.856, +0.905]
 - **1/α_c component**: Spearman **+0.291** 95%CI [+0.209, +0.370]
 - **difference (lag = 1/α_c − 1/α, signed)**: Spearman **+0.124** 95%CI [+0.036, +0.210]
-> 한 성분은 강하고(1/α +0.88) 한 성분은 약한데(1/α_c +0.29); 그 차는 **더 약한 성분보다도 아래로 떨어진다** → 차분이 concordance를 무너뜨린다. 예측대로다: lag은 α_c의 fragility를 물려받고 차분이 잡음을 증폭한다.
+> 한 성분은 강하고(1/α +0.88) 다른 성분은 약한데(1/α_c +0.29); 그 차는 **더 약한 성분보다도 아래로 떨어진다** → 차분이 concordance를 무너뜨린다. 예측대로다: lag은 α_c의 fragility를 물려받고 차분이 잡음을 증폭한다.
 
 ## #5 — Cross-dataset replication CIs (reject monotonicity as a claim)
 
@@ -79,8 +79,8 @@
 | E18 mouse brain (fetal, cross-species) | 132 | **+0.321** [+0.158,+0.472] | +0.105 [-0.069,+0.269] | +0.216 [-0.026,+0.449] | not equiv |
 | GSE194122 BMMC (same-tissue human) | 88 | **+0.550** [+0.368,+0.696] | +0.052 [-0.164,+0.262] | +0.498 [+0.258,+0.732] | not equiv |
 
-- α cross-dataset CI들이 **겹친다** (공통 구간 [0.368, 0.472]) → tissue-distance 순서(BMMC +0.55 > brain +0.48 > E18 +0.32)는 **정성적이며 정량적 단조 주장이 아니다**. 점 3개에 회귀 fit은 하지 않는다.
-- 모든 cross-dataset lag ρ이 약하다; 등가성 여부는 갈린다(n~100 → 일부 CI는 등가성을 인증하기엔 너무 넓다 — 정직하게 보고하며 지어내지 않는다).
+- α cross-dataset CI가 **겹친다** (공통 구간 [0.368, 0.472]) → tissue-distance 순서(BMMC +0.55 > brain +0.48 > E18 +0.32)는 **정성적이며 정량적 단조 주장이 아니다**. 점 3개에 회귀 fit은 하지 않는다.
+- 모든 cross-dataset lag ρ가 약하다; 등가성 여부는 갈린다(n~100 → 일부 CI는 등가성을 인증하기엔 너무 넓다 — 정직하게 보고하며 지어내지 않는다).
 - ⚠️ **cross-dataset** E18 Δρ (+0.216 [−0.026, +0.449])는 0을 스친다 — n=132에서 검정력이 부족하다. E18 dissociation은 **within-dataset** E18 Δρ (+0.841 [+0.779, +0.903], §#1)가 담당한다; cross-dataset은 표본 1개다 → 강한 dissociation 검정이 아니라 replication 신호다(강한 일반화는 없다는 단서와 정합).
 
 ## Summary verdicts
@@ -90,4 +90,4 @@
 - **Identifiability 순위: α ≫ α_c > β > γ** — α만이 cross-method 불변량이다(ATAC이 없는 RNA-only floor가 α를 chromatin-method 수준으로 회복하는 것 포함).
 - **γ/β ratio가 개별 β (0.08), γ (0.11)보다 더 잘 재현된다 (|ρ|≈0.32)** → scVelo scaling 비식별성.
 - **Diff-budget: lag concordance (+0.12)가 두 성분(1/α +0.88, 1/α_c +0.29)보다 아래로 떨어진다** → 차분이 잡음을 증폭한다.
-- **Cross-dataset α CI들이 겹친다** → tissue-distance 순서는 정성적일 뿐이다(점 3개에 추세 없음).
+- **Cross-dataset α CI가 겹친다** → tissue-distance 순서는 정성적일 뿐이다(점 3개에 추세 없음).
