@@ -245,7 +245,7 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 **저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경(Ka-Kyung Kim): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면(Jaemyun Lyu): Formal analysis, Software, Validation, Writing – review & editing. 이건규(Geon gyu Lee): Validation, Software, Writing – review & editing. 박세진(Sejin Park): Validation, Formal analysis, Writing – review & editing. 지용기(Yong Gi Ji): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 착상에 기여한 박상준(Sangjun Park, 연세대학교) 님에게 감사한다.
+**감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 초기 아이디어를 제공하고 참고문헌 분석을 맡아 준 박상준(Sangjun Park, 연세대학교) 님에게 감사한다.
 (영문 제출본 사사 원문: "The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research.")
 
 ---

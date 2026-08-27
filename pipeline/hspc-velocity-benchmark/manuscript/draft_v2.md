@@ -264,7 +264,7 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 **Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. Jaemyun Lyu (류재면): Formal analysis, Software, Validation, Writing – review & editing. Geon gyu Lee (이건규): Validation, Software, Writing – review & editing. Sejin Park (박세진): Validation, Formal analysis, Writing – review & editing. Yong Gi Ji (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
-**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank Sangjun Park (박상준, Yonsei University) for the conceptual origin of the project.
+**Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank Sangjun Park (박상준, Yonsei University) for the initial conceptual idea of the project and for reference-literature analysis.
 
 ---
 
