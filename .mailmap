@@ -9,3 +9,19 @@ kakyungkim <kakyung.kim@gmail.com> <84395053+kakyungkim@users.noreply.github.com
 # 박상준: 연구실 노트북에서 git user 설정 없이 커밋해 macOS 계정명/호스트명이 박혔다.
 # (2026-08-27 본인 확인)
 poqopo <95621149+poqopo@users.noreply.github.com> <hanlab@Hanlabui-MacBookAir.local>
+
+# 지용기. GitHub 계정은 braveji18 (braveji18@gmail.com 이 연결됨).
+# ygji49@gmail.com, biospinleader@gmail.com 은 어느 GitHub 계정에도 연결돼 있지 않다.
+braveji18 <braveji18@gmail.com>
+braveji18 <braveji18@gmail.com> <ygji49@gmail.com>
+braveji18 <braveji18@gmail.com> <biospinleader@gmail.com>
+
+# 류재면. GitHub 계정은 JamieLyu (noreply 와 siegfried.lyu@gmail.com 둘 다 연결됨).
+# jmlyu@genolution1.com 은 회사(제놀루션) 계정 Genolution1 이며 동일인이다(2026-08-27 확인).
+JamieLyu <5819016+JamieLyu@users.noreply.github.com>
+JamieLyu <5819016+JamieLyu@users.noreply.github.com> <siegfried.lyu@gmail.com>
+JamieLyu <5819016+JamieLyu@users.noreply.github.com> <jmlyu@genolution1.com>
+
+# 박세진. sezinie@gmail..com 은 git config 오타(점 두 개)로 잘못 박힌 주소다.
+Sejin Park <sezinie000@gmail.com>
+Sejin Park <sezinie000@gmail.com> <sezinie@gmail..com>
