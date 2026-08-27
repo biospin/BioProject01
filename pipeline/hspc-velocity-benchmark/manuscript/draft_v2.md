@@ -38,9 +38,9 @@ the external-measurement result is corroboration inside the map, not a title cla
 4. Pseudo Lab, Seoul, Republic of Korea
 5. Omixai Co., Ltd., Seoul, Republic of Korea
 6. Seegene Inc., Seoul, Republic of Korea
-7. Quantum C&S Co., Ltd., Seoul, Republic of Korea
+7. Qaumtum c&s, Seoul, Republic of Korea
 
-> 소속 확인 2건 해소(2026-08-15, kkkim 확정): (1) 7번을 공식 홈페이지 https://quantumcns.ai/ 기준 **Quantum C&S Co., Ltd.**로 맞춤(주소도 같은 출처: 서울 구로구 디지털로31길 62). 홈페이지 표기는 로고 스타일의 전대문자 QUANTUM C&S지만, 나머지 소속(Genolution Inc.·Omixai Co., Ltd.·Seegene Inc.)이 전부 title case라 본문 표기를 통일했다. **정정(2026-08-15)**: 앞서 이 주석이 제출값을 "Qaumtum c&s"로 적고 철자 자체가 다르다고 판정했으나, 본인 제출값은 `QUANTUM C&S`(BIOP02-114 댓글 #11741, 2026-08-06)로 **철자는 처음부터 맞았다** — "Qaumtum"은 08-14 전달 과정의 오기다. 따라서 본문과 제출값의 차이는 대소문자와 법인격 `Co., Ltd.` 부기뿐이며, 철자를 바꾼 것이 아니다. ★남은 확인 = 이름 표기. 채널이 둘이다 — ① BIOP02-114 #11741(본인 직접 작성, 08-06) `YONG-GI JI`, ② 카톡 전달분→BIOP01-79 #11890(08-14) `Yong Gi Ji`. 본문은 ②를 따랐다(임의 변경 아님). ②가 더 최근이나 같은 전달분의 소속 철자가 오기였으므로 자동 결론 내리지 않고 본인 확인 대기(BIOP02-114 댓글 11903·11904). (2) 4·5·7번 도시·국가 = 전부 Seoul, Republic of Korea (kkkim 지시 2026-08-15). 근거 강도: 7번=1차(회사 홈페이지), 5번=2차(THE VC 기업정보, 본사 서울), 4번=Pseudo Lab 사이트에 도시 표기 없어 kkkim 판단. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일함(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
+> 저자명·소속 표기는 본인 제출값이 정본이다. **7번 소속·지용기 이름 확정(2026-08-15/16, 지용기 님 카톡)**: kkkim이 공식 홈페이지 https://quantumcns.ai/ 표기가 `Quantum C&S Co., Ltd.`임을 고지하고 재차 확인을 요청했으나, 지용기 님이 `YONG GI JI / Qaumtum c&s`로 실어 달라고 본인 확정(8/15)하고 재확인에도 동의(8/16 "넵 감사합니다") → 홈페이지 철자와 다르더라도 본인 제출값을 그대로 싣는다(본인 결정, 기록 BIOP02-114). 이름은 kkkim이 안내한 논문 관례(대소문자 혼용)에 따라 `Yong Gi Ji`(하이픈 없음, title case)로 표기한다. (앞선 08-15 JIRA 주석 #11903·11904는 `Quantum C&S Co., Ltd.`가 정본이라 잠정 판정했으나 본인 카톡 확정으로 대체됨. 홈페이지 주소: 서울 구로구 디지털로31길 62.) (2) 4·5·7번 도시·국가 = 전부 Seoul, Republic of Korea (kkkim 지시 2026-08-15). 근거 강도: 7번=1차(회사 홈페이지), 5번=2차(THE VC 기업정보, 본사 서울), 4번=Pseudo Lab 사이트에 도시 표기 없어 kkkim 판단. 3번 국가 표기는 류재면 본인 승인으로 "Korea" → "Republic of Korea" 통일함(BIOP01-79, 2026-08-14). 근거 = BIOP02-114 제출 댓글(이건규 2026-08-06, 류재면 2026-08-11) + BIOP01-79 kkkim 지시(2026-08-14, 박세진·지용기).
 
 **Corresponding author:** Ka-Kyung Kim (김가경), Independent Researcher, Seoul, Republic of Korea, kakyung.kim@gmail.com
 
