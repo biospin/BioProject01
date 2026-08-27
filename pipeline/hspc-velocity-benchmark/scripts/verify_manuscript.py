@@ -96,6 +96,8 @@ def main(argv=None):
          ["check_revision_preserved.py", "--doc", DRAFT_KO], [DRAFT_KO]),
         ("본문→목록 인용결함 (p13_check_uncited_sources)",
          ["p13_check_uncited_sources.py"], []),
+        ("정본 수치 파리티 (check_canonical_parity)",
+         ["check_canonical_parity.py"], []),
     ]
     claims = find_claims()
     if claims:

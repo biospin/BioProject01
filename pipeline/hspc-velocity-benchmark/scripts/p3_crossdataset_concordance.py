@@ -67,7 +67,8 @@ def main() -> int:
     new_mv_p = Path(a.new_mv) if a.new_mv else RESULTS / f"multivelo_genes_{ds}.csv"
     hspc_fl_p = Path(a.hspc_floor) if a.hspc_floor else RESULTS / "rna_only_dynamical_genes.csv"
     new_fl_p = Path(a.new_floor) if a.new_floor else RESULTS / f"rna_only_dynamical_genes_{ds}.csv"
-    out_md = Path(a.out) if a.out else RESULTS / f"concordance_{ds}.md"
+    # 모델2: 기계 산출은 .gen.md (byte 재현·게이트 대상). 정본 concordance_{ds}.md(한국어 윤문)·.en.md 는 사람 관리 — 덮지 않는다.
+    out_md = Path(a.out) if a.out else RESULTS / f"concordance_{ds}.gen.md"
 
     hspc_mv, new_mv = load(hspc_mv_p), load(new_mv_p)
     hspc_fl, new_fl = load(hspc_fl_p), load(new_fl_p)

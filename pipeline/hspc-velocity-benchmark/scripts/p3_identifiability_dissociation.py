@@ -20,7 +20,8 @@ GUARDRAILS enforced:
 
 Deterministic (fixed seed) for verify-gate recompute.
 실행: conda run -n scv-preprocess python p3_identifiability_dissociation.py
-출력: results/identifiability_dissociation.md + results/identifiability_dissociation.csv
+출력: results/identifiability_dissociation.gen.md (기계 산출·byte 재현·게이트 대상) + results/identifiability_dissociation.csv
+      정본 results/identifiability_dissociation.md (한국어 윤문)·.en.md 는 사람이 관리하며 이 스크립트가 덮지 않는다(모델2).
 """
 from __future__ import annotations
 import sys
@@ -332,10 +333,10 @@ def main():
           "- **Diff-budget: lag concordance (+0.12) falls below both components (1/α +0.88, 1/α_c +0.29)** → differencing amplifies noise.",
           "- **Cross-dataset α CIs overlap** → tissue-distance ordering qualitative only (no trend on 3 points).", ""]
 
-    (RESULTS / "identifiability_dissociation.md").write_text("\n".join(L), encoding="utf-8")
+    (RESULTS / "identifiability_dissociation.gen.md").write_text("\n".join(L), encoding="utf-8")
     pd.DataFrame(rows).to_csv(RESULTS / "identifiability_dissociation.csv", index=False)
     print("\n".join(L))
-    print("\n✓ → identifiability_dissociation.md + identifiability_dissociation.csv")
+    print("\n✓ → identifiability_dissociation.gen.md + identifiability_dissociation.csv (정본 .md/.en.md 는 미변경)")
     return 0
 
 
