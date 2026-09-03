@@ -27,7 +27,11 @@ def req(method, path, body=None):
     data = json.dumps(body).encode() if body else None
     r = urllib.request.Request(url, data=data, method=method)
     import base64
-    tok = base64.b64encode(f"{os.environ['ATLASSIAN_EMAIL']}:{os.environ['ATLASSIAN_API_TOKEN']}".encode()).decode()
+    # 토큰 변수명이 환경마다 갈린다(ATLASSIAN_API_TOKEN / ATLASSIAN_TOKEN). 둘 다 받는다.
+    _tok_raw = os.environ.get("ATLASSIAN_API_TOKEN") or os.environ.get("ATLASSIAN_TOKEN")
+    if not _tok_raw:
+        sys.exit("ATLASSIAN_API_TOKEN 또는 ATLASSIAN_TOKEN 이 필요합니다. `source ~/.atlassian_env` 확인.")
+    tok = base64.b64encode(f"{os.environ['ATLASSIAN_EMAIL']}:{_tok_raw}".encode()).decode()
     r.add_header("Authorization", "Basic " + tok)
     r.add_header("Content-Type", "application/json")
     r.add_header("User-Agent", "kkkim-cli")
@@ -43,6 +47,11 @@ def req(method, path, body=None):
 pid = sys.argv[1]
 banner = open(sys.argv[2], encoding="utf-8").read().strip()
 dry = "--dry" in sys.argv
+
+# 배너를 여러 차례(다른 날짜로) 붙일 수 있으므로 마커를 인자로 덮어쓸 수 있게 한다.
+# 지정하지 않으면 기존 2026-08-14 마커를 그대로 쓴다(하위호환).
+if "--marker" in sys.argv:
+    MARKER = sys.argv[sys.argv.index("--marker") + 1]
 
 cur = req("GET", f"/wiki/rest/api/content/{pid}?expand=body.storage,version,space")
 body = cur["body"]["storage"]["value"]
