@@ -149,8 +149,6 @@ Reference numbers are inherited from the full-length version of this work so tha
 [4] Li C, Gu Y, Virgilio MC, Lee KH, Collins KL, Welch JD. Inferring differential dynamics from multi-lineage, multi-omic, and multi-sample single-cell data with MultiVeloVAE. *Nature Communications* 16, 11505 (2025). doi:10.1038/s41467-025-66287-6.
 [5] Hong A, Lee S, Kim K. Multi-omic relay velocity modeling uncovers dynamic chromatin-transcription regulation across cell states. *Nature Communications* 17, 566 (2025). doi:10.1038/s41467-025-67259-6.
 [6] El Kazwini N, Gao M, Kouadri Boudjelthia I, Cai F, Huang Y, Sanguinetti G. CRAK-Velo: chromatin accessibility kinetics integration improves RNA velocity estimation. *Genome Biology* 27(1) (2026). doi:10.1186/s13059-026-04086-y.
-[9] Gayoso A, Weiler P, Lotfollahi M, et al. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. *Nature Methods* 21, 50-59 (2024). doi:10.1038/s41592-023-01994-w.
-[18] Ma S, Zhang B, LaFave LM, et al. Chromatin potential identified by shared single-cell profiling of RNA and chromatin. *Cell* 183(4), 1103-1116.e20 (2020). doi:10.1016/j.cell.2020.09.056.
 [19] Trevino AE, Müller F, Andersen J, et al. Chromatin and gene-regulatory dynamics of the developing human cerebral cortex at single-cell resolution. *Cell* 184(19), 5053-5069.e23 (2021). doi:10.1016/j.cell.2021.07.039. (GSE162170.)
 [21] Bergen V, Soldatov RA, Kharchenko PV, Theis FJ. RNA velocity: current challenges and future perspectives. *Molecular Systems Biology* 17(8), e10282 (2021). doi:10.15252/msb.202110282.
 [22] Gorin G, Fang M, Chari T, Pachter L. RNA velocity unraveled. *PLOS Computational Biology* 18(9), e1010492 (2022). doi:10.1371/journal.pcbi.1010492.
@@ -170,7 +168,6 @@ Reference numbers are inherited from the full-length version of this work so tha
 [52] Kreutz C, Raue A, Kaschek D, Timmer J. Profile likelihood in systems biology. *The FEBS Journal* 280(11), 2564-2571 (2013). doi:10.1111/febs.12276.
 [53] Villaverde AF, Barreiro A, Papachristodoulou A. Structural identifiability of dynamic systems biology models. *PLOS Computational Biology* 12(10), e1005153 (2016). doi:10.1371/journal.pcbi.1005153.
 [55] Gu et al. Profile-likelihood identifiability analysis of single-cell transcription (telegraph) kinetics. *Bioinformatics* 41(11), btaf581 (2025). doi:10.1093/bioinformatics/btaf581.
-[60] Lange M, Bergen V, Klein M, et al. CellRank for directed single-cell fate mapping. *Nature Methods* 19(2), 159-170 (2022). doi:10.1038/s41592-021-01346-6.
 [62] Kaminow B, Yunusov D, Dobin A. STARsolo: accurate, fast and versatile mapping/quantification of single-cell and single-nucleus RNA-seq data. bioRxiv (2021). doi:10.1101/2021.05.05.442755. [Preprint, not peer-reviewed.]
 [66] Bergen V, Lange M, Peidli S, Wolf FA, Theis FJ. Generalizing RNA velocity to transient cell states through dynamical modeling. *Nature Biotechnology* 38(12), 1408-1414 (2020). doi:10.1038/s41587-020-0591-3.
 [67] Benjamini Y, Hochberg Y. Controlling the false discovery rate: a practical and powerful approach to multiple testing. *Journal of the Royal Statistical Society Series B* 57(1), 289-300 (1995). doi:10.1111/j.2517-6161.1995.tb02031.x.

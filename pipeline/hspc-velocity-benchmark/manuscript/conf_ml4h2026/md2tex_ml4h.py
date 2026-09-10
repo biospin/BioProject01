@@ -59,6 +59,19 @@ def esc(s):
     return s
 
 
+CITEKEY = {}     # 참고문헌 번호 -> bibitem 키. 아래 parse_refs()가 채운다.
+
+
+def cite_sub(m):
+    """[3] 또는 [25,26,27]을 \\citep{...}로. 신뢰구간 [+0.8, +0.9]는 숫자 앞에
+    부호와 소수점이 있어 이 패턴에 걸리지 않는다."""
+    nums = re.findall(r"\d+", m.group(0))
+    keys = [CITEKEY.get(n) for n in nums]
+    if not all(keys):
+        sys.exit(f"참고문헌 목록에 없는 인용 번호: {m.group(0)}")
+    return "\\citep{" + ",".join(keys) + "}"
+
+
 def inline(s):
     """markdown inline -> LaTeX. 코드부터 처리해 그 안이 다시 마크되지 않게 한다."""
     holes = []
@@ -68,6 +81,8 @@ def inline(s):
         return f"\x00{len(holes) - 1}\x00"
 
     s = re.sub(r"`([^`]+)`", lambda m: stash(r"\texttt{" + esc(m.group(1)) + "}"), s)
+    if CITEKEY:
+        s = re.sub(r"\[\d+(?:\s*,\s*\d+)*\]", lambda m: stash(cite_sub(m)), s)
     s = re.sub(r"\*\*(.+?)\*\*", lambda m: stash(r"\textbf{" + esc(m.group(1)) + "}"), s)
     s = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", lambda m: stash(r"\emph{" + esc(m.group(1)) + "}"), s)
     s = esc(s)
@@ -172,6 +187,59 @@ for chunk in parts[1:]:
     sections.append((headline.strip(), text.strip()))
 
 
+# --- references -> natbib author-year labels ---------------------------------
+# jmlr.cls forces \bibliographystyle{plainnat} with \bibpunct{...}{a}{...},
+# i.e. author-year citations. Numeric [n] markers do not match the template, so
+# each entry gets a \bibitem[Surname et al.(Year)]{key} label and every in-text
+# [n] becomes \citep{key}. The reference TEXT is kept verbatim: it is the
+# project's verified canonical list and is not re-derived from any database.
+INITIALS = re.compile(r"^(.+?)\s+([A-Z]{1,3}(?:-[A-Z])?)$")
+
+
+def ref_label(txt):
+    m = re.search(r"\bet al\.", txt)
+    if m:
+        head, etal = txt[:m.start()], True
+    else:
+        m2 = re.search(r"\.\s+[A-Z]", txt)
+        head, etal = (txt[:m2.start()] if m2 else txt), False
+    names = []
+    for part in (p.strip() for p in head.split(",")):
+        if not part:
+            continue
+        mm = INITIALS.match(part)
+        if mm:
+            names.append(mm.group(1))
+        elif not re.fullmatch(r"[A-Z]{1,3}", part):
+            names.append(part)
+    if not names:
+        sys.exit(f"참고문헌 저자를 파싱하지 못했다: {txt[:60]}")
+    if etal or len(names) >= 3:
+        label = f"{names[0]} et al."
+    elif len(names) == 2:
+        label = f"{names[0]} and {names[1]}"
+    else:
+        label = names[0]
+    years = re.findall(r"\((\d{4})[a-z]?\)", txt) or re.findall(r"\b((?:19|20)\d{2})\b", txt)
+    if not years:
+        sys.exit(f"참고문헌 연도를 파싱하지 못했다: {txt[:60]}")
+    return label, years[-1]
+
+
+REFS_RAW = []
+for _h, _t in sections:
+    if _h.lower().startswith("references"):
+        for line in _t.split("\n"):
+            mm = re.match(r"^\[(\d+)\]\s*(.+)$", line.strip())
+            if mm:
+                num, body_txt = mm.group(1), mm.group(2).strip()
+                lab, yr = ref_label(body_txt)
+                CITEKEY[num] = f"ref{num}"
+                REFS_RAW.append((num, lab, yr, body_txt))
+if not REFS_RAW:
+    sys.exit("참고문헌 목록을 찾지 못했다")
+
+
 def subsections(text):
     """### 소제목을 \\subsection 으로. 소제목 앞의 도입 문단은 그대로 둔다."""
     bits = re.split(r"^### ", text, flags=re.M)
@@ -238,10 +306,16 @@ for head, text in sections:
     elif h.startswith("figure legend"):
         continue
     elif h.startswith("references"):
-        items = [inline(" ".join(l.split()))
-                 for l in text.split("\n") if l.strip().startswith("[")]
-        refs = ("\\section*{References}\n\\begin{refs}\n"
-                + "\n".join(f"\\item {it}" for it in items) + "\n\\end{refs}\n")
+        # natbib thebibliography. \bibitem[Label(Year)]{key} 가 저자-연도 인용을 만든다.
+        lines = [f"\\begin{{thebibliography}}{{{len(REFS_RAW)}}}"]
+        # plainnat sorts author-year bibliographies alphabetically, so match that
+        # rather than keeping the numeric citation order of the source list.
+        for num, lab, yr, body_txt in sorted(
+                REFS_RAW, key=lambda r: (r[1].lower(), r[2], int(r[0]))):
+            lines.append(f"\\bibitem[{inline(lab)}({yr})]{{ref{num}}}\n"
+                         + inline(" ".join(body_txt.split())))
+        lines.append("\\end{thebibliography}\n")
+        refs = "\n".join(lines)
     elif h.startswith("appendix"):
         bits = re.split(r"^### ", text, flags=re.M)
         for b in bits[1:]:
