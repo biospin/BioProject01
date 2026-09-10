@@ -41,6 +41,8 @@ SPECIAL = {"&": r"\&", "%": r"\%", "#": r"\#", "_": r"\_", "~": r"$\sim$"}
 
 # 아래첨자로 살려야 하는 것들(esc가 \_ 로 만든 뒤 되돌린다)
 SUBS = [
+    # stiffness ratio: keep kappa subscripts in one math group instead of literal underscores
+    (r"$\kappa$\_$\alpha$/$\kappa$\_lag", r"$\kappa_\alpha/\kappa_{\mathrm{lag}}$"),
     (r"$\alpha$\_c", r"$\alpha_c$"),
     (r"$\Delta$\_rr", r"$\Delta_{rr}$"),
     (r"k\_deg", r"$k_{\mathrm{deg}}$"),
@@ -197,12 +199,29 @@ FIG = ("\\begin{figure}[t]\n\\centering\n"
        f"\\caption{{{legend}}}\n\\label{{fig:concordance}}\n\\end{{figure}}\n")
 
 abstract = ""
+keywords = ""
+statements = []          # 초록 직후 필수 문단(번호 없음). 빠지면 desk rejection.
 main, tables, refs, appendix = [], [], "", []
+
+# 공식 템플릿이 초록 바로 뒤에 \paragraph*{}로 요구하는 두 문단.
+MANDATORY = ("data and code availability", "institutional review board")
 
 for head, text in sections:
     h = head.lower()
     if h.startswith("abstract"):
-        abstract = "\n\n".join(paragraphs(text))
+        paras = paragraphs(text)
+        # "**Keywords:** ..." 줄은 keywords 환경으로 뺀다(공식 템플릿 형식).
+        kept = []
+        for para in paras:
+            m = re.match(r"^\\textbf\{Keywords:\}\s*(.+)$", para)
+            if m:
+                keywords = m.group(1).strip()
+            else:
+                kept.append(para)
+        abstract = "\n\n".join(kept)
+    elif any(h.startswith(k) for k in MANDATORY):
+        statements.append(f"\\paragraph*{{{inline(head)}}}\n"
+                          + "\n\n".join(paragraphs(text)) + "\n")
     elif h.startswith("table "):
         ncol = len(md_table(text)[0])
         if ncol <= 3:   # 단(column) float. 실측상 전폭 table*보다 본문 줄을 덜 먹는다.
@@ -259,12 +278,17 @@ PRE = r"""\PassOptionsToPackage{sort}{natbib}
 \usepackage{booktabs,array,graphicx}
 \usepackage{enumitem}
 \usepackage{xurl}
+\usepackage[switch]{lineno}   % line numbers for review, as in the official template
 
 \newlist{refs}{enumerate}{1}
 \setlist[refs]{label=,leftmargin=1.1em,itemindent=-1.1em,
                nosep,itemsep=1pt,font=\footnotesize}
 
-\jmlryear{2026}
+% Review-submission header, matching the official template's \iffinal false branch.
+% (\mlhtrack{findings} lives in ML4H's patched class; we reproduce its output here.)
+% \jmlryear is set only in the official template's \iffinal branch; leaving it
+% out here avoids a duplicated year in the review header.
+\jmlrproceedings{}{Submitted to ML4H 2026: Findings Track}
 \jmlrworkshop{Machine Learning for Health (ML4H) 2026}
 \jmlrvolume{}
 
@@ -272,7 +296,9 @@ PRE = r"""\PassOptionsToPackage{sort}{natbib}
 
 % Double-blind: no author names, affiliations or emails. Do not edit this block
 % before submission; identifying information here is a desk-rejection risk.
-\author{\Name{Anonymous Author(s)}}
+\author{Anonymous Author(s)}
+
+\linenumbers
 
 \begin{document}
 \maketitle
@@ -281,6 +307,11 @@ PRE = r"""\PassOptionsToPackage{sort}{natbib}
 ABSTRACT
 \end{abstract}
 
+\begin{keywords}
+KEYWORDS
+\end{keywords}
+
+STATEMENTS
 MAIN
 TABLES
 REFS
@@ -291,8 +322,16 @@ APPENDIX
 \end{document}
 """
 
+if len(statements) != 2:
+    sys.exit(f"필수 문단이 {len(statements)}개다. Data and Code Availability와 "
+             "Institutional Review Board 둘 다 있어야 한다(없으면 desk rejection).")
+if not keywords:
+    sys.exit("keywords를 초록에서 뽑지 못했다")
+
 tex = (PRE.replace("TITLE", inline(title))
           .replace("ABSTRACT", abstract)
+          .replace("KEYWORDS", keywords)
+          .replace("STATEMENTS", "\n".join(statements))
           .replace("MAIN", "\n".join(main))
           .replace("TABLES", "\n".join(tables))
           .replace("REFS", refs)
