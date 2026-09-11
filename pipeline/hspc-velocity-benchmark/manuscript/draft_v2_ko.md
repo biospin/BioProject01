@@ -7,10 +7,10 @@ draft_v2.md의 한국어 검토본(번역·윤문). 정본은 영어 draft_v2.md
 
 # single-cell kinetics에서 유전자별 multiome RNA velocity 모수의 신뢰도 지도
 
-**저자:** 김가경(Ka-Kyung Kim)^1^*, 류재면(Jaemyun Lyu)^2,3^, 이건규(Geon gyu Lee)^4,5^, 박세진(Sejin Park)^6^, 지용기(Yong Gi Ji)^7^(시니어 저자)
+**저자:** 김가경(Ka-Kyung Kim)^1^*, 류재면(Jaemyun Lyu)^2,3^, 이건규(Geongyu Lee)^4,5^, 박세진(Sejin Park)^6^, 지용기(Yong Gi Ji)^7^(시니어 저자)
 
 > 저자 순서: 제안(전 공동저자 합의 전). 근거 = BIOP02-114 댓글 11842(2026-08-11, git 전 브랜치 + BIOP01 코멘트 전수 + draft 본문 도달 여부, ICMJE 4항목). 순번 1·교신 김가경 / 2 류재면 / 3 이건규 / 4 박세진 / 5·시니어(말미) 지용기. 영문명·소속·교신 이메일은 확정 대기(BIOP01-79).
-> ⚠️ **저자명 영문 표기는 본인 제출값이 정본이다. 서식 통일을 이유로 고치지 않는다.** "Geon gyu Lee"의 소문자 `gyu`는 오기가 아니라 이건규 님이 기존 논문에서 써 온 표기이므로 그대로 둔다(kkkim 판단 2026-08-15). 소속 표기 통일(전대문자 → title case)은 기관명에만 적용했다.
+> ⚠️ **저자명 영문 표기는 본인 제출값이 정본이다. 서식 통일을 이유로 고치지 않는다.** 이건규 님 영문명은 2026-09-11 본인 정정으로 `Geongyu Lee`(붙여쓰기)로 확정됐다(BIOP02-114 #12213). 기존 출판물 7편과 통일되며 ORCID·Google Scholar·PubMed에서 같은 저자로 묶인다. 이전 표기 `Geon gyu Lee`는 폐기. 소속 표기 통일(전대문자 → title case)은 기관명에만 적용했다.
 
 **소속:**
 1. Independent Researcher, Seoul, Republic of Korea
@@ -243,7 +243,7 @@ cell-cycle, 전사 버스트(transcriptional burst), ambient/doublet 교란(conf
 
 **연구비.** 본 연구는 과학기술정보통신부(MSIT)가 지원하는 "오픈소스 AI·SW 개발자 및 커뮤니티 지원 사업"의 지원을 받아 수행되었다.
 
-**저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경(Ka-Kyung Kim): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면(Jaemyun Lyu): Formal analysis, Software, Validation, Writing – review & editing. 이건규(Geon gyu Lee): Validation, Software, Writing – review & editing. 박세진(Sejin Park): Validation, Formal analysis, Software, Investigation, Writing – review & editing. 지용기(Yong Gi Ji): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
+**저자 기여.** (CRediT; 제안 — 전 공동저자 합의 전, 근거 BIOP02-114 댓글 11842.) 김가경(Ka-Kyung Kim): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. 류재면(Jaemyun Lyu): Formal analysis, Software, Validation, Writing – review & editing. 이건규(Geongyu Lee): Validation, Software, Writing – review & editing. 박세진(Sejin Park): Validation, Formal analysis, Software, Investigation, Writing – review & editing. 지용기(Yong Gi Ji): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
 **감사의 글.** 저자 일동은 비영리 AI/ML 연구 커뮤니티인 가짜연구소(Pseudo Lab)가 저자들을 한데 모으고 본 연구를 가능하게 한 협업 환경을 제공한 데 감사한다. 또한 프로젝트의 초기 아이디어를 제공하고 참고문헌 분석을 맡아 준 박상준(Sangjun Park, 연세대학교) 님에게 감사한다.
 (영문 제출본 사사 원문: "The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research.")

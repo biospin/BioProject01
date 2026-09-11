@@ -27,10 +27,10 @@ TITLE — declarative, no negation, no arrow, no metaphor. The reliability-map f
 the external-measurement result is corroboration inside the map, not a title claim.
 -->
 
-**Authors:** Ka-Kyung Kim (김가경)^1^*, Jaemyun Lyu (류재면)^2,3^, Geon gyu Lee (이건규)^4,5^, Sejin Park (박세진)^6^, Yong Gi Ji (지용기)^7^ (senior author)
+**Authors:** Ka-Kyung Kim (김가경)^1^*, Jaemyun Lyu (류재면)^2,3^, Geongyu Lee (이건규)^4,5^, Sejin Park (박세진)^6^, Yong Gi Ji (지용기)^7^ (senior author)
 
 > 저자 순서: 제안(전 공동저자 합의 전). 근거 = BIOP02-114 댓글 11842(2026-08-11, git 전 브랜치 + BIOP01 코멘트 전수 + draft 본문 도달 여부, ICMJE 4항목). 순번 1·교신 김가경 / 2 류재면 / 3 이건규 / 4 박세진 / 5·시니어(말미) 지용기. 영문명·소속·교신 이메일은 확정 대기(BIOP01-79).
-> ⚠️ **저자명 영문 표기는 본인 제출값이 정본이다. 서식 통일을 이유로 고치지 않는다.** "Geon gyu Lee"의 소문자 `gyu`는 오기가 아니라 이건규 님이 기존 논문에서 써 온 표기이므로 그대로 둔다(kkkim 판단 2026-08-15). 소속 표기 통일(전대문자 → title case)은 기관명에만 적용했다.
+> ⚠️ **저자명 영문 표기는 본인 제출값이 정본이다. 서식 통일을 이유로 고치지 않는다.** 이건규 님 영문명은 2026-09-11 본인 정정으로 `Geongyu Lee`(붙여쓰기)로 확정됐다(BIOP02-114 #12213). 기존 출판물 7편과 통일되며 ORCID·Google Scholar·PubMed에서 같은 저자로 묶인다. 이전 표기 `Geon gyu Lee`는 폐기. 소속 표기 통일(전대문자 → title case)은 기관명에만 적용했다.
 
 **Affiliations:**
 1. Independent Researcher, Seoul, Republic of Korea
@@ -263,7 +263,7 @@ An external-datasets inventory (accession, species/tissue, cells, platform, role
 
 **Funding.** This research was supported by the "Open Source AI·SW Developer and Community Support Program" funded by the Ministry of Science and ICT (MSIT), Republic of Korea.
 
-**Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. Jaemyun Lyu (류재면): Formal analysis, Software, Validation, Writing – review & editing. Geon gyu Lee (이건규): Validation, Software, Writing – review & editing. Sejin Park (박세진): Validation, Formal analysis, Software, Investigation, Writing – review & editing. Yong Gi Ji (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
+**Authors' contributions.** (CRediT; proposal pending co-author agreement, basis BIOP02-114 comment 11842.) Ka-Kyung Kim (김가경): Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization. Jaemyun Lyu (류재면): Formal analysis, Software, Validation, Writing – review & editing. Geongyu Lee (이건규): Validation, Software, Writing – review & editing. Sejin Park (박세진): Validation, Formal analysis, Software, Investigation, Writing – review & editing. Yong Gi Ji (지용기): Investigation, Formal analysis, Software, Validation, Supervision, Project administration.
 
 **Acknowledgements.** The authors thank Pseudo Lab, a non-profit AI/ML research community, for providing the collaborative environment that brought the authors together and enabled this research. The authors also thank Sangjun Park (박상준, Yonsei University) for the initial conceptual idea of the project and for reference-literature analysis.
 
