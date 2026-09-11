@@ -263,7 +263,7 @@ for head, text in sections:
             legend = inline(cap)
 
 FIG = ("\\begin{figure}[t]\n\\centering\n"
-       f"\\includegraphics[width=\\columnwidth]{{{FIGDIR}/fig01_p2_concordance.png}}\n"
+       f"\\includegraphics[width=\\columnwidth]{{{FIGDIR}/fig_ml4h_cross_method.png}}\n"
        f"\\caption{{{legend}}}\n\\label{{fig:concordance}}\n\\end{{figure}}\n")
 
 abstract = ""

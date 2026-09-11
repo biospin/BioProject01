@@ -137,7 +137,7 @@ Among the per-gene quantities that multiome velocity models emit, only α is rep
 
 ## Figure legend
 
-**Figure 1.** Cross-method concordance of the per-gene lag versus the transcription rate α in HSPC: lag-magnitude pairwise rank agreement (most pairs |ρ|≤0.08, strongest pair +0.163) and per-gene sign agreement (54.6%, near chance), against the α reproducibility scatter (ρ=0.88 observed). Source figure: `fig01_p2_concordance.png`.
+**Figure 1.** HSPC cross-method concordance, rank against rank (MultiVelo versus MultiVeloVAE, n=538). α reproduces (+0.882); the lag magnitude does not (+0.163, the strongest of three pairs). Conventions in Appendix B. Source figure: `fig_ml4h_cross_method.png`.
 
 ## References
 
