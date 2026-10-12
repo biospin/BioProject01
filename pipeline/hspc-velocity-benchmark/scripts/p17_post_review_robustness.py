@@ -7,8 +7,10 @@
      cross-method pair given HSPC mean expression (rank-residualized).
   R3 dependence-aware bootstrap: genes resampled in co-expression modules
      (hierarchical clusters of the Ms gene-gene correlation) instead of independently.
-  R4 curvature coordinates: the profile curvatures are already in
-     ln-parameter units; re-express the lag in pseudotime-horizon units as a sensitivity.
+  R4 curvature coordinates: the profile curvatures are in ln-parameter units as submitted;
+     re-express the lag linearly in pseudotime-horizon units as a sensitivity.
+  R5 MultiVelo lag definition: priming interval fit_t_sw1 (MultiVelo's Δt_priming) against
+     the coupled-on length fit_t_sw2 − fit_t_sw1 used in the paper.
 
 Definitions reused verbatim from p3_identifiability_dissociation.py:
   MultiVelo α = fit_alpha, α_c = fit_alpha_c, lag = fit_t_sw2 − fit_t_sw1 (structural sign)
@@ -245,9 +247,12 @@ def main():
     log_ratio = pl.kappa_alpha_pc / pl.kappa_lag_pc
     # κ on ln-lag → κ on lag/TOTAL_H: multiply by (TOTAL_H / lag0)^2
     hz_ratio = pl.kappa_alpha_pc / (pl.kappa_lag_pc * (TOTAL_H / pl.lag0) ** 2)
-    L += ["", "## R4 Curvature coordinates (fixed-nuisance profile, interior genes)", "",
-          f"> n={len(pl)}. Both curvatures are −d²LL/d(ln θ)² per cell, invariant to a change of units.",
-          "> Sensitivity: lag re-expressed as a fraction of the pseudotime horizon (lag/20).", "",
+    L += ["", "## R4 Curvature coordinates (fixed-nuisance profile)", "",
+          f"> n={len(pl)}: genes whose lag profile is interior (of 302) and whose α and lag curvatures",
+          ">   are both finite and positive. α has no interior/boundary classification.",
+          "> As submitted both curvatures are −d²LL/d(ln θ)² per cell (log coordinates).",
+          "> Sensitivity: lag expressed linearly as a fraction of the pseudotime horizon (lag/20),",
+          ">   with α kept in log coordinates. Neither coordinate system is canonical.", "",
           "| coordinates | median κ_α/κ_lag | IQR | α stiffer (%) |", "|---|---|---|---|"]
     for lbl, s in [("ln α vs ln lag (as submitted)", log_ratio), ("ln α vs lag/horizon", hz_ratio)]:
         L.append(f"| {lbl} | {s.median():.2f} | [{s.quantile(.25):.2f}, {s.quantile(.75):.2f}] | "
@@ -258,6 +263,36 @@ def main():
              f"[{pl.lag0.min():.2f}, {pl.lag0.max():.2f}] pseudotime units")
     cls = pd.read_csv(RES / "profile_likelihood_identifiability.csv").lag_cls.value_counts()
     L.append(f"lag class counts: {cls.to_dict()}")
+
+    # ---- R5 MultiVelo priming interval (fit_t_sw1) instead of fit_t_sw2 − fit_t_sw1
+    # multivelo 0.1.5 dynamical_chrom_func.py: state0 (t ≤ t_sw1) is primed (chromatin open,
+    # no transcription), so t_sw1 = t_i = Δt_priming (to = 0 for models 1 and 2). fit_t_sw2 − fit_t_sw1
+    # is the length of the coupled-on state: t_c − t_i (model 1) or t_r − t_i (model 2).
+    mods_used = A.fit_model.value_counts().to_dict()
+    pr = dict(MV=A.fit_t_sw1.values,
+              VAE=np.abs(1 / V.vae_alpha_c.clip(1e-6) - 1 / V.vae_alpha.clip(1e-6)).values)
+    L += ["", "## R5 MultiVelo lag definition: priming interval (t_sw1) vs coupled-on length (t_sw2 − t_sw1)", "",
+          f"> MultiVelo models among the {n} MV × VAE genes: {mods_used}. Partner lags are magnitudes.",
+          "> Δρ = ρ_α − ρ_lag on the same bootstrap draw.", "",
+          "| analysis | metric | n | point | 95% CI |", "|---|---|---|---|---|"]
+    for lbl, mvlag in [("coupled_on", np.abs(A.fit_t_sw2 - A.fit_t_sw1).values), ("priming", pr["MV"])]:
+        st = lambda idx, u=mvlag: spear(u[idx], pr["VAE"][idx])
+        r = boot_pair(sp("alpha"), st, n, rng)
+        add(f"R5_MVxVAE_{lbl}", "rho", n, r["b"], r["b_ci"])
+        add(f"R5_MVxVAE_{lbl}", "delta_rho_alpha_minus", n, r["d"], r["d_ci"])
+    for lbl, mvlag in [("coupled_on", lag3["MV"]), ("priming", A3.fit_t_sw1.values)]:
+        st = lambda idx, u=mvlag: spear(u[idx], np.abs(lag3["MoFlow"])[idx])
+        r = boot_pair(st_a3, st, n3, rng)
+        add(f"R5_MVxMoFlow_{lbl}", "rho", n3, r["b"], r["b_ci"])
+        add(f"R5_MVxMoFlow_{lbl}", "delta_rho_alpha_minus", n3, r["d"], r["d_ci"])
+    pin = pd.read_csv(RES / "profile_likelihood_identifiability.csv")
+    if "fit_direction" not in pin.columns:
+        pin["gene"] = pin.gene.astype(str).str.upper()
+        pin = pin.merge(mv[["fit_direction"]], left_on="gene", right_index=True, how="left")
+    bnd = pin[pin.lag_cls != "interior"]
+    L.append(f"\nnon-interior lag classes by MultiVelo fit_direction: "
+             f"{bnd.groupby(['lag_cls', 'fit_direction']).size().to_dict()}")
+    L.append(f"all fitted genes by fit_direction: {pin.fit_direction.value_counts().to_dict()}")
 
     (RES / "post_review_robustness.gen.md").write_text("\n".join(L) + "\n")
     pd.DataFrame(rows).to_csv(RES / "post_review_robustness.csv", index=False)

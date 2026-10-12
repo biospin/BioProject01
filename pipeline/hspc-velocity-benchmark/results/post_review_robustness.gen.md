@@ -71,10 +71,13 @@
 | R3_modules_K100(largest=156) | delta_rho | 538 | +0.720 | [+0.612, +0.794] |
 | R3_modules_K100(largest=156) | rho_lag | 538 | +0.163 | [+0.106, +0.250] |
 
-## R4 Curvature coordinates (fixed-nuisance profile, interior genes)
+## R4 Curvature coordinates (fixed-nuisance profile)
 
-> n=258. Both curvatures are −d²LL/d(ln θ)² per cell, invariant to a change of units.
-> Sensitivity: lag re-expressed as a fraction of the pseudotime horizon (lag/20).
+> n=258: genes whose lag profile is interior (of 302) and whose α and lag curvatures
+>   are both finite and positive. α has no interior/boundary classification.
+> As submitted both curvatures are −d²LL/d(ln θ)² per cell (log coordinates).
+> Sensitivity: lag expressed linearly as a fraction of the pseudotime horizon (lag/20),
+>   with α kept in log coordinates. Neither coordinate system is canonical.
 
 | coordinates | median κ_α/κ_lag | IQR | α stiffer (%) |
 |---|---|---|---|
@@ -83,3 +86,22 @@
 
 lag0 among these genes: median 3.50, range [0.20, 11.22] pseudotime units
 lag class counts: {'interior': 302, 'boundary_pinned': 205, 'degenerate': 31}
+
+## R5 MultiVelo lag definition: priming interval (t_sw1) vs coupled-on length (t_sw2 − t_sw1)
+
+> MultiVelo models among the 538 MV × VAE genes: {1.0: 431, 2.0: 107}. Partner lags are magnitudes.
+> Δρ = ρ_α − ρ_lag on the same bootstrap draw.
+
+| analysis | metric | n | point | 95% CI |
+|---|---|---|---|---|
+| R5_MVxVAE_coupled_on | rho | 538 | +0.163 | [+0.078, +0.244] |
+| R5_MVxVAE_coupled_on | delta_rho_alpha_minus | 538 | +0.720 | [+0.638, +0.802] |
+| R5_MVxVAE_priming | rho | 538 | +0.364 | [+0.285, +0.440] |
+| R5_MVxVAE_priming | delta_rho_alpha_minus | 538 | +0.518 | [+0.441, +0.596] |
+| R5_MVxMoFlow_coupled_on | rho | 537 | -0.013 | [-0.096, +0.072] |
+| R5_MVxMoFlow_coupled_on | delta_rho_alpha_minus | 537 | +0.896 | [+0.807, +0.982] |
+| R5_MVxMoFlow_priming | rho | 537 | +0.038 | [-0.046, +0.122] |
+| R5_MVxMoFlow_priming | delta_rho_alpha_minus | 537 | +0.845 | [+0.757, +0.929] |
+
+non-interior lag classes by MultiVelo fit_direction: {('boundary_pinned', 'complete'): 6, ('boundary_pinned', 'on'): 199, ('degenerate', 'complete'): 29, ('degenerate', 'off'): 2}
+all fitted genes by fit_direction: {'complete': 334, 'on': 199, 'off': 5}
