@@ -5,9 +5,9 @@ Text is converted mechanically (no retyping) so no number can drift.  The Korean
 pre-submission memo (the leading HTML comment) is dropped by construction: the body
 starts at the first '# ' title line.  Figure legends become the figure captions.
 """
-import re, sys, unicodedata
+import os, re, sys, unicodedata
 
-SRC = "/home/kkkim/project/BioProject01/manuscript/CONF_LONGABSTRACT_GIW2026_BIOP01.md"
+SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "CONF_LONGABSTRACT_GIW2026_BIOP01.md")
 FIGDIR = "figures"
 OUT = sys.argv[1] if len(sys.argv) > 1 else "/tmp/claude-10005/giw/main.tex"
 
@@ -71,8 +71,8 @@ for head, text in sections:
             cap = re.sub(r"Source:\s*`[^`]+`\.?", "", cap).strip()
             legends[int(m.group(1))] = cap
 
-FIGS = {1: (f"{FIGDIR}/fig01_p2_concordance.png", "fig1"),
-        2: (f"{FIGDIR}/fig07_reliability_map.png", "fig2")}
+FIGS = {1: (f"{FIGDIR}/fig01_concordance_v2.png", "fig1"),
+        2: (f"{FIGDIR}/fig07_reliability_map_v2.png", "fig2")}
 
 
 def figure_env(n):
@@ -154,8 +154,7 @@ tex = (TEX.replace("SUBTITLE", subtitle)          # before TITLE: 'SUBTITLE' con
 # straight ASCII quote pairs -> proper TeX quotes
 tex = re.sub(r'"([^"\n]+)"', r"``\1''", tex)
 
-import os
-os.makedirs(os.path.dirname(OUT), exist_ok=True)
+os.makedirs(os.path.dirname(OUT) or ".", exist_ok=True)
 open(OUT, "w", encoding="utf-8").write(tex)
 
 leftover = sorted({c for c in tex if ord(c) > 127})

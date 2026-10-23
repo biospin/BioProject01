@@ -8,12 +8,15 @@ PDF는 `.gitignore` 대상이라 커밋하지 않는다. 소스와 변환기만 
 ```bash
 python3 md2tex.py /path/to/build/main.tex          # 정본 md -> LaTeX
 mkdir -p /path/to/build/figures
-cp ../../figures/fig01_p2_concordance.png ../../figures/fig07_reliability_map.png /path/to/build/figures/
+cp ../../figures/fig01_concordance_v2.png ../../figures/fig07_reliability_map_v2.png /path/to/build/figures/
 cd /path/to/build && tectonic -X compile main.tex --outdir .
 ```
 
 엔진 = `~/bin/tectonic`(0.17.0 정적 바이너리). `/tmp`가 `noexec`라 바이너리를 `/tmp`에 두면
 "Permission denied"가 난다. 빌드 디렉터리는 `/tmp` 밑이어도 무방하다(실행이 아니라 쓰기라서).
+
+v2(2026-10-23, ML4H 반박 정정 반영)부터 그림은 `fig01_concordance_v2.py`, `fig07_reliability_map_v2.py`로
+만든다(`../../figures/`). 저장소의 `giw2026_longabstract.tex`는 `python3 md2tex.py giw2026_longabstract.tex`로 재생성한다.
 
 ## 변환기가 보장하는 것
 
