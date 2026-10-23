@@ -75,12 +75,24 @@ FIGS = {1: (f"{FIGDIR}/fig01_concordance_v2.png", "fig1"),
         2: (f"{FIGDIR}/fig07_reliability_map_v2.png", "fig2")}
 
 
+def header_figure(n):
+    """Full-width figure inside the \\twocolumn[...] header, i.e. fixed on page 1 under the title.
+    A figure* float cannot appear on the page where it is defined, so it would slip a page."""
+    path, lab = FIGS[n]
+    # braces: a bare ']' (from includegraphics' option) would end \\twocolumn's [..] argument
+    return ("{\\vspace{2pt}\\centering\n"
+            f"\\includegraphics[width=\\textwidth]{{{path}}}\n"
+            f"\\captionof{{figure}}{{{inline(legends[n])}}}\\label{{{lab}}}\\par}}\n"
+            "\\vspace{4pt}\n")
+
+
 def figure_env(n):
     path, lab = FIGS[n]
-    return ("\\begin{figure}[t]\n\\centering\n"
-            f"\\includegraphics[width=\\columnwidth]{{{path}}}\n"
+    # figure* = full text width: the v2 figures are drawn at print size (7 in) for this width.
+    return ("\\begin{figure*}[t]\n\\centering\n"
+            f"\\includegraphics[width=\\textwidth]{{{path}}}\n"
             f"\\caption{{{inline(legends[n])}}}\n\\label{{{lab}}}\n"
-            "\\end{figure}\n")
+            "\\end{figure*}\n")
 
 
 def paragraphs(text):
@@ -100,14 +112,13 @@ for head, text in sections:
     if h.startswith("references"):
         items = [inline(" ".join(l.split()))
                  for l in text.split("\n") if l.strip().startswith("[")]
-        chunks.append("\\section*{References}\n\\begin{refs}\n" +
-                      "\n".join(f"\\item {it}" for it in items) + "\n\\end{refs}\n")
+        # run-in paragraph (not one item per line) so the list fits the 2-page limit
+        chunks.append("\\section*{References}\n{\\scriptsize\\noindent " +
+                      " ".join(items) + "\\par}\n")
         continue
     chunks.append(f"\\section*{{{inline(head)}}}\n")
-    if h.startswith("results"):
-        chunks.append(figure_env(1))
-    if h.startswith("conclusion"):
-        chunks.append(figure_env(2))
+    if h.startswith("methods"):
+        chunks.append(figure_env(2))   # defined on page 1 -> top of page 2
     chunks.append("\n\n".join(paragraphs(text)) + "\n")
 
 subtitle = ""
@@ -116,7 +127,7 @@ if m:
     subtitle = inline(" ".join(m.group(1).split()))
 
 TEX = r"""\documentclass[10pt,twocolumn]{article}
-\usepackage[a4paper,margin=1.9cm,columnsep=0.7cm]{geometry}
+\usepackage[a4paper,margin=1.5cm,columnsep=0.6cm]{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage[T1]{fontenc}
@@ -127,11 +138,11 @@ TEX = r"""\documentclass[10pt,twocolumn]{article}
 \captionsetup{font=footnotesize,labelfont=bf,skip=4pt}
 \newlist{refs}{enumerate}{1}
 \setlist[refs]{label=,leftmargin=1.1em,itemindent=-1.1em,
-               nosep,itemsep=1pt,font=\footnotesize}
+               nosep,itemsep=0pt,font=\scriptsize}
 \setlength{\parskip}{0pt}
 \setlength{\parindent}{1em}
 \pagestyle{empty}
-\renewcommand{\baselinestretch}{0.98}
+\renewcommand{\baselinestretch}{0.96}
 \begin{document}
 \twocolumn[
 \begin{@twocolumnfalse}
@@ -140,7 +151,8 @@ TEX = r"""\documentclass[10pt,twocolumn]{article}
 \vspace{2pt}
 {\footnotesize\itshape SUBTITLE\par}
 \end{center}
-\vspace{6pt}
+\vspace{4pt}
+FIGONE
 \end{@twocolumnfalse}
 ]
 \small
@@ -150,6 +162,7 @@ BODY
 
 tex = (TEX.replace("SUBTITLE", subtitle)          # before TITLE: 'SUBTITLE' contains 'TITLE'
           .replace("TITLE", inline(title))
+          .replace("FIGONE", header_figure(1))
           .replace("BODY", "\n".join(chunks)))
 # straight ASCII quote pairs -> proper TeX quotes
 tex = re.sub(r'"([^"\n]+)"', r"``\1''", tex)

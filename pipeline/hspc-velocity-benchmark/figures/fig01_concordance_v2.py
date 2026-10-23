@@ -96,16 +96,16 @@ assert len(sh) == 538 and len(sh3) == 537, (len(sh), len(sh3))
 fmt = lambda v: f"{v:+.3f}".replace("-", "−")
 
 # ---------------------------------------------------------------- render
-plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 8, "axes.edgecolor": AXIS,
+plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 6.2, "axes.edgecolor": AXIS,
                      "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2})
-fig = plt.figure(figsize=(10.5, 4.3), facecolor=SURFACE)
-gs = fig.add_gridspec(1, 3, width_ratios=[1, 0.78, 1.55], wspace=0.0, left=0.07, right=0.985,
-                      top=0.86, bottom=0.14)
+fig = plt.figure(figsize=(7.0, 2.4), facecolor=SURFACE)
+gs = fig.add_gridspec(1, 3, width_ratios=[1, 0.86, 1.47], wspace=0.0, left=0.07, right=0.985,
+                      top=0.88, bottom=0.15)
 
 # A. α scatter
 ax = fig.add_subplot(gs[0]); ax.set_facecolor(SURFACE)
 x, y = np.log10(A.fit_alpha.clip(1e-6)), np.log10(V.vae_alpha.clip(1e-6))
-ax.scatter(x, y, s=9, color=C_ALPHA, alpha=0.55, linewidths=0)
+ax.scatter(x, y, s=4, color=C_ALPHA, alpha=0.55, linewidths=0)
 lo, hi = min(x.min(), y.min()), max(x.max(), y.max())
 _, a_pt, a_lo, a_hi = gen_row("contract_MVxVAE", "rho_alpha")
 ax.set_xlabel("MultiVelo α (log10)"); ax.set_ylabel("MultiVeloVAE α (log10)")
@@ -113,8 +113,8 @@ ax.grid(color=GRID, lw=0.6); ax.set_axisbelow(True)
 for s in ("top", "right"):
     ax.spines[s].set_visible(False)
 ax.text(0.03, 0.97, f"Spearman ρ = {fmt(a_pt)}\n95% CI [{fmt(a_lo)}, {fmt(a_hi)}]\n{len(sh)} genes",
-        transform=ax.transAxes, ha="left", va="top", fontsize=7.8, color=INK)
-ax.set_title("A   α reproduces across methods", loc="left", fontsize=9.5, fontweight="bold", color=INK)
+        transform=ax.transAxes, ha="left", va="top", fontsize=6.2, color=INK)
+ax.set_title("A   α across methods", loc="left", fontsize=7.6, fontweight="bold", color=INK)
 
 # B. ρ with 95% CI per output / lag definition
 bx = fig.add_subplot(gs[2]); bx.set_facecolor(SURFACE)
@@ -122,15 +122,15 @@ lab = fig.add_subplot(gs[1], sharey=bx); lab.set_axis_off()
 ys = np.arange(len(ROWS))[::-1]
 for yy, (label, col, key, dkey, _r) in zip(ys, ROWS):
     _n, pt, l, h = gen_row(*key)
-    bx.plot([l, h], [yy, yy], color=col, lw=2, solid_capstyle="round", zorder=2)
-    bx.scatter([pt], [yy], s=46, color=col, edgecolors=SURFACE, linewidths=1.6, zorder=3)
-    lab.text(0.04, yy, label, ha="left", va="center", fontsize=7.4, color=INK, linespacing=1.15,
+    bx.plot([l, h], [yy, yy], color=col, lw=1.4, solid_capstyle="round", zorder=2)
+    bx.scatter([pt], [yy], s=22, color=col, edgecolors=SURFACE, linewidths=1.6, zorder=3)
+    lab.text(0.04, yy, label, ha="left", va="center", fontsize=5.9, color=INK, linespacing=1.15,
              transform=lab.get_yaxis_transform())
-    bx.text(max(h, 0.0) + 0.03, yy + 0.02, fmt(pt), ha="left", va="center", fontsize=7.4, color=INK)
+    bx.text(max(h, 0.0) + 0.03, yy + 0.02, fmt(pt), ha="left", va="center", fontsize=5.9, color=INK)
     if dkey:
         _n, d, dl, dh = gen_row(*dkey)
         bx.text(1.36, yy, f"Δρ {fmt(d)}\n[{fmt(dl)}, {fmt(dh)}]", ha="right", va="center",
-                fontsize=7.0, color=INK2, linespacing=1.1)
+                fontsize=5.6, color=INK2, linespacing=1.1)
 bx.axvline(0, color=AXIS, lw=1, zorder=1)
 _n, a_pt, _l, _h = gen_row("contract_MVxVAE", "rho_alpha")
 bx.axvline(a_pt, color=C_ALPHA, lw=0.8, ls=(0, (3, 3)), zorder=1)
@@ -142,15 +142,12 @@ for s in ("top", "right", "left"):
     bx.spines[s].set_visible(False)
 bx.spines["bottom"].set_bounds(-0.2, 1.0)
 bx.set_xlabel("Spearman ρ between methods (95% CI)", x=0.44)
-bx.text(1.36, len(ROWS) - 0.45, "Δρ = ρ_α − ρ_output", ha="right", va="bottom", fontsize=7.2,
+bx.text(1.36, len(ROWS) - 0.45, "Δρ = ρ_α − ρ_output", ha="right", va="bottom", fontsize=5.8,
         color=INK2, style="italic")
-lab.set_title("B   the lag does not reproduce under any definition", loc="left", fontsize=9.5,
+lab.set_title("B   the lag under every definition", loc="left", fontsize=7.6,
               fontweight="bold", color=INK)
 
-fig.text(0.5, 0.012,
-         "MultiVelo × MultiVeloVAE on 538 shared HSPC genes unless noted. MultiVeloVAE has no native per-gene lag "
-         "(rate proxy 1/α_c − 1/α). Percentile 95% CIs from 10,000 paired gene bootstraps; Δρ on the same draw.",
-         ha="center", va="bottom", fontsize=6.7, color=INK2)
+# Footnote dropped for print (2-column width): the figure caption carries it.
 
 out = HERE / "fig01_concordance_v2.png"
 fig.savefig(out, dpi=300, facecolor=SURFACE)

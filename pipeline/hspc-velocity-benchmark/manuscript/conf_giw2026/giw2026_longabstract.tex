@@ -1,5 +1,5 @@
 \documentclass[10pt,twocolumn]{article}
-\usepackage[a4paper,margin=1.9cm,columnsep=0.7cm]{geometry}
+\usepackage[a4paper,margin=1.5cm,columnsep=0.6cm]{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage[T1]{fontenc}
@@ -10,11 +10,11 @@
 \captionsetup{font=footnotesize,labelfont=bf,skip=4pt}
 \newlist{refs}{enumerate}{1}
 \setlist[refs]{label=,leftmargin=1.1em,itemindent=-1.1em,
-               nosep,itemsep=1pt,font=\footnotesize}
+               nosep,itemsep=0pt,font=\scriptsize}
 \setlength{\parskip}{0pt}
 \setlength{\parindent}{1em}
 \pagestyle{empty}
-\renewcommand{\baselinestretch}{0.98}
+\renewcommand{\baselinestretch}{0.96}
 \begin{document}
 \twocolumn[
 \begin{@twocolumnfalse}
@@ -23,7 +23,12 @@
 \vspace{2pt}
 {\footnotesize\itshape GIW/ISCB-Asia 2026 --- oral track long abstract. Authors and affiliations withheld for blind review.\par}
 \end{center}
-\vspace{6pt}
+\vspace{4pt}
+{\vspace{2pt}\centering
+\includegraphics[width=\textwidth]{figures/fig01_concordance_v2.png}
+\captionof{figure}{Cross-method agreement of $\alpha$ versus the per-gene lag in HSPC. (A) $\alpha$, MultiVelo vs MultiVeloVAE on 538 shared genes ($\rho$=+0.882). (B) Spearman $\rho$ with 95\% CI for $\alpha$, $\alpha_c$ and every lag definition: MultiVelo priming interval and coupled-on duration against the MultiVeloVAE rate proxy, one identical formula in both methods (signed, magnitude), and MultiVelo priming against MoFlow (537 genes); $\Delta$$\rho$ = $\rho$\_$\alpha$ $-$ $\rho$\_output on the same bootstrap draw.}\label{fig1}\par}
+\vspace{4pt}
+
 \end{@twocolumnfalse}
 ]
 \small
@@ -33,16 +38,16 @@ Multiome RNA-velocity methods emit several per-gene quantities, each offered as 
 
 \section*{Methods: a four-axis reliability protocol}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig07_reliability_map_v2.png}
+\caption{Velocity-output reliability map. Rows are per-gene outputs; columns are reproducibility evidence (cross-method, cross-dataset), accuracy evidence (comparison with a measured rate, and whether it exceeds abundance) and the routing decision (use; use only beside an abundance baseline; do not use without an independent measurement).}
+\label{fig2}
+\end{figure*}
+
 We ran up to five velocity arms --- an RNA-only scVelo floor [1,9] plus four chromatin-informed methods (MultiVelo [3], MultiVeloVAE [4], MoFlow [5], CRAK-Velo [6]) --- on human hematopoietic stem and progenitor cells (10x Multiome, GSE209878; day0+day7 integrated, 21,878 cells), branching from a common preprocessing. The methods do not estimate the same lag: MultiVelo's priming interval (t\_sw1; coupled-on duration t\_sw2 $-$ t\_sw1 as sensitivity), MultiVeloVAE's rate proxy 1/$\alpha_c$ $-$ 1/$\alpha$, and dynamic-time-warping offsets for MoFlow and CRAK-Velo. Each per-gene output was tested on four axes. \textbf{(1) Cross-method reproducibility:} rank agreement on one method pair and one shared gene set, under every lag definition, with a gene-label permutation-FDR test (N=10$^4$). \textbf{(2) Within-lineage ATAC shuffle:} within each lineage we permuted ATAC profiles across cells, which destroys cell-level chromatin--RNA pairing while preserving lineage-level chromatin distributions, and re-fit. \textbf{(3) Cross-dataset replication} in five external multiomes spanning tissue distance (human fetal cortex, E18 mouse brain, same-tissue human BMMC, HSPC-derived macrophages, mouse gastrulation), the last against six predictions sealed before fitting. \textbf{(4) External anchoring:} fitted $\alpha$ against measured synthesis rates (K562 TT-seq; a second source as replication) and fitted $\gamma$ against measured mRNA half-life (SLAM-seq), with transcript abundance as a competing baseline. CIs are paired gene bootstraps conditional on the fits, checked against a co-expression-module bootstrap.
 
 \section*{Results}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig01_concordance_v2.png}
-\caption{Cross-method agreement of $\alpha$ versus the per-gene lag in HSPC. (A) $\alpha$, MultiVelo vs MultiVeloVAE on 538 shared genes ($\rho$=+0.882). (B) Spearman $\rho$ with 95\% CI for $\alpha$, $\alpha_c$ and every lag definition: MultiVelo priming interval and coupled-on duration against the MultiVeloVAE rate proxy, one identical formula in both methods (signed, magnitude), and MultiVelo priming against MoFlow (537 genes); $\Delta$$\rho$ = $\rho$\_$\alpha$ $-$ $\rho$\_output on the same bootstrap draw.}
-\label{fig1}
-\end{figure}
 
 \textbf{Among the per-gene outputs, $\alpha$ reproduces across methods; the lag does not, under any definition.} $\alpha$ reproduced at Spearman $\rho$=+0.882 [+0.856, +0.904] (MultiVelo vs MultiVeloVAE, 538 genes), and the RNA-only floor recovered it too (+0.82 to +0.89). On the same genes the lag reached +0.364 [+0.285, +0.440] with MultiVelo's priming interval and +0.163 [+0.078, +0.247] with the coupled-on duration; computing both methods' lags from one identical formula did not raise agreement (signed +0.124, magnitude $-$0.009). Against MoFlow the lag did not reproduce (priming +0.038 [$-$0.046, +0.122]). Every $\alpha$-minus-lag contrast excluded zero (smallest $\Delta$$\rho$ +0.518 [+0.441, +0.596]), also under the module bootstrap (Figure 1). Direction stayed near balance (sign agreement 54.6\%, n=560; chromatin-leads fractions 41--49\%), so a genome-wide ``chromatin primes transcription'' ordering is not supported. Within one method the lag is moderately stable (MultiVelo refit on 12 overlapping 70\% subsamples: coupled-on lag +0.624, $\alpha$ +0.949), so the failure is reproducibility across methods and definitions, not necessarily within-method noise. $\gamma$ was fragile ($\rho$$\approx$$-$0.11) and did not recover a measured half-life (RNA-only scVelo ran reversed, $-$0.224).
 
@@ -56,27 +61,9 @@ We ran up to five velocity arms --- an RNA-only scVelo floor [1,9] plus four chr
 
 \section*{Conclusion}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig07_reliability_map_v2.png}
-\caption{Velocity-output reliability map. Rows are per-gene outputs; columns are reproducibility evidence (cross-method, cross-dataset), accuracy evidence (comparison with a measured rate, and whether it exceeds abundance) and the routing decision (use; use only beside an abundance baseline; do not use without an independent measurement).}
-\label{fig2}
-\end{figure}
-
 We distil these axes into a velocity-output \textbf{reliability map} that keeps two kinds of evidence apart (Figure 2): \emph{reproducibility} --- do two reasonable methods, run on the same cells, rank genes the same way? --- and \emph{accuracy} --- has the number been compared with a laboratory measurement of the same rate, and with what result? $\alpha$ is the only per-gene output that is reproducible, including beyond abundance; its accuracy beyond abundance is not shown. Two further outputs are usable only as population statements (the near-50/50 directional balance and the direction agreement of canonical priming markers, which is correlational). The chromatin-opening rate $\alpha_c$ ($\rho$=0.29), $\gamma$, and the per-gene lag magnitude, sign and timing under every definition tested are not reproducible. The routing rule follows: enter transcript abundance first, add $\alpha$ only as its abundance-orthogonal component and keep it only if held-out performance improves, and do not consume a single-method lag, sign or $\gamma$ without an orthogonal measurement. Baseline features predict $\alpha$ on held-out lineages ($\rho$=+0.31) but not the lag ($\rho$$\approx$0.05), and day-0 accessibility adds nothing beyond abundance ($\Delta$$\rho$ $-$0.02). Limits: pseudotime is not wall-clock; external replications are single-sample (no donor variation); the $\alpha$ anchor is one of two sources, measured in K562 rather than HSPC; within-method stability was assessed for MultiVelo only; and we audited per-gene parameters, not trajectories.
 
 \section*{References}
-\begin{refs}
-\item [1] La Manno G, Soldatov R, Zeisel A, et al. RNA velocity of single cells. \emph{Nature} 560, 494--498 (2018). doi:10.1038/s41586-018-0414-6.
-\item [3] Li C, Virgilio MC, Collins KL, Welch JD. Multi-omic single-cell velocity models epigenome--transcriptome interactions and improves cell fate prediction. \emph{Nature Biotechnology} 41, 387--398 (2023). doi:10.1038/s41587-022-01476-y.
-\item [4] Li C, Gu Y, Virgilio MC, Lee KH, Collins KL, Welch JD. Inferring differential dynamics from multi-lineage, multi-omic, and multi-sample single-cell data with MultiVeloVAE. \emph{Nature Communications} 16, 11505 (2025). doi:10.1038/s41467-025-66287-6.
-\item [5] Hong A, Lee S, Kim K. Multi-omic relay velocity modeling uncovers dynamic chromatin-transcription regulation across cell states. \emph{Nature Communications} 17, 566 (2025). doi:10.1038/s41467-025-67259-6.
-\item [6] El Kazwini N, Gao M, Kouadri Boudjelthia I, Cai F, Huang Y, Sanguinetti G. CRAK-Velo: chromatin accessibility kinetics integration improves RNA velocity estimation. \emph{Genome Biology} 27(1) (2026). doi:10.1186/s13059-026-04086-y.
-\item [9] Gayoso A, Weiler P, Lotfollahi M, et al. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. \emph{Nature Methods} 21, 50--59 (2024). doi:10.1038/s41592-023-01994-w.
-\item [25] Luo Y, Ren J, Yang Q, You Z, Zhou Y, Qin Q, Li Q. Benchmarking RNA velocity methods across 17 independent studies. \emph{Cell Reports Methods} 6(4), 101367 (2026). doi:10.1016/j.crmeth.2026.101367.
-\item [26] Huang K, Zhou Y, Wang T, et al. Benchmarking algorithms for RNA velocity inference. bioRxiv 2026.01.03.697314 (2026). [Preprint.]
-\item [27] Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. Comprehensive benchmarking of RNA velocity methods across single-cell datasets. \emph{Genome Biology} 27(1), 242 (2026). doi:10.1186/s13059-026-04182-z.
-\item [41] Zhang et al. Quantifying uncertainty in RNA velocity (ConsensusVelo). bioRxiv 2024.05.14.594102 (2024); \emph{Biometrics} (in press). [Full author list/final venue to confirm.]
-\end{refs}
+{\scriptsize\noindent [1] La Manno G, Soldatov R, Zeisel A, et al. RNA velocity of single cells. \emph{Nature} 560, 494--498 (2018). doi:10.1038/s41586-018-0414-6. [3] Li C, Virgilio MC, Collins KL, Welch JD. Multi-omic single-cell velocity models epigenome--transcriptome interactions and improves cell fate prediction. \emph{Nature Biotechnology} 41, 387--398 (2023). doi:10.1038/s41587-022-01476-y. [4] Li C, Gu Y, Virgilio MC, Lee KH, Collins KL, Welch JD. Inferring differential dynamics from multi-lineage, multi-omic, and multi-sample single-cell data with MultiVeloVAE. \emph{Nature Communications} 16, 11505 (2025). doi:10.1038/s41467-025-66287-6. [5] Hong A, Lee S, Kim K. Multi-omic relay velocity modeling uncovers dynamic chromatin-transcription regulation across cell states. \emph{Nature Communications} 17, 566 (2025). doi:10.1038/s41467-025-67259-6. [6] El Kazwini N, Gao M, Kouadri Boudjelthia I, Cai F, Huang Y, Sanguinetti G. CRAK-Velo: chromatin accessibility kinetics integration improves RNA velocity estimation. \emph{Genome Biology} 27(1) (2026). doi:10.1186/s13059-026-04086-y. [9] Gayoso A, Weiler P, Lotfollahi M, et al. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. \emph{Nature Methods} 21, 50--59 (2024). doi:10.1038/s41592-023-01994-w. [25] Luo Y, Ren J, Yang Q, You Z, Zhou Y, Qin Q, Li Q. Benchmarking RNA velocity methods across 17 independent studies. \emph{Cell Reports Methods} 6(4), 101367 (2026). doi:10.1016/j.crmeth.2026.101367. [26] Huang K, Zhou Y, Wang T, et al. Benchmarking algorithms for RNA velocity inference. bioRxiv 2026.01.03.697314 (2026). [Preprint.] [27] Wu Y, Kong C, Liao X, Lin Z, Sun X, Liu J. Comprehensive benchmarking of RNA velocity methods across single-cell datasets. \emph{Genome Biology} 27(1), 242 (2026). doi:10.1186/s13059-026-04182-z. [41] Zhang et al. Quantifying uncertainty in RNA velocity (ConsensusVelo). bioRxiv 2024.05.14.594102 (2024); \emph{Biometrics} (in press). [Full author list/final venue to confirm.]\par}
 
 \end{document}

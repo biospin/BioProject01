@@ -57,7 +57,7 @@ COLS = ["Reproducibility evidence", "Accuracy evidence", "Routing decision"]
 
 # (row label, [(category, headline, detail, [(source, guard-token), ...]) x 3])
 ROWS = [
-    ("Transcript abundance\n(reference, not a velocity output)", [
+    ("Transcript abundance\n(reference baseline)", [
         ("na", "Reference baseline", "not a velocity output", []),
         ("part", "Partial", "vs synthesis +0.410\n(TT-seq source 1)", [("A", "+0.410")]),
         ("yes", "Enter first", "baseline for every\nrate feature", []),
@@ -88,7 +88,7 @@ ROWS = [
         ("no", "Do not use", "without an independent\nmeasurement", []),
     ]),
     ("Per-gene lag magnitude\n(every definition tested)", [
-        ("no", "Not supported", "priming +0.364 · coupled-on +0.163\nsame formula −0.009 · vs MoFlow +0.038",
+        ("no", "Not supported", "priming +0.364 · coupled-on +0.163\nsame formula −0.009 · MoFlow +0.038",
          [("R", "+0.364"), ("R", "+0.163"), ("R", "-0.009"), ("R", "+0.038")]),
         ("na", "Not tested", "no measured lag", []),
         ("no", "Do not use", "value depends on method\nand definition", []),
@@ -114,12 +114,12 @@ for label, cells in ROWS:
 # ----------------------------------------------------------------------------------
 # Render.
 # ----------------------------------------------------------------------------------
-plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 8})
+plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 6.4})
 nrows, ncols = len(ROWS), len(COLS)
-LABEL_W = 1.05            # row-label gutter, in cell-width units
+LABEL_W = 0.82            # row-label gutter, in cell-width units
 GAP = 0.035               # 2px-ish surface gap between fills
 
-fig, ax = plt.subplots(figsize=(10.5, 6.6))
+fig, ax = plt.subplots(figsize=(7.0, 3.25))
 fig.patch.set_facecolor(SURFACE)
 ax.set_facecolor(SURFACE)
 ax.set_xlim(-LABEL_W, ncols)
@@ -133,11 +133,13 @@ for i, (label, cells) in enumerate(ROWS):
         ax.add_patch(FancyBboxPatch((j + GAP, y + GAP), 1 - 2 * GAP, 1 - 2 * GAP,
                                     boxstyle="round,pad=0,rounding_size=0.04",
                                     facecolor=st["fc"], edgecolor="none", zorder=1))
-        ax.text(j + 0.5, y + 0.66, f"{st['glyph']}  {head}", ha="center", va="center",
-                fontsize=8.6, fontweight="bold", color=st["tc"], zorder=2)
-        ax.text(j + 0.5, y + 0.33, detail, ha="center", va="center",
-                fontsize=6.9, color=st["tc"], linespacing=1.25, zorder=2)
-    ax.text(-0.06, y + 0.5, label, ha="right", va="center", fontsize=8.3,
+        # head sits above the cell midline, detail hangs below it, so the two never overlap
+        two = "\n" in detail
+        ax.text(j + 0.5, y + (0.56 if two else 0.53), f"{st['glyph']}  {head}", ha="center", va="bottom",
+                fontsize=6.6, fontweight="bold", color=st["tc"], zorder=2)
+        ax.text(j + 0.5, y + (0.52 if two else 0.45), detail, ha="center", va="top",
+                fontsize=5.2, color=st["tc"], linespacing=1.05, zorder=2)
+    ax.text(-0.06, y + 0.5, label, ha="right", va="center", fontsize=6.6,
             color=INK2 if i == 0 else INK, style="italic" if i == 0 else "normal",
             linespacing=1.2)
 
@@ -145,7 +147,7 @@ for i, (label, cells) in enumerate(ROWS):
 ax.plot([-LABEL_W, ncols], [nrows - 1, nrows - 1], color="#c3c2b7", lw=1.0, ls=(0, (4, 3)))
 
 for j, c in enumerate(COLS):
-    ax.text(j + 0.5, nrows + 0.12, c, ha="center", va="bottom", fontsize=9.6,
+    ax.text(j + 0.5, nrows + 0.12, c, ha="center", va="bottom", fontsize=7.7,
             fontweight="bold", color=INK)
 
 handles = [
@@ -155,19 +157,12 @@ handles = [
     Patch(facecolor=CAT["na"]["fc"], label="– not tested / reference"),
 ]
 leg = ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 0.0), ncol=4,
-                frameon=False, fontsize=7.6, handlelength=1.2, columnspacing=1.4)
+                frameon=False, fontsize=6.1, handlelength=1.2, columnspacing=1.4)
 for t in leg.get_texts():
     t.set_color(INK2)
 
-fig.text(0.5, 0.012,
-         "Reproducibility: rank agreement of two methods on the same cells (MultiVelo × MultiVeloVAE, 538 genes "
-         "unless noted). Accuracy: comparison with a measured rate (K562 TT-seq synthesis; SLAM-seq half-life), "
-         "not HSPC.\nWithin one method the lag is moderately stable (MultiVelo refits, coupled-on +0.624), so "
-         "“not supported” means not reproducible across methods and definitions.",
-         ha="center", va="bottom", fontsize=6.6, color=INK2, linespacing=1.35)
-assert "+0.624" in SRC["A"]
-
-fig.subplots_adjust(left=0.01, right=0.99, top=0.98, bottom=0.13)
+# Footnote dropped for print (2-column width): the figure caption carries it.
+fig.subplots_adjust(left=0.01, right=0.99, top=0.97, bottom=0.07)
 out = HERE / "fig07_reliability_map_v2.png"
 fig.savefig(out, dpi=300, facecolor=SURFACE)
 print(f"saved {out}  rows={nrows} cols={ncols}  (all guards passed)")
