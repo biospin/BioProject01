@@ -16,8 +16,9 @@ v1(8/15 제출본, 94aa054)과의 차이:
 수치 출처:
 - 새 수치는 results/post_review_robustness.gen.md(R1~R5, scripts/p17_post_review_robustness.py)와 results/bootstrap_refit.md에서 왔다.
 - 외부 짝 Δρ는 ML4H 원고 Appendix C에서 왔다. 나머지는 v1 출처를 그대로 따른다(draft_v2, FINDINGS).
-아직 coupled-on 정의 값인 것: ATAC 셔플 per-gene ρ=0.72, 재적합 lag +0.624. 본문에 정의를 표기했다.
-priming 기준 재계산에는 HPC 셔플·refit 결과가 필요하다.
+ATAC 셔플은 priming 정의로 다시 계산했다(scripts/p18_priming_recompute.py, results/priming_recompute.gen.md):
+ρ 0.753, MW p 0.651, KS p 0.460. coupled-on 값 0.72는 괄호로 함께 둔다.
+아직 coupled-on 정의 값인 것: 재적합 lag +0.624. 재적합 원본 표(refit_*.csv 12개)가 없어 priming으로 다시 재지 못했다.
 그림: figures/fig01_concordance_v2.py, figures/fig07_reliability_map_v2.py. 두 스크립트 모두 표시 수치를 위 출처와 대조하고, 불일치하면 멈춘다.
 빌드: manuscript/conf_giw2026/README.md
 ════════════════════════════════════════════════════════════════════════
@@ -78,9 +79,9 @@ definitions, not necessarily within-method noise. γ was fragile (ρ≈−0.11) 
 measured half-life (RNA-only scVelo ran reversed, −0.224).
 
 **The lag survives destruction of cell-level chromatin pairing (axis 2).** Shuffling ATAC across
-cells within lineage left the MultiVelo lag distribution statistically unchanged (Mann–Whitney
-p=0.20, KS p=0.51), preserved its per-gene ranking (ρ=0.72, coupled-on definition) and left the
-chromatin likelihood unchanged (0.239→0.237). The fitted lag therefore depends little on which cell's chromatin is paired
+cells within lineage left the MultiVelo priming-interval distribution statistically unchanged
+(Mann–Whitney p=0.65, KS p=0.46), preserved its per-gene ranking (ρ=0.75; 0.72 for the coupled-on
+duration) and left the chromatin likelihood unchanged (0.239→0.237). The fitted lag therefore depends little on which cell's chromatin is paired
 with which cell's RNA. Because the shuffle preserves lineage-level chromatin, this does not show that
 chromatin contributes nothing overall; the cell×gene velocity matrix, a separate target, shows a
 small bounded chromatin contribution.
