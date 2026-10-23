@@ -73,9 +73,9 @@ did not raise agreement (signed +0.124, magnitude −0.009). Against MoFlow the 
 (priming +0.038 [−0.046, +0.122]). Every α-minus-lag contrast excluded zero (smallest Δρ +0.518
 [+0.441, +0.596]), also under the module bootstrap (Figure 1). Direction stayed near balance (sign agreement 54.6%, n=560;
 chromatin-leads fractions 41–49%), so a genome-wide "chromatin primes transcription" ordering is not
-supported. Within one method the lag is moderately stable (MultiVelo refit on 12 overlapping 70%
-subsamples: coupled-on lag +0.624, α +0.949), so the failure is reproducibility across methods and
-definitions, not necessarily within-method noise. γ was fragile (ρ≈−0.11) and did not recover a
+supported. Within MultiVelo the coupled-on duration is moderately stable across refits on 12 overlapping
+70% subsamples (+0.624, α +0.949; the priming interval was not refit-tested), so the failure is
+reproducibility across methods and definitions, not necessarily within-method noise. γ was fragile (ρ≈−0.11) and did not recover a
 measured half-life (RNA-only scVelo ran reversed, −0.224).
 
 **The lag survives destruction of cell-level chromatin pairing (axis 2).** Shuffling ATAC across
@@ -128,7 +128,7 @@ a single-method lag, sign or γ without an orthogonal measurement. Baseline feat
 held-out lineages (ρ=+0.31) but not the lag (ρ≈0.05), and day-0 accessibility adds nothing beyond
 abundance (Δρ −0.02). Limits: pseudotime is not wall-clock; external replications are single-sample (no donor
 variation); the α anchor is one of two sources, measured in K562 rather than HSPC; within-method
-stability was assessed for MultiVelo only; and we audited per-gene parameters, not trajectories.
+stability was assessed only for MultiVelo's coupled-on duration; and we audited per-gene parameters, not trajectories.
 
 ## Figure legends
 
