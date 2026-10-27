@@ -1,0 +1,39 @@
+{
+  "pptx_file": "GIW2026_oral241_velocity_reliability_map.pptx",
+  "pptx_sha256": "2da635bf0be3381db7a163d0a07b7397d7e2fed16da5fc299a10701e9bc35b06",
+  "renderer": "LibreOffice 26.2.5.2 cd7284b4cbbfeb507e630c1aac019f4157393acb",
+  "rasterizer": "PyMuPDF 1.27.2.3",
+  "pdf_file": "GIW2026_oral241_velocity_reliability_map.pdf",
+  "pdf_sha256": "1a161ee069e0c5cd3fdad815b1af112fefc89bf17428dae7b3a86d9f1d4db3cf",
+  "slide_count": 17,
+  "rendered_pages": 17,
+  "dpi": 110,
+  "slide_images": [
+    "slide-001.png",
+    "slide-002.png",
+    "slide-003.png",
+    "slide-004.png",
+    "slide-005.png",
+    "slide-006.png",
+    "slide-007.png",
+    "slide-008.png",
+    "slide-009.png",
+    "slide-010.png",
+    "slide-011.png",
+    "slide-012.png",
+    "slide-013.png",
+    "slide-014.png",
+    "slide-015.png",
+    "slide-016.png",
+    "slide-017.png"
+  ],
+  "contact_sheets": [
+    "contact-sheet-01.png",
+    "contact-sheet-02.png"
+  ],
+  "export_status": "PASS",
+  "visual_inspection": "NOT_RUN",
+  "scientific_verification": "NOT_RUN",
+  "native_powerpoint_check": "NOT_RUN",
+  "next_step": "Open every slide image and record the inspection; generation is not verification."
+}

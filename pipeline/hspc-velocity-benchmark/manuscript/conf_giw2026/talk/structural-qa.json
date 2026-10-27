@@ -1,0 +1,1006 @@
+{
+  "pptx_file": "GIW2026_oral241_velocity_reliability_map.pptx",
+  "sha256": "2da635bf0be3381db7a163d0a07b7397d7e2fed16da5fc299a10701e9bc35b06",
+  "slide_count": 17,
+  "slides_with_notes": 17,
+  "automated_structure": "PASS",
+  "errors": [],
+  "warnings": [
+    {
+      "slide": 1,
+      "shape": "affiliations",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "¹ Pseudo Lab, Seoul   ² R&D Center, Genolution Inc., Seoul   ³ Laboratory of RNA Cell Biology, Depar"
+    },
+    {
+      "slide": 2,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "unspliced RNA"
+    },
+    {
+      "slide": 2,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "spliced RNA"
+    },
+    {
+      "slide": 2,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "chromatin accessibility"
+    },
+    {
+      "slide": 2,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "(ATAC)"
+    },
+    {
+      "slide": 2,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "MultiVelo, MultiVeloVAE, MoFlow, CRAK-Velo; scVelo as the RNA-only floor"
+    },
+    {
+      "slide": 3,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Do two methods on the same cells rank genes the same way? Spearman ρ, permutation test"
+    },
+    {
+      "slide": 3,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Permute ATAC across cells inside each lineage, refit. Breaks each cell's chromatin–RNA pairing"
+    },
+    {
+      "slide": 3,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Five external multiomes, from bone marrow to mouse gastrulation; gastrulation preregistered"
+    },
+    {
+      "slide": 3,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "α vs measured synthesis, γ vs measured half-life, each against transcript abundance"
+    },
+    {
+      "slide": 6,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "lower bound ≥ +0.58"
+    },
+    {
+      "slide": 6,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "coupled-on duration, 538 genes"
+    },
+    {
+      "slide": 6,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "sign agreement, n = 560"
+    },
+    {
+      "slide": 6,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "a genome-wide “chromatin primes transcription” ordering is not supported"
+    },
+    {
+      "slide": 6,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "vs α +0.949"
+    },
+    {
+      "slide": 6,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "the failure is across methods and definitions, not only fitting noise; priming interval not refit-te"
+    },
+    {
+      "slide": 7,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Coupled-on duration: ρ 0.72.  Chromatin likelihood 0.239 → 0.237.  The shuffle keeps lineage-level c"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "System"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Relation"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Within α"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Within lag"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Cross α"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Cross lag"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "HSPC (GSE209878)"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "primary"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.078, +0.244]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Macrophage (GSE284047)"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "HSPC-derived"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.006, +0.143]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.554, +0.719]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.027, +0.263]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Human BMMC (GSE194122)"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "same tissue"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.209, +0.034]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.368, +0.696]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.164, +0.262]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Human fetal cortex (GSE162170)"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "distant"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.135, +0.029]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.292, +0.626]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.005, +0.369]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Mouse gastrulation (GSE205117)"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "developmental"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.089, +0.038]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.244, +0.561]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.165, +0.224]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "E18 mouse brain (10x)"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "cross-species"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.005, +0.118]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.158, +0.472]"
+    },
+    {
+      "slide": 8,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.069, +0.269]"
+    },
+    {
+      "slide": 8,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "Same gene pairs, α minus lag: "
+    },
+    {
+      "slide": 8,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "macrophage Δρ +0.843 [+0.773, +0.912], mouse gastrulation Δρ +0.979 [+0.916, +1.041].  "
+    },
+    {
+      "slide": 8,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "Mouse gastrulation: "
+    },
+    {
+      "slide": 8,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "6 predictions sealed before any fit (e.g. α ≥ 0.50, lag ≤ 0.15, α − lag ≥ 0.35); 6 of 6 passed. Othe"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Spearman ρ with measured synthesis rate"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "0.0"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "0.1"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "0.2"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "0.3"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "0.4"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "0.5"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "+0.236"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "scVelo"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "(RNA-only)"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "+0.262"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "MultiVelo"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "+0.285"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "MultiVeloVAE"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "+0.410"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "Transcript"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.5,
+      "text": "abundance"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "fitted α"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.5,
+      "text": "Null: ρ −0.05 to −0.01"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.5,
+      "text": "MultiVelo × MultiVeloVAE +0.882 → +0.715 [+0.659, +0.765] after removing mean expression; lag (coupl"
+    },
+    {
+      "slide": 9,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.5,
+      "text": "Not shown; it may come from the shared unspliced and spliced counts"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.320, +0.091]"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.324, +0.002]"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.359, −0.085]  reversed"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.147, +0.247]"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.127, +0.183]"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.136, +0.134]"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.198, +0.175]"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.033, +0.271]"
+    },
+    {
+      "slide": 10,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.028, +0.291]  weak"
+    },
+    {
+      "slide": 10,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Positive ρ means recovery. The reversal belongs to the RNA-only scVelo γ, not to MultiVelo."
+    },
+    {
+      "slide": 12,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "Predicting α from"
+    },
+    {
+      "slide": 12,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "abundance alone"
+    },
+    {
+      "slide": 12,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "day-0 ATAC alone"
+    },
+    {
+      "slide": 12,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "abundance + ATAC"
+    },
+    {
+      "slide": 12,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "gain from ATAC"
+    },
+    {
+      "slide": 12,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "Predicting the lag (coupled-on) from"
+    },
+    {
+      "slide": 12,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "day-0 ATAC"
+    },
+    {
+      "slide": 13,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "Limits  "
+    },
+    {
+      "slide": 13,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 15.0,
+      "text": "Pseudotime is not wall-clock time. External replications are single samples (no donor variation). Th"
+    },
+    {
+      "slide": 13,
+      "shape": "acknowledgements",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 12.5,
+      "text": "Thanks to Pseudo Lab, a non-profit AI/ML research community, and to Sangjun Park (Yonsei University)"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "Pair (lag magnitude unless noted)"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "Spearman ρ"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "Δρ = ρ_α − ρ_lag"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "MultiVelo × MultiVeloVAE"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.080, +0.248]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.635, +0.799]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "MultiVelo × MoFlow"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.097, +0.070]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.807, +0.984]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "MultiVeloVAE × MoFlow"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[−0.148, +0.023]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.855, +1.031]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "MultiVeloVAE × MoFlow, signed"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.022, +0.188]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.692, +0.861]"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "α, MultiVelo × MultiVeloVAE"
+    },
+    {
+      "slide": 15,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 13.0,
+      "text": "[+0.854, +0.905]"
+    },
+    {
+      "slide": 16,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "MultiVelo × MultiVeloVAE, α:    "
+    },
+    {
+      "slide": 16,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "+0.882, +0.917, +0.898, +0.906, +0.953"
+    },
+    {
+      "slide": 16,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "MultiVelo × MultiVeloVAE, lag:  "
+    },
+    {
+      "slide": 16,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 17.0,
+      "text": "+0.163, +0.074, +0.057, −0.088, −0.026"
+    },
+    {
+      "slide": 16,
+      "shape": "body",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 14.0,
+      "text": "     (HSPC, macrophage, E18 mouse brain, human BMMC, mouse gastrulation)"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "#"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Prediction"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Sealed threshold"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Observed"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Result"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "1"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Within-dataset α reproduces"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "ρ ≥ 0.50"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "2"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Within-dataset lag does not"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "ρ ≤ 0.15"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "3"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "α over lag"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Δρ ≥ 0.35"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "4"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Cross-dataset HSPC ↔ gastrulation"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "α > +0.20 and α > lag"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "5"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Per-gene disagreement larger for lag (MV × MoFlow) than α (MV × VAE)"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "lag > α"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "6"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "Lag fragile even at maximal priming"
+    },
+    {
+      "slide": 17,
+      "shape": "table",
+      "issue": "Explicit text below 18 pt; review its role.",
+      "font_pt": 16.0,
+      "text": "2 and 3 hold"
+    }
+  ],
+  "visual_render_inspection": "NOT_RUN",
+  "scientific_verification": "NOT_RUN",
+  "limitations": [
+    "No proof of text fit, overlaps, font availability, or glyph coverage.",
+    "No source comparison or validation of figure labels and data.",
+    "Only outer nonrotated shape boxes are checked precisely.",
+    "Masters, group geometry, and chart text require rendered/manual checks.",
+    "A PASS here is not a READY release decision."
+  ]
+}

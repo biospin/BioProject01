@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "mode": "light",
+  "tokens": {
+    "preferred": "#2457C5",
+    "background": "#FFFFFF",
+    "primary": "#2457C5",
+    "primary_ink": "#2457C5",
+    "on_primary": "#FFFFFF",
+    "primary_soft": "#F2F5FC",
+    "surface": "#F8FAFD",
+    "primary_dark": "#1A3F8E",
+    "text": "#172033",
+    "muted_text": "#526174",
+    "baseline": "#596579",
+    "border": "#D9DEE7",
+    "secondary": null,
+    "secondary_ink": null
+  },
+  "canvas": {
+    "width_in": 13.333333,
+    "height_in": 7.5,
+    "margin_in": 0.55
+  },
+  "typography": {
+    "family": "Pretendard",
+    "east_asian_family": "Pretendard",
+    "language": "en-US",
+    "cover_pt": 44,
+    "title_pt": 30,
+    "body_pt": 24,
+    "annotation_pt": 20,
+    "citation_pt": 12
+  },
+  "semantic_map": {},
+  "contrast_checks": [
+    {
+      "foreground": "text",
+      "background": "background",
+      "minimum": 4.5,
+      "ratio": 16.268480224545662,
+      "pass": true
+    },
+    {
+      "foreground": "muted_text",
+      "background": "background",
+      "minimum": 4.5,
+      "ratio": 6.323708513479427,
+      "pass": true
+    },
+    {
+      "foreground": "primary_ink",
+      "background": "background",
+      "minimum": 4.5,
+      "ratio": 6.472421857201706,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "background",
+      "minimum": 3.0,
+      "ratio": 6.472421857201706,
+      "pass": true
+    },
+    {
+      "foreground": "on_primary",
+      "background": "primary",
+      "minimum": 4.5,
+      "ratio": 6.472421857201706,
+      "pass": true
+    },
+    {
+      "foreground": "baseline",
+      "background": "background",
+      "minimum": 3.0,
+      "ratio": 5.895006920356563,
+      "pass": true
+    }
+  ],
+  "adjustments": {},
+  "font_verified": false,
+  "limitations": [
+    "Font existence and glyph coverage are not verified by this script.",
+    "Tint mixing is RGB interpolation, not perceptual palette optimization.",
+    "Contrast tests do not certify color-vision or projection readability.",
+    "Inspect actual text/mark pairs on images, surfaces, and charts separately."
+  ]
+}

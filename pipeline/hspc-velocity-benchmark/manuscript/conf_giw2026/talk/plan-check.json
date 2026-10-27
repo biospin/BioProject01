@@ -1,0 +1,131 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "warnings": [
+    "Approval is not approved; do not treat this plan as released."
+  ],
+  "main_seconds": 780,
+  "budget_seconds": 810,
+  "notes_estimates": [
+    {
+      "slide": "S00",
+      "approximate_seconds_range": [
+        24.400000000000002,
+        28.153846153846153
+      ]
+    },
+    {
+      "slide": "S01",
+      "approximate_seconds_range": [
+        61.599999999999994,
+        71.07692307692308
+      ]
+    },
+    {
+      "slide": "S02",
+      "approximate_seconds_range": [
+        62.8,
+        72.46153846153845
+      ]
+    },
+    {
+      "slide": "S03",
+      "approximate_seconds_range": [
+        54.4,
+        62.769230769230774
+      ]
+    },
+    {
+      "slide": "S04",
+      "approximate_seconds_range": [
+        61.2,
+        70.61538461538461
+      ]
+    },
+    {
+      "slide": "S05",
+      "approximate_seconds_range": [
+        66.0,
+        76.15384615384615
+      ]
+    },
+    {
+      "slide": "S06",
+      "approximate_seconds_range": [
+        58.8,
+        67.84615384615384
+      ]
+    },
+    {
+      "slide": "S07",
+      "approximate_seconds_range": [
+        74.4,
+        85.84615384615385
+      ]
+    },
+    {
+      "slide": "S08",
+      "approximate_seconds_range": [
+        61.599999999999994,
+        71.07692307692308
+      ]
+    },
+    {
+      "slide": "S09",
+      "approximate_seconds_range": [
+        29.200000000000003,
+        33.69230769230769
+      ]
+    },
+    {
+      "slide": "S10",
+      "approximate_seconds_range": [
+        54.4,
+        62.769230769230774
+      ]
+    },
+    {
+      "slide": "S11",
+      "approximate_seconds_range": [
+        40.4,
+        46.61538461538461
+      ]
+    },
+    {
+      "slide": "S12",
+      "approximate_seconds_range": [
+        40.0,
+        46.15384615384615
+      ]
+    },
+    {
+      "slide": "B01",
+      "approximate_seconds_range": [
+        26.0,
+        30.0
+      ]
+    },
+    {
+      "slide": "B02",
+      "approximate_seconds_range": [
+        18.0,
+        20.76923076923077
+      ]
+    },
+    {
+      "slide": "B03",
+      "approximate_seconds_range": [
+        19.2,
+        22.153846153846153
+      ]
+    },
+    {
+      "slide": "B04",
+      "approximate_seconds_range": [
+        28.4,
+        32.76923076923077
+      ]
+    }
+  ],
+  "timing_method": "Approximation only: Korean 300-350 syllables/min; English 130-150 words/min. Explanation + transition; rehearse with pauses and figures."
+}

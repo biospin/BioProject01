@@ -1,0 +1,39 @@
+{
+  "presentation_type": "academic-conference-oral",
+  "talk_minutes": 15,
+  "qa_included": false,
+  "qa_minutes": null,
+  "timing_buffer_fraction": 0.1,
+  "audience": "genome informatics and computational biology researchers (GIW/ISCB-Asia 2026)",
+  "slide_language": "en",
+  "notes_language": "en",
+  "preferred_color": "#2457C5",
+  "background_mode": "light",
+  "aspect_ratio": "16:9",
+  "font_family": "Pretendard (installed; Greek and math glyphs verified)",
+  "venue": "GIW/ISCB-Asia 2026, Yonsei University, Seoul, 17–20 November 2026; oral, submission 241",
+  "mandatory_template": null,
+  "required_disclosures": [
+    "Acknowledgements and funding as in the manuscript draft"
+  ],
+  "source_files": [
+    "manuscript/CONF_LONGABSTRACT_GIW2026_BIOP01.md",
+    "results/post_review_robustness.gen.md",
+    "results/priming_recompute.gen.md",
+    "manuscript/draft_v2.md",
+    "results/external_rate_validation.md",
+    "results/prereg_gse205117_scorecard.md",
+    "results/atac_alpha_expression_confound.md",
+    "results/lag_model_atac.md",
+    "results/FINDINGS.md",
+    "manuscript/PREREGISTRATION_gse205117.md"
+  ],
+  "requested_output": "pptx",
+  "approval_mode": "waived",
+  "assumptions": [
+    "Talk length not yet assigned by the organizers on 2026-10-25; planned for 15 minutes of speaking, Q&A separate.",
+    "English slides and English speaker notes because the venue is international.",
+    "Default primary color #2457C5; no lab template was supplied.",
+    "Presenter affiliation shown as Pseudo Lab, Seoul, as requested to the organizers on 2026-09-25."
+  ]
+}
