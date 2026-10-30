@@ -4,14 +4,14 @@
   "qa_included": false,
   "qa_minutes": null,
   "timing_buffer_fraction": 0.1,
-  "audience": "genome informatics and computational biology researchers (GIW/ISCB-Asia 2026)",
+  "audience": "genome informatics and computational biology researchers (BIOINFO/GIW ISCB-Asia 2026)",
   "slide_language": "en",
   "notes_language": "en",
   "preferred_color": "#2457C5",
   "background_mode": "light",
   "aspect_ratio": "16:9",
   "font_family": "Pretendard (installed; Greek and math glyphs verified)",
-  "venue": "GIW/ISCB-Asia 2026, Yonsei University, Seoul, 17–20 November 2026; oral, submission 241",
+  "venue": "BIOINFO/GIW ISCB-Asia 2026, Yonsei University, Seoul, 17–20 November 2026; oral, submission 241",
   "mandatory_template": null,
   "required_disclosures": [
     "Acknowledgements and funding as in the manuscript draft"

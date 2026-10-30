@@ -72,7 +72,7 @@ SLIDES = [
          explanation="Good morning. I am Ka-Kyung Kim. This is joint work with Jaemyun Lyu, Geongyu Lee, Sejin Park and Yong Gi Ji, carried out in Pseudo Lab, an open research community in Seoul. The talk is about a simple question: which numbers that RNA velocity methods give us per gene can we actually trust?",
          cue="Title and author line.",
          transition="Let me start with why that question matters.",
-         source="Talk based on the GIW/ISCB-Asia 2026 long abstract, submission 241."),
+         source="Talk based on the BIOINFO/GIW ISCB-Asia 2026 long abstract, submission 241."),
     dict(id="S01", title="Velocity methods emit per-gene numbers that we read as biology",
          purpose="Pose the question: which per-gene outputs are reliable enough to use as features?",
          claims=[], loc=["SRC01: Background and motivation"], layout="concept: data → model → four outputs → question", assets=[], sec=55, caveat=None,
@@ -229,11 +229,11 @@ def main():
     brief = {
         "presentation_type": "academic-conference-oral",
         "talk_minutes": 15, "qa_included": False, "qa_minutes": None, "timing_buffer_fraction": 0.1,
-        "audience": "genome informatics and computational biology researchers (GIW/ISCB-Asia 2026)",
+        "audience": "genome informatics and computational biology researchers (BIOINFO/GIW ISCB-Asia 2026)",
         "slide_language": "en", "notes_language": "en",
         "preferred_color": "#2457C5", "background_mode": "light", "aspect_ratio": "16:9",
         "font_family": "Pretendard (installed; Greek and math glyphs verified)",
-        "venue": "GIW/ISCB-Asia 2026, Yonsei University, Seoul, 17–20 November 2026; oral, submission 241",
+        "venue": "BIOINFO/GIW ISCB-Asia 2026, Yonsei University, Seoul, 17–20 November 2026; oral, submission 241",
         "mandatory_template": None,
         "required_disclosures": ["Acknowledgements and funding as in the manuscript draft"],
         "source_files": [s[1] for s in SOURCES],
@@ -275,7 +275,7 @@ def main():
     (HERE / "slide-plan.json").write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
 
     main_s = [s for s in SLIDES if not s.get("backup")]
-    lines = ["# GIW/ISCB-Asia 2026 oral talk: outline", "",
+    lines = ["# BIOINFO/GIW ISCB-Asia 2026 oral talk: outline", "",
              f"Planned speaking time {sum(s['sec'] for s in main_s)} s of 900 s (target 810 s). Approval: waived by the user on 2026-10-25.", "",
              "| # | Title | Seconds | Evidence |", "|---|---|---|---|"]
     for s in SLIDES:

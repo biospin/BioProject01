@@ -26,7 +26,7 @@ ATAC 셔플은 priming 정의로 다시 계산했다(scripts/p18_priming_recompu
 
 # A reliability map for per-gene multiome RNA velocity parameters in single-cell kinetics
 
-*(GIW/ISCB-Asia 2026 — oral track long abstract. Authors and affiliations withheld for blind review.)*
+*(BIOINFO/GIW ISCB-Asia 2026 — oral track long abstract. Authors and affiliations withheld for blind review.)*
 
 ## Background and motivation
 

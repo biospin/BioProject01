@@ -13,7 +13,7 @@ Visual cue
 Title and author line.
 
 Source and caveats
-Talk based on the GIW/ISCB-Asia 2026 long abstract, submission 241.
+Talk based on the BIOINFO/GIW ISCB-Asia 2026 long abstract, submission 241.
 
 Type: main
 Estimated seconds: 25

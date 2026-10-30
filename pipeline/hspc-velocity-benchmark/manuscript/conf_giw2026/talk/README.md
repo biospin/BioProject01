@@ -1,4 +1,4 @@
-# GIW/ISCB-Asia 2026 oral talk (submission 241)
+# BIOINFO/GIW ISCB-Asia 2026 oral talk (submission 241)
 
 Built 2026-10-25 with the academic-conference-presentation skill v1.1.0 (Geongyu Lee).
 

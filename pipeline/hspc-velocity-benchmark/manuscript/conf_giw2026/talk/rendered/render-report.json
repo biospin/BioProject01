@@ -1,10 +1,10 @@
 {
   "pptx_file": "GIW2026_oral241_velocity_reliability_map.pptx",
-  "pptx_sha256": "2da635bf0be3381db7a163d0a07b7397d7e2fed16da5fc299a10701e9bc35b06",
+  "pptx_sha256": "3ce302583cab01ace61e68e6a1b553b4ca2090fc612e1f4a4718eb3a118973a9",
   "renderer": "LibreOffice 26.2.5.2 cd7284b4cbbfeb507e630c1aac019f4157393acb",
   "rasterizer": "PyMuPDF 1.27.2.3",
   "pdf_file": "GIW2026_oral241_velocity_reliability_map.pdf",
-  "pdf_sha256": "1a161ee069e0c5cd3fdad815b1af112fefc89bf17428dae7b3a86d9f1d4db3cf",
+  "pdf_sha256": "8a28af3bf033d0df8e4dad56e80effa15b81952df1a52582d400d095c92bb847",
   "slide_count": 17,
   "rendered_pages": 17,
   "dpi": 110,

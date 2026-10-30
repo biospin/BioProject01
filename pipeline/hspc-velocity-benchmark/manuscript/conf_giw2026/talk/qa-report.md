@@ -1,4 +1,4 @@
-# QA report: GIW/ISCB-Asia 2026 oral talk (submission 241)
+# QA report: BIOINFO/GIW ISCB-Asia 2026 oral talk (submission 241)
 
 Deck `GIW2026_oral241_velocity_reliability_map.pptx` (sha256 2da635bf0be3381d…), 13 main + 4 hidden backup slides, built 2026-10-25 with
 academic-conference-presentation skill v1.1.0. Renderer LibreOffice 26.2.5.2, python-pptx 1.0.2.

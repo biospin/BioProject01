@@ -1,4 +1,4 @@
-"""Build the GIW/ISCB-Asia 2026 oral talk (submission 241) from slide-plan.json.
+"""Build the BIOINFO/GIW ISCB-Asia 2026 oral talk (submission 241) from slide-plan.json.
 
 Titles and speaker notes come from slide-plan.json (written by make_plan.py). Numbers drawn
 natively on slides are copied from the verified sources listed in evidence-map.json; each block
@@ -164,7 +164,7 @@ s = prs.slides.add_slide(next(l for l in prs.slide_layouts if l.name == "Blank")
 s.background.fill.solid()
 s.background.fill.fore_color.rgb = color(T["background"])
 add_rect(s, 0, 0, W, 0.16, T["primary"], name="top-band")
-txt(s, "GIW/ISCB-Asia 2026  ·  Oral presentation, submission 241", M, 0.62, CW, 0.4, size=18,
+txt(s, "BIOINFO/GIW ISCB-Asia 2026  ·  Oral presentation, submission 241", M, 0.62, CW, 0.4, size=18,
     fill=T["primary_ink"], bold=True, name="venue")
 txt(s, plan_by_id["S00"]["title"], M, 1.25, CW, 1.9, size=40, bold=True, name="title")
 rich(s, [{"text": "Ka-Kyung Kim", "bold": True}, {"text": "¹ ", "bold": True},

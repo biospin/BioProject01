@@ -1,4 +1,4 @@
-# GIW/ISCB-Asia 2026 oral talk: outline
+# BIOINFO/GIW ISCB-Asia 2026 oral talk: outline
 
 Planned speaking time 780 s of 900 s (target 810 s). Approval: waived by the user on 2026-10-25.
 
