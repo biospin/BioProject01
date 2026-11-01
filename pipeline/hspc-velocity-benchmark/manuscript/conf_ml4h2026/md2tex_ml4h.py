@@ -33,7 +33,7 @@ UNI = {
     "×": r"$\times$", "≤": r"$\le$", "≥": r"$\ge$", "≈": r"$\approx$",
     "≫": r"$\gg$", "≳": r"$\gtrsim$",
     "→": r"$\rightarrow$", "↔": r"$\leftrightarrow$", "−": r"$-$",
-    "⁴": r"$^4$", "±": r"$\pm$", "ü": r'\"u',
+    "⁴": r"$^4$", "²": r"$^2$", "θ": r"$\theta$", "·": r"$\cdot$", "±": r"$\pm$", "ü": r'\"u',
     "–": "--", "—": "---", "’": "'", "‘": "'", "“": "``", "”": "''",
     "…": r"\ldots{}", "\u00a0": "~",
 }
@@ -181,6 +181,27 @@ title = lines[0][2:].strip()
 rest = "\n".join(lines[1:])
 
 parts = re.split(r"^## ", rest, flags=re.M)
+
+# --- camera-ready author block (de-anonymized) ------------------------------
+# "**Authors:** Name^1,2^\*, ..." and "**Affiliations:** ^1^Inst; ^2^Inst. \*Corresponding author: email"
+_front = parts[0]
+_ma = re.search(r"\*\*Authors:\*\*\s*(.+)", _front)
+_mf = re.search(r"\*\*Affiliations:\*\*\s*(.+)", _front)
+if not (_ma and _mf):
+    sys.exit("저자 블록(**Authors:**, **Affiliations:**)을 찾지 못했다")
+_aff_txt, _, _corr = _mf.group(1).partition("\\*Corresponding author:")
+AFF = dict(re.findall(r"\^(\d+)\^([^;]+?)(?:;|\.\s*$|$)", _aff_txt.strip()))
+CORR_EMAIL = _corr.strip().rstrip(".")
+AUTHORS = []
+for nm, ks, star in re.findall(r"\s*,?\s*([^,^]+?)\^([\d,]+)\^(\\\*)?", _ma.group(1)):
+    AUTHORS.append((nm.strip(), ks.split(","), bool(star)))
+if len(AUTHORS) != _ma.group(1).count("^") // 2:
+    sys.exit("저자 표기를 모두 파싱하지 못했다")
+if any(k not in AFF for _, ks, _ in AUTHORS for k in ks):
+    sys.exit("소속 번호가 맞지 않는다")
+if not CORR_EMAIL:
+    sys.exit("교신 이메일이 없다")
+
 sections = []
 for chunk in parts[1:]:
     headline, _, text = chunk.partition("\n")
@@ -262,9 +283,9 @@ for head, text in sections:
             cap = re.sub(r"Source figure:\s*`[^`]+`\.?", "", cap).strip()
             legend = inline(cap)
 
-FIG = ("\\begin{figure}[t]\n\\centering\n"
-       f"\\includegraphics[width=\\columnwidth]{{{FIGDIR}/fig_ml4h_cross_method.png}}\n"
-       f"\\caption{{{legend}}}\n\\label{{fig:concordance}}\n\\end{{figure}}\n")
+FIG = ("\\begin{figure*}[t]\n\\centering\n"
+       f"\\includegraphics[width=\\textwidth]{{{FIGDIR}/fig01_concordance_v2.png}}\n"
+       f"\\caption{{{legend}}}\n\\label{{fig:concordance}}\n\\end{{figure*}}\n")
 
 abstract = ""
 keywords = ""
@@ -305,6 +326,8 @@ for head, text in sections:
                                     "footnotesize", env="table*", place="[t]"))
     elif h.startswith("figure legend"):
         continue
+    elif h.startswith("acknowledg"):
+        main.append("\\acks{" + "\n\n".join(paragraphs(text)) + "}\n")
     elif h.startswith("references"):
         # natbib thebibliography. \bibitem[Label(Year)]{key} 가 저자-연도 인용을 만든다.
         lines = [f"\\begin{{thebibliography}}{{{len(REFS_RAW)}}}"]
@@ -358,21 +381,16 @@ PRE = r"""\PassOptionsToPackage{sort}{natbib}
 \setlist[refs]{label=,leftmargin=1.1em,itemindent=-1.1em,
                nosep,itemsep=1pt,font=\footnotesize}
 
-% Review-submission header, matching the official template's \iffinal false branch.
+% Camera-ready header for the Findings track (non-archival; not in PMLR).
 % (\mlhtrack{findings} lives in ML4H's patched class; we reproduce its output here.)
-% \jmlryear is set only in the official template's \iffinal branch; leaving it
-% out here avoids a duplicated year in the review header.
-\jmlrproceedings{}{Submitted to ML4H 2026: Findings Track}
+\jmlrproceedings{}{Machine Learning for Health (ML4H) 2026: Findings Track}
 \jmlrworkshop{Machine Learning for Health (ML4H) 2026}
 \jmlrvolume{}
 
 \title[Reliability map for multiome velocity outputs]{TITLE}
 
-% Double-blind: no author names, affiliations or emails. Do not edit this block
-% before submission; identifying information here is a desk-rejection risk.
-\author{Anonymous Author(s)}
-
-\linenumbers
+% Camera-ready: authors are generated from the **Authors:**/**Affiliations:** lines of the source.
+\author{AUTHORS}
 
 \begin{document}
 \maketitle
@@ -402,7 +420,16 @@ if len(statements) != 2:
 if not keywords:
     sys.exit("keywords를 초록에서 뽑지 못했다")
 
+_names = []
+for nm, ks, star in AUTHORS:
+    tag = ",".join(ks) + ("*" if star else "")
+    _names.append(f"\\Name{{{inline(nm)}}}\\nametag{{$^{{{tag}}}$}}")
+_addrs = " \\\\\n".join(f"\\addr $^{{{k}}}${inline(v.strip())}" for k, v in sorted(AFF.items(), key=lambda kv: int(kv[0])))
+AUTHOR_TEX = (", ".join(_names) + " \\\\\n" + _addrs
+              + f" \\\\\n\\addr $^*$Corresponding author: \\Email{{{CORR_EMAIL}}}")
+
 tex = (PRE.replace("TITLE", inline(title))
+          .replace("AUTHORS", AUTHOR_TEX)
           .replace("ABSTRACT", abstract)
           .replace("KEYWORDS", keywords)
           .replace("STATEMENTS", "\n".join(statements))
