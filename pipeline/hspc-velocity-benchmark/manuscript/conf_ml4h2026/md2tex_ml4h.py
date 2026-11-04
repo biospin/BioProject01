@@ -13,6 +13,10 @@ ML4H 규정(2026 CFP 실측):
 - 이중맹검. 저자·소속·자기 인용 귀속이 드러나면 desk rejection.
 - 공식 템플릿은 `jmlr` 클래스에 `[pmlr,twocolumn,10pt]` 옵션.
 
+카메라레디(2026-11-03 안내 메일): 쪽수 제한 없음, `\\mlhtrack{findings}` + `\\finaltrue` 필수,
+제목과 절 제목 Title Case, 부록은 참고문헌 뒤 새 쪽. 템플릿이 패치한 jmlr.cls(Overleaf 소스,
+sha256 33782aa4...)가 빌드 폴더에 있어야 `\\mlhtrack`가 정의된다.
+
 사용:
   python3 md2tex_ml4h.py <build_dir>/main.tex
 """
@@ -148,6 +152,16 @@ def plain_table(body_text):
     ws = [max(m, 6) for m in mx]
     tot = sum(ws)
     ws = [0.93 * w / tot for w in ws]
+    # 짧은 열에 긴 단어 하나("MultiVeloVAE")가 들어가면 비례 폭으로는 여백을 넘는다(Overfull).
+    # 가장 긴 단어가 들어갈 폭을 하한으로 두고, 모자란 만큼 가장 넓은 열에서 덜어낸다.
+    longest = [max((len(t) for r in [header] + rows if i < len(r)
+                    for t in re.split(r"[\s/]+", r[i])), default=0) for i in range(n)]
+    floor = [0.0105 * L + 0.012 for L in longest]
+    for i in range(n):
+        if ws[i] < floor[i]:
+            j = max(range(n), key=lambda k: ws[k])
+            ws[j] -= floor[i] - ws[i]
+            ws[i] = floor[i]
     colspec = "".join(f">{{\\raggedright\\arraybackslash}}p{{{w:.3f}\\textwidth}}" for w in ws)
     tex = ["\\begin{center}", "\\scriptsize" if n >= 5 else "\\footnotesize",
            "\\setlength{\\tabcolsep}{2pt}",
@@ -381,13 +395,27 @@ PRE = r"""\PassOptionsToPackage{sort}{natbib}
 \setlist[refs]{label=,leftmargin=1.1em,itemindent=-1.1em,
                nosep,itemsep=1pt,font=\footnotesize}
 
-% Camera-ready header for the Findings track (non-archival; not in PMLR).
-% (\mlhtrack{findings} lives in ML4H's patched class; we reproduce its output here.)
-\jmlrproceedings{}{Machine Learning for Health (ML4H) 2026: Findings Track}
-\jmlrworkshop{Machine Learning for Health (ML4H) 2026}
-\jmlrvolume{}
+% Track and camera-ready switches, copied from the official ML4H 2026 template.
+% Needs the template's patched jmlr.cls (defines \mlhtrack and the \ifmlh* flags).
+\mlhtrack{findings}
 
-\title[Reliability map for multiome velocity outputs]{TITLE}
+\newif\iffinal
+\finaltrue  % camera-ready
+
+\iffinal
+    \ifmlhneedspmlr
+      \jmlrvolume{XXX}
+      \jmlryear{2026}
+    \fi
+    \ifmlhfindings \jmlrproceedings{}{ML4H 2026 - Findings Track}\fi
+    \ifmlhdemo     \jmlrproceedings{}{ML4H 2026 - Demo Track}\fi
+    \jmlrworkshop{Machine Learning for Health (ML4H) 2026}
+\else
+    \jmlrproceedings{}{Submitted to ML4H 2026: \mlhtrackname}
+    \jmlrworkshop{Machine Learning for Health (ML4H) 2026}
+\fi
+
+\title[Reliability Map for Multiome Velocity Outputs]{TITLE}
 
 % Camera-ready: authors are generated from the **Authors:**/**Affiliations:** lines of the source.
 \author{AUTHORS}
@@ -403,7 +431,9 @@ ABSTRACT
 KEYWORDS
 \end{keywords}
 
+\ifmlhneedsstatements
 STATEMENTS
+\fi
 MAIN
 TABLES
 REFS
