@@ -26,7 +26,8 @@ import sys
 import unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "CONF_ML4H2026_BIOP01.md")
+# 두 번째 인자로 다른 원고(예: 부록을 본문으로 옮긴 _long.md)를 줄 수 있다.
+SRC = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "CONF_ML4H2026_BIOP01.md")
 FIGDIR = "figures"
 OUT = sys.argv[1] if len(sys.argv) > 1 else "/tmp/ml4h/main.tex"
 
@@ -140,8 +141,9 @@ def table_env(head, body_text, label, colspec, fontsize, env="table*", place="[t
     return "\n".join(tex)
 
 
-def plain_table(body_text):
-    """부록용 비-float 표. 순서가 어긋나지 않게 그 자리에 그대로 조판한다."""
+def plain_table(body_text, caption=None, label=None):
+    """부록용 비-float 표. 순서가 어긋나지 않게 그 자리에 그대로 조판한다.
+    caption을 주면 본문용 전폭 float(table*)으로 감싸고 LaTeX가 번호를 매긴다."""
     header, rows = md_table(body_text)
     if not header:
         return ""
@@ -170,7 +172,52 @@ def plain_table(body_text):
     for r in rows:
         tex.append(" & ".join(inline(c) for c in r) + " \\\\")
     tex += ["\\bottomrule", "\\end{tabular}", "\\end{center}", ""]
+    if caption is not None:
+        tex = (["\\begin{table*}[t]", f"\\caption{{{caption}}}", f"\\label{{{label}}}"]
+               + tex[:-1] + ["\\end{table*}", ""])
     return "\n".join(tex)
+
+
+# 본문 절 안의 표와 그림(부록을 본문으로 옮긴 판에서 쓴다).
+# "**Table A0. 제목.** 설명" 문단 바로 뒤의 마크다운 표 -> 번호 붙는 table*.
+# "<!-- FIG: 파일명.png -->" -> figure*. 범례는 Figure legend 절의 "**Figure: 파일명.png.** ..." 줄.
+MAINTABS = []
+FIGLEG = {}
+
+
+def main_blocks(text):
+    out, cap = [], None
+    for chunk in re.split(r"\n\s*\n", text):
+        s = " ".join(chunk.split())
+        if not s:
+            continue
+        mf = re.fullmatch(r"<!--\s*FIG:\s*(\S+)\s*-->", s)
+        if mf:
+            fn = mf.group(1)
+            if fn in FIGLEG and os.path.exists(os.path.join(os.path.dirname(OUT), FIGDIR, fn)):
+                out.append("\\begin{figure*}[t]\n\\centering\n"
+                           f"\\includegraphics[width=\\textwidth]{{{FIGDIR}/{fn}}}\n"
+                           f"\\caption{{{FIGLEG[fn]}}}\n\\label{{fig:{fn.rsplit('.', 1)[0]}}}\n\\end{{figure*}}")
+            else:
+                print("FIG pending (그림 파일이나 범례 없음):", fn)
+            continue
+        if chunk.strip().startswith("|"):
+            if cap:
+                key, captxt = cap
+                MAINTABS.append(key)
+                out.append(plain_table(chunk, inline(captxt), f"tab:{key}"))
+                cap = None
+            else:
+                out.append(plain_table(chunk))
+            continue
+        mt = re.match(r"^\*\*Table ([A-Z]?\d+[a-z]?)\.\s*(.*?)\*\*\s*(.*)$", s)
+        if mt:
+            cap = (mt.group(1), (mt.group(2) + " " + mt.group(3)).strip())
+            continue
+        out.append(inline(s))
+    if cap:
+        sys.exit(f"Table {cap[0]} 제목 뒤에 표가 없다")
+    return "\n\n".join(out)
 
 
 def blocks(text):
@@ -278,12 +325,12 @@ if not REFS_RAW:
 def subsections(text):
     """### 소제목을 \\subsection 으로. 소제목 앞의 도입 문단은 그대로 둔다."""
     bits = re.split(r"^### ", text, flags=re.M)
-    out = ["\n\n".join(paragraphs(bits[0]))] if bits[0].strip() else []
+    out = [main_blocks(bits[0])] if bits[0].strip() else []
     for b in bits[1:]:
         h, _, t = b.partition("\n")
         h = re.sub(r"^\d+(\.\d+)*\.?\s*", "", h.strip())      # "3.1 " 번호 제거(클래스가 매김)
         out.append(f"\\subsection{{{inline(h)}}}")
-        out.append("\n\n".join(paragraphs(t)))
+        out.append(main_blocks(t))
     return "\n\n".join(x for x in out if x.strip())
 
 
@@ -296,6 +343,8 @@ for head, text in sections:
             cap = " ".join(m.group(1).split())
             cap = re.sub(r"Source figure:\s*`[^`]+`\.?", "", cap).strip()
             legend = inline(cap)
+        for fn, cap in re.findall(r"\*\*Figure:\s*(\S+?)\.\*\*\s*(.+)", text):
+            FIGLEG[fn] = inline(" ".join(cap.split()))
 
 FIG = ("\\begin{figure*}[t]\n\\centering\n"
        f"\\includegraphics[width=\\textwidth]{{{FIGDIR}/fig01_concordance_v2.png}}\n"
@@ -468,6 +517,12 @@ tex = (PRE.replace("TITLE", inline(title))
           .replace("REFS", refs)
           .replace("APPENDIX", "\n".join(appendix)))
 tex = re.sub(r'"([^"\n]+)"', r"``\1''", tex)
+# 본문 표가 생기면 LaTeX가 매기는 번호와 원고의 "Table A0"/"Table 1" 표기가 어긋난다.
+# 그래서 본문 표가 있을 때만 표기를 \ref로 바꾼다(축약판 출력은 그대로).
+if MAINTABS:
+    for key in MAINTABS:
+        tex = re.sub(rf"\bTable {key}\b", rf"Table~\\ref{{tab:{key}}}", tex)
+    tex = re.sub(r"\bTable 1\b", r"Table~\\ref{tab:t1}", tex)
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 open(OUT, "w", encoding="utf-8").write(tex)
