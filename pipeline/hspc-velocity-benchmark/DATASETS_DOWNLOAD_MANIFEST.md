@@ -223,11 +223,11 @@ raw 정렬·cellranger-arc 불요. sample별 fragments.tsv.gz를 GEO에서 직�
 ## 7-3. GSE75792: Schwalb 2016 K562 TT-seq (α 2차 소스) · 등급 A
 
 - **Accession**: GEO **GSE75792**. Schwalb B. et al., Science 352(6290):1225-1228, 2016, DOI 10.1126/science.aad9841. K562 wild-type TT-seq.
-- **역할**: α 외부검증 2차 독립 소스(1차 GSE229305의 "n=1 외부" 취약성 완화 시도. 결과는 null, 정직 보고).
+- **역할**: α 외부검증 2차 독립 소스(1차 GSE229305의 "n=1 외부" 취약성 완화 시도. hg19 매핑으로 낸 첫 결과는 null이었으나 좌표계 오류였고, 2026-11-05 GRCh38 재계산에서 multiome 두 방법의 α를 재현).
 - **원파일**: `GSE75792_transcript.annotation.gtf.gz`(로컬 `data/GSE75792_transcript.annotation.gtf.gz`), sha256 `2c7a31a83d81db465889973860b0a00dab5c081997432ada1fb396db9e6707b9`.
 - **소스 URL**: `https://ftp.ncbi.nlm.nih.gov/geo/series/GSE75nnn/GSE75792/suppl/GSE75792_transcript.annotation.gtf.gz`(GEO FTP, proof-of-work 없음, 직접 curl 성공 2026-07-10).
-- ⚠️ per-gene 합성율 없음(per-TU만, hg19 좌표). per-gene는 GENCODE v19 좌표 join으로 재계산(§8 gencode 참조).
-- 파생물(§5): `data/k562_schwalb_ttseq_synthrate.csv`.
+- ⚠️ per-gene 합성율 없음(per-TU만, **GRCh38 좌표**). 처음에는 hg19로 보고 GENCODE v19와 join해 TU 2,965/6,913개만 매핑됐다(2026-11-05 공저자 검토 A-6에서 발견, MYC TU chr8:127,734,280은 hg38 위치). 현재 per-gene는 GENCODE v24(GRCh38) 좌표 join으로 재계산(`scripts/external_rate_validation_schwalb_grch38.py`, §8 gencode 참조). v19판은 기록용으로만 남긴다.
+- 파생물(§5): `data/k562_schwalb_ttseq_synthrate_grch38.csv`(현행), `data/k562_schwalb_ttseq_synthrate.csv`(hg19, 대체됨).
 
 ## 7-4. MOLM13 half-life: RNADecayCafe / Muhar 2018 (Zenodo) · 등급 B
 
@@ -251,7 +251,8 @@ raw 정렬·cellranger-arc 불요. sample별 fragments.tsv.gz를 GEO에서 직�
 | `data/halflife_hek293t.csv` (15,231) | Zenodo 15785218 (HEK293T) | filter+rename |
 | `data/halflife_rnadecaycafe_k562.csv` (10,802) | Zenodo 15785218 (K562) | filter+rename |
 | `data/k562_ttseq_synthrate.csv` (11,776) | GSE229305 | treatment=UT, rename |
-| `data/k562_schwalb_ttseq_synthrate.csv` (2,746) | GSE75792 + GENCODE v19 | 좌표 join 재계산 |
+| `data/k562_schwalb_ttseq_synthrate_grch38.csv` (6,783) | GSE75792 + GENCODE v24 (GRCh38) | 좌표 join 재계산(현행) |
+| `data/k562_schwalb_ttseq_synthrate.csv` (2,746) | GSE75792 + GENCODE v19 | 빌드 불일치로 대체됨 |
 
 ---
 
@@ -259,7 +260,8 @@ raw 정렬·cellranger-arc 불요. sample별 fragments.tsv.gz를 GEO에서 직�
 
 | 파일 | 로컬 | 소스 URL | 등급 |
 |---|---|---|---|
-| GENCODE v19 gene-level (hg19) | `data/gencode.v19.genes.gtf.gz`(sha256 `dffda97722d19f56…`) | `https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz` → `feature=="gene"` subset | A(URL 실재, sha256 앞16) |
+| GENCODE v24 gene-level (GRCh38, Ensembl 83) | `data/gencode.v24.genes.gtf.gz`(sha256 `438636113b82365276d6…`; 원본 annotation sha256 `147e62909c2cdd622433…`) | `https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/gencode.v24.annotation.gtf.gz` → `feature=="gene"` subset | A(URL 실재, sha256 앞20). GSE75792 현행 |
+| GENCODE v19 gene-level (hg19, GSE75792에는 맞지 않음) | `data/gencode.v19.genes.gtf.gz`(sha256 `dffda97722d19f56…`) | `https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz` → `feature=="gene"` subset | A(URL 실재, sha256 앞16) |
 | Housekeeping gene list (Eisenberg & Levanon) | `data/housekeeping.txt`(3,804) | `https://www.tau.ac.il/~elieis/HKG/HK_genes.txt`(첫 컬럼 symbol) | B(URL 실재, 체크섬 없음) |
 | MGI mouse→human ortholog | `data/HOM_MouseHumanSequence.rpt` | `https://www.informatics.jax.org/downloads/reports/HOM_MouseHumanSequence.rpt`(디렉터리 실재, `p5_drug_arm_feasibility.py` L336) | B(URL 실재, 체크섬 없음) |
 | MGI marker→Ensembl | `data/MRK_ENSEMBL.rpt` | `https://www.informatics.jax.org/downloads/reports/MRK_ENSEMBL.rpt`(같은 MGI reports 디렉터리) | C(디렉터리만 기록, 파일 URL 패턴 구성) |
