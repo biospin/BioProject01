@@ -1,0 +1,907 @@
+{
+  "mapping": {
+    "gencode_protein_coding_genes": 19815,
+    "protein_coding_only": {
+      "TUs_numeric_GENCODEtrue": 6913,
+      "TUs_unique_by_coord": 6913,
+      "TUs_assigned_frac_gate": 6907,
+      "frac_gate": 0.5,
+      "median_overlap_frac": 1.0,
+      "unique_genes_mapped": 6783
+    },
+    "incl_NA_biotype": {
+      "TUs_numeric_GENCODEtrue": 11587,
+      "TUs_unique_by_coord": 9250,
+      "TUs_assigned_frac_gate": 9577,
+      "frac_gate": 0.5,
+      "median_overlap_frac": 1.0,
+      "unique_genes_mapped": 7910
+    }
+  },
+  "qc": {
+    "protein_coding_only": {
+      "QC1": {
+        "n": 6051,
+        "rho": 0.415,
+        "p": 1.0400525476307921e-250
+      },
+      "QC2": {
+        "todorovski_K562": {
+          "n": 4179,
+          "rho": 0.021,
+          "p": 0.16663764137345302
+        },
+        "rnadecaycafe_K562": {
+          "n": 5738,
+          "rho": -0.028,
+          "p": 0.033590061824295664
+        },
+        "molm13": {
+          "n": 5413,
+          "rho": 0.005,
+          "p": 0.7133764478624607
+        },
+        "thp1": {
+          "n": 4210,
+          "rho": -0.047,
+          "p": 0.0022693558848225154
+        }
+      }
+    },
+    "incl_NA_biotype": {
+      "QC1": {
+        "n": 6900,
+        "rho": 0.39,
+        "p": 5.413999950858043e-249
+      },
+      "QC2": {
+        "todorovski_K562": {
+          "n": 4710,
+          "rho": 0.012,
+          "p": 0.4257139522385147
+        },
+        "rnadecaycafe_K562": {
+          "n": 6512,
+          "rho": -0.03,
+          "p": 0.013961333214159995
+        },
+        "molm13": {
+          "n": 6156,
+          "rho": -0.002,
+          "p": 0.8591513162792102
+        },
+        "thp1": {
+          "n": 4738,
+          "rho": -0.054,
+          "p": 0.00020979691021545327
+        }
+      }
+    }
+  },
+  "methods": {
+    "rna_only": {
+      "all": {
+        "tag": "all",
+        "n": 130,
+        "rho_alpha_synth": 0.061,
+        "ci": [
+          -0.12,
+          0.24
+        ],
+        "p": 0.49058729361729014,
+        "validates": false
+      },
+      "non_HK": {
+        "tag": "non_HK",
+        "n": 124,
+        "rho_alpha_synth": 0.087,
+        "ci": [
+          -0.1,
+          0.271
+        ],
+        "p": 0.33655052818577424,
+        "validates": false
+      },
+      "HK": {
+        "tag": "HK",
+        "n": 6,
+        "rho_alpha_synth": -0.429,
+        "ci": [
+          -1.0,
+          0.8
+        ],
+        "p": 0.3965014577259474,
+        "validates": false
+      }
+    },
+    "multivelo": {
+      "all": {
+        "tag": "all",
+        "n": 169,
+        "rho_alpha_synth": 0.237,
+        "ci": [
+          0.077,
+          0.388
+        ],
+        "p": 0.0018798591518635582,
+        "validates": true
+      },
+      "non_HK": {
+        "tag": "non_HK",
+        "n": 157,
+        "rho_alpha_synth": 0.27,
+        "ci": [
+          0.108,
+          0.428
+        ],
+        "p": 0.0006361531483340302,
+        "validates": true
+      },
+      "HK": {
+        "tag": "HK",
+        "n": 12,
+        "rho_alpha_synth": 0.049,
+        "ci": [
+          -0.588,
+          0.644
+        ],
+        "p": 0.8799185788786749,
+        "validates": false
+      }
+    },
+    "multivelovae": {
+      "all": {
+        "tag": "all",
+        "n": 177,
+        "rho_alpha_synth": 0.211,
+        "ci": [
+          0.057,
+          0.357
+        ],
+        "p": 0.0048304343917719254,
+        "validates": true
+      },
+      "non_HK": {
+        "tag": "non_HK",
+        "n": 164,
+        "rho_alpha_synth": 0.235,
+        "ci": [
+          0.08,
+          0.381
+        ],
+        "p": 0.0024740034385507723,
+        "validates": true
+      },
+      "HK": {
+        "tag": "HK",
+        "n": 13,
+        "rho_alpha_synth": 0.033,
+        "ci": [
+          -0.621,
+          0.714
+        ],
+        "p": 0.9148564744875125,
+        "validates": false
+      }
+    }
+  },
+  "matched_gene_set_nonHK": {
+    "rna_only": {
+      "n_nonHK": 108,
+      "alpha_vs_schwalb": {
+        "rho": 0.095,
+        "ci": [
+          -0.108,
+          0.295
+        ],
+        "p": 0.32661049001164855
+      },
+      "alpha_vs_todorovski": {
+        "rho": 0.299,
+        "ci": [
+          0.107,
+          0.475
+        ],
+        "p": 0.0016689763668036278
+      },
+      "schwalb_vs_todorovski_rho": 0.483
+    },
+    "multivelo": {
+      "n_nonHK": 138,
+      "alpha_vs_schwalb": {
+        "rho": 0.271,
+        "ci": [
+          0.095,
+          0.435
+        ],
+        "p": 0.0012818208094584193
+      },
+      "alpha_vs_todorovski": {
+        "rho": 0.341,
+        "ci": [
+          0.17,
+          0.495
+        ],
+        "p": 4.23862739520262e-05
+      },
+      "schwalb_vs_todorovski_rho": 0.51
+    },
+    "multivelovae": {
+      "n_nonHK": 143,
+      "alpha_vs_schwalb": {
+        "rho": 0.249,
+        "ci": [
+          0.088,
+          0.402
+        ],
+        "p": 0.0026789556299844064
+      },
+      "alpha_vs_todorovski": {
+        "rho": 0.319,
+        "ci": [
+          0.157,
+          0.467
+        ],
+        "p": 0.00010533170688738047
+      },
+      "schwalb_vs_todorovski_rho": 0.51
+    }
+  },
+  "provenance": {
+    "gencode_url": "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/gencode.v24.annotation.gtf.gz",
+    "gencode_full_sha256": "147e62909c2cdd622433edae71796367b5774aa17f676174242801a79220093d",
+    "gencode_genes_subset_sha256": "438636113b82365276d697277d0ca5f404891ac3289f7cf6b3ab547b8d130d36",
+    "schwalb_gtf_sha256": "2c7a31a83d81db465889973860b0a00dab5c081997432ada1fb396db9e6707b9",
+    "abundance_file": "results/coupling_per_gene.csv (column abundance = HSPC mean Ms)",
+    "schwalb_per_gene_table_sha256": "23758525fffac60e2dd0257ae59950d903f3a3156f43bc47dec8689c8e241b38"
+  },
+  "inclNA": [
+    {
+      "method": "rna_only",
+      "stratum": "all",
+      "n": 151,
+      "rho_alpha_synth": 0.036,
+      "ci_lo": -0.126,
+      "ci_hi": 0.204,
+      "variant": "incl_NA_biotype"
+    },
+    {
+      "method": "rna_only",
+      "stratum": "non_HK",
+      "n": 143,
+      "rho_alpha_synth": 0.069,
+      "ci_lo": -0.106,
+      "ci_hi": 0.236,
+      "variant": "incl_NA_biotype"
+    },
+    {
+      "method": "rna_only",
+      "stratum": "non_HK_matched",
+      "n": 123,
+      "rho_alpha_synth": 0.088,
+      "ci_lo": -0.104,
+      "ci_hi": 0.274,
+      "variant": "incl_NA_biotype",
+      "rho_schwalb_todorovski": 0.532
+    },
+    {
+      "method": "multivelo",
+      "stratum": "all",
+      "n": 193,
+      "rho_alpha_synth": 0.245,
+      "ci_lo": 0.099,
+      "ci_hi": 0.382,
+      "variant": "incl_NA_biotype"
+    },
+    {
+      "method": "multivelo",
+      "stratum": "non_HK",
+      "n": 179,
+      "rho_alpha_synth": 0.275,
+      "ci_lo": 0.129,
+      "ci_hi": 0.415,
+      "variant": "incl_NA_biotype"
+    },
+    {
+      "method": "multivelo",
+      "stratum": "non_HK_matched",
+      "n": 155,
+      "rho_alpha_synth": 0.283,
+      "ci_lo": 0.119,
+      "ci_hi": 0.436,
+      "variant": "incl_NA_biotype",
+      "rho_schwalb_todorovski": 0.528
+    },
+    {
+      "method": "multivelovae",
+      "stratum": "all",
+      "n": 205,
+      "rho_alpha_synth": 0.19,
+      "ci_lo": 0.051,
+      "ci_hi": 0.323,
+      "variant": "incl_NA_biotype"
+    },
+    {
+      "method": "multivelovae",
+      "stratum": "non_HK",
+      "n": 190,
+      "rho_alpha_synth": 0.219,
+      "ci_lo": 0.073,
+      "ci_hi": 0.352,
+      "variant": "incl_NA_biotype"
+    },
+    {
+      "method": "multivelovae",
+      "stratum": "non_HK_matched",
+      "n": 163,
+      "rho_alpha_synth": 0.234,
+      "ci_lo": 0.079,
+      "ci_hi": 0.385,
+      "variant": "incl_NA_biotype",
+      "rho_schwalb_todorovski": 0.528
+    }
+  ],
+  "abundance": [
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "all",
+      "n": 122,
+      "rho_alpha_synth": 0.071,
+      "a_lo": -0.123,
+      "a_hi": 0.254,
+      "rho_abund_synth": 0.248,
+      "b_lo": 0.06,
+      "b_hi": 0.421,
+      "delta_alpha_minus_abund": -0.177,
+      "d_lo": -0.306,
+      "d_hi": -0.057,
+      "rho_alpha_abund": 0.768
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "non_HK",
+      "n": 116,
+      "rho_alpha_synth": 0.102,
+      "a_lo": -0.092,
+      "a_hi": 0.289,
+      "rho_abund_synth": 0.262,
+      "b_lo": 0.07,
+      "b_hi": 0.438,
+      "delta_alpha_minus_abund": -0.159,
+      "d_lo": -0.289,
+      "d_hi": -0.034,
+      "rho_alpha_abund": 0.771
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "HK",
+      "n": 6,
+      "rho_alpha_synth": -0.429,
+      "a_lo": -1.0,
+      "a_hi": 0.742,
+      "rho_abund_synth": -0.143,
+      "b_lo": -1.0,
+      "b_hi": 1.0,
+      "delta_alpha_minus_abund": -0.286,
+      "d_lo": -1.0,
+      "d_hi": 0.0,
+      "rho_alpha_abund": 0.771
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "non_HK_matched",
+      "n": 101,
+      "rho_alpha_synth": 0.116,
+      "a_lo": -0.095,
+      "a_hi": 0.323,
+      "rho_abund_synth": 0.234,
+      "b_lo": 0.033,
+      "b_hi": 0.425,
+      "delta_alpha_minus_abund": -0.119,
+      "d_lo": -0.252,
+      "d_hi": 0.013,
+      "rho_alpha_abund": 0.789
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "all",
+      "n": 169,
+      "rho_alpha_synth": 0.237,
+      "a_lo": 0.081,
+      "a_hi": 0.389,
+      "rho_abund_synth": 0.274,
+      "b_lo": 0.116,
+      "b_hi": 0.422,
+      "delta_alpha_minus_abund": -0.037,
+      "d_lo": -0.138,
+      "d_hi": 0.062,
+      "rho_alpha_abund": 0.792
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "non_HK",
+      "n": 157,
+      "rho_alpha_synth": 0.27,
+      "a_lo": 0.105,
+      "a_hi": 0.421,
+      "rho_abund_synth": 0.309,
+      "b_lo": 0.15,
+      "b_hi": 0.46,
+      "delta_alpha_minus_abund": -0.039,
+      "d_lo": -0.132,
+      "d_hi": 0.05,
+      "rho_alpha_abund": 0.825
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "HK",
+      "n": 12,
+      "rho_alpha_synth": 0.049,
+      "a_lo": -0.599,
+      "a_hi": 0.648,
+      "rho_abund_synth": -0.196,
+      "b_lo": -0.73,
+      "b_hi": 0.498,
+      "delta_alpha_minus_abund": 0.245,
+      "d_lo": -0.509,
+      "d_hi": 0.942,
+      "rho_alpha_abund": 0.42
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "non_HK_matched",
+      "n": 138,
+      "rho_alpha_synth": 0.271,
+      "a_lo": 0.098,
+      "a_hi": 0.435,
+      "rho_abund_synth": 0.299,
+      "b_lo": 0.126,
+      "b_hi": 0.461,
+      "delta_alpha_minus_abund": -0.028,
+      "d_lo": -0.129,
+      "d_hi": 0.069,
+      "rho_alpha_abund": 0.822
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "all",
+      "n": 169,
+      "rho_alpha_synth": 0.227,
+      "a_lo": 0.072,
+      "a_hi": 0.376,
+      "rho_abund_synth": 0.274,
+      "b_lo": 0.119,
+      "b_hi": 0.422,
+      "delta_alpha_minus_abund": -0.048,
+      "d_lo": -0.151,
+      "d_hi": 0.058,
+      "rho_alpha_abund": 0.773
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "non_HK",
+      "n": 157,
+      "rho_alpha_synth": 0.25,
+      "a_lo": 0.092,
+      "a_hi": 0.398,
+      "rho_abund_synth": 0.309,
+      "b_lo": 0.151,
+      "b_hi": 0.462,
+      "delta_alpha_minus_abund": -0.058,
+      "d_lo": -0.161,
+      "d_hi": 0.043,
+      "rho_alpha_abund": 0.795
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "HK",
+      "n": 12,
+      "rho_alpha_synth": 0.021,
+      "a_lo": -0.662,
+      "a_hi": 0.707,
+      "rho_abund_synth": -0.196,
+      "b_lo": -0.736,
+      "b_hi": 0.502,
+      "delta_alpha_minus_abund": 0.217,
+      "d_lo": -0.5,
+      "d_hi": 0.946,
+      "rho_alpha_abund": 0.517
+    },
+    {
+      "variant": "protein_coding_only",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "non_HK_matched",
+      "n": 138,
+      "rho_alpha_synth": 0.275,
+      "a_lo": 0.104,
+      "a_hi": 0.434,
+      "rho_abund_synth": 0.299,
+      "b_lo": 0.125,
+      "b_hi": 0.457,
+      "delta_alpha_minus_abund": -0.024,
+      "d_lo": -0.131,
+      "d_hi": 0.08,
+      "rho_alpha_abund": 0.808
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "all",
+      "n": 137,
+      "rho_alpha_synth": 0.068,
+      "a_lo": -0.11,
+      "a_hi": 0.243,
+      "rho_abund_synth": 0.26,
+      "b_lo": 0.087,
+      "b_hi": 0.423,
+      "delta_alpha_minus_abund": -0.192,
+      "d_lo": -0.311,
+      "d_hi": -0.075,
+      "rho_alpha_abund": 0.763
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "non_HK",
+      "n": 129,
+      "rho_alpha_synth": 0.107,
+      "a_lo": -0.078,
+      "a_hi": 0.283,
+      "rho_abund_synth": 0.29,
+      "b_lo": 0.114,
+      "b_hi": 0.453,
+      "delta_alpha_minus_abund": -0.183,
+      "d_lo": -0.305,
+      "d_hi": -0.066,
+      "rho_alpha_abund": 0.763
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "HK",
+      "n": 8,
+      "rho_alpha_synth": -0.429,
+      "a_lo": -1.0,
+      "a_hi": 0.538,
+      "rho_abund_synth": -0.19,
+      "b_lo": -0.852,
+      "b_hi": 0.675,
+      "delta_alpha_minus_abund": -0.238,
+      "d_lo": -0.72,
+      "d_hi": 0.0,
+      "rho_alpha_abund": 0.857
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "rna_only",
+      "stratum": "non_HK_matched",
+      "n": 112,
+      "rho_alpha_synth": 0.123,
+      "a_lo": -0.078,
+      "a_hi": 0.311,
+      "rho_abund_synth": 0.256,
+      "b_lo": 0.064,
+      "b_hi": 0.429,
+      "delta_alpha_minus_abund": -0.133,
+      "d_lo": -0.257,
+      "d_hi": -0.009,
+      "rho_alpha_abund": 0.789
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "all",
+      "n": 193,
+      "rho_alpha_synth": 0.245,
+      "a_lo": 0.099,
+      "a_hi": 0.386,
+      "rho_abund_synth": 0.275,
+      "b_lo": 0.128,
+      "b_hi": 0.414,
+      "delta_alpha_minus_abund": -0.03,
+      "d_lo": -0.123,
+      "d_hi": 0.064,
+      "rho_alpha_abund": 0.802
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "non_HK",
+      "n": 179,
+      "rho_alpha_synth": 0.275,
+      "a_lo": 0.124,
+      "a_hi": 0.413,
+      "rho_abund_synth": 0.317,
+      "b_lo": 0.169,
+      "b_hi": 0.454,
+      "delta_alpha_minus_abund": -0.042,
+      "d_lo": -0.128,
+      "d_hi": 0.042,
+      "rho_alpha_abund": 0.835
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "HK",
+      "n": 14,
+      "rho_alpha_synth": -0.029,
+      "a_lo": -0.595,
+      "a_hi": 0.555,
+      "rho_abund_synth": -0.314,
+      "b_lo": -0.795,
+      "b_hi": 0.298,
+      "delta_alpha_minus_abund": 0.286,
+      "d_lo": -0.371,
+      "d_hi": 0.867,
+      "rho_alpha_abund": 0.451
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelo",
+      "stratum": "non_HK_matched",
+      "n": 155,
+      "rho_alpha_synth": 0.283,
+      "a_lo": 0.119,
+      "a_hi": 0.436,
+      "rho_abund_synth": 0.304,
+      "b_lo": 0.143,
+      "b_hi": 0.455,
+      "delta_alpha_minus_abund": -0.022,
+      "d_lo": -0.114,
+      "d_hi": 0.069,
+      "rho_alpha_abund": 0.832
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "all",
+      "n": 193,
+      "rho_alpha_synth": 0.224,
+      "a_lo": 0.081,
+      "a_hi": 0.363,
+      "rho_abund_synth": 0.275,
+      "b_lo": 0.132,
+      "b_hi": 0.409,
+      "delta_alpha_minus_abund": -0.05,
+      "d_lo": -0.148,
+      "d_hi": 0.046,
+      "rho_alpha_abund": 0.779
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "non_HK",
+      "n": 179,
+      "rho_alpha_synth": 0.255,
+      "a_lo": 0.11,
+      "a_hi": 0.393,
+      "rho_abund_synth": 0.317,
+      "b_lo": 0.17,
+      "b_hi": 0.452,
+      "delta_alpha_minus_abund": -0.062,
+      "d_lo": -0.159,
+      "d_hi": 0.033,
+      "rho_alpha_abund": 0.794
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "HK",
+      "n": 14,
+      "rho_alpha_synth": -0.121,
+      "a_lo": -0.678,
+      "a_hi": 0.578,
+      "rho_abund_synth": -0.314,
+      "b_lo": -0.792,
+      "b_hi": 0.306,
+      "delta_alpha_minus_abund": 0.193,
+      "d_lo": -0.307,
+      "d_hi": 0.797,
+      "rho_alpha_abund": 0.613
+    },
+    {
+      "variant": "incl_NA_biotype",
+      "source": "schwalb",
+      "method": "multivelovae",
+      "stratum": "non_HK_matched",
+      "n": 155,
+      "rho_alpha_synth": 0.283,
+      "a_lo": 0.124,
+      "a_hi": 0.433,
+      "rho_abund_synth": 0.304,
+      "b_lo": 0.139,
+      "b_hi": 0.454,
+      "delta_alpha_minus_abund": -0.022,
+      "d_lo": -0.123,
+      "d_hi": 0.081,
+      "rho_alpha_abund": 0.812
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "rna_only",
+      "stratum": "all",
+      "n": 179,
+      "rho_alpha_synth": 0.268,
+      "a_lo": 0.121,
+      "a_hi": 0.402,
+      "rho_abund_synth": 0.415,
+      "b_lo": 0.277,
+      "b_hi": 0.538,
+      "delta_alpha_minus_abund": -0.147,
+      "d_lo": -0.243,
+      "d_hi": -0.052,
+      "rho_alpha_abund": 0.765
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "rna_only",
+      "stratum": "non_HK",
+      "n": 167,
+      "rho_alpha_synth": 0.242,
+      "a_lo": 0.088,
+      "a_hi": 0.387,
+      "rho_abund_synth": 0.37,
+      "b_lo": 0.219,
+      "b_hi": 0.504,
+      "delta_alpha_minus_abund": -0.128,
+      "d_lo": -0.227,
+      "d_hi": -0.029,
+      "rho_alpha_abund": 0.762
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "rna_only",
+      "stratum": "HK",
+      "n": 12,
+      "rho_alpha_synth": 0.629,
+      "a_lo": 0.011,
+      "a_hi": 0.936,
+      "rho_abund_synth": 0.615,
+      "b_lo": -0.065,
+      "b_hi": 0.943,
+      "delta_alpha_minus_abund": 0.014,
+      "d_lo": -0.229,
+      "d_hi": 0.277,
+      "rho_alpha_abund": 0.916
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "multivelo",
+      "stratum": "all",
+      "n": 254,
+      "rho_alpha_synth": 0.285,
+      "a_lo": 0.163,
+      "a_hi": 0.401,
+      "rho_abund_synth": 0.446,
+      "b_lo": 0.33,
+      "b_hi": 0.551,
+      "delta_alpha_minus_abund": -0.162,
+      "d_lo": -0.236,
+      "d_hi": -0.091,
+      "rho_alpha_abund": 0.794
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "multivelo",
+      "stratum": "non_HK",
+      "n": 235,
+      "rho_alpha_synth": 0.262,
+      "a_lo": 0.133,
+      "a_hi": 0.386,
+      "rho_abund_synth": 0.41,
+      "b_lo": 0.284,
+      "b_hi": 0.524,
+      "delta_alpha_minus_abund": -0.148,
+      "d_lo": -0.222,
+      "d_hi": -0.077,
+      "rho_alpha_abund": 0.814
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "multivelo",
+      "stratum": "HK",
+      "n": 19,
+      "rho_alpha_synth": 0.698,
+      "a_lo": 0.336,
+      "a_hi": 0.885,
+      "rho_abund_synth": 0.749,
+      "b_lo": 0.408,
+      "b_hi": 0.925,
+      "delta_alpha_minus_abund": -0.051,
+      "d_lo": -0.379,
+      "d_hi": 0.268,
+      "rho_alpha_abund": 0.647
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "multivelovae",
+      "stratum": "all",
+      "n": 254,
+      "rho_alpha_synth": 0.318,
+      "a_lo": 0.197,
+      "a_hi": 0.427,
+      "rho_abund_synth": 0.446,
+      "b_lo": 0.33,
+      "b_hi": 0.55,
+      "delta_alpha_minus_abund": -0.128,
+      "d_lo": -0.202,
+      "d_hi": -0.055,
+      "rho_alpha_abund": 0.769
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "multivelovae",
+      "stratum": "non_HK",
+      "n": 235,
+      "rho_alpha_synth": 0.286,
+      "a_lo": 0.162,
+      "a_hi": 0.407,
+      "rho_abund_synth": 0.41,
+      "b_lo": 0.285,
+      "b_hi": 0.524,
+      "delta_alpha_minus_abund": -0.124,
+      "d_lo": -0.201,
+      "d_hi": -0.046,
+      "rho_alpha_abund": 0.774
+    },
+    {
+      "variant": "primary",
+      "source": "todorovski",
+      "method": "multivelovae",
+      "stratum": "HK",
+      "n": 19,
+      "rho_alpha_synth": 0.814,
+      "a_lo": 0.581,
+      "a_hi": 0.93,
+      "rho_abund_synth": 0.749,
+      "b_lo": 0.406,
+      "b_hi": 0.928,
+      "delta_alpha_minus_abund": 0.065,
+      "d_lo": -0.148,
+      "d_hi": 0.317,
+      "rho_alpha_abund": 0.754
+    }
+  ]
+}

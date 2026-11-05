@@ -1,0 +1,10 @@
+method,stratum,n,rho_alpha_synth,ci_lo,ci_hi,variant,rho_schwalb_todorovski
+rna_only,all,151,0.036,-0.126,0.204,incl_NA_biotype,
+rna_only,non_HK,143,0.069,-0.106,0.236,incl_NA_biotype,
+rna_only,non_HK_matched,123,0.088,-0.104,0.274,incl_NA_biotype,0.532
+multivelo,all,193,0.245,0.099,0.382,incl_NA_biotype,
+multivelo,non_HK,179,0.275,0.129,0.415,incl_NA_biotype,
+multivelo,non_HK_matched,155,0.283,0.119,0.436,incl_NA_biotype,0.528
+multivelovae,all,205,0.19,0.051,0.323,incl_NA_biotype,
+multivelovae,non_HK,190,0.219,0.073,0.352,incl_NA_biotype,
+multivelovae,non_HK_matched,163,0.234,0.079,0.385,incl_NA_biotype,0.528
