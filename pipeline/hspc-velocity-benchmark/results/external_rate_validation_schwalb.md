@@ -1,5 +1,7 @@
 # α 외부검증 2차 독립 소스 — Schwalb 2016 (GSE75792) K562 TT-seq synthesis rate
 
+> **2026-11-05 대체됨.** 이 결과는 GRCh38 좌표의 TU를 hg19(GENCODE v19) 주석에 붙여 얻은 것이라 매핑이 2,965/6,913 TU에 그쳤다. GRCh38(GENCODE v24)로 다시 돌린 결과는 `results/external_rate_validation_schwalb_grch38.md`에 있고, 그쪽에서 MultiVelo와 MultiVeloVAE의 α가 양의 상관을 보인다. 아래의 null 결론과 "연구 간 상한 ρ≈0.15"는 쓰지 않는다.
+
 실행 **2026-07-10**. 스크립트 `scripts/external_rate_validation_schwalb.py`, env `scv-preprocess`.
 원자료: `results/external_rate_validation_schwalb.csv`(full-set) · `_matched.csv`(matched-set headline) · `.json`, 파생 per-gene 표 `data/k562_schwalb_ttseq_synthrate.csv`.
 1차 소스(GSE229305, Todorovski)는 `results/external_rate_validation.md` Part B에 있다.
