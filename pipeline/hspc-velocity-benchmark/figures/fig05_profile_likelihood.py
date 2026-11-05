@@ -42,9 +42,10 @@ parts = ax[0, 0].violinplot([np.log10(ka), np.log10(kl)], showmedians=True)
 for i, pc in enumerate(parts["bodies"]):
     pc.set_facecolor([RED, BLUE][i]); pc.set_alpha(0.55)
 ax[0, 0].set_xticks([1, 2]); ax[0, 0].set_xticklabels(
-    [f"alpha\nmed {ka.median():.2f}/cell", f"lag\nmed {kl.median():.2f}/cell"])
-ax[0, 0].set_ylabel("log10 curvature  -d2 LL / d(ln theta)2  per cell")
-ax[0, 0].set_title(f"A. alpha is the stiff direction, lag the sloppy one (n={len(df)})")
+    [f"$\\alpha$ (n={len(ka)})\nmedian {ka.median():.2f}/cell",
+     f"coupled-on lag (n={len(kl)})\nmedian {kl.median():.2f}/cell"])
+ax[0, 0].set_ylabel(r"$\log_{10}$ curvature $-\partial^2 \mathrm{LL}/\partial(\ln\theta)^2$ per cell")
+ax[0, 0].set_title(f"A. Per-cell curvature, genes with positive curvature (of {len(df)})")
 
 # ---- B. per-gene stiffness ratio kappa_alpha / kappa_lag ----
 ratio = df["ratio"].replace([np.inf, -np.inf], np.nan).dropna()
@@ -53,9 +54,9 @@ ax[0, 1].hist(np.log10(ratio), bins=30, color=BLUE, edgecolor="white")
 ax[0, 1].axvline(0, color="k", ls="-", lw=1, label="equal (ratio=1)")
 ax[0, 1].axvline(np.log10(ratio.median()), color=RED, ls="--",
                  label=f"median {ratio.median():.2f}x")
-ax[0, 1].set_xlabel("log10( kappa_alpha / kappa_lag )")
+ax[0, 1].set_xlabel(r"$\log_{10}(\kappa_\alpha/\kappa_{\mathrm{lag}})$")
 ax[0, 1].set_ylabel("genes (interior, both curvatures > 0)")
-ax[0, 1].set_title(f"B. alpha stiffer than lag in {(ratio>1).mean():.0%} of genes")
+ax[0, 1].set_title(f"B. $\\alpha$ curvature exceeds lag curvature in {(ratio>1).mean():.0%} (n={len(ratio)})")
 ax[0, 1].legend()
 
 # ---- C. honest population trichotomy of the lag profile ----
@@ -65,14 +66,14 @@ vals = [int(cnt.get(k, 0)) for k in order]
 cols = [BLUE, "#DD8452", GREY]
 bars = ax[1, 0].bar(range(3), vals, color=cols, edgecolor="white")
 ax[1, 0].set_xticks(range(3))
-ax[1, 0].set_xticklabels(["interior\n(sloppy but scannable)",
-                          "boundary-pinned\n(t_sw2 ~ 20)", "degenerate"])
+ax[1, 0].set_xticklabels(["interior\n(profile bounded)",
+                          "boundary-pinned\n" + r"($t_{\mathrm{sw2}}\approx 20$)", "degenerate"])
 for b, v in zip(bars, vals):
     ax[1, 0].text(b.get_x() + b.get_width() / 2, v, f"{v}\n{v/len(df):.0%}",
                   ha="center", va="bottom", fontsize=9)
 ax[1, 0].set_ylabel("genes")
 ax[1, 0].set_ylim(0, max(vals) * 1.25)
-ax[1, 0].set_title("C. lag population: a large share is boundary-limited")
+ax[1, 0].set_title("C. Lag profile classes: 44% not bounded by the profile")
 
 # ---- D. representative overlaid profiles (recompute, same objective) ----
 try:
@@ -99,14 +100,14 @@ try:
         return LL(g, conn, ac, al, be, ga, np.array([t1, t1 + lg, t1 + lg + gap]), rc, ru, scc, model, direc)
     la = np.array([fa(x) for x in xs]) / nk
     ll = np.array([fl(x) for x in xs]) / nk
-    la -= np.nanmax(la); ll -= np.nanmax(ll)
-    ax[1, 1].plot(xs, la, "-o", ms=3, color=RED, label="alpha (stiff)")
-    ax[1, 1].plot(xs, ll, "-s", ms=3, color=BLUE, label="lag (sloppy)")
+    la -= fa(0.0) / nk; ll -= fl(0.0) / nk          # relative to the fitted value, as in fig05b
+    ax[1, 1].plot(xs, la, "-o", ms=3, color=RED, label=r"$\alpha$")
+    ax[1, 1].plot(xs, ll, "-s", ms=3, color=BLUE, label="coupled-on lag")
     ax[1, 1].axhline(0, color="k", lw=0.6)
     ax[1, 1].set_ylim(bottom=max(-3.0, np.nanmin([np.nanmin(la), np.nanmin(ll)]) * 1.05))
-    ax[1, 1].set_xlabel("standardized log-perturbation  ln(theta / MLE)")
-    ax[1, 1].set_ylabel("per-cell log-likelihood drop (nats/cell)")
-    ax[1, 1].set_title(f"D. profiles for {g_name} (lag0={lag0:.1f} pt): alpha narrow, lag shallow")
+    ax[1, 1].set_xlabel(r"log-perturbation $\ln(\theta/\hat\theta)$")
+    ax[1, 1].set_ylabel(r"$\Delta$ log-likelihood per cell")
+    ax[1, 1].set_title(f"D. Profiles for {g_name} (fitted lag {lag0:.2f}, median-ratio gene)")
     ax[1, 1].legend()
 except Exception as e:  # figure still useful without panel D
     ax[1, 1].text(0.5, 0.5, f"panel D recompute skipped:\n{e}", ha="center",
@@ -116,9 +117,8 @@ except Exception as e:  # figure still useful without panel D
 sub = ""
 # freed-nuisance gate CSV is only a partial/stale smoke (main 538-gene fixed-nuisance
 # result carries the claim); do not surface a misleading tiny-n number in the figure.
-fig.suptitle("Profile-likelihood: transcription rate alpha is locally identifiable; the chromatin->transcription "
-             "lag is sloppier + boundary-limited\n(MultiVelo objective, latent time re-optimized; RELATIVE practical "
-             "non-identifiability, not a flat valley)" + ("\n" + sub if sub else ""),
+fig.suptitle("Profile likelihood on the MultiVelo objective with latent time re-optimized: "
+             "relative precision of $\\alpha$ versus the coupled-on lag" + ("\n" + sub if sub else ""),
              fontsize=10.5, y=1.0)
 fig.tight_layout(rect=[0, 0, 1, 0.96])
 out = Path(__file__).resolve().parent / "fig05_profile_likelihood.png"
