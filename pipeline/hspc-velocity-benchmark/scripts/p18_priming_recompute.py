@@ -93,19 +93,23 @@ def refit_block(refit_dir: Path | None, rows, L):
         L += [f"재적합 표가 없어 건너뛰었다(찾은 위치: `{refit_dir}`). 이 표는 `.gitignore` 대상이라 "
               "HPC의 `results/bootstrap_refit/`에만 있다. 그곳에서 `--refit-dir`를 주고 다시 실행한다.", ""]
         return
-    tabs = [load(f) for f in files]
-    common = sorted(set.intersection(*[set(t.index) for t in tabs]))
-    L += [f"> 재적합 {len(tabs)}회, 공통 유전자 n={len(common)}. 평균 pairwise Spearman과 유전자별 CV의 median.", "",
+    # same statistic as p3_bootstrap_refit.py: raw tables, each refit pair on the genes both fitted
+    tabs = {f.stem: pd.read_csv(f, index_col=0) for f in files if ".smoke" not in f.name}
+    n_all = int(pd.concat([t["fit_alpha"] for t in tabs.values()], axis=1).notna().all(axis=1).sum())
+    L += [f"> 재적합 {len(tabs)}회, 12회 모두 적합된 유전자 n={n_all}. refit 쌍마다 둘 다 적합된 유전자로 Spearman을 내 "
+          "평균하고(p3_bootstrap_refit.py와 같은 방식), 유전자별 CV의 median을 적는다.", "",
           "| 값 | mean pairwise ρ | median CV |", "|---|---|---|"]
     res = {}
     defs = {"alpha": lambda d: d["fit_alpha"], "alpha_c": lambda d: d["fit_alpha_c"], **LAGS}
     for name, f in defs.items():
-        M = np.column_stack([f(t.loc[common]).values for t in tabs])
-        rhos = [stats.spearmanr(M[:, i], M[:, j]).statistic for i, j in itertools.combinations(range(M.shape[1]), 2)]
-        cv = np.nanmedian(np.nanstd(M, axis=1, ddof=1) / np.abs(np.nanmean(M, axis=1)).clip(1e-9))
-        res[name] = float(np.mean(rhos))
-        L.append(f"| {name} | {np.mean(rhos):+.3f} | {cv:.2f} |")
-        rows.append(dict(block="refit", definition=name, n=len(common), rho=float(np.mean(rhos)), cv_median=float(cv)))
+        M = pd.DataFrame({k: f(t) for k, t in tabs.items()})
+        rhos = [stats.spearmanr(s[a], s[b]).statistic
+                for a, b in itertools.combinations(M.columns, 2)
+                if len(s := M[[a, b]].dropna()) >= 10]
+        cv = float((M.std(axis=1) / M.mean(axis=1).abs().replace(0, np.nan)).median())
+        res[name] = float(np.nanmean(rhos))
+        L.append(f"| {name} | {res[name]:+.3f} | {cv:.2f} |")
+        rows.append(dict(block="refit", definition=name, n=n_all, rho=res[name], cv_median=cv))
     assert abs(res["coupled_on"] - 0.624) < 5e-4 and abs(res["alpha"] - 0.949) < 5e-4, res
     L += ["", "계약 검사 통과: coupled-on +0.624, α +0.949가 bootstrap_refit.md와 같다.", ""]
 

@@ -15,5 +15,14 @@
 
 ## B. MultiVelo 재적합 안정성 (12 × 70% 부분표본)
 
-재적합 표가 없어 건너뛰었다(찾은 위치: `/Users/kkkim/projects/autobiox/BioProject01-pipeline/pipeline/hspc-velocity-benchmark/results/bootstrap_refit`). 이 표는 `.gitignore` 대상이라 HPC의 `results/bootstrap_refit/`에만 있다. 그곳에서 `--refit-dir`를 주고 다시 실행한다.
+> 재적합 12회, 12회 모두 적합된 유전자 n=485. refit 쌍마다 둘 다 적합된 유전자로 Spearman을 내 평균하고(p3_bootstrap_refit.py와 같은 방식), 유전자별 CV의 median을 적는다.
+
+| 값 | mean pairwise ρ | median CV |
+|---|---|---|
+| alpha | +0.949 | 0.23 |
+| alpha_c | +0.729 | 0.25 |
+| coupled_on | +0.624 | 0.31 |
+| priming | +0.725 | 0.37 |
+
+계약 검사 통과: coupled-on +0.624, α +0.949가 bootstrap_refit.md와 같다.
 
