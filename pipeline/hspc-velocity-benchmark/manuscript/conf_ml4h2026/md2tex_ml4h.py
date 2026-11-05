@@ -53,6 +53,10 @@ SUBS = [
     (r"k\_deg", r"$k_{\mathrm{deg}}$"),
     (r"t\_sw1", r"$t_{\mathrm{sw1}}$"),
     (r"t\_sw2", r"$t_{\mathrm{sw2}}$"),
+    (r"$\rho$\_$\alpha$", r"$\rho_\alpha$"),
+    (r"$\rho$\_lag", r"$\rho_{\mathrm{lag}}$"),
+    (r"$\rho$\_output", r"$\rho_{\mathrm{output}}$"),
+    (r"N\_perm", r"$N_{\mathrm{perm}}$"),
 ]
 
 
@@ -77,6 +81,12 @@ def cite_sub(m):
     return "\\citep{" + ",".join(keys) + "}"
 
 
+def subs(s):
+    for a, b in SUBS:
+        s = s.replace(a, b)
+    return s
+
+
 def inline(s):
     """markdown inline -> LaTeX. 코드부터 처리해 그 안이 다시 마크되지 않게 한다."""
     holes = []
@@ -88,11 +98,9 @@ def inline(s):
     s = re.sub(r"`([^`]+)`", lambda m: stash(r"\texttt{" + esc(m.group(1)) + "}"), s)
     if CITEKEY:
         s = re.sub(r"\[\d+(?:\s*,\s*\d+)*\]", lambda m: stash(cite_sub(m)), s)
-    s = re.sub(r"\*\*(.+?)\*\*", lambda m: stash(r"\textbf{" + esc(m.group(1)) + "}"), s)
-    s = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", lambda m: stash(r"\emph{" + esc(m.group(1)) + "}"), s)
-    s = esc(s)
-    for a, b in SUBS:
-        s = s.replace(a, b)
+    s = re.sub(r"\*\*(.+?)\*\*", lambda m: stash(r"\textbf{" + subs(esc(m.group(1))) + "}"), s)
+    s = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", lambda m: stash(r"\emph{" + subs(esc(m.group(1))) + "}"), s)
+    s = subs(esc(s))
     return re.sub(r"\x00(\d+)\x00", lambda m: holes[int(m.group(1))], s)
 
 
@@ -338,7 +346,8 @@ def subsections(text):
 legend = ""
 for head, text in sections:
     if head.lower().startswith("figure legend"):
-        m = re.search(r"\*\*Figure 1\.\*\*(.*)", text, re.S)
+        # 다음 "**Figure" 범례 앞에서 멈춘다(긴 판에서 그림 2 범례가 그림 1 캡션에 붙던 버그).
+        m = re.search(r"\*\*Figure 1\.\*\*(.*?)(?=\n\s*\*\*Figure|\Z)", text, re.S)
         if m:
             cap = " ".join(m.group(1).split())
             cap = re.sub(r"Source figure:\s*`[^`]+`\.?", "", cap).strip()
