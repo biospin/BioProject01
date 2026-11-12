@@ -1,6 +1,6 @@
 # ML4H 2026 Findings — 카메라레디 PDF 빌드
 
-`CONF_ML4H2026_BIOP01_long.md`(카메라레디 정본)에서 제출용 PDF를 만드는 경로. GIW 선례(`../conf_giw2026/`)와 같은 구조다.
+`CONF_ML4H2026_BIOP01.md`(카메라레디 제출본, 2026-11-13 사용자 결정)에서 제출용 PDF를 만드는 경로. `CONF_ML4H2026_BIOP01_long.md`는 제출하지 않고 저널판 작업의 바탕으로 둔다. GIW 선례(`../conf_giw2026/`)와 같은 구조다.
 **PDF는 `.gitignore` 대상이라 커밋하지 않는다. 소스와 변환기만 추적한다.**
 
 ## 트랙과 규정 (2026-09-10 CFP 실측)
@@ -34,8 +34,8 @@ tar xzf src.tar.gz           # jmlr.cls, jmlrutils.sty, jmlrbook.cls
 
 ## 빌드
 
-카메라레디는 `CONF_ML4H2026_BIOP01_long.md`를 두 번째 인자로 넘긴다. DOI가 발급되기 전에는
-`<FILL: Zenodo DOI>`가 남으므로 최종 제출본으로 부르지 않는다.
+카메라레디 제출본은 `CONF_ML4H2026_BIOP01.md`다(두 번째 인자 생략 시 기본값). 긴 판을 빌드할 때만
+`CONF_ML4H2026_BIOP01_long.md`를 두 번째 인자로 넘긴다. 코드 DOI는 10.5281/zenodo.24166066(release ml4h2026-camera-ready).
 
 ```bash
 BUILD=/tmp/ml4h-camera-ready && mkdir -p "$BUILD/figures"
@@ -44,7 +44,7 @@ cp ../../figures/fig01_concordance_v2.png \
    ../../figures/figT01_atac_shuffle_priming.png \
    ../../figures/fig05_profile_likelihood.png \
    ../../figures/fig05b_profile_curves_by_class.png "$BUILD/figures/"
-python3 md2tex_ml4h.py "$BUILD/main.tex" CONF_ML4H2026_BIOP01_long.md
+python3 md2tex_ml4h.py "$BUILD/main.tex" CONF_ML4H2026_BIOP01.md
 cd "$BUILD" && ~/bin/tectonic -X compile main.tex --outdir .
 ```
 
