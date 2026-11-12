@@ -57,7 +57,7 @@ Chromatin-informed ("multiome") RNA velocity models emit per-gene quantities inc
 
 All data analysed here are public and previously published: human HSPC 10x Multiome (GSE209878, primary); human fetal cortex (GSE162170); human BMMC (GSE194122); macrophage differentiation (GSE284047); mouse gastrulation (GSE205117); the 10x Genomics "Fresh Embryonic E18 Mouse Brain 5k" demo, which carries no accession; and the measured-rate references GSE229305 and GSE75792. Accessions, processing and provenance caveats are in Section 3.1.
 
-The analysis scripts, per-gene result tables, sealed preregistration, environment files and deterministic recomputation scripts are public at https://github.com/biospin/velocity-reliability-map (MIT licence; release ml4h2026-camera-ready), archived as <FILL: Zenodo DOI>. Every number in this paper is regenerated from that release.
+The analysis scripts, per-gene result tables, sealed preregistration, environment files and deterministic recomputation scripts are public at https://github.com/biospin/velocity-reliability-map (MIT licence; release ml4h2026-camera-ready), archived at Zenodo (doi:10.5281/zenodo.24166066). Every number in this paper is regenerated from that release.
 
 ## Institutional Review Board (IRB)
 
@@ -339,4 +339,4 @@ Main-text Table 1 is condensed to three columns. The internal-axis and external-
 
 ### C. Data and Code Availability
 
-All primary and external datasets are public under the accessions listed in Section 3.1. Analysis code, per-gene result tables, the sealed preregistration, environment files and the deterministic recomputation scripts are at https://github.com/biospin/velocity-reliability-map (MIT licence; release ml4h2026-camera-ready), archived as <FILL: Zenodo DOI>.
+All primary and external datasets are public under the accessions listed in Section 3.1. Analysis code, per-gene result tables, the sealed preregistration, environment files and the deterministic recomputation scripts are at https://github.com/biospin/velocity-reliability-map (MIT licence; release ml4h2026-camera-ready), archived at Zenodo (doi:10.5281/zenodo.24166066).
