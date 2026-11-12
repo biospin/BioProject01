@@ -1,6 +1,6 @@
-# ML4H 2026 Findings — 4페이지 PDF 빌드
+# ML4H 2026 Findings — 카메라레디 PDF 빌드
 
-`CONF_ML4H2026_BIOP01.md`(정본)에서 제출용 PDF를 만드는 경로. GIW 선례(`../conf_giw2026/`)와 같은 구조다.
+`CONF_ML4H2026_BIOP01_long.md`(카메라레디 정본)에서 제출용 PDF를 만드는 경로. GIW 선례(`../conf_giw2026/`)와 같은 구조다.
 **PDF는 `.gitignore` 대상이라 커밋하지 않는다. 소스와 변환기만 추적한다.**
 
 ## 트랙과 규정 (2026-09-10 CFP 실측)
@@ -34,11 +34,17 @@ tar xzf src.tar.gz           # jmlr.cls, jmlrutils.sty, jmlrbook.cls
 
 ## 빌드
 
+카메라레디는 `CONF_ML4H2026_BIOP01_long.md`를 두 번째 인자로 넘긴다. DOI가 발급되기 전에는
+`<FILL: Zenodo DOI>`가 남으므로 최종 제출본으로 부르지 않는다.
+
 ```bash
-BUILD=/tmp/ml4h && mkdir -p "$BUILD/figures"
+BUILD=/tmp/ml4h-camera-ready && mkdir -p "$BUILD/figures"
 cp <arxiv에서 푼>/jmlr.cls <...>/jmlrutils.sty <...>/jmlrbook.cls "$BUILD/"
-cp ../../figures/fig01_p2_concordance.png "$BUILD/figures/"
-python3 md2tex_ml4h.py "$BUILD/main.tex"
+cp ../../figures/fig01_concordance_v2.png \
+   ../../figures/figT01_atac_shuffle_priming.png \
+   ../../figures/fig05_profile_likelihood.png \
+   ../../figures/fig05b_profile_curves_by_class.png "$BUILD/figures/"
+python3 md2tex_ml4h.py "$BUILD/main.tex" CONF_ML4H2026_BIOP01_long.md
 cd "$BUILD" && ~/bin/tectonic -X compile main.tex --outdir .
 ```
 
@@ -50,7 +56,9 @@ cd "$BUILD" && ~/bin/tectonic -X compile main.tex --outdir .
 ```bash
 cd ../..   # pipeline/hspc-velocity-benchmark
 export OMP_NUM_THREADS=1 MPLBACKEND=Agg
-python figures/fig01_p2_concordance.py
+python figures/fig01_concordance_v2.py
+python figures/fig05_profile_likelihood.py
+python figures/fig05b_profile_curves_by_class.py
 ```
 
 ## 변환기가 보장하는 것
@@ -59,7 +67,15 @@ python figures/fig01_p2_concordance.py
   파일 머리의 HTML 주석 블록은 들어갈 수 없다.
 - **수치를 사람이 옮겨 적지 않는다.** 마크다운을 기계 변환하므로 드리프트가 생길 수 없다.
 - 그리스 문자와 수학 기호를 LaTeX 매크로로 치환한다. 변환 후 남은 non-ASCII를 출력한다(정상 = `none`).
-- 저자 블록은 `Anonymous Author(s)` 고정이다. **이 블록을 제출 전에 바꾸지 않는다.**
+- 카메라레디에서는 `\finaltrue`와 실제 저자·소속 블록을 사용한다.
+
+## 카메라레디 최종 관문
+
+- 공개 저장소 release `ml4h2026-camera-ready`에 재적합 표 12개와 원고 수치 생성 파일을 포함한다.
+- Zenodo가 해당 GitHub release를 수집한 뒤 발급한 **version DOI**로 원고의 두 `<FILL: Zenodo DOI>`를 교체한다.
+- DOI 교체 후 다시 빌드해 PDF 본문에서 `FILL`이 0건인지 확인한다.
+- 두 profile 그림 범례에 fixed-nuisance 3.53×와 freed-nuisance 2.49×의 차이, log 좌표의
+  좌표의존성, 두 그림의 interior 예시가 같은 TLE1이라는 점이 남아 있는지 확인한다.
 
 ## 제출 전 검증 (2026-09-10 실측값)
 
