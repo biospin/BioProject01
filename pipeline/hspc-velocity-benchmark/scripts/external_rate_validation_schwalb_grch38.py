@@ -155,6 +155,11 @@ def run(alpha, synth, subset=None, tag=""):
 
 def build_gene_tables(biotypes, gc):
     tu = parse_schwalb_tus(SCHWALB_GTF, biotypes)
+    # GSE75792 lists every NA-biotype TU twice (two annotation systems).
+    # Deduplicate coordinates before the gene-level median so NA TUs are not
+    # double-weighted. protein_coding TUs are already unique, so the primary
+    # analysis is unchanged.
+    tu = tu.drop_duplicates(["chr", "start", "end", "strand"])
     mp = map_tus_to_genes(tu, gc, FRAC_GATE)
     return tu, mp, mp.groupby("gene")["synth"].median(), mp.groupby("gene")["decay"].median()
 

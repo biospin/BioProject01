@@ -21,7 +21,7 @@ Choice of v24: GENCODE v24 = Ensembl 83 (Dec 2015), the GRCh38 release contempor
 
 ## Method (identical to the original except where listed)
 
-Same filters (TU biotype protein_coding, GENCODE flag TRUE, numeric synth), same reciprocal-overlap gate 0.5, median per gene, HK/non-HK strata, Spearman, paired-gene percentile bootstrap B=10,000, seed 20260710 with the same call order, so the alpha rows are exactly a v19-to-v24 swap. Additions (abundance, NA-biotype variant, QC) use a separate RNG stream (seed 20261105), so they do not perturb the alpha rows. Note each protein_coding TU is listed once but each NA-biotype TU twice (two biotype annotation systems), which doubles its weight in the per-gene median in the +NA variant (a dedup check changes rho by at most 0.01).
+Same filters (TU biotype protein_coding, GENCODE flag TRUE, numeric synth), same reciprocal-overlap gate 0.5, median per gene, HK/non-HK strata, Spearman, paired-gene percentile bootstrap B=10,000, seed 20260710 with the same call order, so the alpha rows are exactly a v19-to-v24 swap. Additions (abundance, NA-biotype variant, QC) use a separate RNG stream (seed 20261105), so they do not perturb the alpha rows. GSE75792 lists every NA-biotype TU twice under two annotation systems; coordinate duplicates are removed before the per-gene median so those TUs are not double-weighted. Protein-coding TUs are already unique, so this correction does not affect the primary analysis.
 
 ### A. alpha vs Schwalb synthesis, full gene set (non-HK headline stratum)
 
@@ -67,18 +67,18 @@ Same filters (TU biotype protein_coding, GENCODE flag TRUE, numeric synth), same
 | schwalb / protein_coding_only | multivelovae | non_HK | 157 | +0.250 [+0.092, +0.398] | +0.309 [+0.151, +0.462] | -0.058 [-0.161, +0.043] | +0.795 |
 | schwalb / protein_coding_only | multivelovae | HK | 12 | +0.021 [-0.662, +0.707] | -0.196 [-0.736, +0.502] | +0.217 [-0.500, +0.946] | +0.517 |
 | schwalb / protein_coding_only | multivelovae | non_HK_matched | 138 | +0.275 [+0.104, +0.434] | +0.299 [+0.125, +0.457] | -0.024 [-0.131, +0.080] | +0.808 |
-| schwalb / incl_NA_biotype | rna_only | all | 137 | +0.068 [-0.110, +0.243] | +0.260 [+0.087, +0.423] | -0.192 [-0.311, -0.075] | +0.763 |
-| schwalb / incl_NA_biotype | rna_only | non_HK | 129 | +0.107 [-0.078, +0.283] | +0.290 [+0.114, +0.453] | -0.183 [-0.305, -0.066] | +0.763 |
+| schwalb / incl_NA_biotype | rna_only | all | 137 | +0.068 [-0.111, +0.243] | +0.258 [+0.085, +0.422] | -0.190 [-0.308, -0.074] | +0.763 |
+| schwalb / incl_NA_biotype | rna_only | non_HK | 129 | +0.107 [-0.078, +0.284] | +0.288 [+0.112, +0.450] | -0.181 [-0.304, -0.064] | +0.763 |
 | schwalb / incl_NA_biotype | rna_only | HK | 8 | -0.429 [-1.000, +0.538] | -0.190 [-0.852, +0.675] | -0.238 [-0.720, +0.000] | +0.857 |
-| schwalb / incl_NA_biotype | rna_only | non_HK_matched | 112 | +0.123 [-0.078, +0.311] | +0.256 [+0.064, +0.429] | -0.133 [-0.257, -0.009] | +0.789 |
-| schwalb / incl_NA_biotype | multivelo | all | 193 | +0.245 [+0.099, +0.386] | +0.275 [+0.128, +0.414] | -0.030 [-0.123, +0.064] | +0.802 |
-| schwalb / incl_NA_biotype | multivelo | non_HK | 179 | +0.275 [+0.124, +0.413] | +0.317 [+0.169, +0.454] | -0.042 [-0.128, +0.042] | +0.835 |
+| schwalb / incl_NA_biotype | rna_only | non_HK_matched | 112 | +0.123 [-0.078, +0.312] | +0.253 [+0.062, +0.427] | -0.130 [-0.256, -0.007] | +0.789 |
+| schwalb / incl_NA_biotype | multivelo | all | 193 | +0.240 [+0.093, +0.381] | +0.273 [+0.127, +0.412] | -0.033 [-0.127, +0.061] | +0.802 |
+| schwalb / incl_NA_biotype | multivelo | non_HK | 179 | +0.269 [+0.118, +0.407] | +0.315 [+0.166, +0.452] | -0.047 [-0.132, +0.037] | +0.835 |
 | schwalb / incl_NA_biotype | multivelo | HK | 14 | -0.029 [-0.595, +0.555] | -0.314 [-0.795, +0.298] | +0.286 [-0.371, +0.867] | +0.451 |
-| schwalb / incl_NA_biotype | multivelo | non_HK_matched | 155 | +0.283 [+0.119, +0.436] | +0.304 [+0.143, +0.455] | -0.022 [-0.114, +0.069] | +0.832 |
-| schwalb / incl_NA_biotype | multivelovae | all | 193 | +0.224 [+0.081, +0.363] | +0.275 [+0.132, +0.409] | -0.050 [-0.148, +0.046] | +0.779 |
-| schwalb / incl_NA_biotype | multivelovae | non_HK | 179 | +0.255 [+0.110, +0.393] | +0.317 [+0.170, +0.452] | -0.062 [-0.159, +0.033] | +0.794 |
+| schwalb / incl_NA_biotype | multivelo | non_HK_matched | 155 | +0.275 [+0.111, +0.429] | +0.302 [+0.140, +0.453] | -0.027 [-0.119, +0.063] | +0.832 |
+| schwalb / incl_NA_biotype | multivelovae | all | 193 | +0.221 [+0.076, +0.359] | +0.273 [+0.129, +0.407] | -0.052 [-0.150, +0.044] | +0.779 |
+| schwalb / incl_NA_biotype | multivelovae | non_HK | 179 | +0.251 [+0.105, +0.388] | +0.315 [+0.168, +0.451] | -0.065 [-0.161, +0.030] | +0.794 |
 | schwalb / incl_NA_biotype | multivelovae | HK | 14 | -0.121 [-0.678, +0.578] | -0.314 [-0.792, +0.306] | +0.193 [-0.307, +0.797] | +0.613 |
-| schwalb / incl_NA_biotype | multivelovae | non_HK_matched | 155 | +0.283 [+0.124, +0.433] | +0.304 [+0.139, +0.454] | -0.022 [-0.123, +0.081] | +0.812 |
+| schwalb / incl_NA_biotype | multivelovae | non_HK_matched | 155 | +0.277 [+0.118, +0.429] | +0.302 [+0.137, +0.452] | -0.025 [-0.125, +0.077] | +0.812 |
 | todorovski / primary | rna_only | all | 179 | +0.268 [+0.121, +0.402] | +0.415 [+0.277, +0.538] | -0.147 [-0.243, -0.052] | +0.765 |
 | todorovski / primary | rna_only | non_HK | 167 | +0.242 [+0.088, +0.387] | +0.370 [+0.219, +0.504] | -0.128 [-0.227, -0.029] | +0.762 |
 | todorovski / primary | rna_only | HK | 12 | +0.629 [+0.011, +0.936] | +0.615 [-0.065, +0.943] | +0.014 [-0.229, +0.277] | +0.916 |
@@ -93,25 +93,25 @@ Same filters (TU biotype protein_coding, GENCODE flag TRUE, numeric synth), same
 
 | method | stratum | n | rho [95% CI] |
 |---|---|---|---|
-| rna_only | all | 151 | +0.036 [-0.126, +0.204] |
-| rna_only | non_HK | 143 | +0.069 [-0.106, +0.236] |
-| rna_only | non_HK_matched | 123 | +0.088 [-0.104, +0.274] |
-| multivelo | all | 193 | +0.245 [+0.099, +0.382] |
-| multivelo | non_HK | 179 | +0.275 [+0.129, +0.415] |
-| multivelo | non_HK_matched | 155 | +0.283 [+0.119, +0.436] |
-| multivelovae | all | 205 | +0.190 [+0.051, +0.323] |
-| multivelovae | non_HK | 190 | +0.219 [+0.073, +0.352] |
-| multivelovae | non_HK_matched | 163 | +0.234 [+0.079, +0.385] |
+| rna_only | all | 151 | +0.039 [-0.125, +0.206] |
+| rna_only | non_HK | 143 | +0.071 [-0.103, +0.238] |
+| rna_only | non_HK_matched | 123 | +0.092 [-0.100, +0.275] |
+| multivelo | all | 193 | +0.240 [+0.093, +0.378] |
+| multivelo | non_HK | 179 | +0.269 [+0.122, +0.409] |
+| multivelo | non_HK_matched | 155 | +0.275 [+0.110, +0.429] |
+| multivelovae | all | 205 | +0.188 [+0.050, +0.321] |
+| multivelovae | non_HK | 190 | +0.216 [+0.071, +0.350] |
+| multivelovae | non_HK_matched | 163 | +0.231 [+0.075, +0.382] |
 
 ### E. QC
 
 | quantity | hg19 | GRCh38 protein_coding | GRCh38 +NA |
 |---|---|---|---|
-| QC1 Schwalb vs Todorovski synth | n=1905, +0.154 | n=6051, +0.415 | n=6900, +0.390 |
-| QC2 decay vs half-life, todorovski_K562 (expect negative) | n=1238, -0.013 | n=4179, +0.021 | n=4710, +0.012 |
+| QC1 Schwalb vs Todorovski synth | n=1905, +0.154 | n=6051, +0.415 | n=6900, +0.392 |
+| QC2 decay vs half-life, todorovski_K562 (expect negative) | n=1238, -0.013 | n=4179, +0.021 | n=4710, +0.011 |
 | QC2 decay vs half-life, rnadecaycafe_K562 (expect negative) | n=1735, -0.048 | n=5738, -0.028 | n=6512, -0.030 |
 | QC2 decay vs half-life, molm13 (expect negative) | n=1638, -0.039 | n=5413, +0.005 | n=6156, -0.002 |
-| QC2 decay vs half-life, thp1 (expect negative) | n=1249, -0.063 | n=4210, -0.047 | n=4738, -0.054 |
+| QC2 decay vs half-life, thp1 (expect negative) | n=1249, -0.063 | n=4210, -0.047 | n=4738, -0.053 |
 ## Notes
 
 - The matched sets are non-HK genes with alpha, Schwalb and Todorovski values. They grow from n=54-56 (hg19) to n=108-143 (GRCh38).
